@@ -10,7 +10,7 @@ import com.lowbyte.battery.animation.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
-    private val SPLASH_DURATION = 10000L // 10 seconds
+    private val SPLASH_DURATION = 5000L // 10 seconds
     private val UPDATE_INTERVAL = 100L // Update every 100ms
 
     override fun onCreate(savedInstanceState: Bundle?) {

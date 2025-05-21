@@ -3,4 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="accessibility_service_description">
+        Enables custom notification notch overlay when new notifications arrive. Required for advanced notification access and user interface enhancements.
+    </string>
 </resources>
