@@ -1,12 +1,17 @@
 package com.lowbyte.battery.animation.ui.dashboard
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.databinding.FragmentDashboardBinding
 
 class DashboardFragment : Fragment() {
@@ -22,18 +27,70 @@ class DashboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
 
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+        checkAccessibilityPermission()
+        setupSeekBars()
+
         return root
     }
+
+    private fun checkAccessibilityPermission() {
+        if (!isAccessibilityServiceEnabled()) {
+            Toast.makeText(
+                requireContext(),
+                "Please enable accessibility service",
+                Toast.LENGTH_LONG
+            ).show()
+            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+        }
+        // else, do nothing or show UI as normal
+    }
+
+    private fun isAccessibilityServiceEnabled(): Boolean {
+        val expectedComponentName =
+            "${requireContext().packageName}/${NotchAccessibilityService::class.java.canonicalName}"
+        val enabledServices = Settings.Secure.getString(
+            requireContext().contentResolver,
+            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        ) ?: return false
+
+        return enabledServices.split(':')
+            .any { it.equals(expectedComponentName, ignoreCase = true) }
+    }
+
+
+    private fun setupSeekBars() {
+        binding.seekBarX.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                // Update notch X position
+             //   updateNotchPosition(progress, binding.seekBarY.progress)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        binding.seekBarY.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                // Update notch Y position
+              //  updateNotchPosition(binding.seekBarX.progress, progress)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+    }
+
+//    private fun updateNotchPosition(x: Int, y: Int) {
+//        // Send broadcast to update notch position
+//        val intent = Intent("com.lowbyte.battery.animation.UPDATE_NOTCH_POSITION")
+//        intent.putExtra("x_position", x)
+//        intent.putExtra("y_position", y)
+//        requireContext().sendBroadcast(intent)
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

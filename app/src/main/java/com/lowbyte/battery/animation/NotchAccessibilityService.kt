@@ -3,6 +3,7 @@ package com.lowbyte.battery.animation
 import android.accessibilityservice.AccessibilityService
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.IntentFilter
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.os.Handler
@@ -13,131 +14,92 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ImageView
 import android.graphics.PixelFormat
+import android.os.BatteryManager
+import android.os.Build
+import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 
 class NotchAccessibilityService : AccessibilityService() {
     private var windowManager: WindowManager? = null
-    private var notchView: View? = null
-    private var notificationBanner: View? = null
-    private val handler = Handler(Looper.getMainLooper())
-    private var currentNotification: NotificationData? = null
-
-    data class NotificationData(
-        val packageName: String,
-        val title: String,
-        val text: String,
-        val intent: PendingIntent?
-    )
+    private var statusBarView: View? = null
 
     override fun onServiceConnected() {
         super.onServiceConnected()
-        windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-        createNotchView()
+        createFakeStatusBar()
     }
 
-    private fun createNotchView() {
-        val params = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            100,
-            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+    private fun createFakeStatusBar() {
+        val layoutParams = WindowManager.LayoutParams(
+            WindowManager.LayoutParams.MATCH_PARENT, 100,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
+            else
+                WindowManager.LayoutParams.TYPE_PHONE,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
             PixelFormat.TRANSLUCENT
         )
-        params.gravity = Gravity.TOP
+        layoutParams.gravity = Gravity.TOP
 
-        notchView = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            setBackgroundColor(0x80000000.toInt())
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                100
-            )
-        }
+        statusBarView = LayoutInflater.from(this).inflate(R.layout.custom_status_bar, null)
+        updateBatteryInfo()
 
-        windowManager?.addView(notchView, params)
-    }
+        // Gesture listener
+        statusBarView?.setOnTouchListener(object : View.OnTouchListener {
+            private var downX = 0f
+            private var downY = 0f
+            private val SWIPE_THRESHOLD = 100
 
-    private fun showNotificationBanner(notification: NotificationData) {
-        currentNotification = notification
-        
-        val bannerParams = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-            PixelFormat.TRANSLUCENT
-        )
-        bannerParams.gravity = Gravity.TOP
-        bannerParams.y = 100
+            override fun onTouch(v: View?, event: MotionEvent): Boolean {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        downX = event.x
+                        downY = event.y
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        val deltaX = event.x - downX
+                        val deltaY = event.y - downY
 
-        notificationBanner = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setBackgroundColor(0xFF333333.toInt())
-            setPadding(20, 20, 20, 20)
-
-            addView(TextView(context).apply {
-                text = notification.title
-                setTextColor(0xFFFFFFFF.toInt())
-                textSize = 16f
-            })
-
-            addView(TextView(context).apply {
-                text = notification.text
-                setTextColor(0xFFCCCCCC.toInt())
-                textSize = 14f
-            })
-
-            setOnClickListener {
-//                notification.intent?.let { intent ->
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//                    startActivity(intent)
-//                }
-                hideNotificationBanner()
+                        if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
+                            if (deltaX > 0) {
+                                showToast("Swipe Right")
+                            } else {
+                                showToast("Swipe Left")
+                            }
+                        } else if (Math.abs(deltaY) < 20) {
+                            showToast("Tap")
+                        }
+                    }
+                    MotionEvent.ACTION_BUTTON_PRESS -> {
+                        showToast("Long Press")
+                    }
+                }
+                return true
             }
-        }
+        })
 
-        windowManager?.addView(notificationBanner, bannerParams)
-        
-        handler.postDelayed({
-            hideNotificationBanner()
-        }, 5000)
+        windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+        windowManager?.addView(statusBarView, layoutParams)
     }
 
-    private fun hideNotificationBanner() {
-        notificationBanner?.let {
-            windowManager?.removeView(it)
-            notificationBanner = null
+    private fun showToast(msg: String) {
+        Handler(Looper.getMainLooper()).post {
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         }
     }
 
-    override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        if (event.eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
-            val packageName = event.packageName?.toString() ?: return
-            val notification = event.parcelableData as? android.app.Notification ?: return
-            
-            val notificationData = NotificationData(
-                packageName = packageName,
-                title = notification.extras.getString("android.title") ?: "",
-                text = notification.extras.getString("android.text") ?: "",
-                intent = notification.contentIntent
-            )
-            
-            showNotificationBanner(notificationData)
-        }
+    private fun updateBatteryInfo() {
+        val batteryIntent = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        val batteryStatus = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+        statusBarView?.findViewById<TextView>(R.id.batteryPercent)?.text = "$batteryStatus%"
     }
 
+    override fun onAccessibilityEvent(event: AccessibilityEvent?) {
+
+    }
     override fun onInterrupt() {
-        hideNotificationBanner()
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        hideNotificationBanner()
-        notchView?.let {
-            windowManager?.removeView(it)
-            notchView = null
-        }
     }
-} 
+}
