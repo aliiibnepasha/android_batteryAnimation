@@ -34,5 +34,52 @@
     <fragment
         android:id="@+id/getStartedFragment"
         android:name="com.lowbyte.battery.animation.GetStartedFragment"
-        android:label="Get Started" />
+        android:label="Get Started">
+                <action
+                    android:id="@+id/action_getStarted_to_main"
+                    app:destination="@id/getMainFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/getMainFragment"
+        android:name="com.lowbyte.battery.animation.main.MainFragment"
+        android:label="Main">
+        <!--        <action-->
+        <!--            android:id="@+id/action_splash_to_language"-->
+        <!--            app:destination="@id/languageFragment" />-->
+    </fragment>
+
+    <fragment
+        android:id="@+id/getCustomizeFragment"
+        android:name="com.lowbyte.battery.animation.main.customization.CustomizeFragment"
+        android:label="Customize">
+        <!--        <action-->
+        <!--            android:id="@+id/action_splash_to_language"-->
+        <!--            app:destination="@id/languageFragment" />-->
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/getHomeFragment"
+        android:name="com.lowbyte.battery.animation.main.home.HomeFragment"
+        android:label="Home">
+        <!--        <action-->
+        <!--            android:id="@+id/action_splash_to_language"-->
+        <!--            app:destination="@id/languageFragment" />-->
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/getIslandFragment"
+        android:name="com.lowbyte.battery.animation.main.island.IslandFragment"
+        android:label="Island">
+        <!--        <action-->
+        <!--            android:id="@+id/action_splash_to_language"-->
+        <!--            app:destination="@id/languageFragment" />-->
+    </fragment>
+
+
+
+
+
 </navigation>

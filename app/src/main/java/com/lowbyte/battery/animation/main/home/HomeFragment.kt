@@ -1,4 +1,4 @@
-package com.lowbyte.battery.animation.ui.home
+package com.lowbyte.battery.animation.main.home
 
 import android.os.Bundle
 import android.view.LayoutInflater

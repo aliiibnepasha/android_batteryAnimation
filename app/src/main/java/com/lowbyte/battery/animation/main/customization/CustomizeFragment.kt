@@ -1,4 +1,4 @@
-package com.lowbyte.battery.animation.ui.dashboard
+package com.lowbyte.battery.animation.main.customization
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,14 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.databinding.FragmentDashboardBinding
 
-class DashboardFragment : Fragment() {
+class CustomizeFragment : Fragment() {
 
     private var _binding: FragmentDashboardBinding? = null
 
