@@ -85,12 +85,9 @@ class NotchAccessibilityService : AccessibilityService() {
             
             // Update icon sizes
             val iconSizePx = (iconSize * resources.displayMetrics.density).toInt()
-            findViewById<ImageView>(R.id.batteryIcon)?.layoutParams = 
-                LinearLayout.LayoutParams(iconSizePx, iconSizePx)
-            findViewById<ImageView>(R.id.wifiIcon)?.layoutParams = 
-                LinearLayout.LayoutParams(iconSizePx, iconSizePx)
-            findViewById<ImageView>(R.id.signalIcon)?.layoutParams = 
-                LinearLayout.LayoutParams(iconSizePx, iconSizePx)
+            findViewById<ImageView>(R.id.batteryIcon)?.layoutParams = LinearLayout.LayoutParams(iconSizePx, iconSizePx)
+            findViewById<ImageView>(R.id.wifiIcon)?.layoutParams = LinearLayout.LayoutParams(iconSizePx, iconSizePx)
+            findViewById<ImageView>(R.id.signalIcon)?.layoutParams = LinearLayout.LayoutParams(iconSizePx, iconSizePx)
         }
     }
 

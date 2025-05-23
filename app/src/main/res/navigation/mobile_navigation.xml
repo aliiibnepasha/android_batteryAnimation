@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashFragment">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.lowbyte.battery.animation.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/splashFragment"
+        android:name="com.lowbyte.battery.animation.SplashFragment"
+        android:label="Splash" >
+        <action
+            android:id="@+id/action_splash_to_language"
+            app:destination="@id/languageFragment" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.lowbyte.battery.animation.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/languageFragment"
+        android:name="LanguageFragment"
+        android:label="Select Language" >
+        <action
+            android:id="@+id/action_language_to_intro"
+            app:destination="@id/introFragment" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.lowbyte.battery.animation.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/introFragment"
+        android:name="com.lowbyte.battery.animation.IntroFragment"
+        android:label="Intro Screens" >
+        <action
+            android:id="@+id/action_intro_to_getStarted"
+            app:destination="@id/getStartedFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/getStartedFragment"
+        android:name="com.lowbyte.battery.animation.GetStartedFragment"
+        android:label="Get Started" />
 </navigation>

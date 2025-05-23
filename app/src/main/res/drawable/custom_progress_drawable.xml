@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background color (non-fill) -->
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/blue_progress_non_fill"/> <!-- light gray for background -->
+        </shape>
+    </item>
+
+    <!-- Secondary progress (optional) -->
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+            <shape android:shape="rectangle">
+                <solid android:color="@color/blue_progress_non_fill"/> <!-- slightly darker gray -->
+            </shape>
+        </clip>
+    </item>
+
+    <!-- Progress fill color -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape android:shape="rectangle">
+                <solid android:color="@color/blue_app_color"/> <!-- your desired progress color -->
+            </shape>
+        </clip>
+    </item>
+</layer-list>

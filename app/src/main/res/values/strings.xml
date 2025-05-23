@@ -6,4 +6,11 @@
     <string name="accessibility_service_description">
         Enables custom notification notch overlay when new notifications arrive. Required for advanced notification access and user interface enhancements.
     </string>
+    <string name="battery_emoji_widget">Battery Emoji Widget</string>
+    <string name="this_action_may_contain_ads">This action may contain Ads.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="done">Done</string>
+    <string name="next">Next</string>
+    <string name="select_language">Select language</string>
 </resources>
