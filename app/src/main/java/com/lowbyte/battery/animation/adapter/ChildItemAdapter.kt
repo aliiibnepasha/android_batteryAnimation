@@ -1,29 +1,38 @@
 package com.lowbyte.battery.animation.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.recyclerview.widget.RecyclerView
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.databinding.MainItemRvItemBinding
 
 class ChildItemAdapter(
-    private val items: List<Int>,
+    private val items: List<String>,
     private val onClick: (Int) -> Unit
 ) : RecyclerView.Adapter<ChildItemAdapter.ChildViewHolder>() {
 
-    inner class ChildViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(text: Int) {
-            val tv = itemView.findViewById<ImageFilterView>(R.id.textChild)
-            tv.setImageResource(text)
-            itemView.setOnClickListener { onClick(position) }
+    inner class ChildViewHolder(private val binding: MainItemRvItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(drawableName: String) {
+            val context = binding.root.context
+            val resId = context.resources.getIdentifier(drawableName, "drawable", context.packageName)
+
+            if (resId != 0) {
+                binding.widgetPreview.setImageResource(resId)
+            } else {
+                binding.widgetPreview.setImageResource(R.drawable.emoji_default) // fallback
+            }
+
+            binding.root.setOnClickListener {
+                onClick(adapterPosition)
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChildViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.main_item_rv_item, parent, false)
-        return ChildViewHolder(view)
+        val binding = MainItemRvItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ChildViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ChildViewHolder, position: Int) {

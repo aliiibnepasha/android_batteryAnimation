@@ -111,4 +111,4 @@ class AppPreferences private constructor(context: Context) {
             }
         }
     }
-} 
+}

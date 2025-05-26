@@ -29,4 +29,7 @@
     <string name="view_all_battery_emoji">Battery Emoji</string>
     <string name="view_all_battery_widget">Battery Widget</string>
     <string name="view_all_battery_animation">Battery Animation</string>
+    <string name="enable_battery_emoji">Enable Battery Emoji</string>
+    <string name="enable_battery_anim">Enable Battery Animation</string>
+    <string name="height_12_dp">Height : 12 dp</string>
 </resources>

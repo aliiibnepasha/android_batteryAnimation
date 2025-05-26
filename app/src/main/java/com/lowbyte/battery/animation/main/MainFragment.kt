@@ -25,7 +25,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             if (navController.currentDestination?.id == R.id.action_home_to_viewAllEmoji) {
                 navController.navigateUp()
             } else {
-                requireActivity().onBackPressedDispatcher.onBackPressed()
+                //requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }
 
@@ -38,18 +38,30 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.navigation_home -> {
-                    // Handle home fragment selection
+                    binding.tvTitle.text  = getString(R.string.title_home)
                     binding.ibBackButton.visibility = View.INVISIBLE
                 }
                 R.id.navigation_customize -> {
-                    // Handle customize fragment selection
+                    binding.tvTitle.text  = getString(R.string.menu_customize)
                     binding.ibBackButton.visibility = View.INVISIBLE
                 }
                 R.id.navigation_island -> {
-                    // Handle island fragment selection
+                    binding.tvTitle.text  = getString(R.string.menu_dynamic_island)
                     binding.ibBackButton.visibility = View.INVISIBLE
-                }else->{
-                binding.ibBackButton.visibility = View.VISIBLE
+                }
+
+
+                R.id.navigation_view_all_emoji -> {
+                    binding.tvTitle.text  = getString(R.string.view_all_battery_emoji)
+                    binding.ibBackButton.visibility = View.VISIBLE
+                }
+                R.id.navigation_view_all_widget -> {
+                    binding.tvTitle.text  = getString(R.string.view_all_battery_widget)
+                    binding.ibBackButton.visibility = View.VISIBLE
+                }
+                R.id.navigation_view_all_animation -> {
+                    binding.tvTitle.text  = getString(R.string.view_all_battery_animation)
+                    binding.ibBackButton.visibility = View.VISIBLE
                 }
             }
         }

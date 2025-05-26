@@ -62,7 +62,7 @@ class MultiViewAdapter(
     inner class HorizontalListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val recyclerView: RecyclerView = itemView.findViewById(R.id.recyclerChild)
 
-        fun bind(items: List<Int>) {
+        fun bind(items: List<String>) {
             recyclerView.layoutManager = LinearLayoutManager(itemView.context, RecyclerView.HORIZONTAL, false)
             recyclerView.adapter = ChildItemAdapter(items, onChildItemClick)
         }

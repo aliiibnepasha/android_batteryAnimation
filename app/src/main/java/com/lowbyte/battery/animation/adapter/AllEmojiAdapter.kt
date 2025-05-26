@@ -1,18 +1,19 @@
-package com.lowbyte.battery.animation.main.view_all
+package com.lowbyte.battery.animation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.lowbyte.battery.animation.databinding.ItemAnimationBinding
+import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.databinding.ItemAllEmojiBinding
 
-class AnimationAdapter(
+class AllEmojiAdapter(
     private val onItemClick: (Int) -> Unit
-) : ListAdapter<String, AnimationAdapter.ViewHolder>(DiffCallback()) {
+) : ListAdapter<String, AllEmojiAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemAnimationBinding.inflate(
+        val binding = ItemAllEmojiBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -25,7 +26,7 @@ class AnimationAdapter(
     }
 
     inner class ViewHolder(
-        private val binding: ItemAnimationBinding
+        private val binding: ItemAllEmojiBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
@@ -35,8 +36,15 @@ class AnimationAdapter(
         }
 
         fun bind(item: String) {
-           // binding.titleText.text = item
-            // Set image or other data
+            val context = binding.root.context
+            val resId = context.resources.getIdentifier(item, "drawable", context.packageName)
+
+            if (resId != 0) {
+                binding.widgetPreview.setImageResource(resId)
+            } else {
+                // Handle missing drawable (optional)
+                binding.widgetPreview.setImageResource(R.drawable.emoji_default) // fallback image
+            }
         }
     }
 
