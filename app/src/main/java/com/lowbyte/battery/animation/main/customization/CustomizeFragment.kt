@@ -10,11 +10,11 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.lowbyte.battery.animation.NotchAccessibilityService
-import com.lowbyte.battery.animation.databinding.FragmentDashboardBinding
+import com.lowbyte.battery.animation.databinding.FragmentCustomizeBinding
 
 class CustomizeFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentCustomizeBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -26,7 +26,7 @@ class CustomizeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentCustomizeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         checkAccessibilityPermission()

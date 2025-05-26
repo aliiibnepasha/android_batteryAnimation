@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.lowbyte.battery.animation.main.home.HomeFragment"
+        android:label="@string/title_home" >
+        <action
+            android:id="@+id/action_home_to_viewAllEmoji"
+            app:destination="@id/navigation_view_all_emoji"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+        <action
+            android:id="@+id/action_home_to_viewAllWidget"
+            app:destination="@id/navigation_view_all_widget"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+        <action
+            android:id="@+id/action_home_to_viewAllAnim"
+            app:destination="@id/navigation_view_all_animation"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_customize"
+        android:name="com.lowbyte.battery.animation.main.customization.CustomizeFragment"
+        android:label="@string/menu_customize" />
+
+    <fragment
+        android:id="@+id/navigation_island"
+        android:name="com.lowbyte.battery.animation.main.island.IslandFragment"
+        android:label="@string/menu_dynamic_island" />
+
+    <fragment
+        android:id="@+id/navigation_view_all_emoji"
+        android:name="com.lowbyte.battery.animation.main.view_all.ViewAllEmojiFragment"
+        android:label="@string/view_all_battery_emoji" />
+
+    <fragment
+        android:id="@+id/navigation_view_all_widget"
+        android:name="com.lowbyte.battery.animation.main.view_all.ViewAllWidgetsFragment"
+        android:label="@string/view_all_battery_widget" />
+
+    <fragment
+        android:id="@+id/navigation_view_all_animation"
+        android:name="com.lowbyte.battery.animation.main.view_all.ViewAllAnimationFragment"
+        android:label="@string/view_all_battery_animation" />
+
+
+</navigation> 

@@ -20,4 +20,13 @@
     <string name="intro_description_1">Emojis, widgets and animation\nto customize your screen</string>
     <string name="intro_description_2">Setup and display custom notch,\ngestures, styles and more</string>
     <string name="intro_description_3">Personalize your screens with unique battery emojis, widgets and animations</string>
+    <string name="menu_customize">Customize</string>
+    <string name="menu_dynamic_island">Dynamic Island</string>
+    <string name="view_all">View All</string>
+    <string name="cat_emojis">Emojis</string>
+    <string name="cat_widgets">Widgets</string>
+    <string name="cat_animations">Animations</string>
+    <string name="view_all_battery_emoji">Battery Emoji</string>
+    <string name="view_all_battery_widget">Battery Widget</string>
+    <string name="view_all_battery_animation">Battery Animation</string>
 </resources>

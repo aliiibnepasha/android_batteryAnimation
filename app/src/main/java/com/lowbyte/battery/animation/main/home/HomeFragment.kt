@@ -1,42 +1,64 @@
 package com.lowbyte.battery.animation.main.home
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.adapter.MultiViewAdapter
 import com.lowbyte.battery.animation.databinding.FragmentHomeBinding
+import com.lowbyte.battery.animation.model.MultiViewItem
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(R.layout.fragment_home) {
 
-    private var _binding: FragmentHomeBinding? = null
+    private lateinit var binding: FragmentHomeBinding
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding = FragmentHomeBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+        val data = listOf(
+            MultiViewItem.TitleItem(getString(R.string.cat_emojis)),
+            MultiViewItem.ListItem(listOf(R.drawable.emoji, R.drawable.emoji, R.drawable.emoji)),
+            MultiViewItem.TitleItem(getString(R.string.cat_widgets)),
+            MultiViewItem.ListItem(listOf(R.drawable.emoji, R.drawable.emoji, R.drawable.emoji)),
+            MultiViewItem.TitleItem(getString(R.string.cat_animations)),
+            MultiViewItem.ListItem(listOf(R.drawable.emoji, R.drawable.emoji, R.drawable.emoji)),
+        )
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        val adapter = MultiViewAdapter(
+            data,
+            onChildItemClick = { parentPosition ->
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
-    }
+                Toast.makeText(
+                    context,
+                    "Child clicked in section $parentPosition",
+                    Toast.LENGTH_SHORT
+                ).show()
+            },
+            onChildViewAllClick = { titlePosition ->
+                when (titlePosition) {
+                    0 -> {
+                        findNavController().navigate(R.id.action_home_to_viewAllEmoji)
+                    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+                    2 -> {
+                        findNavController().navigate(R.id.action_home_to_viewAllWidget)
+
+                    }
+
+                    4 -> {
+                        findNavController().navigate(R.id.action_home_to_viewAllAnim)
+
+                    }
+                }
+            }
+        )
+
+        binding.recyclerViewParent.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerViewParent.adapter = adapter
+
     }
 }
