@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/enableBatteryAnim"
+            android:id="@+id/titleVibrateFeedback"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="start|center_vertical"
@@ -23,17 +23,17 @@
             android:textStyle="bold"
             android:text="@string/enable_battery_anim"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/switchEnableBatteryAnim"
+            app:layout_constraintEnd_toStartOf="@+id/switchVibrateFeedback"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switchEnableBatteryAnim"
+            android:id="@+id/switchVibrateFeedback"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/enableBatteryAnim"
+            app:layout_constraintStart_toEndOf="@+id/titleVibrateFeedback"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.3" />
 

@@ -2,21 +2,18 @@ package com.lowbyte.battery.animation.main.customization
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.lowbyte.battery.animation.NotchAccessibilityService
+import com.lowbyte.battery.animation.activity.StatusBarCustomizeActivity
+import com.lowbyte.battery.animation.activity.StatusBarGestureActivity
 import com.lowbyte.battery.animation.databinding.FragmentCustomizeBinding
 
 class CustomizeFragment : Fragment() {
 
     private var _binding: FragmentCustomizeBinding? = null
 
-    // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
@@ -29,35 +26,18 @@ class CustomizeFragment : Fragment() {
         _binding = FragmentCustomizeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-     //   checkAccessibilityPermission()
-      //  setupSeekBars()
+        _binding?.menuStatusBar?.setOnClickListener {
+            startActivity(Intent(requireContext(), StatusBarCustomizeActivity::class.java))
+        }
+
+        _binding?.menuGesture?.setOnClickListener {
+            startActivity(Intent(requireContext(), StatusBarGestureActivity::class.java))
+        }
 
         return root
     }
 
 
-
-//    private fun setupSeekBars() {
-//        binding.seekBarX.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-//            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-//                // Update notch X position
-//             //   updateNotchPosition(progress, binding.seekBarY.progress)
-//            }
-//
-//            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-//            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-//        })
-//
-//        binding.seekBarY.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-//            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-//                // Update notch Y position
-//              //  updateNotchPosition(binding.seekBarX.progress, progress)
-//            }
-//
-//            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-//            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-//        })
-//    }
 
 //    private fun updateNotchPosition(x: Int, y: Int) {
 //        // Send broadcast to update notch position

@@ -1,30 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".main.customization.CustomizeFragment">
 
-        <SeekBar
-            android:id="@+id/seekBarY"
-            android:layout_width="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/menuStatusBar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/bg_customize_item"
+        android:padding="15dp"
+        app:layout_constraintDimensionRatio="1:1.2"
+        app:layout_constraintEnd_toStartOf="@+id/menuGesture"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.42">
+
+        <TextView
+            android:id="@+id/menuStatusTitle"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:text="@string/status_bar"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.9"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_height="wrap_content"/>
 
-         <SeekBar
-            android:id="@+id/seekBarX"
-            android:layout_width="0dp"
-            app:layout_constraintStart_toStartOf="parent"
+        <TextView
+            android:id="@+id/menuStatusDetails"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/statusbar_menu_details"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toTopOf="@+id/icMenuStatusBar"
             app:layout_constraintEnd_toEndOf="parent"
-           app:layout_constraintTop_toBottomOf="@+id/seekBarY"
-            app:layout_constraintWidth_percent="0.9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/menuStatusTitle" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icMenuStatusBar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_height="wrap_content"/>
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/ic_menu_statusbar" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/menuGesture"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/bg_customize_item"
+        android:padding="15dp"
+        app:layout_constraintDimensionRatio="1:1.2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/menuStatusBar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.42">
+
+        <TextView
+            android:id="@+id/menuGestureTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/gesture"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/menuGestureDetails"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/gesture_menu_details"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toTopOf="@+id/icMenuGestureBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/menuGestureTitle" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icMenuGestureBar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.4"
+            app:srcCompat="@drawable/ic_menu_gasture" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
