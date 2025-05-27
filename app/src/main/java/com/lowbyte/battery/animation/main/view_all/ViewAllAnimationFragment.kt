@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.adapter.AnimationAdapter
 import com.lowbyte.battery.animation.databinding.FragmentViewAllAnimationBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.animationList
+import com.lowbyte.battery.animation.utils.AnimationUtils.animationListNew
 
 class ViewAllAnimationFragment : Fragment() {
     private lateinit var binding: FragmentViewAllAnimationBinding
@@ -45,6 +46,7 @@ class ViewAllAnimationFragment : Fragment() {
 //            "anim_${it + 1}"
 //        }
 //        Log.d("itemsLotti","${items}")
+       // adapter.submitList(animationListNew)
         adapter.submitList(animationList)
     }
 }

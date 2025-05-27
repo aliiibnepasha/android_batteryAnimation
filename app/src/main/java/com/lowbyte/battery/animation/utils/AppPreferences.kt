@@ -2,6 +2,7 @@ package com.lowbyte.battery.animation.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import androidx.core.content.edit
 
 
@@ -30,6 +31,29 @@ class AppPreferences private constructor(context: Context) {
         private const val KEY_USER_NAME = "user_name"
         private const val KEY_SELECTED_THEME = "selected_theme"
 
+
+        // In AppPreferences.kt (add to companion object)
+        private const val KEY_STATUS_HEIGHT = "status_height"
+        private const val KEY_STATUS_MARGIN_LEFT = "status_margin_left"
+        private const val KEY_STATUS_MARGIN_RIGHT = "status_margin_right"
+        private const val KEY_STATUS_BG_COLOR = "status_bg_color"
+
+        // Icon show/hide
+        private const val KEY_SHOW_WIFI = "show_wifi"
+        private const val KEY_SHOW_HOTSPOT = "show_hotspot"
+        private const val KEY_SHOW_DATA = "show_data"
+        private const val KEY_SHOW_SIGNAL = "show_signal"
+        private const val KEY_SHOW_AIRPLANE = "show_airplane"
+        private const val KEY_SHOW_TIME = "show_time"
+        private const val KEY_SHOW_DATE = "show_date"
+
+        // Lottie and icon resource names
+        private const val KEY_STATUS_LOTTIE = "status_lottie"
+        private const val KEY_STATUS_ICON = "status_icon"
+
+        // Each icon size, e.g. icon_size_wifi, icon_size_hotspot, etc.
+        fun iconSizeKeyFor(label: String) = "icon_size_${label.trim().replace("\\s+".toRegex(), "_").lowercase()}"
+
         @Volatile
         private var instance: AppPreferences? = null
 
@@ -40,6 +64,65 @@ class AppPreferences private constructor(context: Context) {
         }
     }
 
+
+    // For ints
+    var statusBarHeight: Int
+        get() = sharedPreferences.getInt(KEY_STATUS_HEIGHT, 24)
+        set(value) = sharedPreferences.edit { putInt(KEY_STATUS_HEIGHT, value) }
+
+    var statusBarMarginLeft: Int
+        get() = sharedPreferences.getInt(KEY_STATUS_MARGIN_LEFT, 0)
+        set(value) = sharedPreferences.edit { putInt(KEY_STATUS_MARGIN_LEFT, value) }
+
+    var statusBarMarginRight: Int
+        get() = sharedPreferences.getInt(KEY_STATUS_MARGIN_RIGHT, 0)
+        set(value) = sharedPreferences.edit { putInt(KEY_STATUS_MARGIN_RIGHT, value) }
+
+    var statusBarBgColor: Int
+        get() = sharedPreferences.getInt(KEY_STATUS_BG_COLOR, Color.WHITE)
+        set(value) = sharedPreferences.edit { putInt(KEY_STATUS_BG_COLOR, value) }
+
+    // For booleans (show/hide)
+    var showWifi: Boolean
+        get() = sharedPreferences.getBoolean(KEY_SHOW_WIFI, true)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_WIFI, value) }
+
+    // Repeat for other icons...
+    var showHotspot: Boolean
+        get() = sharedPreferences.getBoolean(KEY_SHOW_HOTSPOT, false)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_HOTSPOT, value) }
+    var showData: Boolean
+        get() = sharedPreferences.getBoolean(KEY_SHOW_DATA, false)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_DATA, value) }
+    var showSignal: Boolean
+        get() = sharedPreferences.getBoolean(KEY_SHOW_SIGNAL, true)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_SIGNAL, value) }
+    var showAirplane: Boolean
+        get() = sharedPreferences.getBoolean(KEY_SHOW_AIRPLANE, false)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_AIRPLANE, value) }
+    var showTime: Boolean
+        get() = sharedPreferences.getBoolean(KEY_SHOW_TIME, true)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_TIME, value) }
+    var showDate: Boolean
+        get() = sharedPreferences.getBoolean(KEY_SHOW_DATE, false)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_DATE, value) }
+
+    // For icon/lottie resource names
+    var statusLottieName: String
+        get() = sharedPreferences.getString(KEY_STATUS_LOTTIE, "anim_8") ?: "anim_8"
+        set(value) = sharedPreferences.edit { putString(KEY_STATUS_LOTTIE, value) }
+
+    var statusIconName: String
+        get() = sharedPreferences.getString(KEY_STATUS_ICON, "widget_fantasy_1") ?: "widget_fantasy_1"
+        set(value) = sharedPreferences.edit { putString(KEY_STATUS_ICON, value) }
+
+    // For per-icon size (dynamically via key)
+    fun getIconSize(label: String, default: Int = 24) = getInt(iconSizeKeyFor(label), default)
+    fun setIconSize(label: String, size: Int) = setInt(iconSizeKeyFor(label), size)
+
+
+
+
     // Boolean preferences
     var isFirstRun: Boolean
         get() = sharedPreferences.getBoolean(KEY_FIRST_RUN, true)
@@ -48,11 +131,6 @@ class AppPreferences private constructor(context: Context) {
      var isStatusBarEnabled: Boolean
         get() = sharedPreferences.getBoolean(KEY_STATUS_ENABLED, false)
         set(value) = sharedPreferences.edit { putBoolean(KEY_STATUS_ENABLED, value) }
-
-
-
-
-
 
 
     var isDarkMode: Boolean
@@ -104,28 +182,4 @@ class AppPreferences private constructor(context: Context) {
         return sharedPreferences.contains(key)
     }
 
-    // Generic methods for any type
-    fun <T> getValue(key: String, defaultValue: T): T {
-        return when (defaultValue) {
-            is Boolean -> sharedPreferences.getBoolean(key, defaultValue) as T
-            is Int -> sharedPreferences.getInt(key, defaultValue) as T
-            is Long -> sharedPreferences.getLong(key, defaultValue) as T
-            is String -> sharedPreferences.getString(key, defaultValue) as T
-            is Float -> sharedPreferences.getFloat(key, defaultValue) as T
-            else -> throw IllegalArgumentException("Type not supported")
-        }
-    }
-
-    fun <T> setValue(key: String, value: T) {
-        sharedPreferences.edit {
-            when (value) {
-                is Boolean -> putBoolean(key, value)
-                is Int -> putInt(key, value)
-                is Long -> putLong(key, value)
-                is String -> putString(key, value)
-                is Float -> putFloat(key, value)
-                else -> throw IllegalArgumentException("Type not supported")
-            }
-        }
-    }
 }

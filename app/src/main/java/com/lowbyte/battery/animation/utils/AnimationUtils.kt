@@ -3,7 +3,11 @@ package com.lowbyte.battery.animation.utils
 object AnimationUtils {
     // Lotti Animations
     val animationList: List<String> by lazy {
-        List(10) { index -> "anim_${index + 1}" }
+        List(14) { index -> "anim_${index + 1}" }
+    }
+  // Lotti Animations
+    val animationListNew: List<String> by lazy {
+        List(17) { index -> "a_${index + 1}" }
     }
 
     //  Widgets List all Cat

@@ -61,4 +61,32 @@ class StatusBarIconSettingsActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
         })
     }
+
+
+
+    /*
+    // Save icon size
+prefs.setIconSize("wifi", wifiSeekBar.progress)
+prefs.setIconSize("signal", signalSeekBar.progress)
+
+// Save show/hide
+prefs.showWifi = wifiSwitch.isChecked
+prefs.showHotspot = hotspotSwitch.isChecked
+// ...
+
+// Save background color (from a color picker, for example)
+prefs.statusBarBgColor = pickedColor
+
+// Save lottie and icon drawable name
+prefs.statusLottieName = "animation_wifi"
+prefs.statusIconName = "ic_custom_battery"
+
+// In settings UI after a change
+sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+// In service, listen for this broadcast and call updateStatusBarAppearance()
+    *
+    *
+    *
+    *
+    * */
 }
