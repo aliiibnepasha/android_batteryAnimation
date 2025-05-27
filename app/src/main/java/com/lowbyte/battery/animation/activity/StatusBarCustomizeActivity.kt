@@ -1,9 +1,12 @@
 package com.lowbyte.battery.animation.activity
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -15,18 +18,29 @@ import com.lowbyte.battery.animation.adapter.CustomIconGridAdapter
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarCustommizeBinding
 import com.lowbyte.battery.animation.model.CustomIconGridItem
 import com.lowbyte.battery.animation.utils.AppPreferences
+import com.skydoves.colorpickerview.ColorEnvelope
+import com.skydoves.colorpickerview.ColorPickerDialog
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
+
 
 class StatusBarCustomizeActivity : AppCompatActivity() {
 
     private var _binding: ActivityStatusBarCustommizeBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var preferences: AppPreferences
+
+    // At the top of your Activity or Fragment:
+    private val resizeHandler = Handler(Looper.getMainLooper())
+    private var resizeRunnable: Runnable? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         _binding = ActivityStatusBarCustommizeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val prefs = AppPreferences.getInstance(this)
+        preferences = AppPreferences.getInstance(this)
 
 
         _binding?.ibBackButton?.setOnClickListener {
@@ -39,32 +53,41 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
             insets
         }
 
-// Restore previous values
-        binding.statusBarHeightSeekbar.progress = prefs.statusBarHeight
-        binding.leftMarginSeekBar.progress = prefs.statusBarMarginLeft
-        binding.rightMarginSeekBar.progress = prefs.statusBarMarginRight
+        binding.statusBarHeightSeekbar.progress = preferences.statusBarHeight
+        binding.leftMarginSeekBar.progress = preferences.statusBarMarginLeft
+        binding.rightMarginSeekBar.progress = preferences.statusBarMarginRight
 
-        val minStatusBarHeightPx = getSystemStatusBarHeight(this) / resources.displayMetrics.density // get in dp
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            binding.statusBarHeightSeekbar.min = minStatusBarHeightPx.toInt()
-        }
-        binding.statusBarHeightSeekbar.progress = maxOf(prefs.statusBarHeight, minStatusBarHeightPx.toInt())
-        binding.statusBarHeight.text = "${binding.statusBarHeightSeekbar.progress} dp"
+
+
+        binding.statusBarHeightSeekbar.progress = preferences.statusBarHeight
+
+        binding.statusBarHeight.text = getString(R.string.height_dp, binding.statusBarHeightSeekbar.progress)
+        binding.leftMarginLabel.text = getString(R.string.left_margin_dp, preferences.statusBarMarginLeft)
+        binding.rightMarginLabel.text = getString(R.string.right_margin_dp, preferences.statusBarMarginLeft)
+
 
         binding.statusBarHeightSeekbar.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: android.widget.SeekBar?, progress: Int, fromUser: Boolean) {
-                val minStatusBarHeightDp = minStatusBarHeightPx.toInt()
-                val safeProgress = progress.coerceAtLeast(minStatusBarHeightDp)
-                prefs.statusBarHeight = safeProgress
-                binding.statusBarHeight.text = "$safeProgress dp"
-                sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+                val safeProgress = progress
+                preferences.statusBarHeight = safeProgress
+                binding.statusBarHeight.text = getString(R.string.height_dp, safeProgress)
+
+
+                // Debounce broadcast (delay a bit to prevent flooding)
+                resizeRunnable?.let { resizeHandler.removeCallbacks(it) }
+                resizeRunnable = Runnable {
+                    sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+                }
+                // Adjust delay as needed (e.g., 40-60ms for smooth effect)
+                resizeHandler.postDelayed(resizeRunnable!!, 100)
             }
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
         })
 
 
+        /*Status bar height Code */
         binding.leftMarginSeekBar.setOnSeekBarChangeListener(object :
             android.widget.SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(
@@ -72,8 +95,8 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
                 progress: Int,
                 fromUser: Boolean
             ) {
-                prefs.statusBarMarginLeft = progress
-                binding.longTapLabel.text = "${prefs.statusBarMarginLeft} dp"
+                preferences.statusBarMarginLeft = progress
+                binding.leftMarginLabel.text = getString(R.string.left_margin_dp, preferences.statusBarMarginLeft)
                 Log.d("servicesdd", "Broadcast sent ff!")
                 sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
             }
@@ -89,8 +112,8 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
                 progress: Int,
                 fromUser: Boolean
             ) {
-                prefs.statusBarMarginRight = progress
-                binding.swipeLeftToRightTapLabel.text = "${prefs.statusBarMarginLeft} dp"
+                preferences.statusBarMarginRight = progress
+                binding.rightMarginLabel.text = getString(R.string.right_margin_dp, preferences.statusBarMarginLeft)
                 Log.d("servicesdd", "Broadcast sent gg!")
                 sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
 
@@ -99,11 +122,21 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
         })
-
-
-
-
-
+        binding.openColorPalate.setOnClickListener {
+            ColorPickerDialog.Builder(this)
+                .setTitle(getString(R.string.status_bar))
+                .setPreferenceName("MyColorPickerDialog")
+                .setPositiveButton(
+                    "Conform",
+                    ColorEnvelopeListener { envelope, fromUser -> setLayoutColor(envelope) })
+                .setNegativeButton(
+                    "Cancel"
+                ) { dialogInterface, i -> dialogInterface.dismiss() }
+                .attachAlphaSlideBar(false) // the default value is true.
+                .attachBrightnessSlideBar(true) // the default value is true.
+                .setBottomSpace(12) // set a bottom space between the last slidebar and buttons.
+                .show()
+        }
 
         // Create dummy data
         val items = ArrayList<CustomIconGridItem>().apply {
@@ -125,15 +158,14 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
         binding.recyclerViewCustomIcon.layoutManager = GridLayoutManager(this, 3)
         binding.recyclerViewCustomIcon.adapter = adapter
     }
-    fun getSystemStatusBarHeight(context: Context): Int {
-        val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
-        return if (resourceId > 0) {
-            context.resources.getDimensionPixelSize(resourceId)
-        } else {
-            // fallback 24dp
-            (24 * context.resources.displayMetrics.density).toInt()
-        }
+
+    private fun setLayoutColor(envelope: ColorEnvelope?) {
+        preferences.statusBarBgColor = envelope?.color!!
+
+        sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

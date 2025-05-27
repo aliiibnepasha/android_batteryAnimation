@@ -55,4 +55,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation (libs.lottie)
+    implementation (libs.colorpickerview)
+
 }

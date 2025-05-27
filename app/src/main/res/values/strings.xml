@@ -63,4 +63,8 @@
     <string name="action_recent_action">Recent Action</string>
     <string name="action_take_screenshot">Take Screenshot</string>
     <string name="action_lock_screen">Lock Screen</string>
-    <string name="size_dp">%1$s Size : %2$d dp</string></resources>
+    <string name="size_dp">%1$s Size : %2$d dp</string>
+    <string name="right_margin_dp">Right Margin : %1$d dp</string>
+    <string name="left_margin_dp">Left Margin : %1$d dp</string>
+    <string name="height_dp">Height : %1$d dp</string>
+</resources>

@@ -1,6 +1,7 @@
 package com.lowbyte.battery.animation
 
 import android.accessibilityservice.AccessibilityService
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -127,8 +128,8 @@ class NotchAccessibilityService : AccessibilityService() {
         val prefs = AppPreferences.getInstance(this)
 
         // Height and margins
-        layoutParams?.height = (prefs.statusBarHeight * resources.displayMetrics.density).toInt()
-
+        val newHeight = (prefs.statusBarHeight * resources.displayMetrics.density).toInt()
+        animateStatusBarHeight(newHeight)
 
         statusBarView?.setPadding(
             (prefs.statusBarMarginLeft * resources.displayMetrics.density).toInt(),
@@ -268,7 +269,17 @@ class NotchAccessibilityService : AccessibilityService() {
         updateStatusBarAppearance()
     }
 
-
+    private fun animateStatusBarHeight(targetHeight: Int) {
+        val currentHeight = layoutParams?.height ?: return
+        if (currentHeight == targetHeight) return
+        val animator = ValueAnimator.ofInt(currentHeight, targetHeight)
+        animator.duration = 200 // 150-200ms is best for UI
+        animator.addUpdateListener { valueAnimator ->
+            layoutParams?.height = valueAnimator.animatedValue as Int
+            windowManager?.updateViewLayout(statusBarView, layoutParams)
+        }
+        animator.start()
+    }
 
     private fun handleTap() {
         Toast.makeText(this, "Status Bar Tapped", Toast.LENGTH_SHORT).show()

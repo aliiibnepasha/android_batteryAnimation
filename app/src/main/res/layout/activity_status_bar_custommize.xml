@@ -173,7 +173,7 @@
                 app:layout_constraintWidth_percent="0.95">
 
                 <TextView
-                    android:id="@+id/longTapLabel"
+                    android:id="@+id/left_margin_label"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="start|center_vertical"
@@ -190,7 +190,7 @@
                     android:layout_marginTop="5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/longTapLabel"
+                    app:layout_constraintTop_toBottomOf="@+id/left_margin_label"
                     app:layout_constraintWidth_percent="1" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -208,7 +208,7 @@
                 app:layout_constraintWidth_percent="0.95">
 
                 <TextView
-                    android:id="@+id/swipeLeftToRightTapLabel"
+                    android:id="@+id/right_margin_label"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="start|center_vertical"
@@ -225,7 +225,7 @@
                     android:layout_marginTop="5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/swipeLeftToRightTapLabel"
+                    app:layout_constraintTop_toBottomOf="@+id/right_margin_label"
                     app:layout_constraintWidth_percent="1" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
