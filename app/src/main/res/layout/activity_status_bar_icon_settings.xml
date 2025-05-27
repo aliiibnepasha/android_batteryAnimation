@@ -34,7 +34,7 @@
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="match_parent"
             android:contentDescription="@string/status_bar"
             android:gravity="center"
             android:text="@string/wifi"
@@ -89,7 +89,7 @@
         app:layout_constraintWidth_percent="0.95">
 
         <TextView
-            android:id="@+id/singleTapLabel"
+            android:id="@+id/labelIconSize"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
@@ -100,13 +100,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatSeekBar
-            android:id="@+id/actionOnSingleTap"
+            android:id="@+id/seekBarIconSize"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/singleTapLabel"
+            app:layout_constraintTop_toBottomOf="@+id/labelIconSize"
             app:layout_constraintWidth_percent="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 
+
 class AppPreferences private constructor(context: Context) {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
         PREF_NAME, Context.MODE_PRIVATE
@@ -14,6 +15,7 @@ class AppPreferences private constructor(context: Context) {
         
         // Boolean keys
         private const val KEY_FIRST_RUN = "first_run"
+        private const val KEY_STATUS_ENABLED = "isStatusEnabled"
         private const val KEY_IS_DARK_MODE = "is_dark_mode"
         
         // Int keys
@@ -43,6 +45,16 @@ class AppPreferences private constructor(context: Context) {
         get() = sharedPreferences.getBoolean(KEY_FIRST_RUN, true)
         set(value) = sharedPreferences.edit { putBoolean(KEY_FIRST_RUN, value) }
 
+     var isStatusBarEnabled: Boolean
+        get() = sharedPreferences.getBoolean(KEY_STATUS_ENABLED, false)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_STATUS_ENABLED, value) }
+
+
+
+
+
+
+
     var isDarkMode: Boolean
         get() = sharedPreferences.getBoolean(KEY_IS_DARK_MODE, false)
         set(value) = sharedPreferences.edit { putBoolean(KEY_IS_DARK_MODE, value) }
@@ -60,6 +72,11 @@ class AppPreferences private constructor(context: Context) {
     var lastUpdate: Long
         get() = sharedPreferences.getLong(KEY_LAST_UPDATE, 0L)
         set(value) = sharedPreferences.edit { putLong(KEY_LAST_UPDATE, value) }
+
+
+
+    fun getInt(key: String, default: Int = 0): Int = sharedPreferences.getInt(key, default)
+    fun setInt(key: String, value: Int) = sharedPreferences.edit { putInt(key, value) }
 
     var userId: Long
         get() = sharedPreferences.getLong(KEY_USER_ID, 0L)

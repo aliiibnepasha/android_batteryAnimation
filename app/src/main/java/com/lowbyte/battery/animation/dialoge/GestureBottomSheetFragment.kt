@@ -2,6 +2,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lowbyte.battery.animation.adapter.ActionScrollAdapter
@@ -32,7 +33,11 @@ class GestureBottomSheetFragment(
 
         // RecyclerView setup
         binding.recyclerViewActions.layoutManager = LinearLayoutManager(context)
-        binding.recyclerViewActions.adapter = ActionScrollAdapter(actions)
+        binding.recyclerViewActions.adapter = ActionScrollAdapter(actions){ position, label ->
+            // Handle the click
+            Toast.makeText(context, "Clicked: $label at $position", Toast.LENGTH_SHORT).show()
+            dismiss() // Close the bottom sheet
+        }
 
         binding.btnClose.setOnClickListener { dismiss() }
     }

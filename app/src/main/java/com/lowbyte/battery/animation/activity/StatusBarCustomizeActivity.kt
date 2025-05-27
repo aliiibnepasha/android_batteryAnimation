@@ -1,6 +1,8 @@
 package com.lowbyte.battery.animation.activity
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -42,7 +44,13 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
             add(CustomIconGridItem(R.drawable.ic_time_date, getString(R.string.time)))
         }
 
-        val adapter = CustomIconGridAdapter(items)
+        val adapter = CustomIconGridAdapter(items) { position, label ->
+            val intent = Intent(this, StatusBarIconSettingsActivity::class.java)
+            intent.putExtra("EXTRA_POSITION", position)
+            intent.putExtra("EXTRA_LABEL", label)
+            startActivity(intent)
+        }
+        binding.recyclerViewCustomIcon.adapter = adapter
         binding.recyclerViewCustomIcon.layoutManager = GridLayoutManager(this, 3)
         binding.recyclerViewCustomIcon.adapter = adapter
     }
