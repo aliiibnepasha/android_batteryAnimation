@@ -1,9 +1,7 @@
 package com.lowbyte.battery.animation.activity
 
-import android.annotation.SuppressLint
-import android.content.Context
+
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -86,10 +84,8 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
         })
 
-
         /*Status bar height Code */
-        binding.leftMarginSeekBar.setOnSeekBarChangeListener(object :
-            android.widget.SeekBar.OnSeekBarChangeListener {
+        binding.leftMarginSeekBar.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(
                 seekBar: android.widget.SeekBar?,
                 progress: Int,
@@ -105,8 +101,7 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
         })
 
-        binding.rightMarginSeekBar.setOnSeekBarChangeListener(object :
-            android.widget.SeekBar.OnSeekBarChangeListener {
+        binding.rightMarginSeekBar.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(
                 seekBar: android.widget.SeekBar?,
                 progress: Int,
@@ -161,7 +156,6 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
 
     private fun setLayoutColor(envelope: ColorEnvelope?) {
         preferences.statusBarBgColor = envelope?.color!!
-
         sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
 
     }

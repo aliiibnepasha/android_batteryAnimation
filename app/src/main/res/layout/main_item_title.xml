@@ -2,7 +2,6 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
     android:gravity="center">
 
     <TextView
@@ -12,6 +11,8 @@
         android:gravity="start|center_vertical"
         android:textColor="@color/blue_app_color"
         android:layout_marginStart="15dp"
+        android:text="@string/app_name"
+        android:textAlignment="viewStart"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textRight"
@@ -24,6 +25,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:text="@string/view_all"
+        android:textAlignment="viewEnd"
         android:gravity="end|center_vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textLeft"

@@ -38,6 +38,7 @@ class SplashFragment : Fragment() {
                 preferences.isFirstRun = false
                 findNavController().navigate(R.id.action_splash_to_language)
             }else{
+              //  preferences.isFirstRun = true
                 findNavController().navigate(R.id.action_splash_to_main)
 
             }

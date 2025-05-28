@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/languageFragment"
-        android:name="LanguageFragment"
+        android:name="com.lowbyte.battery.animation.LanguageFragment"
         android:label="Select Language" >
         <action
             android:id="@+id/action_language_to_intro"

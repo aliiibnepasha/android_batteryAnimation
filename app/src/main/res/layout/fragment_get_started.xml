@@ -51,8 +51,8 @@
     <TextView
         android:id="@+id/btnNext"
         android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:background="@drawable/large_button_bg"
+        android:layout_height="45dp"
+        android:background="@drawable/bg_next_button"
         android:gravity="center"
         android:text="@string/getStarted"
         android:textColor="@color/white"

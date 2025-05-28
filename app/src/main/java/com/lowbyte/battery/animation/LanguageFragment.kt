@@ -1,41 +1,44 @@
+package com.lowbyte.battery.animation
+
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
-import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.LanguageAdapter
+import com.lowbyte.battery.animation.databinding.FragmentLanguageBinding
 
 class LanguageFragment : Fragment(R.layout.fragment_language) {
+
+    private var _binding: FragmentLanguageBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var adapter: LanguageAdapter
     private var selectedLanguage: String = "English"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        _binding = FragmentLanguageBinding.bind(view)
 
-        val languages = listOf("English", "Spanish", "French", "Hindi", "Arabic", "Spanish", "French", "Hindi", "Arabic")
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        val buttonBack = view.findViewById<ImageFilterView>(R.id.ibBackButton)
-        val buttonNext = view.findViewById<TextView>(R.id.ibNextButton)
-        buttonBack.setOnClickListener {
-            requireActivity().finish()
-        }
-        buttonNext.setOnClickListener {
-            findNavController().navigate(R.id.action_language_to_intro)
-
-        }
-
-
+        val languages = listOf("English", "Spanish", "French", "Hindi", "Arabic")
 
         adapter = LanguageAdapter(languages) { language ->
             selectedLanguage = language
-
         }
 
-        recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = adapter
+
+        binding.ibBackButton.setOnClickListener {
+            requireActivity().finish()
+        }
+
+        binding.ibNextButton.setOnClickListener {
+            findNavController().navigate(R.id.action_language_to_intro)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

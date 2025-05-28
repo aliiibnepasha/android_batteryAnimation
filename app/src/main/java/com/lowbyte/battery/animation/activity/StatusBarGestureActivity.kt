@@ -16,7 +16,6 @@ class StatusBarGestureActivity : AppCompatActivity() {
     private var _binding: ActivityStatusBarGestureBinding? = null
     private val binding get() = _binding!!
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

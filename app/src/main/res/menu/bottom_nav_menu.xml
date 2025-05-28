@@ -10,6 +10,6 @@
         android:title="@string/menu_customize" />
     <item
         android:id="@+id/navigation_island"
-        android:icon="@drawable/menu_dynamic"
+        android:icon="@drawable/dynamic_island"
         android:title="@string/menu_dynamic_island" />
 </menu>
