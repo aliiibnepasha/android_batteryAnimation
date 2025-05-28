@@ -27,7 +27,7 @@
         android:textSize="18sp"
         android:textColor="@color/white"
         android:background="@drawable/bg_next_button"
-        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintWidth_percent="0.9"
         app:layout_constraintTop_toBottomOf="@+id/viewPager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

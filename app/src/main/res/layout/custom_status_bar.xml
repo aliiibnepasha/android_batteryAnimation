@@ -23,7 +23,7 @@
       <LinearLayout
           android:id="@+id/timeDateView"
           android:layout_width="wrap_content"
-          android:layout_height="match_parent"
+          android:layout_height="wrap_content"
           android:orientation="vertical"
           android:gravity="center_vertical">
           <TextView
@@ -40,7 +40,7 @@
               android:layout_height="wrap_content"
               android:text="10/2/2025"
               android:textColor="@color/black"
-              android:textSize="12sp"
+              android:textSize="11sp"
               android:visibility="visible"
               />
 
@@ -102,6 +102,7 @@
             android:layout_height="24dp"
             android:layout_marginEnd="6dp"
             android:padding="4dp"
+            android:tint="@color/black"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_signal_wifi"
             android:visibility="visible"

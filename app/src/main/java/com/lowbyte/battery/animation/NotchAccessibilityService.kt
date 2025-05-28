@@ -5,7 +5,6 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Context.RECEIVER_NOT_EXPORTED
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
@@ -15,13 +14,21 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
-import android.widget.*
-import java.text.SimpleDateFormat
-import java.util.*
-import androidx.core.graphics.toColorInt
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import com.lowbyte.battery.animation.utils.AppPreferences
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class NotchAccessibilityService : AccessibilityService() {
     private var windowManager: WindowManager? = null
@@ -159,35 +166,70 @@ class NotchAccessibilityService : AccessibilityService() {
 
         // Per-icon size
         wifiIcon?.layoutParams = LinearLayout.LayoutParams(
-            (prefs.getIconSize("wifi", 24) * resources.displayMetrics.density).toInt(),
-            (prefs.getIconSize("wifi", 24) * resources.displayMetrics.density).toInt()
-        )
-        hotspotIcon?.layoutParams = LinearLayout.LayoutParams(
-            (prefs.getIconSize("hotspot", 24) * resources.displayMetrics.density).toInt(),
-            (prefs.getIconSize("hotspot", 24) * resources.displayMetrics.density).toInt()
+            (prefs.getIconSize("size_0", 24) * resources.displayMetrics.density).toInt(),
+            (prefs.getIconSize("size_0", 24) * resources.displayMetrics.density).toInt()
         )
         dataIcon?.layoutParams = LinearLayout.LayoutParams(
-            (prefs.getIconSize("data", 24) * resources.displayMetrics.density).toInt(),
-            (prefs.getIconSize("data", 24) * resources.displayMetrics.density).toInt()
+            (prefs.getIconSize("size_1", 24) * resources.displayMetrics.density).toInt(),
+            (prefs.getIconSize("size_1", 24) * resources.displayMetrics.density).toInt()
         )
         signalIcon?.layoutParams = LinearLayout.LayoutParams(
-            (prefs.getIconSize("signal", 24) * resources.displayMetrics.density).toInt(),
-            (prefs.getIconSize("signal", 24) * resources.displayMetrics.density).toInt()
+            (prefs.getIconSize("size_2", 24) * resources.displayMetrics.density).toInt(),
+            (prefs.getIconSize("size_2", 24) * resources.displayMetrics.density).toInt()
         )
         airplaneIcon?.layoutParams = LinearLayout.LayoutParams(
-            (prefs.getIconSize("airplane", 24) * resources.displayMetrics.density).toInt(),
-            (prefs.getIconSize("airplane", 24) * resources.displayMetrics.density).toInt()
+            (prefs.getIconSize("size_3", 24) * resources.displayMetrics.density).toInt(),
+            (prefs.getIconSize("size_3", 24) * resources.displayMetrics.density).toInt()
         )
+        hotspotIcon?.layoutParams = LinearLayout.LayoutParams(
+            (prefs.getIconSize("size_4", 24) * resources.displayMetrics.density).toInt(),
+            (prefs.getIconSize("size_4", 24) * resources.displayMetrics.density).toInt()
+        )
+
+        val scaledSizeSp = prefs.getIconSize("size_5", 12)  // base size in sp
+        val scaledSizePx = scaledSizeSp * resources.displayMetrics.scaledDensity
+        timeText?.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, scaledSizePx)
+
 
         lottieView?.layoutParams = LinearLayout.LayoutParams(
             (prefs.getIconSize("lottieView", 24) * resources.displayMetrics.density).toInt(),
             (prefs.getIconSize("lottieView", 24) * resources.displayMetrics.density).toInt()
         )
 
+// Pre Colors
+        // Per-icon tint color
+        wifiIcon?.setColorFilter(
+            prefs.getInt("tint_0", Color.BLACK),
+            android.graphics.PorterDuff.Mode.SRC_IN
+        )
 
+        dataIcon?.setColorFilter(
+            prefs.getInt("tint_1", Color.BLACK),
+            android.graphics.PorterDuff.Mode.SRC_IN
+        )
 
+        signalIcon?.setColorFilter(
+            prefs.getInt("tint_2", Color.BLACK),
+            android.graphics.PorterDuff.Mode.SRC_IN
+        )
 
+        airplaneIcon?.setColorFilter(
+            prefs.getInt("tint_3", Color.BLACK),
+            android.graphics.PorterDuff.Mode.SRC_IN
+        )
 
+        hotspotIcon?.setColorFilter(
+            prefs.getInt("tint_4", Color.BLACK),
+            android.graphics.PorterDuff.Mode.SRC_IN
+        )
+
+// Text color (e.g. for timeText)
+        timeText?.setTextColor(
+            prefs.getInt("tint_5", Color.BLACK)
+        )
+        dateText?.setTextColor(
+            prefs.getInt("tint_5", Color.BLACK)
+        )
 
 
         // Lottie animation
