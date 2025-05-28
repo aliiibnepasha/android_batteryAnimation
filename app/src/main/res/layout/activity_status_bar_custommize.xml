@@ -108,12 +108,12 @@
                     android:textColor="@color/white"
                     android:textStyle="normal"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/switchVibrateFeedback"
+                    app:layout_constraintEnd_toStartOf="@+id/switchEnableBatteryEmoji"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/switchVibrateFeedback"
+                    android:id="@+id/switchEnableBatteryEmoji"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     app:layout_constraintBottom_toBottomOf="parent"

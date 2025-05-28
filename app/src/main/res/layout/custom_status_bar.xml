@@ -1,139 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/statusBarRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:background="@color/white"
-    android:padding="8dp"
     android:elevation="1000dp"
-    android:gravity="center_vertical">
+    android:paddingHorizontal="4dp">
 
-    <!-- Time -->
-    <TextView
-        android:id="@+id/timeText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        android:layout_marginEnd="12dp"
-        android:layout_gravity="center_vertical"
-        android:visibility="visible" />
-
-    <!-- Date (optional, can hide/show) -->
-    <TextView
-        android:id="@+id/dateText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        android:layout_marginEnd="12dp"
-        android:layout_gravity="center_vertical"
-        android:visibility="gone" />
-
-    <!-- Battery Icon -->
-    <ImageView
-        android:id="@+id/batteryIcon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:contentDescription="@string/app_name"
-        android:src="@android:drawable/ic_lock_power_off"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="4dp"
-        android:visibility="visible" />
-
-    <!-- Battery Percent -->
-    <TextView
-        android:id="@+id/batteryPercent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="10dp"
-        android:visibility="visible" />
-
-    <!-- Space pushes right side -->
-    <Space
+    <LinearLayout
+        android:id="@+id/leftSideViews"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rightSideViews"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <!-- Left Side -->
+      <LinearLayout
+          android:id="@+id/timeDateView"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:orientation="vertical"
+          android:gravity="center_vertical">
+          <TextView
+              android:id="@+id/timeText"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="9:00"
+              android:textColor="@color/black"
+              android:textSize="12sp" />
 
-    <!-- Lottie Animation (hidden by default, visible via code) -->
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottieIcon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginEnd="8dp"
-        app:lottie_autoPlay="true"
-        android:layout_gravity="center_vertical"
-        app:lottie_repeatMode="reverse"
-        app:lottie_repeatCount="1000"
-        android:visibility="gone" />
+          <TextView
+              android:id="@+id/dateText"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="10/2/2025"
+              android:textColor="@color/black"
+              android:textSize="12sp"
+              android:visibility="visible"
+              />
 
-    <!-- Custom Drawable/Icon (hidden by default, visible via code) -->
-    <ImageView
-        android:id="@+id/customIcon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="8dp"
-        android:contentDescription="@string/app_name"
-        android:layout_gravity="center_vertical"
-        android:visibility="gone" />
+      </LinearLayout>
 
-    <!-- WiFi -->
-    <ImageView
-        android:id="@+id/wifiIcon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@android:drawable/ic_input_add"
-        android:contentDescription="@string/app_name"
-        android:layout_marginEnd="8dp"
-        android:layout_gravity="center_vertical"
-        android:visibility="visible" />
 
-    <!-- Hotspot -->
-    <ImageView
-        android:id="@+id/hotspotIcon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@android:drawable/ic_menu_share"
-        android:contentDescription="@string/app_name"
-        android:layout_marginEnd="8dp"
-        android:layout_gravity="center_vertical"
-        android:visibility="gone" />
+        <ImageView
+            android:id="@+id/customIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="6dp"
+            android:padding="3dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/widget_cute_12"
+            />
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="6dp"
+            android:visibility="visible"
+            app:lottie_autoPlay="true"
+            app:lottie_repeatCount="1000"
+            app:lottie_repeatMode="reverse" />
 
-    <!-- Data -->
-    <ImageView
-        android:id="@+id/dataIcon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:contentDescription="@string/app_name"
-        android:src="@android:drawable/stat_sys_upload"
-        android:layout_marginEnd="8dp"
-        android:layout_gravity="center_vertical"
-        android:visibility="gone" />
 
-    <!-- Signal -->
-    <ImageView
-        android:id="@+id/signalIcon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@android:drawable/ic_lock_lock"
-        app:tint="#FFFFFF"
-        android:layout_marginEnd="8dp"
-        android:layout_gravity="center_vertical"
-        android:visibility="visible" />
 
-    <!-- Airplane -->
-    <ImageView
-        android:id="@+id/airplaneIcon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@android:drawable/ic_menu_compass"
-        app:tint="#FFFFFF"
-        android:layout_gravity="center_vertical"
-        android:visibility="gone" />
-</LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/rightSideViews"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end|center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/leftSideViews"
+        app:layout_constraintTop_toTopOf="parent">
+        <!-- Right Side (GONE-safe layout) -->
+
+
+        <ImageView
+            android:id="@+id/hotspotIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="6dp"
+            android:padding="4dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_signal_hotspot"
+            android:visibility="visible"
+            />
+
+
+        <ImageView
+            android:id="@+id/wifiIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="6dp"
+            android:padding="4dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_signal_wifi"
+            android:visibility="visible"
+            />
+
+
+        <ImageView
+            android:id="@+id/airplaneIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="6dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_airplan_mod"
+            android:visibility="gone"
+            android:contentDescription="@string/app_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/signalIcon"
+            app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/dataIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="6dp"
+            android:padding="6dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_signal_date"
+            android:visibility="visible"
+           />
+        <ImageView
+            android:id="@+id/signalIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="6dp"
+            android:padding="6dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_signal_mobile"
+            android:visibility="visible"
+           />
+
+        <TextView
+            android:id="@+id/batteryPercent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:text="100%"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:visibility="visible"
+            />
+
+        <ImageView
+            android:id="@+id/batteryIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="6dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/emoji_cute_2"
+            android:visibility="visible"
+            />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

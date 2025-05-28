@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lowbyte.battery.animation.databinding.ItemAllAnimationBinding
 
 class AnimationAdapter(
-    private val onItemClick: (Int) -> Unit
+    private val onItemClick: (Int, String) -> Unit
 ) : ListAdapter<String, AnimationAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,7 +31,7 @@ class AnimationAdapter(
 
         init {
             binding.root.setOnClickListener {
-                onItemClick(adapterPosition)
+                onItemClick(adapterPosition, getItem(adapterPosition))
             }
         }
 

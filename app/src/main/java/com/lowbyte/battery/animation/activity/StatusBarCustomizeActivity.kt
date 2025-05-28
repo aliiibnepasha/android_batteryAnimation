@@ -5,12 +5,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.CustomIconGridAdapter
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarCustommizeBinding
@@ -40,7 +43,6 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
 
-
         _binding?.ibBackButton?.setOnClickListener {
             finish()
         }
@@ -54,15 +56,26 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
         binding.statusBarHeightSeekbar.progress = preferences.statusBarHeight
         binding.leftMarginSeekBar.progress = preferences.statusBarMarginLeft
         binding.rightMarginSeekBar.progress = preferences.statusBarMarginRight
-
-
-
-
         binding.statusBarHeightSeekbar.progress = preferences.statusBarHeight
 
-        binding.statusBarHeight.text = getString(R.string.height_dp, binding.statusBarHeightSeekbar.progress)
+
+
+        binding.switchEnableBatteryEmoji.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                checkAccessibilityPermission()
+            } else {
+                preferences.isStatusBarEnabled = false
+            }
+
+
+        }
+
+
+
+
+        binding.statusBarHeight.text = getString(R.string.height_dp, preferences.statusBarHeight)
         binding.leftMarginLabel.text = getString(R.string.left_margin_dp, preferences.statusBarMarginLeft)
-        binding.rightMarginLabel.text = getString(R.string.right_margin_dp, preferences.statusBarMarginLeft)
+        binding.rightMarginLabel.text = getString(R.string.right_margin_dp, preferences.statusBarMarginRight)
 
 
         binding.statusBarHeightSeekbar.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
@@ -70,20 +83,12 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
                 val safeProgress = progress
                 preferences.statusBarHeight = safeProgress
                 binding.statusBarHeight.text = getString(R.string.height_dp, safeProgress)
+                sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
 
-
-                // Debounce broadcast (delay a bit to prevent flooding)
-                resizeRunnable?.let { resizeHandler.removeCallbacks(it) }
-                resizeRunnable = Runnable {
-                    sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
-                }
-                // Adjust delay as needed (e.g., 40-60ms for smooth effect)
-                resizeHandler.postDelayed(resizeRunnable!!, 100)
             }
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
         })
-
         /*Status bar height Code */
         binding.leftMarginSeekBar.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(
@@ -108,7 +113,7 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
                 fromUser: Boolean
             ) {
                 preferences.statusBarMarginRight = progress
-                binding.rightMarginLabel.text = getString(R.string.right_margin_dp, preferences.statusBarMarginLeft)
+                binding.rightMarginLabel.text = getString(R.string.right_margin_dp, preferences.statusBarMarginRight)
                 Log.d("servicesdd", "Broadcast sent gg!")
                 sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
 
@@ -117,6 +122,8 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
         })
+
+
         binding.openColorPalate.setOnClickListener {
             ColorPickerDialog.Builder(this)
                 .setTitle(getString(R.string.status_bar))
@@ -159,7 +166,39 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
         sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
 
     }
+    private fun checkAccessibilityPermission() {
+        if (!isAccessibilityServiceEnabled()) {
+            Toast.makeText(
+                this,
+                "Please enable accessibility service",
+                Toast.LENGTH_LONG
+            ).show()
+            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+        }else{
+            preferences.isStatusBarEnabled = true
+            binding.switchEnableBatteryEmoji.isChecked = true
 
+        }
+        // else, do nothing or show UI as normal
+    }
+
+    private fun isAccessibilityServiceEnabled(): Boolean {
+        val expectedComponentName =
+            "${this.packageName}/${NotchAccessibilityService::class.java.canonicalName}"
+        val enabledServices = Settings.Secure.getString(
+            contentResolver,
+            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        ) ?: return false
+
+        return enabledServices.split(':')
+            .any { it.equals(expectedComponentName, ignoreCase = true) }
+    }
+
+
+    override fun onResume() {
+        binding.switchEnableBatteryEmoji.isChecked = isAccessibilityServiceEnabled() && preferences.isStatusBarEnabled
+        super.onResume()
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

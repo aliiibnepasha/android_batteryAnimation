@@ -32,10 +32,6 @@ class NotchAccessibilityService : AccessibilityService() {
     private var longPressRunnable: Runnable? = null
     private var updateReceiver: BroadcastReceiver? = null
 
-    // Status bar customization
-    private var statusBarHeight = 24 // Default height in dp
-    private var iconColor = Color.WHITE
-    private var iconSize = 24 // Default size in dp
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -149,6 +145,7 @@ class NotchAccessibilityService : AccessibilityService() {
         val airplaneIcon = statusBarView?.findViewById<ImageView>(R.id.airplaneIcon)
         val timeText = statusBarView?.findViewById<TextView>(R.id.timeText)
         val dateText = statusBarView?.findViewById<TextView>(R.id.dateText)
+        val lottieView = statusBarView?.findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottieIcon)
 
         // Show/hide icons by preferences
         wifiIcon?.visibility = if (prefs.showWifi) View.VISIBLE else View.GONE
@@ -182,8 +179,18 @@ class NotchAccessibilityService : AccessibilityService() {
             (prefs.getIconSize("airplane", 24) * resources.displayMetrics.density).toInt()
         )
 
+        lottieView?.layoutParams = LinearLayout.LayoutParams(
+            (prefs.getIconSize("lottieView", 24) * resources.displayMetrics.density).toInt(),
+            (prefs.getIconSize("lottieView", 24) * resources.displayMetrics.density).toInt()
+        )
+
+
+
+
+
+
+
         // Lottie animation
-        val lottieView = statusBarView?.findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottieIcon)
         if (prefs.statusLottieName.isNotBlank()) {
             val rawId = resources.getIdentifier(prefs.statusLottieName, "raw", packageName)
             if (rawId != 0) {
@@ -247,33 +254,12 @@ class NotchAccessibilityService : AccessibilityService() {
         statusBarView?.findViewById<TextView>(R.id.batteryPercent)?.text = "$batteryStatus%"
     }
 
-    // Public methods to customize status bar
-    fun setStatusBarHeight(height: Int) {
-        statusBarHeight = height
-        layoutParams?.height = (height * resources.displayMetrics.density).toInt()
-        windowManager?.updateViewLayout(statusBarView, layoutParams)
-    }
-
-    fun setStatusBarColor(color: Int) {
-        //    statusBarColor = color
-        statusBarView?.setBackgroundColor(color)
-    }
-
-    fun setIconColor(color: Int) {
-        iconColor = color
-        updateStatusBarAppearance()
-    }
-
-    fun setIconSize(size: Int) {
-        iconSize = size
-        updateStatusBarAppearance()
-    }
 
     private fun animateStatusBarHeight(targetHeight: Int) {
         val currentHeight = layoutParams?.height ?: return
         if (currentHeight == targetHeight) return
         val animator = ValueAnimator.ofInt(currentHeight, targetHeight)
-        animator.duration = 200 // 150-200ms is best for UI
+        animator.duration = 10 // 150-200ms is best for UI
         animator.addUpdateListener { valueAnimator ->
             layoutParams?.height = valueAnimator.animatedValue as Int
             windowManager?.updateViewLayout(statusBarView, layoutParams)

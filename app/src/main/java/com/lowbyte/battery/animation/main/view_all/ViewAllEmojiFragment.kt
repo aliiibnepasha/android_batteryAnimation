@@ -40,13 +40,7 @@ class ViewAllEmojiFragment : Fragment() {
             } else {
                 preferences.isStatusBarEnabled = false
             }
-
-
         }
-
-
-
-
     }
 
     private fun setupViewPager() {
@@ -75,6 +69,7 @@ class ViewAllEmojiFragment : Fragment() {
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
         }else{
             preferences.isStatusBarEnabled = true
+            binding.switchEnableBatteryEmoji.isChecked = true
 
         }
         // else, do nothing or show UI as normal
