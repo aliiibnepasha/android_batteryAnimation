@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.GestureDetector
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -99,133 +100,151 @@ class NotchAccessibilityService : AccessibilityService() {
             PixelFormat.TRANSLUCENT
         ).apply { gravity = Gravity.TOP }
 
+        windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         statusBarBinding = CustomStatusBarBinding.inflate(LayoutInflater.from(this))
+
         updateStatusBarAppearance()
         setupGestures()
         updateBatteryInfo()
 
-        windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-        if (preferences.isStatusBarEnabled){
+        // Add view only if enabled and not already attached
+        if (preferences.isStatusBarEnabled && statusBarBinding?.root?.windowToken == null) {
             windowManager?.addView(statusBarBinding?.root, layoutParams)
-        }else{
-            statusBarBinding?.root?.let { windowManager?.removeView(it) }
-            statusBarBinding = null
         }
-
     }
 
     private fun updateStatusBarAppearance() {
         val binding = statusBarBinding ?: return
 
-        // Height & padding
+        if (!preferences.isStatusBarEnabled) {
+            if (binding.root.parent != null) {
+                windowManager?.removeView(binding.root)
+            }
+            return
+        } else {
+            if (binding.root.parent == null) {
+                windowManager?.addView(binding.root, layoutParams)
+            }
+        }
+
         animateStatusBarHeight((preferences.statusBarHeight * resources.displayMetrics.density).toInt())
         binding.root.setPadding(
             (preferences.statusBarMarginLeft * resources.displayMetrics.density).toInt(), 0,
             (preferences.statusBarMarginRight * resources.displayMetrics.density).toInt(), 0
         )
-
         binding.root.setBackgroundColor(preferences.statusBarBgColor)
 
-        // Icon visibilities
+        // ⛔ Real System State Checks — Replace with actual checks
+        val isWifiEnabled = true // TODO: get real wifi state
+        val isAirplaneModeOn = false // TODO: get real airplane mode state
+        val isHotspotOn = true // TODO: get real hotspot state
+        val isMobileDataEnabled = true // TODO: real mobile data check
+
         with(binding) {
+            wifiIcon.visibility = if (preferences.showWifi && isWifiEnabled) View.VISIBLE else View.GONE
+            hotspotIcon.visibility = if (preferences.showHotspot && isHotspotOn) View.VISIBLE else View.GONE
+
+            if (isAirplaneModeOn) {
+                airplaneIcon.visibility = if (preferences.showAirplane) View.VISIBLE else View.GONE
+                dataIcon.visibility = View.GONE
+                signalIcon.visibility = View.GONE
+            } else {
+                airplaneIcon.visibility = View.GONE
+                dataIcon.visibility = if (preferences.showData && isMobileDataEnabled) View.VISIBLE else View.GONE
+                signalIcon.visibility = if (preferences.showSignal) View.VISIBLE else View.GONE
+            }
+
             batteryIcon.visibility = preferences.showBatteryIcon.toVisibility()
-            wifiIcon.visibility = preferences.showWifi.toVisibility()
-            hotspotIcon.visibility = preferences.showHotspot.toVisibility()
-            dataIcon.visibility = preferences.showData.toVisibility()
-            signalIcon.visibility = preferences.showSignal.toVisibility()
-            airplaneIcon.visibility = preferences.showAirplane.toVisibility()
             timeText.visibility = preferences.showTime.toVisibility()
             dateText.visibility = preferences.showDate.toVisibility()
             batteryPercent.visibility = preferences.showBatteryPercent.toVisibility()
-        }
 
-        // Icon Sizes
-        applyIconSize(binding.wifiIcon, preferences.getIconSize("size_0", 24))
-        applyIconSize(binding.dataIcon, preferences.getIconSize("size_1", 24))
-        applyIconSize(binding.signalIcon, preferences.getIconSize("size_2", 24))
-        applyIconSize(binding.airplaneIcon, preferences.getIconSize("size_3", 24))
-        applyIconSize(binding.hotspotIcon, preferences.getIconSize("size_4", 24))
-        applyIconSize(binding.batteryIcon, preferences.getIconSize("batteryIconSize", 24))
-        applyIconSize(binding.lottieIcon, preferences.getIconSize("lottieView", 24))
+            applyIconSize(wifiIcon, preferences.getIconSize("size_0", 24))
+            applyIconSize(dataIcon, preferences.getIconSize("size_1", 24))
+            applyIconSize(signalIcon, preferences.getIconSize("size_2", 24))
+            applyIconSize(airplaneIcon, preferences.getIconSize("size_3", 24))
+            applyIconSize(hotspotIcon, preferences.getIconSize("size_4", 24))
+            applyIconSize(batteryIcon, preferences.getIconSize("batteryIconSize", 24))
+            applyIconSize(lottieIcon, preferences.getIconSize("lottieView", 24))
 
-        // Text Sizes
-        binding.timeText.setTextSizeInSp(preferences.getIconSize("size_5", 12))
-        binding.batteryPercent.setTextSizeInSp(preferences.getIconSize("percentageSize", 12))
+            timeText.setTextSizeInSp(preferences.getIconSize("size_5", 12))
+            batteryPercent.setTextSizeInSp(preferences.getIconSize("percentageSize", 12))
 
-        // Icon colors
-        binding.wifiIcon.setTint(preferences.getInt("tint_0", Color.BLACK))
-        binding.dataIcon.setTint(preferences.getInt("tint_1", Color.BLACK))
-        binding.signalIcon.setTint(preferences.getInt("tint_2", Color.BLACK))
-        binding.airplaneIcon.setTint(preferences.getInt("tint_3", Color.BLACK))
-        binding.hotspotIcon.setTint(preferences.getInt("tint_4", Color.BLACK))
+            wifiIcon.setTint(preferences.getInt("tint_0", Color.BLACK))
+            dataIcon.setTint(preferences.getInt("tint_1", Color.BLACK))
+            signalIcon.setTint(preferences.getInt("tint_2", Color.BLACK))
+            airplaneIcon.setTint(preferences.getInt("tint_3", Color.BLACK))
+            hotspotIcon.setTint(preferences.getInt("tint_4", Color.BLACK))
+            timeText.setTextColor(preferences.getInt("tint_5", Color.BLACK))
+            dateText.setTextColor(preferences.getInt("tint_5", Color.BLACK))
+            batteryPercent.setTextColor(preferences.getInt("percentageColor", Color.BLACK))
 
-        binding.timeText.setTextColor(preferences.getInt("tint_5", Color.BLACK))
-        binding.dateText.setTextColor(preferences.getInt("tint_5", Color.BLACK))
-        binding.batteryPercent.setTextColor(preferences.getInt("percentageColor", Color.BLACK))
-
-        // Lottie animation
-        if (preferences.statusLottieName.isNotBlank()) {
-            val animId = resources.getIdentifier(preferences.statusLottieName, "raw", packageName)
-            binding.lottieIcon.apply {
-                visibility = if (animId != 0) View.VISIBLE else View.GONE
-                if (animId != 0) {
-                    setAnimation(animId)
-                    playAnimation()
-                }
+            // Battery icon
+            val batteryIconRes = resources.getIdentifier(preferences.batteryIconName, "drawable", packageName)
+            if (preferences.batteryIconName.isNotBlank() && batteryIconRes != 0) {
+                batteryIcon.setImageResource(batteryIconRes)
             }
-        } else {
-            binding.lottieIcon.visibility = View.GONE
-        }
 
-        // Custom drawable icon
-        binding.customIcon.apply {
-            val resId = resources.getIdentifier(preferences.statusIconName, "drawable", packageName)
-            if (preferences.statusIconName.isNotBlank() && resId != 0) {
-                setImageResource(resId)
-                visibility = View.VISIBLE
+            // Custom icon
+            val customIconRes = resources.getIdentifier(preferences.statusIconName, "drawable", packageName)
+            if (preferences.statusIconName.isNotBlank() && customIconRes != 0) {
+                customIcon.setImageResource(customIconRes)
+                customIcon.visibility = View.VISIBLE
             } else {
-                visibility = View.GONE
+                customIcon.visibility = View.GONE
             }
-        }
 
-        // Battery icon override
-        binding.batteryIcon.apply {
-            val resId = resources.getIdentifier(preferences.batteryIconName, "drawable", packageName)
-            if (preferences.batteryIconName.isNotBlank() && resId != 0) {
-                setImageResource(resId)
-                visibility = View.VISIBLE
+            // Lottie icon
+            val lottieRes = resources.getIdentifier(preferences.statusLottieName, "raw", packageName)
+            if (preferences.statusLottieName.isNotBlank() && lottieRes != 0) {
+                lottieIcon.setAnimation(lottieRes)
+                lottieIcon.visibility = View.VISIBLE
+                lottieIcon.playAnimation()
             } else {
-                visibility = View.GONE
+                lottieIcon.visibility = View.GONE
             }
-        }
-        if (preferences.isStatusBarEnabled){
+
             windowManager?.updateViewLayout(binding.root, layoutParams)
-        }else{
-            statusBarBinding?.root?.let { windowManager?.removeView(it) }
-          //  statusBarBinding = null
         }
-
-
     }
+
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupGestures() {
-        statusBarBinding?.root?.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    isLongPress = false
-                    longPressRunnable = Runnable {
-                        isLongPress = true
-                        handleLongPress()
-                    }
-                    handler.postDelayed(longPressRunnable!!, 500)
-                }
+        val gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
 
-                MotionEvent.ACTION_UP -> {
-                    longPressRunnable?.let { handler.removeCallbacks(it) }
-                    if (!isLongPress) handleTap()
-                }
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                handleTap()
+                return true
             }
+
+            override fun onDoubleTap(e: MotionEvent): Boolean {
+                Toast.makeText(this@NotchAccessibilityService, "Double Tap Detected", Toast.LENGTH_SHORT).show()
+                return true
+            }
+
+            override fun onLongPress(e: MotionEvent) {
+                handleLongPress()
+            }
+
+            override fun onFling(
+                e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float
+            ): Boolean {
+                val deltaX = (e2?.x ?: 0f) - (e1?.x ?: 0f)
+                val deltaY = (e2?.y ?: 0f) - (e1?.y ?: 0f)
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    if (deltaX > 100) {
+                        Toast.makeText(this@NotchAccessibilityService, "Swiped Left to Right", Toast.LENGTH_SHORT).show()
+                    } else if (deltaX < -100) {
+                        Toast.makeText(this@NotchAccessibilityService, "Swiped Right to Left", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                return true
+            }
+        })
+
+        statusBarBinding?.root?.setOnTouchListener { _, event ->
+            gestureDetector.onTouchEvent(event)
             true
         }
     }
