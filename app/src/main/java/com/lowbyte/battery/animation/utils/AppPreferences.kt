@@ -96,16 +96,16 @@ class AppPreferences private constructor(context: Context) {
 
     // Repeat for other icons...
     var showHotspot: Boolean
-        get() = sharedPreferences.getBoolean(KEY_SHOW_HOTSPOT, false)
+        get() = sharedPreferences.getBoolean(KEY_SHOW_HOTSPOT, true)
         set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_HOTSPOT, value) }
     var showData: Boolean
-        get() = sharedPreferences.getBoolean(KEY_SHOW_DATA, false)
+        get() = sharedPreferences.getBoolean(KEY_SHOW_DATA, true)
         set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_DATA, value) }
     var showSignal: Boolean
         get() = sharedPreferences.getBoolean(KEY_SHOW_SIGNAL, true)
         set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_SIGNAL, value) }
     var showAirplane: Boolean
-        get() = sharedPreferences.getBoolean(KEY_SHOW_AIRPLANE, false)
+        get() = sharedPreferences.getBoolean(KEY_SHOW_AIRPLANE, true)
         set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_AIRPLANE, value) }
     var showTime: Boolean
         get() = sharedPreferences.getBoolean(KEY_SHOW_TIME, true)
@@ -115,7 +115,7 @@ class AppPreferences private constructor(context: Context) {
         set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_DATE, value) }
 
     var showBatteryPercent: Boolean
-        get() = sharedPreferences.getBoolean(KEY_SHOW_PERCENTAGE, false)
+        get() = sharedPreferences.getBoolean(KEY_SHOW_PERCENTAGE, true)
         set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_PERCENTAGE, value) }
 
     // For icon/lottie resource names

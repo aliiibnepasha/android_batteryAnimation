@@ -9,10 +9,13 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.PixelFormat
+import android.net.ConnectivityManager
+import android.net.wifi.WifiManager
 import android.os.BatteryManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.util.Log
 import android.view.GestureDetector
 import android.view.Gravity
@@ -47,10 +50,10 @@ class NotchAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         preferences = AppPreferences.getInstance(this)
-
+        registerUpdateReceiver()
         createCustomStatusBar()
         startTimeUpdates()
-        registerUpdateReceiver()
+
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
@@ -74,7 +77,13 @@ class NotchAccessibilityService : AccessibilityService() {
                     updateStatusBarAppearance()
                 }
             }
-            val filter = IntentFilter("com.lowbyte.UPDATE_STATUSBAR")
+            val filter = IntentFilter().apply {
+                addAction("com.lowbyte.UPDATE_STATUSBAR") // existing
+                addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
+                addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
+                addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+                // You may also listen to custom broadcast if you manually trigger hotspot toggles
+            }
             if (Build.VERSION.SDK_INT >= 33) {
                 registerReceiver(updateReceiver, filter, RECEIVER_EXPORTED)
                 Log.d("servicesdd","Received broadcast>= 33")
@@ -135,10 +144,10 @@ class NotchAccessibilityService : AccessibilityService() {
         binding.root.setBackgroundColor(preferences.statusBarBgColor)
 
         // ⛔ Real System State Checks — Replace with actual checks
-        val isWifiEnabled = true // TODO: get real wifi state
-        val isAirplaneModeOn = false // TODO: get real airplane mode state
-        val isHotspotOn = true // TODO: get real hotspot state
-        val isMobileDataEnabled = true // TODO: real mobile data check
+        val isWifiEnabled = isWifiEnabled()
+        val isAirplaneModeOn = isAirplaneModeOn()
+        val isHotspotOn = isHotspotEnabled()
+        val isMobileDataEnabled = isMobileDataEnabled()
 
         with(binding) {
             wifiIcon.visibility = if (preferences.showWifi && isWifiEnabled) View.VISIBLE else View.GONE
@@ -289,6 +298,32 @@ class NotchAccessibilityService : AccessibilityService() {
         val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
         statusBarBinding?.timeText?.text = timeFormat.format(Date())
     }
+
+    private fun isAirplaneModeOn(): Boolean {
+        return Settings.Global.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) != 0
+    }
+
+    private fun isWifiEnabled(): Boolean {
+        val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        return wifiManager.isWifiEnabled
+    }
+
+    private fun isMobileDataEnabled(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return cm.activeNetworkInfo?.type == ConnectivityManager.TYPE_MOBILE && cm.activeNetworkInfo?.isConnected == true
+    }
+
+    // Hotspot detection is tricky. Here's an API-30+ example using ConnectivityManager
+    private fun isHotspotEnabled(): Boolean {
+        val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        return try {
+            val method = wifiManager.javaClass.getDeclaredMethod("isWifiApEnabled")
+            method.invoke(wifiManager) as Boolean
+        } catch (e: Exception) {
+            false
+        }
+    }
+
 
     // ========== Extension Utils ==========
 
