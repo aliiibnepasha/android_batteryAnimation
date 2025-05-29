@@ -5,6 +5,125 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".activity.BatteryAnimationEditApplyActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/titlebarEditEmoji"
+        android:layout_width="0dp"
+        android:layout_height="?actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="1">
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/ibBackButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/app_name"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_left"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/edit"
+            android:gravity="center"
+            android:text="@string/view_all_battery_animation"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ibNextButton"
+            app:layout_constraintStart_toEndOf="@+id/ibBackButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/ibNextButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/app_name"
+            android:gravity="center"
+            android:text="@string/done"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1.1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/previewBatteryAnimation"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginVertical="?actionBarSize"
+        android:background="@drawable/bg_rectangle_gradient"
+        app:layout_constraintDimensionRatio="1:0.6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titlebarEditEmoji"
+        app:layout_constraintWidth_percent="0.90">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/previewLottiAnimation"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:0.6"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.6" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <TextView
+        android:id="@+id/buttonForApply"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginVertical="?actionBarSize"
+        android:background="@drawable/home_button"
+        android:gravity="center"
+        android:text="@string/apply"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/buttonHome"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/previewBatteryAnimation"
+        app:layout_constraintWidth_percent="0.4" />
+
+
+    <TextView
+        android:id="@+id/buttonHome"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginVertical="?actionBarSize"
+        android:background="@drawable/bg_border_fill_transparent"
+        android:gravity="center"
+        android:text="@string/title_home"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonForApply"
+        app:layout_constraintTop_toBottomOf="@+id/previewBatteryAnimation"
+        app:layout_constraintWidth_percent="0.4" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

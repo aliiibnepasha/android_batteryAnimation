@@ -34,7 +34,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled
 
         binding.switchEnableBatteryEmoji.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
+            if (isChecked && ::preferences.isInitialized) {
                 checkAccessibilityPermission()
             } else {
                 preferences.isStatusBarEnabled = false
@@ -130,7 +130,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
 
     override fun onResume() {
-        binding.switchEnableBatteryEmoji.isChecked = isAccessibilityServiceEnabled() && preferences.isStatusBarEnabled
+        preferences = AppPreferences.getInstance(requireActivity())
+        if (preferences.isStatusBarEnabled && ::preferences.isInitialized){
+            binding.switchEnableBatteryEmoji.isChecked = isAccessibilityServiceEnabled()
+        }else{
+            binding.switchEnableBatteryEmoji.isChecked = false
+            preferences.isStatusBarEnabled = false
+        }
         super.onResume()
     }
 }

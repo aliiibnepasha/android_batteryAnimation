@@ -34,11 +34,16 @@ class ViewAllEmojiFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupViewPager()
+
+        binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled
+
         binding.switchEnableBatteryEmoji.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
+            if (isChecked && ::preferences.isInitialized) {
                 checkAccessibilityPermission()
             } else {
                 preferences.isStatusBarEnabled = false
+                requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+
             }
         }
     }
@@ -70,6 +75,7 @@ class ViewAllEmojiFragment : Fragment() {
         }else{
             preferences.isStatusBarEnabled = true
             binding.switchEnableBatteryEmoji.isChecked = true
+            requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
 
         }
         // else, do nothing or show UI as normal
@@ -89,7 +95,13 @@ class ViewAllEmojiFragment : Fragment() {
 
 
     override fun onResume() {
-        binding.switchEnableBatteryEmoji.isChecked = isAccessibilityServiceEnabled() && preferences.isStatusBarEnabled
+        preferences = AppPreferences.getInstance(requireContext())
+        if (preferences.isStatusBarEnabled && ::preferences.isInitialized){
+            binding.switchEnableBatteryEmoji.isChecked = isAccessibilityServiceEnabled()
+        }else{
+            binding.switchEnableBatteryEmoji.isChecked = false
+            preferences.isStatusBarEnabled = false
+        }
         super.onResume()
     }
 }

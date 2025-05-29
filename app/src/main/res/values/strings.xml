@@ -24,6 +24,7 @@
     <string name="menu_dynamic_island">Dynamic Island</string>
     <string name="view_all">See All</string>
     <string name="cat_emojis">Emojis</string>
+    <string name="emoji">Emoji</string>
     <string name="cat_widgets">Widgets</string>
     <string name="cat_animations">Animations</string>
     <string name="view_all_battery_emoji">Battery Emoji</string>
@@ -77,4 +78,5 @@
     <string name="applied_successfully">Applied successfully!</string>
     <string name="the_changes_have_been_saved_successfully">The changes have been saved successfully</string>
     <string name="customize">Customize</string>
+    <string name="setting">Settings</string>
 </resources>

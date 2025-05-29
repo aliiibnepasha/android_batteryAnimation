@@ -42,8 +42,6 @@ class NotchAccessibilityService : AccessibilityService() {
     private val handler = Handler(Looper.getMainLooper())
 
     private var statusBarBinding: CustomStatusBarBinding? = null
-    private var isLongPress = false
-    private var longPressRunnable: Runnable? = null
     private var updateReceiver: BroadcastReceiver? = null
     private lateinit var preferences: AppPreferences
 
@@ -117,7 +115,7 @@ class NotchAccessibilityService : AccessibilityService() {
         updateBatteryInfo()
 
         // Add view only if enabled and not already attached
-        if (preferences.isStatusBarEnabled && statusBarBinding?.root?.windowToken == null) {
+        if (::preferences.isInitialized && preferences.isStatusBarEnabled && statusBarBinding?.root?.windowToken == null) {
             windowManager?.addView(statusBarBinding?.root, layoutParams)
         }
     }
@@ -125,7 +123,7 @@ class NotchAccessibilityService : AccessibilityService() {
     private fun updateStatusBarAppearance() {
         val binding = statusBarBinding ?: return
 
-        if (!preferences.isStatusBarEnabled) {
+        if (!preferences.isStatusBarEnabled && ::preferences.isInitialized) {
             if (binding.root.parent != null) {
                 windowManager?.removeView(binding.root)
             }

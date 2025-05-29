@@ -31,11 +31,6 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
 
     private lateinit var preferences: AppPreferences
 
-    // At the top of your Activity or Fragment:
-    private val resizeHandler = Handler(Looper.getMainLooper())
-    private var resizeRunnable: Runnable? = null
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -59,12 +54,15 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
         binding.statusBarHeightSeekbar.progress = preferences.statusBarHeight
 
 
+        binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled
 
         binding.switchEnableBatteryEmoji.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
+            if (isChecked && ::preferences.isInitialized) {
                 checkAccessibilityPermission()
             } else {
                 preferences.isStatusBarEnabled = false
+               sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+
             }
 
 
@@ -177,6 +175,7 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
         }else{
             preferences.isStatusBarEnabled = true
             binding.switchEnableBatteryEmoji.isChecked = true
+            sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
 
         }
         // else, do nothing or show UI as normal
@@ -196,7 +195,14 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
 
 
     override fun onResume() {
-        binding.switchEnableBatteryEmoji.isChecked = isAccessibilityServiceEnabled() && preferences.isStatusBarEnabled
+        preferences = AppPreferences.getInstance(this)
+
+        if (preferences.isStatusBarEnabled && ::preferences.isInitialized){
+            binding.switchEnableBatteryEmoji.isChecked = isAccessibilityServiceEnabled()
+        }else{
+            binding.switchEnableBatteryEmoji.isChecked = false
+            preferences.isStatusBarEnabled = false
+        }
         super.onResume()
     }
     override fun onDestroy() {
