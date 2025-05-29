@@ -2,10 +2,13 @@ package com.lowbyte.battery.animation.main.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.BatteryAnimationEditApplyActivity
 import com.lowbyte.battery.animation.activity.BatteryWidgetEditApplyActivity
@@ -16,15 +19,29 @@ import com.lowbyte.battery.animation.model.MultiViewItem
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListAction
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListFantasy
+import com.lowbyte.battery.animation.utils.AppPreferences
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var preferences: AppPreferences
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentHomeBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
+        preferences = AppPreferences.getInstance(requireContext())
 
+        binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled
+
+        binding.switchEnableBatteryEmoji.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                checkAccessibilityPermission()
+            } else {
+                preferences.isStatusBarEnabled = false
+                requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+
+            }
+        }
         val data = listOf(
             MultiViewItem.TitleItem(getString(R.string.cat_emojis)),
             MultiViewItem.ListItem(emojiCuteListFantasy),
@@ -81,5 +98,39 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.recyclerViewParent.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewParent.adapter = adapter
 
+    }
+
+    private fun checkAccessibilityPermission() {
+        if (!isAccessibilityServiceEnabled()) {
+            Toast.makeText(
+                requireContext(),
+                "Please enable accessibility service",
+                Toast.LENGTH_LONG
+            ).show()
+            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+        }else{
+            preferences.isStatusBarEnabled = true
+            binding.switchEnableBatteryEmoji.isChecked = true
+            requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+
+        }
+        // else, do nothing or show UI as normal
+    }
+    private fun isAccessibilityServiceEnabled(): Boolean {
+        val expectedComponentName =
+            "${requireContext().packageName}/${NotchAccessibilityService::class.java.canonicalName}"
+        val enabledServices = Settings.Secure.getString(
+            requireContext().contentResolver,
+            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        ) ?: return false
+
+        return enabledServices.split(':')
+            .any { it.equals(expectedComponentName, ignoreCase = true) }
+    }
+
+
+    override fun onResume() {
+        binding.switchEnableBatteryEmoji.isChecked = isAccessibilityServiceEnabled() && preferences.isStatusBarEnabled
+        super.onResume()
     }
 }

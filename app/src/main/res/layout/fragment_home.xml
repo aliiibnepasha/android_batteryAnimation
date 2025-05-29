@@ -6,12 +6,48 @@
     android:layout_height="match_parent"
     tools:context=".main.home.HomeFragment">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/designEnableEmoji"
+        android:layout_width="0dp"
+        android:layout_height="?actionBarSize"
+        android:background="@color/bg_color_enable"
+        android:paddingHorizontal="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewParent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/enableBatteryEmoji"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/enable_battery_emoji"
+            android:textColor="@color/blue_app_color"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/switchEnableBatteryEmoji"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchEnableBatteryEmoji"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/enableBatteryEmoji"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.3" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewParent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/designEnableEmoji" />
 </androidx.constraintlayout.widget.ConstraintLayout>

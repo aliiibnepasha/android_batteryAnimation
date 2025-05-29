@@ -126,13 +126,12 @@ class EmojiEditApplyActivity : AppCompatActivity() {
             preferences.batteryIconName = drawable
             sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
             startActivity(Intent(this, ApplySuccessfullyActivity::class.java))
-            // Save settings or apply logic here
+            finish()
+
         }
     }
 
-    private fun colorOfIcon(
-        envelope: ColorEnvelope
-    ) {
+    private fun colorOfIcon(envelope: ColorEnvelope) {
         preferences.setInt("percentageColor", envelope.color)
         sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
     }

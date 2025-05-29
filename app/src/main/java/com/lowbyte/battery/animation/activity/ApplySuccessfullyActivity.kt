@@ -31,6 +31,7 @@ class ApplySuccessfullyActivity : AppCompatActivity() {
         }
         binding.buttonCustomizeAgain.setOnClickListener {
             startActivity(Intent(this, StatusBarCustomizeActivity::class.java))
+            finish()
 
             // Save settings or apply logic here
         }
