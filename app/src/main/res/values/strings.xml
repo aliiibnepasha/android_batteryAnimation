@@ -67,4 +67,14 @@
     <string name="right_margin_dp">Right Margin : %1$d dp</string>
     <string name="left_margin_dp">Left Margin : %1$d dp</string>
     <string name="height_dp">Height : %1$d dp</string>
+    <string name="edit">Edit</string>
+    <string name="battery_emoji_12_dp">Battery emoji : 12 dp</string>
+    <string name="show_battery_percentage">Show battery percentage</string>
+    <string name="percentage_size">Percentage Size</string>
+    <string name="percentage_colour">Percentage Colour</string>
+    <string name="percentage_size_16_dp">Percentage size : 16 dp</string>
+    <string name="apply">Apply</string>
+    <string name="applied_successfully">Applied successfully!</string>
+    <string name="the_changes_have_been_saved_successfully">The changes have been saved successfully</string>
+    <string name="customize">Customize</string>
 </resources>

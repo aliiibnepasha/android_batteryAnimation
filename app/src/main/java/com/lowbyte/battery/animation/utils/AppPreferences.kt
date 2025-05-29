@@ -40,16 +40,19 @@ class AppPreferences private constructor(context: Context) {
 
         // Icon show/hide
         private const val KEY_SHOW_WIFI = "show_wifi"
+        private const val KEY_SHOW_BAT_ICON = "show_battery_icon"
         private const val KEY_SHOW_HOTSPOT = "show_hotspot"
         private const val KEY_SHOW_DATA = "show_data"
         private const val KEY_SHOW_SIGNAL = "show_signal"
         private const val KEY_SHOW_AIRPLANE = "show_airplane"
         private const val KEY_SHOW_TIME = "show_time"
         private const val KEY_SHOW_DATE = "show_date"
+        private const val KEY_SHOW_PERCENTAGE = "show_percentage"
 
         // Lottie and icon resource names
         private const val KEY_STATUS_LOTTIE = "status_lottie"
         private const val KEY_STATUS_ICON = "status_icon"
+        private const val KEY_BAT_ICON = "batteryIconName"
 
         // Each icon size, e.g. icon_size_wifi, icon_size_hotspot, etc.
         fun iconSizeKeyFor(label: String) = "icon_size_${label.trim().replace("\\s+".toRegex(), "_").lowercase()}"
@@ -87,6 +90,10 @@ class AppPreferences private constructor(context: Context) {
         get() = sharedPreferences.getBoolean(KEY_SHOW_WIFI, true)
         set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_WIFI, value) }
 
+ var showBatteryIcon: Boolean
+        get() = sharedPreferences.getBoolean(KEY_SHOW_BAT_ICON, true)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_BAT_ICON, value) }
+
     // Repeat for other icons...
     var showHotspot: Boolean
         get() = sharedPreferences.getBoolean(KEY_SHOW_HOTSPOT, false)
@@ -107,6 +114,10 @@ class AppPreferences private constructor(context: Context) {
         get() = sharedPreferences.getBoolean(KEY_SHOW_DATE, false)
         set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_DATE, value) }
 
+    var showBatteryPercent: Boolean
+        get() = sharedPreferences.getBoolean(KEY_SHOW_PERCENTAGE, false)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_PERCENTAGE, value) }
+
     // For icon/lottie resource names
     var statusLottieName: String
         get() = sharedPreferences.getString(KEY_STATUS_LOTTIE, "anim_8") ?: "anim_8"
@@ -115,6 +126,13 @@ class AppPreferences private constructor(context: Context) {
     var statusIconName: String
         get() = sharedPreferences.getString(KEY_STATUS_ICON, "widget_fantasy_1") ?: "widget_fantasy_1"
         set(value) = sharedPreferences.edit { putString(KEY_STATUS_ICON, value) }
+
+      var batteryIconName: String
+        get() = sharedPreferences.getString(KEY_BAT_ICON, "widget_fantasy_1") ?: "widget_fantasy_1"
+        set(value) = sharedPreferences.edit { putString(KEY_BAT_ICON, value) }
+
+
+
 
     // For per-icon size (dynamically via key)
     fun getIconSize(label: String, default: Int = 24) = getInt(iconSizeKeyFor(label), default)

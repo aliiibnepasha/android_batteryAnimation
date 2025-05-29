@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".activity.EmojiEditApplyActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/titlebarEditEmoji"
+        android:layout_width="0dp"
+        android:layout_height="?actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="1">
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/ibBackButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/black"
+            android:contentDescription="@string/app_name"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_left"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/edit"
+            android:gravity="center"
+            android:text="@string/edit"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ibNextButton"
+            app:layout_constraintStart_toEndOf="@+id/ibBackButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/ibNextButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/app_name"
+            android:gravity="center"
+            android:text="@string/done"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1.1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/previewEditEmoji"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginVertical="30dp"
+        app:layout_constraintDimensionRatio="1:0.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titlebarEditEmoji"
+        app:layout_constraintWidth_percent="0.3"
+        app:srcCompat="@drawable/emoji_3" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/viewBatteryEmojiSize"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:background="@drawable/bg_item_rectangle_101010"
+        android:padding="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/previewEditEmoji"
+        app:layout_constraintWidth_percent="0.95">
+
+        <TextView
+            android:id="@+id/batteryEmojiLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:text="@string/battery_emoji_12_dp"
+            android:textColor="@color/white"
+            android:textStyle="normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/batteryEmojiSeekbarSize"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/batteryEmojiLabel"
+            app:layout_constraintWidth_percent="1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/viewBatteryPercentage"
+        android:layout_width="0dp"
+        android:layout_height="?actionBarSize"
+        android:layout_marginVertical="20dp"
+        android:background="@drawable/bg_item_rectangle_101010"
+        android:paddingHorizontal="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewBatteryEmojiSize"
+        app:layout_constraintWidth_percent="0.95">
+
+        <TextView
+            android:id="@+id/titleShowBatPercentage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/show_battery_percentage"
+            android:textColor="@color/white"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/enableShowBatteryPercentage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/enableShowBatteryPercentage"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/titleShowBatPercentage"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.3" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/viewPercentageColor"
+        android:layout_width="0dp"
+        android:layout_height="?actionBarSize"
+        android:layout_marginVertical="20dp"
+        android:background="@drawable/bg_item_rectangle_101010"
+        android:paddingHorizontal="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewBatteryPercentage"
+        app:layout_constraintWidth_percent="0.95">
+
+        <TextView
+            android:id="@+id/selectBgColor"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/percentage_colour"
+            android:textColor="@color/white"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/openColorPalate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/openColorPalate"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:padding="14dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/selectBgColor"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.3"
+            app:srcCompat="@drawable/ic_color_picker" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/viewPercentageEmojiSize"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:background="@drawable/bg_item_rectangle_101010"
+        android:padding="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewPercentageColor"
+        app:layout_constraintWidth_percent="0.95">
+
+        <TextView
+            android:id="@+id/batteryPercentageEmojiLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:text="@string/percentage_size_16_dp"
+            android:textColor="@color/white"
+            android:textStyle="normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/batteryEmojiPercentageSeekbarSize"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/batteryPercentageEmojiLabel"
+            app:layout_constraintWidth_percent="1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/btnNext"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginVertical="?actionBarSize"
+        android:background="@drawable/bg_next_button"
+        android:gravity="center"
+        android:text="@string/apply"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.9" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

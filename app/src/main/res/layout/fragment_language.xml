@@ -14,7 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.95">
+        app:layout_constraintWidth_percent="1">
 
         <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/ibBackButton"
@@ -34,7 +34,7 @@
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="match_parent"
             android:contentDescription="@string/app_name"
             android:gravity="center"
             android:text="@string/select_language"
@@ -50,7 +50,7 @@
         <TextView
             android:id="@+id/ibNextButton"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="match_parent"
             android:contentDescription="@string/app_name"
             android:gravity="center"
             android:text="@string/done"

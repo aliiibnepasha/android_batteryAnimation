@@ -40,8 +40,6 @@ class ViewAllAnimationFragment : Fragment() {
                 requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
 
             }
-
-
         }
 
         binding.enableSizeAnim.text = getString(R.string.height_dp, preferences.getIconSize("lottieView", 24))

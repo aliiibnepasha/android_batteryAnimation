@@ -33,6 +33,16 @@ import java.util.Locale
 class NotchAccessibilityService : AccessibilityService() {
     private var windowManager: WindowManager? = null
     private var statusBarView: View? = null
+    private var batteryIcon: ImageView? = null
+    private var wifiIcon: ImageView? = null
+    private var hotspotIcon: ImageView? = null
+    private var dataIcon: ImageView? = null
+    private var signalIcon: ImageView? = null
+    private var airplaneIcon: ImageView? = null
+    private var customIconImageView: ImageView? = null
+    private var timeText: TextView? = null
+    private var dateText: TextView? = null
+    private var batteryPercent: TextView? = null
     private var layoutParams: WindowManager.LayoutParams? = null
     private val handler = Handler(Looper.getMainLooper())
     private var isLongPress = false
@@ -145,24 +155,29 @@ class NotchAccessibilityService : AccessibilityService() {
         statusBarView?.setBackgroundColor(prefs.statusBarBgColor)
 
         // Lookup once, use many times:
-        val wifiIcon = statusBarView?.findViewById<ImageView>(R.id.wifiIcon)
-        val hotspotIcon = statusBarView?.findViewById<ImageView>(R.id.hotspotIcon)
-        val dataIcon = statusBarView?.findViewById<ImageView>(R.id.dataIcon)
-        val signalIcon = statusBarView?.findViewById<ImageView>(R.id.signalIcon)
-        val airplaneIcon = statusBarView?.findViewById<ImageView>(R.id.airplaneIcon)
-        val timeText = statusBarView?.findViewById<TextView>(R.id.timeText)
-        val dateText = statusBarView?.findViewById<TextView>(R.id.dateText)
+        batteryIcon = statusBarView?.findViewById<ImageView>(R.id.batteryIcon)
+        wifiIcon = statusBarView?.findViewById<ImageView>(R.id.wifiIcon)
+        hotspotIcon = statusBarView?.findViewById<ImageView>(R.id.hotspotIcon)
+        dataIcon = statusBarView?.findViewById<ImageView>(R.id.dataIcon)
+        signalIcon = statusBarView?.findViewById<ImageView>(R.id.signalIcon)
+        airplaneIcon = statusBarView?.findViewById<ImageView>(R.id.airplaneIcon)
+        customIconImageView = statusBarView?.findViewById<ImageView>(R.id.customIcon)
+        timeText = statusBarView?.findViewById<TextView>(R.id.timeText)
+        dateText = statusBarView?.findViewById<TextView>(R.id.dateText)
+        batteryPercent = statusBarView?.findViewById<TextView>(R.id.batteryPercent)
+
         val lottieView = statusBarView?.findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottieIcon)
 
         // Show/hide icons by preferences
+        batteryIcon?.visibility = if (prefs.showBatteryIcon) View.VISIBLE else View.GONE
         wifiIcon?.visibility = if (prefs.showWifi) View.VISIBLE else View.GONE
         hotspotIcon?.visibility = if (prefs.showHotspot) View.VISIBLE else View.GONE
         dataIcon?.visibility = if (prefs.showData) View.VISIBLE else View.GONE
         signalIcon?.visibility = if (prefs.showSignal) View.VISIBLE else View.GONE
         airplaneIcon?.visibility = if (prefs.showAirplane) View.VISIBLE else View.GONE
-
         timeText?.visibility = if (prefs.showTime) View.VISIBLE else View.GONE
         dateText?.visibility = if (prefs.showDate) View.VISIBLE else View.GONE
+        batteryPercent?.visibility = if (prefs.showBatteryPercent) View.VISIBLE else View.GONE
 
         // Per-icon size
         wifiIcon?.layoutParams = LinearLayout.LayoutParams(
@@ -185,10 +200,18 @@ class NotchAccessibilityService : AccessibilityService() {
             (prefs.getIconSize("size_4", 24) * resources.displayMetrics.density).toInt(),
             (prefs.getIconSize("size_4", 24) * resources.displayMetrics.density).toInt()
         )
+        batteryIcon?.layoutParams = LinearLayout.LayoutParams(
+            (prefs.getIconSize("batteryIconSize", 24) * resources.displayMetrics.density).toInt(),
+            (prefs.getIconSize("batteryIconSize", 24) * resources.displayMetrics.density).toInt()
+        )
 
         val scaledSizeSp = prefs.getIconSize("size_5", 12)  // base size in sp
         val scaledSizePx = scaledSizeSp * resources.displayMetrics.scaledDensity
         timeText?.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, scaledSizePx)
+
+        val scaledSizeSpPercentage = prefs.getIconSize("percentageSize", 12)  // base size in sp
+        val scaledSizePxPercentage = scaledSizeSpPercentage * resources.displayMetrics.scaledDensity
+        batteryPercent?.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, scaledSizePxPercentage)
 
 
         lottieView?.layoutParams = LinearLayout.LayoutParams(
@@ -231,6 +254,10 @@ class NotchAccessibilityService : AccessibilityService() {
             prefs.getInt("tint_5", Color.BLACK)
         )
 
+        batteryPercent?.setTextColor(
+            prefs.getInt("percentageColor", Color.BLACK)
+        )
+
 
         // Lottie animation
         if (prefs.statusLottieName.isNotBlank()) {
@@ -247,19 +274,38 @@ class NotchAccessibilityService : AccessibilityService() {
         }
 
         // Icon from drawable
-        val imageView = statusBarView?.findViewById<ImageView>(R.id.customIcon)
+
+
+
 
         if (prefs.statusIconName.isNotBlank()) {
             val iconRes = resources.getIdentifier(prefs.statusIconName, "drawable", packageName)
             if (iconRes != 0) {
-                imageView?.setImageResource(iconRes)
-                imageView?.visibility = View.VISIBLE
+                customIconImageView?.setImageResource(iconRes)
+                customIconImageView?.visibility = View.VISIBLE
             } else {
-                imageView?.visibility = View.GONE
+                customIconImageView?.visibility = View.GONE
             }
         } else {
-            imageView?.visibility = View.GONE
+            customIconImageView?.visibility = View.GONE
         }
+
+        //Battery Icon
+         if (prefs.statusIconName.isNotBlank()) {
+            val iconRes = resources.getIdentifier(prefs.batteryIconName, "drawable", packageName)
+            if (iconRes != 0) {
+                batteryIcon?.setImageResource(iconRes)
+                batteryIcon?.visibility = View.VISIBLE
+            } else {
+                batteryIcon?.visibility = View.GONE
+            }
+        } else {
+             batteryIcon?.visibility = View.GONE
+        }
+
+
+
+
 
         windowManager?.updateViewLayout(statusBarView, layoutParams)
         Log.d("servicesdd","Received updateViewLayout")
@@ -293,7 +339,7 @@ class NotchAccessibilityService : AccessibilityService() {
     private fun updateBatteryInfo() {
         val batteryIntent = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
         val batteryStatus = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
-        statusBarView?.findViewById<TextView>(R.id.batteryPercent)?.text = "$batteryStatus%"
+        batteryPercent?.text = "$batteryStatus%"
     }
 
 

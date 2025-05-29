@@ -8,7 +8,8 @@ import com.lowbyte.battery.animation.databinding.MainItemRvItemBinding
 
 class ChildItemAdapter(
     private val items: List<String>,
-    private val onClick: (Int) -> Unit
+    private val onChildItemClick: (Int, String, Int) -> Unit,
+    private val parentPosition: Int
 ) : RecyclerView.Adapter<ChildItemAdapter.ChildViewHolder>() {
 
     inner class ChildViewHolder(private val binding: MainItemRvItemBinding) :
@@ -25,7 +26,7 @@ class ChildItemAdapter(
             }
 
             binding.root.setOnClickListener {
-                onClick(adapterPosition)
+                onChildItemClick(adapterPosition, drawableName, parentPosition)
             }
         }
     }

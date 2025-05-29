@@ -9,7 +9,7 @@ import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ItemAllEmojiBinding
 
 class AllEmojiAdapter(
-    private val onItemClick: (Int) -> Unit
+    private val onItemClick: (position: Int, label: String) -> Unit
 ) : ListAdapter<String, AllEmojiAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,7 +31,7 @@ class AllEmojiAdapter(
 
         init {
             binding.root.setOnClickListener {
-                onItemClick(adapterPosition)
+                onItemClick(adapterPosition, getItem(adapterPosition))
             }
         }
 

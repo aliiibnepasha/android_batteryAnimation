@@ -11,7 +11,7 @@ import com.lowbyte.battery.animation.model.MultiViewItem
 
 class MultiViewAdapter(
     private val data: List<MultiViewItem>,
-    private val onChildItemClick: (Int) -> Unit,
+    private val onChildItemClick:  (Int, String, Int)  -> Unit,
     private val onChildViewAllClick: (Int) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -46,7 +46,7 @@ class MultiViewAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = data[position]) {
             is MultiViewItem.TitleItem -> (holder as TitleViewHolder).bind(item,position)
-            is MultiViewItem.ListItem -> (holder as HorizontalListViewHolder).bind(item.items)
+            is MultiViewItem.ListItem -> (holder as HorizontalListViewHolder).bind(item.items,position,)
         }
     }
 
@@ -62,9 +62,9 @@ class MultiViewAdapter(
     inner class HorizontalListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val recyclerView: RecyclerView = itemView.findViewById(R.id.recyclerChild)
 
-        fun bind(items: List<String>) {
+        fun bind(items: List<String>,parentPosition: Int) {
             recyclerView.layoutManager = LinearLayoutManager(itemView.context, RecyclerView.HORIZONTAL, false)
-            recyclerView.adapter = ChildItemAdapter(items, onChildItemClick)
+            recyclerView.adapter = ChildItemAdapter(items, onChildItemClick,parentPosition)
         }
     }
 }
