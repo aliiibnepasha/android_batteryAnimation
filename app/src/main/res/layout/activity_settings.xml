@@ -137,7 +137,7 @@
 
         <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/ivSettingDark"
-            android:layout_width="?actionBarSize"
+            android:layout_width="50dp"
             android:layout_height="0dp"
             android:padding="12dp"
             app:layout_constraintBottom_toBottomOf="parent"

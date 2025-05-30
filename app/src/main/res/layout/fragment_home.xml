@@ -9,9 +9,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/designEnableEmoji"
         android:layout_width="0dp"
-        android:layout_height="?actionBarSize"
+        android:layout_height="50dp"
         android:background="@color/bg_color_enable"
-        android:paddingHorizontal="15dp"
+        android:paddingHorizontal="14dp"
         app:layout_constraintBottom_toTopOf="@+id/recyclerViewParent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
