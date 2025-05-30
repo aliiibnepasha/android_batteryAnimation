@@ -123,16 +123,13 @@ class AppPreferences private constructor(context: Context) {
         get() = sharedPreferences.getString(KEY_STATUS_LOTTIE, "anim_8") ?: "anim_8"
         set(value) = sharedPreferences.edit { putString(KEY_STATUS_LOTTIE, value) }
 
-    var statusIconName: String
+    var customIconName: String
         get() = sharedPreferences.getString(KEY_STATUS_ICON, "widget_fantasy_1") ?: "widget_fantasy_1"
         set(value) = sharedPreferences.edit { putString(KEY_STATUS_ICON, value) }
 
       var batteryIconName: String
-        get() = sharedPreferences.getString(KEY_BAT_ICON, "widget_fantasy_1") ?: "widget_fantasy_1"
+        get() = sharedPreferences.getString(KEY_BAT_ICON, "emoji_1") ?: "emoji_1"
         set(value) = sharedPreferences.edit { putString(KEY_BAT_ICON, value) }
-
-
-
 
     // For per-icon size (dynamically via key)
     fun getIconSize(label: String, default: Int = 24) = getInt(iconSizeKeyFor(label), default)

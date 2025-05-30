@@ -16,9 +16,9 @@ import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
 import com.lowbyte.battery.animation.adapter.MultiViewAdapter
 import com.lowbyte.battery.animation.databinding.FragmentHomeBinding
 import com.lowbyte.battery.animation.model.MultiViewItem
+import com.lowbyte.battery.animation.utils.AnimationUtils.animationList
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListAction
-import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListFantasy
 import com.lowbyte.battery.animation.utils.AppPreferences
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -44,11 +44,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         val data = listOf(
             MultiViewItem.TitleItem(getString(R.string.cat_emojis)),
-            MultiViewItem.ListItem(emojiCuteListFantasy),
+            MultiViewItem.ListEmojiOrWidgetItem(emojiCuteListFantasy),
             MultiViewItem.TitleItem(getString(R.string.cat_widgets)),
-            MultiViewItem.ListItem(widgetListAction),
+            MultiViewItem.ListEmojiOrWidgetItem(widgetListAction),
             MultiViewItem.TitleItem(getString(R.string.cat_animations)),
-            MultiViewItem.ListItem(widgetListFantasy),
+            MultiViewItem.ListAnimationItem(animationList),
         )
 
         val adapter = MultiViewAdapter(

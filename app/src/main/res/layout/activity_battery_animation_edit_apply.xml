@@ -84,7 +84,9 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:0.6"
-
+            app:lottie_autoPlay="true"
+            app:lottie_repeatCount="10"
+            app:lottie_repeatMode="reverse"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
