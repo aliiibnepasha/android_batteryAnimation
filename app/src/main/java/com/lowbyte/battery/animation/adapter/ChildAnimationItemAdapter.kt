@@ -1,30 +1,33 @@
 package com.lowbyte.battery.animation.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.databinding.MainItemRvAnimItemBinding
 import com.lowbyte.battery.animation.databinding.MainItemRvItemBinding
 
-class ChildItemAdapter(
+class ChildAnimationItemAdapter(
     private val items: List<String>,
     private val onChildItemClick: (Int, String, Int) -> Unit,
     private val parentPosition: Int
-) : RecyclerView.Adapter<ChildItemAdapter.ChildViewHolder>() {
+) : RecyclerView.Adapter<ChildAnimationItemAdapter.ChildViewHolder>() {
 
-    inner class ChildViewHolder(private val binding: MainItemRvItemBinding) :
+    inner class ChildViewHolder(private val binding: MainItemRvAnimItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(drawableName: String) {
             val context = binding.root.context
-            val resId = context.resources.getIdentifier(drawableName, "drawable", context.packageName)
+
+            val resId = context.resources.getIdentifier(drawableName, "raw", context.packageName)
 
             if (resId != 0) {
-                binding.widgetPreview.setImageResource(resId)
+                binding.animationPreview.setAnimation(resId)
             } else {
-                binding.widgetPreview.setImageResource(R.drawable.emoji_4)
+                Log.e("AnimationAdapter", "Lottie resource not found for name: $drawableName")
+                binding.animationPreview.cancelAnimation()
             }
-
 
             binding.root.setOnClickListener {
                 onChildItemClick(adapterPosition, drawableName, parentPosition)
@@ -33,7 +36,7 @@ class ChildItemAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChildViewHolder {
-        val binding = MainItemRvItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = MainItemRvAnimItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ChildViewHolder(binding)
     }
 
@@ -41,5 +44,5 @@ class ChildItemAdapter(
         holder.bind(items[position])
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount() = items.size
 }

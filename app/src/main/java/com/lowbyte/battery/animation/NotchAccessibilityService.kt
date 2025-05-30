@@ -193,8 +193,8 @@ class NotchAccessibilityService : AccessibilityService() {
             }
 
             // Custom icon
-            val customIconRes = resources.getIdentifier(preferences.statusIconName, "drawable", packageName)
-            if (preferences.statusIconName.isNotBlank() && customIconRes != 0) {
+            val customIconRes = resources.getIdentifier(preferences.customIconName, "drawable", packageName)
+            if (preferences.customIconName.isNotBlank() && customIconRes != 0) {
                 customIcon.setImageResource(customIconRes)
                 customIcon.visibility = View.VISIBLE
             } else {
@@ -302,18 +302,18 @@ class NotchAccessibilityService : AccessibilityService() {
     }
 
     private fun isWifiEnabled(): Boolean {
-        val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
         return wifiManager.isWifiEnabled
     }
 
     private fun isMobileDataEnabled(): Boolean {
-        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         return cm.activeNetworkInfo?.type == ConnectivityManager.TYPE_MOBILE && cm.activeNetworkInfo?.isConnected == true
     }
 
     // Hotspot detection is tricky. Here's an API-30+ example using ConnectivityManager
     private fun isHotspotEnabled(): Boolean {
-        val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
         return try {
             val method = wifiManager.javaClass.getDeclaredMethod("isWifiApEnabled")
             method.invoke(wifiManager) as Boolean

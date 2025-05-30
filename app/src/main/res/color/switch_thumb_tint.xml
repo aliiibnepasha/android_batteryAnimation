@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- ON: white -->
+    <item android:state_checked="true" android:color="@color/blue_progress_non_fill" />
+    <!-- OFF: blue_app_color -->
+    <item android:state_checked="false" android:color="@color/gray_unselected" />
+</selector>

@@ -141,10 +141,17 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/enableShowBatteryPercentage"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:checked="false"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            android:text=""
+            app:showText="false"
+            app:thumbTint="@color/switch_thumb_tint"
+            app:trackTint="@color/switch_track_tint"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/titleShowBatPercentage"

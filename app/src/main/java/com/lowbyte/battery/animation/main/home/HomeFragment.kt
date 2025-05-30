@@ -15,10 +15,11 @@ import com.lowbyte.battery.animation.activity.BatteryWidgetEditApplyActivity
 import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
 import com.lowbyte.battery.animation.adapter.MultiViewAdapter
 import com.lowbyte.battery.animation.databinding.FragmentHomeBinding
+import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.model.MultiViewItem
+import com.lowbyte.battery.animation.utils.AnimationUtils.animationList
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListAction
-import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListFantasy
 import com.lowbyte.battery.animation.utils.AppPreferences
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -35,7 +36,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         binding.switchEnableBatteryEmoji.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked && ::preferences.isInitialized) {
-                checkAccessibilityPermission()
+                val sheet = AccessibilityPermissionBottomSheet(
+                    onAllowClicked = {
+                        checkAccessibilityPermission()
+                    },
+                    onCancelClicked = {
+                        // Handle cancel
+                    }
+                )
+                sheet.show(childFragmentManager, "AccessibilityPermission")
+
             } else {
                 preferences.isStatusBarEnabled = false
                 requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
@@ -44,11 +54,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         val data = listOf(
             MultiViewItem.TitleItem(getString(R.string.cat_emojis)),
-            MultiViewItem.ListItem(emojiCuteListFantasy),
+            MultiViewItem.ListEmojiOrWidgetItem(emojiCuteListFantasy),
             MultiViewItem.TitleItem(getString(R.string.cat_widgets)),
-            MultiViewItem.ListItem(widgetListAction),
+            MultiViewItem.ListEmojiOrWidgetItem(widgetListAction),
             MultiViewItem.TitleItem(getString(R.string.cat_animations)),
-            MultiViewItem.ListItem(widgetListFantasy),
+            MultiViewItem.ListAnimationItem(animationList),
         )
 
         val adapter = MultiViewAdapter(

@@ -37,7 +37,7 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/edit"
             android:gravity="center"
-            android:text="@string/view_all_battery_animation"
+            android:text="@string/view_all_battery_widget"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -67,7 +67,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/previewBatteryAnimation"
+        android:id="@+id/previewBatteryWidget"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginVertical="?actionBarSize"
@@ -78,13 +78,12 @@
         app:layout_constraintTop_toBottomOf="@+id/titlebarEditEmoji"
         app:layout_constraintWidth_percent="0.90">
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/previewLottiAnimation"
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/previewWidgetView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:0.6"
-
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -105,7 +104,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/buttonHome"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/previewBatteryAnimation"
+        app:layout_constraintTop_toBottomOf="@+id/previewBatteryWidget"
         app:layout_constraintWidth_percent="0.4" />
 
 
@@ -122,7 +121,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonForApply"
-        app:layout_constraintTop_toBottomOf="@+id/previewBatteryAnimation"
+        app:layout_constraintTop_toBottomOf="@+id/previewBatteryWidget"
         app:layout_constraintWidth_percent="0.4" />
 
 

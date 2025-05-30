@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.activity.BatteryAnimationEditApplyActivity
 import com.lowbyte.battery.animation.adapter.AnimationAdapter
 import com.lowbyte.battery.animation.databinding.FragmentViewAllAnimationBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.animationList
@@ -75,9 +76,10 @@ class ViewAllAnimationFragment : Fragment() {
     private fun setupRecyclerView() {
         adapter = AnimationAdapter { position, name ->
             Log.d("Click", "Clicked position: $position, animation: $name")
-            preferences.statusLottieName = name
-            requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
-
+            val intent = Intent(requireActivity(), BatteryAnimationEditApplyActivity::class.java)
+            intent.putExtra("EXTRA_POSITION", position)
+            intent.putExtra("EXTRA_LABEL", name)
+            startActivity(intent)
         }
 
         binding.recyclerView.apply {

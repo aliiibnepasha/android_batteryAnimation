@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -8,7 +9,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.lowbyte.battery.animation"
+        applicationId = "com.emojibattery.widget.statusbar"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -19,7 +20,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -56,5 +58,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation (libs.lottie)
     implementation (libs.colorpickerview)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
 
 }
