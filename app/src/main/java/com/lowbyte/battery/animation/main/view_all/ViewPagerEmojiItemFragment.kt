@@ -2,6 +2,7 @@ package com.lowbyte.battery.animation.main.view_all
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
 import com.lowbyte.battery.animation.activity.StatusBarIconSettingsActivity
 import com.lowbyte.battery.animation.adapter.AllEmojiAdapter
 import com.lowbyte.battery.animation.databinding.ItemViewPagerBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.allEmojis
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiAnimListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiBasicListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiComicListFantasy
@@ -64,32 +66,49 @@ class ViewPagerEmojiItemFragment : Fragment() {
         when (currentPos) {
             0 -> {
 
-                adapter.submitList(emojiListFantasy)
+                adapter.submitList(allEmojis)
+                Log.d("TAG", "setupRecyclerView:0  ${allEmojis}")
             }
 
             1 -> {
 
-                adapter.submitList(emojiAnimListFantasy)
+                adapter.submitList(emojiListFantasy)
+                Log.d("TAG", "setupRecyclerView:1 ${emojiListFantasy}")
+
             }
 
             2 -> {
 
-                adapter.submitList(emojiBasicListFantasy)
+                adapter.submitList(emojiAnimListFantasy)
+                Log.d("TAG", "setupRecyclerView:2 ${emojiAnimListFantasy}")
+
             }
 
             3 -> {
 
-                adapter.submitList(emojiCuteListFantasy)
+                adapter.submitList(emojiBasicListFantasy)
+                Log.d("TAG", "setupRecyclerView:3 ${emojiBasicListFantasy}")
+
             }
 
             4 -> {
 
-                adapter.submitList(emojiFashionListFantasy)
+                adapter.submitList(emojiCuteListFantasy)
+                Log.d("TAG", "setupRecyclerView:4 ${emojiCuteListFantasy}")
+
             }
 
             5 -> {
 
-                adapter.submitList(emojiListFantasy)
+                adapter.submitList(emojiFashionListFantasy)
+                Log.d("TAG", "setupRecyclerView:5 ${emojiFashionListFantasy}")
+
+            }
+            6 -> {
+
+                adapter.submitList(emojiComicListFantasy)
+                Log.d("TAG", "setupRecyclerView:5 ${emojiComicListFantasy}")
+
             }
         }
 

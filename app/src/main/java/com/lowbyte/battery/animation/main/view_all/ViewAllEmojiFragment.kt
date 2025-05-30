@@ -17,7 +17,7 @@ import com.lowbyte.battery.animation.utils.AppPreferences
 
 class ViewAllEmojiFragment : Fragment() {
     private lateinit var binding: FragmentViewAllEmojiBinding
-    private val tabTitles = listOf("All", "Popular", "Cute", "Comic", "Hot")
+    private val tabTitles = listOf("All", "Popular", "Cute", "Comic", "Hot", "New", "Cute")
     private lateinit var preferences: AppPreferences
 
 

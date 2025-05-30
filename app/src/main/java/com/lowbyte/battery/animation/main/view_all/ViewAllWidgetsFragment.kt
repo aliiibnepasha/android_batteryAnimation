@@ -12,7 +12,7 @@ import com.lowbyte.battery.animation.databinding.FragmentViewAllWidgetsBinding
 
 class ViewAllWidgetsFragment : Fragment() {
     private lateinit var binding: FragmentViewAllWidgetsBinding
-    private val tabTitles = listOf("All", "Popular", "Cute", "Comic", "Hot")
+    private val tabTitles = listOf("All", "Popular", "Cute", "Comic", "Hot", "New")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

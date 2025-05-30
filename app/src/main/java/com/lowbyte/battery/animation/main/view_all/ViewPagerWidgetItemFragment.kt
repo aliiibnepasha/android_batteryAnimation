@@ -11,11 +11,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.activity.BatteryWidgetEditApplyActivity
 import com.lowbyte.battery.animation.adapter.AllWidgetAdapter
 import com.lowbyte.battery.animation.databinding.ItemViewPagerBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.allWidgets
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListAction
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListBasic
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListCute
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListFantasy
-import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListW
+import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListFashion
 
 class ViewPagerWidgetItemFragment : Fragment() {
     private lateinit var binding: ItemViewPagerBinding
@@ -61,29 +62,39 @@ class ViewPagerWidgetItemFragment : Fragment() {
         when (currentPos) {
             0 -> {
 
-                adapter.submitList(widgetListW)
-                Log.d("listDrawable","$widgetListW")
+                adapter.submitList(allWidgets)
+                Log.d("listDrawable","$allWidgets")
             }
 
             1 -> {
 
-                adapter.submitList(widgetListAction)
+                adapter.submitList(widgetListFantasy)
+                Log.d("listDrawable","$widgetListFantasy")
             }
 
             2 -> {
 
-                adapter.submitList(widgetListBasic)
+                adapter.submitList(widgetListAction)
+                Log.d("listDrawable","$widgetListAction")
             }
 
             3 -> {
 
-                adapter.submitList(widgetListCute)
+                adapter.submitList(widgetListBasic)
+                Log.d("listDrawable","$widgetListBasic")
             }
 
             4 -> {
 
-                adapter.submitList(widgetListFantasy)
+                adapter.submitList(widgetListCute)
+                Log.d("listDrawable","$widgetListCute")
             }
+            5 -> {
+
+                adapter.submitList(widgetListFashion)
+                Log.d("listDrawable","$widgetListFashion")
+            }
+
 
 
         }
