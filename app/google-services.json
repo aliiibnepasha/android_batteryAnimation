@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "403636444526",
+    "project_id": "battery-emoji-8fee2",
+    "storage_bucket": "battery-emoji-8fee2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:403636444526:android:b9524918ded3463300f57f",
+        "android_client_info": {
+          "package_name": "com.emojibattery.widget.statusbar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBh6h4XQgvaVV2NK9kxHWmjaPJDCa-UcHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

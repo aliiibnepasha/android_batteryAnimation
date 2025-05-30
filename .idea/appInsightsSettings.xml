@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.emojibattery.widget.statusbar" />
+                  <option name="mobileSdkAppId" value="1:403636444526:android:b9524918ded3463300f57f" />
+                  <option name="projectId" value="battery-emoji-8fee2" />
+                  <option name="projectNumber" value="403636444526" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

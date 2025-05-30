@@ -15,6 +15,7 @@ import com.lowbyte.battery.animation.activity.BatteryWidgetEditApplyActivity
 import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
 import com.lowbyte.battery.animation.adapter.MultiViewAdapter
 import com.lowbyte.battery.animation.databinding.FragmentHomeBinding
+import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.model.MultiViewItem
 import com.lowbyte.battery.animation.utils.AnimationUtils.animationList
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
@@ -35,7 +36,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         binding.switchEnableBatteryEmoji.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked && ::preferences.isInitialized) {
-                checkAccessibilityPermission()
+                val sheet = AccessibilityPermissionBottomSheet(
+                    onAllowClicked = {
+                        checkAccessibilityPermission()
+                    },
+                    onCancelClicked = {
+                        // Handle cancel
+                    }
+                )
+                sheet.show(childFragmentManager, "AccessibilityPermission")
+
             } else {
                 preferences.isStatusBarEnabled = false
                 requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
