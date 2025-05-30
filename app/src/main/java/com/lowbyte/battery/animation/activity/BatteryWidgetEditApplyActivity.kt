@@ -41,7 +41,7 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
         if (resId != 0) {
             binding.previewWidgetView.setImageResource(resId)
         } else {
-            binding.previewWidgetView.setImageResource(R.drawable.emoji_default) // fallback
+            binding.previewWidgetView.setImageResource(R.drawable.emoji_4)
         }
 
         setupClickListeners()
@@ -53,14 +53,13 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
         }
 
         binding.buttonForApply.setOnClickListener {
-            // Handle Apply action
+
             preferences.statusLottieName = label
             sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
             Log.d("BUTTON", "Apply clicked")
         }
 
         binding.buttonHome.setOnClickListener {
-            // Handle Emoji/Home action
             Log.d("BUTTON", "Home clicked")
         }
     }
