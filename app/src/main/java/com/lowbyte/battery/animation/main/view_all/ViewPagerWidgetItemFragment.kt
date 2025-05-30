@@ -45,8 +45,7 @@ class ViewPagerWidgetItemFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = AllWidgetAdapter { position ->
-            // Handle item click
-            // Navigate to detail screen or perform action
+
         }
 
         binding.recyclerView.apply {

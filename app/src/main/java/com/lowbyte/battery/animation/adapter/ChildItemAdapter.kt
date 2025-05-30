@@ -22,8 +22,9 @@ class ChildItemAdapter(
             if (resId != 0) {
                 binding.widgetPreview.setImageResource(resId)
             } else {
-                binding.widgetPreview.setImageResource(R.drawable.emoji_default) // fallback
+                binding.widgetPreview.setImageResource(R.drawable.emoji_4)
             }
+
 
             binding.root.setOnClickListener {
                 onChildItemClick(adapterPosition, drawableName, parentPosition)
@@ -40,5 +41,5 @@ class ChildItemAdapter(
         holder.bind(items[position])
     }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount(): Int = items.size
 }

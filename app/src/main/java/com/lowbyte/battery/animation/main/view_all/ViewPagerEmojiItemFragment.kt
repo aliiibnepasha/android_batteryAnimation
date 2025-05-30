@@ -89,7 +89,7 @@ class ViewPagerEmojiItemFragment : Fragment() {
 
             5 -> {
 
-                adapter.submitList(emojiComicListFantasy)
+                adapter.submitList(emojiListFantasy)
             }
         }
 

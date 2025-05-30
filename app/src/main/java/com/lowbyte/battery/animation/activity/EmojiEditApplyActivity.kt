@@ -38,7 +38,7 @@ class EmojiEditApplyActivity : AppCompatActivity() {
         if (resId != 0) {
             binding.previewEditEmoji.setImageResource(resId)
         } else {
-            binding.previewEditEmoji.setImageResource(R.drawable.emoji_default) // fallback
+            binding.previewEditEmoji.setImageResource(R.drawable.emoji_1) // fallback
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->

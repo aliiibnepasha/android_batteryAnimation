@@ -43,7 +43,7 @@ class AllWidgetAdapter(
                 binding.widgetPreview.setImageResource(resId)
             } else {
                 // Handle missing drawable (optional)
-                binding.widgetPreview.setImageResource(R.drawable.emoji_default) // fallback image
+                binding.widgetPreview.setImageResource(R.drawable.emoji_3) // fallback image
             }
         }
     }
