@@ -74,6 +74,21 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
+        <receiver android:name=".adapter.BatteryWidgetProvider" android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/battery_widget_info" />
+        </receiver>
+
+        <receiver android:name=".BatteryLevelReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_CHANGED"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

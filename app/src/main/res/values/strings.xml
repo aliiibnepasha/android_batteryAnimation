@@ -55,9 +55,6 @@
     <string name="single_tap">Single-tap</string>
     <string name="swipe_right_to_left">Swipe right to left</string>
 
-
-
-
     <string name="action_quick_scroll_to_up">Quick Scroll to up</string>
     <string name="action_open_notifications">Open Notifications</string>
     <string name="action_open_control_centre">Open Control Centre</string>
@@ -68,8 +65,6 @@
     <string name="action_recent_action">Recent Action</string>
     <string name="action_take_screenshot">Take Screenshot</string>
     <string name="action_lock_screen">Lock Screen</string>
-
-
 
     <string name="size_dp">%1$s Size : %2$d dp</string>
     <string name="right_margin_dp">Right Margin : %1$d dp</string>
