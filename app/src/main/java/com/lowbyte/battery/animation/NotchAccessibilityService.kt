@@ -31,6 +31,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.lowbyte.battery.animation.databinding.CustomStatusBarBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
+import com.lowbyte.battery.animation.utils.GestureActionUtils.performAction
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -221,17 +222,25 @@ class NotchAccessibilityService : AccessibilityService() {
         val gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
 
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                handleTap()
+                if (preferences.isGestureMode){
+                    handleTap()
+                }
+
                 return true
             }
 
             override fun onDoubleTap(e: MotionEvent): Boolean {
-                Toast.makeText(this@NotchAccessibilityService, "Double Tap Detected", Toast.LENGTH_SHORT).show()
+                if (preferences.isGestureMode){
+                    Toast.makeText(this@NotchAccessibilityService, "Double Tap Detected", Toast.LENGTH_SHORT).show()
+                }
                 return true
             }
 
             override fun onLongPress(e: MotionEvent) {
-                handleLongPress()
+                if (preferences.isGestureMode){
+                    handleLongPress()
+                }
+
             }
 
             override fun onFling(
@@ -241,9 +250,13 @@ class NotchAccessibilityService : AccessibilityService() {
                 val deltaY = (e2?.y ?: 0f) - (e1?.y ?: 0f)
                 if (Math.abs(deltaX) > Math.abs(deltaY)) {
                     if (deltaX > 100) {
-                        Toast.makeText(this@NotchAccessibilityService, "Swiped Left to Right", Toast.LENGTH_SHORT).show()
+                        if (preferences.isGestureMode){
+                            performAction(this@NotchAccessibilityService, preferences.getString("swipeLeftToRightAction", getString(R.string.action_do_nothing))?:getString(R.string.action_do_nothing))
+                        }
                     } else if (deltaX < -100) {
-                        Toast.makeText(this@NotchAccessibilityService, "Swiped Right to Left", Toast.LENGTH_SHORT).show()
+                        if (preferences.isGestureMode){
+                            performAction(this@NotchAccessibilityService, preferences.getString("swipeRightToLeftAction", getString(R.string.action_do_nothing))?:getString(R.string.action_do_nothing))
+                        }
                     }
                 }
                 return true
@@ -276,11 +289,11 @@ class NotchAccessibilityService : AccessibilityService() {
     }
 
     private fun handleTap() {
-        Toast.makeText(this, "Status Bar Tapped", Toast.LENGTH_SHORT).show()
+        performAction(this, preferences.getString("gestureAction", getString(R.string.action_do_nothing))?:getString(R.string.action_do_nothing))
     }
 
     private fun handleLongPress() {
-        Toast.makeText(this, "Status Bar Long Pressed", Toast.LENGTH_SHORT).show()
+        performAction(this, preferences.getString("longPressAction", getString(R.string.action_do_nothing))?:getString(R.string.action_do_nothing))
     }
 
     private fun startTimeUpdates() {

@@ -179,7 +179,7 @@
         app:layout_constraintWidth_percent="0.95">
 
         <TextView
-            android:id="@+id/status_bar_height"
+            android:id="@+id/status_bar_single_tap"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
@@ -190,7 +190,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/status_bar_height_seekbar"
+            android:id="@+id/status_bar_single_tap_action"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -198,7 +198,7 @@
             android:textColor="@color/gray_unselected"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/status_bar_height"
+            app:layout_constraintTop_toBottomOf="@+id/status_bar_single_tap"
             app:layout_constraintWidth_percent="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -216,7 +216,7 @@
         app:layout_constraintWidth_percent="0.95">
 
         <TextView
-            android:id="@+id/left_margin_label"
+            android:id="@+id/status_bar_long_tap"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
@@ -227,7 +227,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/left_margin_seek_bar"
+            android:id="@+id/status_bar_long_action"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -235,7 +235,7 @@
             android:textColor="@color/gray_unselected"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/left_margin_label"
+            app:layout_constraintTop_toBottomOf="@+id/status_bar_long_tap"
             app:layout_constraintWidth_percent="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -253,7 +253,7 @@
         app:layout_constraintWidth_percent="0.95">
 
         <TextView
-            android:id="@+id/right_margin_label"
+            android:id="@+id/swipe_left_to_right"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
@@ -264,7 +264,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/right_margin_seek_bar"
+            android:id="@+id/swipe_left_to_right_action"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -272,7 +272,7 @@
             android:textColor="@color/gray_unselected"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/right_margin_label"
+            app:layout_constraintTop_toBottomOf="@+id/swipe_left_to_right"
             app:layout_constraintWidth_percent="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

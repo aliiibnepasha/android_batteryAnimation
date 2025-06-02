@@ -18,7 +18,9 @@ class AppPreferences private constructor(context: Context) {
         private const val KEY_FIRST_RUN = "first_run"
         private const val KEY_STATUS_ENABLED = "isStatusEnabled"
         private const val KEY_IS_DARK_MODE = "is_dark_mode"
-        
+        private const val KEY_IS_VIBRATE_MODE = "is_vibrate_mode"
+        private const val KEY_IS_GESTURE_MODE = "is_gesture_mode"
+
         // Int keys
         private const val KEY_SELECTED_TAB = "selected_tab"
         private const val KEY_ANIMATION_SPEED = "animation_speed"
@@ -85,10 +87,28 @@ class AppPreferences private constructor(context: Context) {
         get() = sharedPreferences.getInt(KEY_STATUS_BG_COLOR, Color.WHITE)
         set(value) = sharedPreferences.edit { putInt(KEY_STATUS_BG_COLOR, value) }
 
+
+
+
     // For booleans (show/hide)
+    var isVibrateMode: Boolean
+        get() = sharedPreferences.getBoolean(KEY_IS_VIBRATE_MODE, true)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_IS_VIBRATE_MODE, value) }
+
+      // For booleans (show/hide)
+    var isGestureMode: Boolean
+        get() = sharedPreferences.getBoolean(KEY_IS_GESTURE_MODE, true)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_IS_GESTURE_MODE, value) }
+
+      // For booleans (show/hide)
     var showWifi: Boolean
         get() = sharedPreferences.getBoolean(KEY_SHOW_WIFI, true)
         set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_WIFI, value) }
+
+
+
+
+
 
  var showBatteryIcon: Boolean
         get() = sharedPreferences.getBoolean(KEY_SHOW_BAT_ICON, true)
@@ -167,9 +187,17 @@ class AppPreferences private constructor(context: Context) {
         set(value) = sharedPreferences.edit { putLong(KEY_LAST_UPDATE, value) }
 
 
-
     fun getInt(key: String, default: Int = 0): Int = sharedPreferences.getInt(key, default)
     fun setInt(key: String, value: Int) = sharedPreferences.edit { putInt(key, value) }
+
+
+
+
+    fun getString(key: String, default: String = ""): String? = sharedPreferences.getString(key, default)
+
+    fun setString(key: String, value: String) = sharedPreferences.edit { putString(key, value) }
+
+
 
     var userId: Long
         get() = sharedPreferences.getLong(KEY_USER_ID, 0L)
@@ -198,4 +226,5 @@ class AppPreferences private constructor(context: Context) {
     }
 
 }
+
 

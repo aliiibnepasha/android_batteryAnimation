@@ -23,7 +23,7 @@
             android:layout_height="0dp"
             android:gravity="start|center_vertical"
             android:text="@string/enable_battery_emoji"
-            android:textColor="@color/blue_app_color"
+            android:textColor="@color/white"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/switchEnableBatteryEmoji"

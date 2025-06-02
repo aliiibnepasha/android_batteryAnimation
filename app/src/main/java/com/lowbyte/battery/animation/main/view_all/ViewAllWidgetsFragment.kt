@@ -14,10 +14,7 @@ class ViewAllWidgetsFragment : Fragment() {
     private lateinit var binding: FragmentViewAllWidgetsBinding
     private val tabTitles = listOf("All", "Popular", "Cute", "Comic", "Hot", "New")
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentViewAllWidgetsBinding.inflate(inflater, container, false)
         return binding.root
     }
