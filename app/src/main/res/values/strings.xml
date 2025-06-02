@@ -95,4 +95,6 @@
     <string name="why_we_need_accessibility_permission">Why we need accessibility permission?</string>
     <string name="service_note_2">We Need Permission To Enhance Your App\nExperience And Functionality.</string>
     <string name="service_note_3">I Have Read And Accepted Terms Of Service</string>
+    <string name="lock_screen_not_supported_on_your_device">Lock screen not supported on your device.</string>
+    <string name="take_screenshot_not_supported_on_your_device">Take screenshot not supported on your device.</string>
 </resources>

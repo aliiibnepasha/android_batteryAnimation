@@ -31,7 +31,6 @@ import android.widget.TextView
 import android.widget.Toast
 import com.lowbyte.battery.animation.databinding.CustomStatusBarBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
-import com.lowbyte.battery.animation.utils.GestureActionUtils.performAction
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -251,11 +250,23 @@ class NotchAccessibilityService : AccessibilityService() {
                 if (Math.abs(deltaX) > Math.abs(deltaY)) {
                     if (deltaX > 100) {
                         if (preferences.isGestureMode){
-                            performAction(this@NotchAccessibilityService, preferences.getString("swipeLeftToRightAction", getString(R.string.action_do_nothing))?:getString(R.string.action_do_nothing))
+                            performGlobalActionByName(
+                                preferences.getString(
+                                    "swipeLeftToRightAction",
+                                    getString(R.string.action_do_nothing)
+                                ) ?: getString(R.string.action_do_nothing)
+                            )
+
                         }
                     } else if (deltaX < -100) {
                         if (preferences.isGestureMode){
-                            performAction(this@NotchAccessibilityService, preferences.getString("swipeRightToLeftAction", getString(R.string.action_do_nothing))?:getString(R.string.action_do_nothing))
+                            performGlobalActionByName(
+                                preferences.getString(
+                                    "swipeRightToLeftAction",
+                                    getString(R.string.action_do_nothing)
+                                ) ?: getString(R.string.action_do_nothing)
+                            )
+
                         }
                     }
                 }
@@ -289,11 +300,22 @@ class NotchAccessibilityService : AccessibilityService() {
     }
 
     private fun handleTap() {
-        performAction(this, preferences.getString("gestureAction", getString(R.string.action_do_nothing))?:getString(R.string.action_do_nothing))
+        performGlobalActionByName(
+            preferences.getString(
+                "gestureAction",
+                getString(R.string.action_do_nothing)
+            ) ?: getString(R.string.action_do_nothing)
+        )
     }
 
     private fun handleLongPress() {
-        performAction(this, preferences.getString("longPressAction", getString(R.string.action_do_nothing))?:getString(R.string.action_do_nothing))
+        performGlobalActionByName(
+            preferences.getString(
+                "longPressAction",
+                getString(R.string.action_do_nothing)
+            ) ?: getString(R.string.action_do_nothing)
+        )
+
     }
 
     private fun startTimeUpdates() {
@@ -354,5 +376,70 @@ class NotchAccessibilityService : AccessibilityService() {
     private fun applyIconSize(view: View?, sizeDp: Int) {
         val px = (sizeDp * resources.displayMetrics.density).toInt()
         view?.layoutParams = LinearLayout.LayoutParams(px, px)
+    }
+
+    fun performGlobalActionByName(actionName: String) {
+        when (actionName) {
+            getString(R.string.action_do_nothing) -> {
+
+            }
+
+            getString(R.string.action_back_action) -> {
+                performGlobalAction(GLOBAL_ACTION_BACK)
+            }
+
+            getString(R.string.action_home_action) -> {
+                performGlobalAction(GLOBAL_ACTION_HOME)
+            }
+
+            getString(R.string.action_recent_action) -> {
+                performGlobalAction(GLOBAL_ACTION_RECENTS)
+            }
+
+            getString(R.string.action_lock_screen) -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    performGlobalAction(GLOBAL_ACTION_POWER_DIALOG)
+                } else {
+                    Toast.makeText(
+                        this,
+                        getString(R.string.lock_screen_not_supported_on_your_device),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            getString(R.string.action_open_notifications) -> {
+                performGlobalAction(GLOBAL_ACTION_NOTIFICATIONS)
+            }
+
+            getString(R.string.action_power_options) -> {
+                performGlobalAction(GLOBAL_ACTION_POWER_DIALOG)
+            }
+
+            getString(R.string.action_quick_scroll_to_up) -> {
+                performGlobalAction(GESTURE_SWIPE_UP)
+            }
+
+            getString(R.string.action_open_control_centre) -> {
+                performGlobalAction(GLOBAL_ACTION_QUICK_SETTINGS)
+            }
+
+            getString(R.string.action_take_screenshot) -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    performGlobalAction(GLOBAL_ACTION_TAKE_SCREENSHOT)
+                } else {
+                    Toast.makeText(
+                        this,
+                        getString(R.string.take_screenshot_not_supported_on_your_device),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+
+            else -> {
+                // Unsupported
+            }
+        }
     }
 }
