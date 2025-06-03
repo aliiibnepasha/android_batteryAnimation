@@ -66,17 +66,17 @@ class NotchAccessibilityService : AccessibilityService() {
         updateReceiver = null
     }
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun registerUpdateReceiver() {
         if (updateReceiver == null) {
             updateReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
-                    Log.d("servicesdd","Received broadcast")
+                    Log.d("servicesdd", "Received broadcast")
                     updateStatusBarAppearance()
                 }
             }
+
             val filter = IntentFilter().apply {
-                addAction("com.lowbyte.UPDATE_STATUSBAR") // existing
+                addAction("com.lowbyte.UPDATE_STATUSBAR")
                 addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
                 addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
                 addAction(ConnectivityManager.CONNECTIVITY_ACTION)
@@ -398,7 +398,7 @@ class NotchAccessibilityService : AccessibilityService() {
 
             getString(R.string.action_lock_screen) -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    performGlobalAction(GLOBAL_ACTION_POWER_DIALOG)
+                    performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
                 } else {
                     Toast.makeText(
                         this,

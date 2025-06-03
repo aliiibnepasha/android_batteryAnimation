@@ -93,4 +93,5 @@
     <string name="service_note_3">I Have Read And Accepted Terms Of Service</string>
     <string name="lock_screen_not_supported_on_your_device">Lock screen not supported on your device.</string>
     <string name="take_screenshot_not_supported_on_your_device">Take screenshot not supported on your device.</string>
+    <string name="widget_design_preview">Take screenshot not supported on your device.</string>
 </resources>

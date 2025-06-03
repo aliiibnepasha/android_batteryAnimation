@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.BatteryManager
 import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.utils.AppPreferences
@@ -15,7 +16,7 @@ class BatteryLevelReceiver : BroadcastReceiver() {
     private lateinit var preferences: AppPreferences
 
     override fun onReceive(context: Context, intent: Intent) {
-         preferences = AppPreferences.getInstance(context)
+        preferences = AppPreferences.getInstance(context)
         val manager = AppWidgetManager.getInstance(context)
         val widgetIds = manager.getAppWidgetIds(ComponentName(context, BatteryWidgetProvider::class.java))
 
@@ -23,55 +24,41 @@ class BatteryLevelReceiver : BroadcastReceiver() {
         val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
         val batteryPct = (level / scale.toFloat() * 100).toInt()
 
-        for (widgetId in widgetIds) {
-            val styleIndex = preferences.getStyleIndexForWidget(widgetId)
-            val widgetIconName = preferences.getIconNameForWidget(widgetId)
+        // If a specific widget ID was passed, only update that widget
+        val specificWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
+        val widgetsToUpdate = if (specificWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+            listOf(specificWidgetId)
+        } else {
+            widgetIds.toList()
+        }
+
+        for (widgetId in widgetsToUpdate) {
+            val widgetIconName = preferences.getWidgetIcon(widgetId)
+            if (widgetIconName.isEmpty()) {
+                Log.d("BatteryWidget", "No icon saved for widget $widgetId")
+                continue
+            }
+
             val views = RemoteViews(context.packageName, R.layout.widget_battery)
+            Log.d("BatteryWidget", "Updating widget $widgetId with icon: $widgetIconName")
 
-            Log.d("STYLEINDEX", "Rec WidgetID: $widgetId -> styleIndex: $styleIndex, icon: $widgetIconName")
-
+            // Set the battery icon
             val resId = context.resources.getIdentifier(widgetIconName, "drawable", context.packageName)
             views.setImageViewResource(R.id.battery_icon, if (resId != 0) resId else R.drawable.emoji_1)
 
-            when (styleIndex) {
-                0 -> applyStyleClassic(context, views, batteryPct)
-                1 -> applyStyleDark(context, views, batteryPct)
-                2 -> applyStyleGreen(context, views, batteryPct)
-                else -> applyStyleClassic(context, views, batteryPct)
-            }
+            // Set battery percentage
+            val percent = "$batteryPct%"
+            
+            // Show percentage in bottom text view
+            views.setViewVisibility(R.id.batteryLevelBottom, View.VISIBLE)
+            views.setTextViewText(R.id.batteryLevelBottom, percent)
+            
+            // Hide other percentage views
+            views.setViewVisibility(R.id.batteryLevelTop, View.GONE)
+            views.setViewVisibility(R.id.batteryLevelCenter, View.GONE)
 
+            // Update the widget
             manager.updateAppWidget(widgetId, views)
         }
-    }
-
-    private fun applyStyleClassic(context: Context, views: RemoteViews, batteryPct: Int) {
-        views.setTextColor(R.id.batteryLevelTop, context.getColor(R.color.white))
-        views.setTextColor(R.id.batteryLevelCenter, context.getColor(R.color.white))
-        views.setTextColor(R.id.batteryLevelBottom, context.getColor(R.color.white))
-        views.setInt(R.id.widget_root, "setBackgroundResource", R.drawable.widget_1)
-        setBatteryPercentage(views, batteryPct)
-    }
-
-    private fun applyStyleDark(context: Context, views: RemoteViews, batteryPct: Int) {
-        views.setTextColor(R.id.batteryLevelTop, context.getColor(R.color.black))
-        views.setTextColor(R.id.batteryLevelCenter, context.getColor(R.color.black))
-        views.setTextColor(R.id.batteryLevelBottom, context.getColor(R.color.black))
-        views.setInt(R.id.widget_root, "setBackgroundResource", R.drawable.widget_5)
-        setBatteryPercentage(views, batteryPct)
-    }
-
-    private fun applyStyleGreen(context: Context, views: RemoteViews, batteryPct: Int) {
-        views.setTextColor(R.id.batteryLevelTop, context.getColor(R.color.black))
-        views.setTextColor(R.id.batteryLevelCenter, context.getColor(R.color.black))
-        views.setTextColor(R.id.batteryLevelBottom, context.getColor(R.color.black))
-        views.setInt(R.id.widget_root, "setBackgroundResource", R.drawable.widget_9)
-        setBatteryPercentage(views, batteryPct)
-    }
-
-    private fun setBatteryPercentage(views: RemoteViews, batteryPct: Int) {
-        val percent = "$batteryPct%"
-        views.setTextViewText(R.id.batteryLevelTop, percent)
-        views.setTextViewText(R.id.batteryLevelCenter, percent)
-        views.setTextViewText(R.id.batteryLevelBottom, percent)
     }
 }

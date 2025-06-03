@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="120dp"
     android:layout_height="120dp"
-    android:minHeight="120dp"
-    android:gravity="center"
-    android:orientation="vertical"
+    android:background="@android:color/transparent"
     android:padding="3dp">
 
     <!-- Top Battery Level -->
@@ -19,43 +17,15 @@
         android:textColor="@color/white"
         android:textSize="12sp"
         android:textStyle="bold"
+        android:layout_alignParentTop="true"
         android:visibility="gone" />
-
-    <!-- Center Section with Icon + Centered Percentage -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp">
-
-        <ImageView
-            android:id="@+id/battery_icon"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible"
-            android:contentDescription="@string/battery_emoji_widget"
-            android:padding="5dp"
-            android:scaleType="fitCenter" />
-
-        <TextView
-            android:id="@+id/batteryLevelCenter"
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:text="@string/percentage_size"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            android:layout_gravity="center" />
-    </FrameLayout>
 
     <!-- Bottom Battery Level -->
     <TextView
         android:id="@+id/batteryLevelBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:fontFamily="sans-serif"
         android:gravity="center"
         android:text="@string/percentage_size"
@@ -64,4 +34,32 @@
         android:textStyle="bold"
         android:visibility="visible" />
 
-</LinearLayout>
+    <!-- Battery Icon between top and bottom -->
+    <ImageView
+        android:id="@+id/battery_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/batteryLevelBottom"
+        android:layout_below="@id/batteryLevelTop"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:background="@color/blue_app_color"
+        android:contentDescription="@string/battery_emoji_widget"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:visibility="visible" />
+
+    <!-- Centered Percentage TextView over Image -->
+    <TextView
+        android:id="@+id/batteryLevelCenter"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_centerInParent="true"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:text="@string/percentage_size"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+</RelativeLayout>

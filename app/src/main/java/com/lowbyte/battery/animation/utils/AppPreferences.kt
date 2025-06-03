@@ -188,7 +188,13 @@ class AppPreferences private constructor(context: Context) {
         get() = sharedPreferences.getBoolean(KEY_IS_DARK_MODE, false)
         set(value) = sharedPreferences.edit { putBoolean(KEY_IS_DARK_MODE, value) }
 
+    fun saveWidgetIcon(widgetId: Int, iconName: String) {
+        sharedPreferences.edit { putString("icon_name_$widgetId", iconName) }
+    }
 
+    fun getWidgetIcon(widgetId: Int): String {
+        return sharedPreferences.getString("icon_name_$widgetId", "emoji_1") ?: "emoji_1"
+    }
 
     fun getInt(key: String, default: Int = 0): Int = sharedPreferences.getInt(key, default)
     fun setInt(key: String, value: Int) = sharedPreferences.edit { putInt(key, value) }
