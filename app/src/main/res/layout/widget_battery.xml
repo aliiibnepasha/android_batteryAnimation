@@ -11,7 +11,7 @@
     <TextView
         android:id="@+id/batteryLevelTop"
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
         android:gravity="center"
         android:text="@string/percentage_size"
@@ -54,7 +54,7 @@
     <TextView
         android:id="@+id/batteryLevelBottom"
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
         android:gravity="center"
         android:text="@string/percentage_size"

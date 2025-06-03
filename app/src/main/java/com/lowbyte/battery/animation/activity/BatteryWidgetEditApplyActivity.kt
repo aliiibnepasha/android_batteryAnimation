@@ -56,8 +56,6 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
         }
 
         binding.buttonForApply.setOnClickListener {
-            preferences.statusLottieName = label
-            sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
             Log.d("BUTTON", "Apply clicked")
 
             // 🧠 Pin the widget to home screen
@@ -79,8 +77,10 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
             }
         }
 
-        binding.buttonHome.setOnClickListener {
+        binding.buttonSetAsEmoji.setOnClickListener {
             Log.d("BUTTON", "Home clicked")
+            preferences.customIconName = label
+            sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
         }
     }
 }

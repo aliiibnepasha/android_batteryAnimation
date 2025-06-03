@@ -3,6 +3,7 @@ package com.lowbyte.battery.animation.activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -57,10 +58,12 @@ class BatteryAnimationEditApplyActivity : AppCompatActivity() {
             // Add apply logic here
             preferences.statusLottieName = label
             sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+            Toast.makeText(this, "Animation Applied Successfully.", Toast.LENGTH_SHORT).show()
         }
 
         binding.buttonHome.setOnClickListener {
             Log.d("BUTTON_CLICK", "Home clicked")
+            finish()
             // Add navigation to home logic here
         }
     }

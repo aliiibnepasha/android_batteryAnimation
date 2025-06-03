@@ -21,16 +21,8 @@ class AppPreferences private constructor(context: Context) {
         private const val KEY_IS_VIBRATE_MODE = "is_vibrate_mode"
         private const val KEY_IS_GESTURE_MODE = "is_gesture_mode"
 
-        // Int keys
-        private const val KEY_SELECTED_TAB = "selected_tab"
-        private const val KEY_ANIMATION_SPEED = "animation_speed"
-        
-        // Long keys
-        private const val KEY_LAST_UPDATE = "last_update"
-        private const val KEY_USER_ID = "user_id"
-        
+
         // String keys
-        private const val KEY_USER_NAME = "user_name"
         private const val KEY_SELECTED_THEME = "selected_theme"
 
 
@@ -172,19 +164,6 @@ class AppPreferences private constructor(context: Context) {
         get() = sharedPreferences.getBoolean(KEY_IS_DARK_MODE, false)
         set(value) = sharedPreferences.edit { putBoolean(KEY_IS_DARK_MODE, value) }
 
-    // Int preferences
-    var selectedTab: Int
-        get() = sharedPreferences.getInt(KEY_SELECTED_TAB, 0)
-        set(value) = sharedPreferences.edit { putInt(KEY_SELECTED_TAB, value) }
-
-    var animationSpeed: Int
-        get() = sharedPreferences.getInt(KEY_ANIMATION_SPEED, 1)
-        set(value) = sharedPreferences.edit { putInt(KEY_ANIMATION_SPEED, value) }
-
-    // Long preferences
-    var lastUpdate: Long
-        get() = sharedPreferences.getLong(KEY_LAST_UPDATE, 0L)
-        set(value) = sharedPreferences.edit { putLong(KEY_LAST_UPDATE, value) }
 
 
     fun getInt(key: String, default: Int = 0): Int = sharedPreferences.getInt(key, default)
@@ -198,15 +177,6 @@ class AppPreferences private constructor(context: Context) {
     fun setString(key: String, value: String) = sharedPreferences.edit { putString(key, value) }
 
 
-
-    var userId: Long
-        get() = sharedPreferences.getLong(KEY_USER_ID, 0L)
-        set(value) = sharedPreferences.edit { putLong(KEY_USER_ID, value) }
-
-    // String preferences
-    var userName: String
-        get() = sharedPreferences.getString(KEY_USER_NAME, "") ?: ""
-        set(value) = sharedPreferences.edit { putString(KEY_USER_NAME, value) }
 
     var selectedTheme: String
         get() = sharedPreferences.getString(KEY_SELECTED_THEME, "default") ?: "default"
