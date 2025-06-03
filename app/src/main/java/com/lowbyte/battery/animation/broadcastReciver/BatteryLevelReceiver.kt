@@ -30,11 +30,11 @@ class BatteryLevelReceiver : BroadcastReceiver() {
         // If a specific widget ID was passed, only update that widget
         val specificWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
         val widgetsToUpdate = if (specificWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-            Log.d("ITEMCLICK", "Updating widget $specificWidgetId")
+            Log.d("ITEM_CLICK", "Updating widget $specificWidgetId")
             listOf(specificWidgetId)
 
         } else {
-            Log.d("ITEMCLICK", "Updating widget List")
+            Log.d("ITEM_CLICK", "Updating widget List")
             widgetIds.toList()
         }
 
@@ -43,7 +43,7 @@ class BatteryLevelReceiver : BroadcastReceiver() {
             val widgetIconName =  preferences.getWidgetIcon(widgetId)
 
             val views = RemoteViews(context.packageName, R.layout.widget_battery)
-            Log.d("ITEMCLICK", "Updating widget $widgetId with icon: $widgetIconName")
+            Log.d("ITEM_CLICK", "Updating widget $widgetId with icon: $widgetIconName")
             val resId = context.resources.getIdentifier(widgetIconName, "drawable", context.packageName)
             views.setImageViewResource(R.id.battery_icon, if (resId != 0) resId else R.drawable.emoji_1)
             val percent = "$batteryPct %"
@@ -54,10 +54,7 @@ class BatteryLevelReceiver : BroadcastReceiver() {
             val intent = Intent(context, BatteryWidgetEditApplyActivity::class.java).apply {
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId) // 🔥 REQUIRED!
             }
-
-           // Required by AppWidgetManager
             intent.data = intent.toUri(Intent.URI_INTENT_SCHEME).toUri()
-
             val pendingIntent = PendingIntent.getActivity(
                 context, widgetId, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE

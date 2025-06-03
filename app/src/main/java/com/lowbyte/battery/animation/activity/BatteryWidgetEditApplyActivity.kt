@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -33,14 +34,9 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
         preferences = AppPreferences.getInstance(this)
 
         // Get the widget ID from the intent
-        appWidgetId = intent.getIntExtra(
-            AppWidgetManager.EXTRA_APPWIDGET_ID,
-            AppWidgetManager.INVALID_APPWIDGET_ID
-        )
-
+        appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
         // Check if this is a new widget creation
         isNewWidget = appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID
-
         enableEdgeToEdge()
 
         binding = ActivityBatteryWidgetEditApplyBinding.inflate(layoutInflater)
@@ -55,7 +51,10 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
         position = intent.getIntExtra("EXTRA_POSITION", -1)
         label = intent.getStringExtra("EXTRA_LABEL") ?: getString(R.string.wifi)
 
-        Log.i("ITEMCLICK", "Widget ID: $appWidgetId, Position: $position, Label: $label, IsNew: $isNewWidget")
+        Log.i(
+            "ITEM_CLICK",
+            "Widget ID: $appWidgetId, Position: $position, Label: $label, IsNew: $isNewWidget"
+        )
 
         // Load saved widget data if it exists and this is not a new widget
         if (!isNewWidget) {
@@ -86,19 +85,25 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
             preferences.saveWidgetIcon(appWidgetId, label)
 
             if (isNewWidget) {
-                // For new widget, request pinning
-                val appWidgetManager = AppWidgetManager.getInstance(this)
-                if (appWidgetManager.isRequestPinAppWidgetSupported) {
-                    val widgetProvider = ComponentName(this, BatteryWidgetProvider::class.java)
-                    val pinIntent = Intent(this, BatteryWidgetProvider::class.java).apply {
-                        putExtra("WIDGET_ICON", label) // Pass the icon name to the provider
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    // For new widget, request pinning
+                    val appWidgetManager = AppWidgetManager.getInstance(this)
+                    if (appWidgetManager.isRequestPinAppWidgetSupported) {
+                        val widgetProvider = ComponentName(this, BatteryWidgetProvider::class.java)
+                        val pinIntent = Intent(this, BatteryWidgetProvider::class.java).apply {
+                            putExtra("WIDGET_ICON", label) // Pass the icon name to the provider
+                        }
+                        val successCallback = PendingIntent.getBroadcast(
+                            this, 0, pinIntent,
+                            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                        )
+                        appWidgetManager.requestPinAppWidget(widgetProvider, null, successCallback)
+
                     }
-                    val successCallback = PendingIntent.getBroadcast(
-                        this, 0, pinIntent,
-                        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-                    )
-                    appWidgetManager.requestPinAppWidget(widgetProvider, null, successCallback)
+                } else {
+                    Toast.makeText(this, "Device not supported", Toast.LENGTH_SHORT).show()
                 }
+
             } else {
                 updateWidget()
             }
