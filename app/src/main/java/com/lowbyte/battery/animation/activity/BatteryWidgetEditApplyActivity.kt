@@ -82,12 +82,17 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
         }
 
         binding.buttonForApply.setOnClickListener {
+            // Always save the widget icon first
+            preferences.saveWidgetIcon(appWidgetId, label)
+
             if (isNewWidget) {
                 // For new widget, request pinning
                 val appWidgetManager = AppWidgetManager.getInstance(this)
                 if (appWidgetManager.isRequestPinAppWidgetSupported) {
                     val widgetProvider = ComponentName(this, BatteryWidgetProvider::class.java)
-                    val pinIntent = Intent(this, BatteryWidgetProvider::class.java)
+                    val pinIntent = Intent(this, BatteryWidgetProvider::class.java).apply {
+                        putExtra("WIDGET_ICON", label) // Pass the icon name to the provider
+                    }
                     val successCallback = PendingIntent.getBroadcast(
                         this, 0, pinIntent,
                         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
@@ -95,8 +100,6 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
                     appWidgetManager.requestPinAppWidget(widgetProvider, null, successCallback)
                 }
             } else {
-                // For existing widget, save and update
-                preferences.saveWidgetIcon(appWidgetId, label)
                 updateWidget()
             }
         }
@@ -117,6 +120,7 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
             putExtra(BatteryManager.EXTRA_LEVEL, batteryLevel)
             putExtra(BatteryManager.EXTRA_SCALE, batteryScale)
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            putExtra("WIDGET_ICON", label) // Pass the icon name
         }
         sendBroadcast(batteryStatusIntent)
 
