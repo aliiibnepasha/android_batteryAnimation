@@ -4,15 +4,17 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
+import android.content.IntentFilter
+import android.os.BatteryManager
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.R
-import com.lowbyte.battery.animation.adapter.BatteryWidgetProvider
+import com.lowbyte.battery.animation.broadcastReciver.BatteryLevelReceiver
+import com.lowbyte.battery.animation.broadcastReciver.BatteryWidgetProvider
 import com.lowbyte.battery.animation.databinding.ActivityBatteryWidgetEditApplyBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
 
@@ -40,6 +42,7 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
 
         position = intent.getIntExtra("EXTRA_POSITION", -1)
         label = intent.getStringExtra("EXTRA_LABEL") ?: getString(R.string.wifi)
+
         Log.i("ITEMCLICK", "$position $label")
 
         val resId = resources.getIdentifier(label, "drawable", packageName)
@@ -56,27 +59,30 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
         }
 
         binding.buttonForApply.setOnClickListener {
-            Log.d("BUTTON", "Apply clicked")
+            val widgetId = position
+            preferences.saveStyleForWidget(widgetId, position, label)
 
-            // 🧠 Pin the widget to home screen
             val appWidgetManager = AppWidgetManager.getInstance(this)
-
             if (appWidgetManager.isRequestPinAppWidgetSupported) {
                 val widgetProvider = ComponentName(this, BatteryWidgetProvider::class.java)
-
                 val pinIntent = Intent(this, BatteryWidgetProvider::class.java)
                 val successCallback = PendingIntent.getBroadcast(
                     this, 0, pinIntent,
                     PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
-
                 appWidgetManager.requestPinAppWidget(widgetProvider, null, successCallback)
-                Toast.makeText(this, "Widget pin request sent", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Pinning widgets not supported on this device", Toast.LENGTH_SHORT).show()
             }
-        }
 
+            val batteryIntent = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            val batteryLevel = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+            val batteryScale = batteryIntent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+
+            val batteryStatusIntent = Intent(this, BatteryLevelReceiver::class.java).apply {
+                putExtra(BatteryManager.EXTRA_LEVEL, batteryLevel)
+                putExtra(BatteryManager.EXTRA_SCALE, batteryScale)
+            }
+            sendBroadcast(batteryStatusIntent)
+        }
         binding.buttonSetAsEmoji.setOnClickListener {
             Log.d("BUTTON", "Home clicked")
             preferences.customIconName = label

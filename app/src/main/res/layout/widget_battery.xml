@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="120dp"
-    android:layout_height="wrap_content"
+    android:layout_height="120dp"
+    android:minHeight="120dp"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="3dp">
@@ -30,10 +31,10 @@
         <ImageView
             android:id="@+id/battery_icon"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:padding="5dp"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
             android:contentDescription="@string/battery_emoji_widget"
-            android:src="@drawable/widget_27"
+            android:padding="5dp"
             android:scaleType="fitCenter" />
 
         <TextView

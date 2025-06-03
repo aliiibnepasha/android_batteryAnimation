@@ -3,6 +3,7 @@ package com.lowbyte.battery.animation.utils
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.util.Log
 import androidx.core.content.edit
 
 
@@ -46,6 +47,7 @@ class AppPreferences private constructor(context: Context) {
         // Lottie and icon resource names
         private const val KEY_STATUS_LOTTIE = "status_lottie"
         private const val KEY_STATUS_ICON = "status_icon"
+        private const val KEY_WIDGET_ICON = "widget_icon"
         private const val KEY_BAT_ICON = "batteryIconName"
 
         // Each icon size, e.g. icon_size_wifi, icon_size_hotspot, etc.
@@ -98,7 +100,22 @@ class AppPreferences private constructor(context: Context) {
         set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_WIFI, value) }
 
 
+    // --- Widget specific style handling (per widget ID) ---
+    fun saveStyleForWidget(widgetId: Int, styleIndex: Int, iconName: String) {
+        Log.d("STYLEINDEX"," Pref WidgetID: $widgetId -> styleIndex: $styleIndex, icon: $iconName")
+        sharedPreferences.edit {
+            putInt("style_index_$widgetId", styleIndex)
+                .putString("icon_name_$widgetId", iconName)
+        }
+    }
 
+    fun getStyleIndexForWidget(widgetId: Int): Int {
+        return sharedPreferences.getInt("style_index_$widgetId", 0)
+    }
+
+    fun getIconNameForWidget(widgetId: Int): String {
+        return sharedPreferences.getString("icon_name_$widgetId", "emoji_1") ?: "emoji_1"
+    }
 
 
 
@@ -139,16 +156,23 @@ class AppPreferences private constructor(context: Context) {
         get() = sharedPreferences.getString(KEY_STATUS_ICON, "widget_fantasy_1") ?: "widget_fantasy_1"
         set(value) = sharedPreferences.edit { putString(KEY_STATUS_ICON, value) }
 
+      var widgetIconName: String
+        get() = sharedPreferences.getString(KEY_WIDGET_ICON, "widget_fantasy_1") ?: "widget_fantasy_1"
+        set(value) = sharedPreferences.edit { putString(KEY_WIDGET_ICON, value) }
+
       var batteryIconName: String
         get() = sharedPreferences.getString(KEY_BAT_ICON, "emoji_1") ?: "emoji_1"
         set(value) = sharedPreferences.edit { putString(KEY_BAT_ICON, value) }
 
+    // For widget style
+    var widgetStyleIndex: Int
+        get() = sharedPreferences.getInt("widget_style_index", 0)
+        set(value) = sharedPreferences.edit { putInt("widget_style_index", value) }
+
+
     // For per-icon size (dynamically via key)
     fun getIconSize(label: String, default: Int = 24) = getInt(iconSizeKeyFor(label), default)
     fun setIconSize(label: String, size: Int) = setInt(iconSizeKeyFor(label), size)
-
-
-
 
     // Boolean preferences
     var isFirstRun: Boolean

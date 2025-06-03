@@ -1,4 +1,4 @@
-package com.lowbyte.battery.animation.adapter
+package com.lowbyte.battery.animation.broadcastReciver
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
