@@ -5,12 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.lowbyte.battery.animation.LanguageFragment.Language
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ItemLanguageBinding
 
 class LanguageAdapter(
-    private val items: List<String>,
-    private val onSelect: (String) -> Unit
+    private val items: List<Language>,
+    private val onSelect: (Language) -> Unit
 ) : RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder>() {
 
     private var selectedPosition = -1
@@ -31,7 +32,7 @@ class LanguageAdapter(
         val language = items[position]
         val context = holder.itemView.context
 
-        holder.binding.textLanguage.text = language
+        holder.binding.textLanguage.text = language.name
         holder.binding.imageTick.visibility = if (position == selectedPosition) View.VISIBLE else View.GONE
         holder.binding.textLanguage.setTextColor(
             ContextCompat.getColor(

@@ -22,7 +22,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:contentDescription="@string/app_name"
-            android:padding="12dp"
+            android:padding="16dp"
             android:src="@drawable/ic_arrow_left"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"

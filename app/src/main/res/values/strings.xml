@@ -101,4 +101,5 @@
     <string name="please_enable_accessibility_service">Please enable accessibility service</string>
     <string name="please_accept_terms_of_service">Please accept Terms of Service</string>
     <string name="allow">Allow</string>
+    <string name="privacy_policy_url">https://www.google.co.uk</string>
 </resources>

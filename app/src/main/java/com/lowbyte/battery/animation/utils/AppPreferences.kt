@@ -127,7 +127,7 @@ class AppPreferences private constructor(context: Context) {
 
     // For icon/lottie resource names
     var statusLottieName: String
-        get() = sharedPreferences.getString(KEY_STATUS_LOTTIE, "anim_8") ?: "anim_8"
+        get() = sharedPreferences.getString(KEY_STATUS_LOTTIE, "a_13") ?: "a_13"
         set(value) = sharedPreferences.edit { putString(KEY_STATUS_LOTTIE, value) }
 
     var customIconName: String

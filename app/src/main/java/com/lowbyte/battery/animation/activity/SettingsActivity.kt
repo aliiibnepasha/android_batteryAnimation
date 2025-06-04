@@ -1,5 +1,7 @@
 package com.lowbyte.battery.animation.activity
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ActivitySettingsBinding
+import androidx.core.net.toUri
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -33,23 +36,31 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.proView.setOnClickListener {
-            // Open Premium screen
+
         }
 
         binding.ivNextDark.setOnCheckedChangeListener { _, isChecked ->
-            // Toggle dark mode here
+
         }
 
         binding.viewTerms.setOnClickListener {
-            // Open Terms of Service
+            val url = getString(R.string.privacy_policy_url)
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = url.toUri()
+            }
+            startActivity(intent)
         }
 
         binding.viewPrivacy.setOnClickListener {
-            // Open Privacy Policy
+            val url = getString(R.string.privacy_policy_url)
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = url.toUri()
+            }
+            startActivity(intent)
         }
 
         binding.viewLanguage.setOnClickListener {
-            // startActivity(Intent(this, LanguageActivity::class.java)))
+
         }
     }
 }

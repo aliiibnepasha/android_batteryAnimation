@@ -23,6 +23,7 @@ import com.lowbyte.battery.animation.databinding.FragmentHomeBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.model.MultiViewItem
 import com.lowbyte.battery.animation.utils.AnimationUtils.animationList
+import com.lowbyte.battery.animation.utils.AnimationUtils.combinedAnimationList
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListAction
 import com.lowbyte.battery.animation.utils.AppPreferences
@@ -89,7 +90,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             MultiViewItem.TitleItem(getString(R.string.cat_widgets)),
             MultiViewItem.ListEmojiOrWidgetItem(widgetListAction),
             MultiViewItem.TitleItem(getString(R.string.cat_animations)),
-            MultiViewItem.ListAnimationItem(animationList),
+            MultiViewItem.ListAnimationItem(combinedAnimationList),
         )
 
         val adapter = MultiViewAdapter(
