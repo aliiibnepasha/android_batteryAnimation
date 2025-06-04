@@ -10,10 +10,10 @@ import android.os.BatteryManager
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
+import androidx.core.net.toUri
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.BatteryWidgetEditApplyActivity
 import com.lowbyte.battery.animation.utils.AppPreferences
-import androidx.core.net.toUri
 
 class BatteryLevelReceiver : BroadcastReceiver() {
     private lateinit var preferences: AppPreferences
@@ -61,5 +61,6 @@ class BatteryLevelReceiver : BroadcastReceiver() {
             )
             views.setOnClickPendingIntent(R.id.battery_icon, pendingIntent)
             manager.updateAppWidget(widgetId, views)
-        }    }
+        }
+    }
 }
