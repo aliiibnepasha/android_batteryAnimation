@@ -48,8 +48,9 @@ class NotchAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         preferences = AppPreferences.getInstance(this)
-        registerUpdateReceiver()
+
         createCustomStatusBar()
+        registerUpdateReceiver()
         startTimeUpdates()
 
     }
@@ -87,17 +88,8 @@ class NotchAccessibilityService : AccessibilityService() {
                     registerReceiver(updateReceiver, filter, RECEIVER_EXPORTED)
                     Log.d("servicesdd", "Registered receiver for API 33+")
                 } else {
+                    registerReceiver(updateReceiver, filter)
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        registerReceiver(
-                            updateReceiver,
-                            IntentFilter("com.lowbyte.UPDATE_STATUSBAR"),
-                            Context.RECEIVER_EXPORTED
-                        )
-                    }else{
-                        registerReceiver(updateReceiver, filter)
-
-                    }
                     Log.d("servicesdd", "Registered receiver for pre-API 33")
                 }
             } catch (e: Exception) {
