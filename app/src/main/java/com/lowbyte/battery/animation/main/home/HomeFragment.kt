@@ -1,6 +1,8 @@
 package com.lowbyte.battery.animation.main.home
 
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -26,6 +28,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.animationList
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListAction
 import com.lowbyte.battery.animation.utils.AppPreferences
+import androidx.core.net.toUri
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -188,6 +191,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     override fun onResume() {
+//        if (true && !Settings.canDrawOverlays(requireContext())) {
+//            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+//            intent.data = "package:${requireActivity().packageName}".toUri()
+//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//            startActivity(intent)
+//            return
+//        }
         super.onResume()
 
     }

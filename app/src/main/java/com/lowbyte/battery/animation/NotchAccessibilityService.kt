@@ -48,22 +48,39 @@ class NotchAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         preferences = AppPreferences.getInstance(this)
-      //  registerUpdateReceiver()
         createCustomStatusBar()
         startTimeUpdates()
-        updateStatusBarAppearance()
+        registerUpdateReceiver()
 
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
     override fun onInterrupt() {}
 
+
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
-        statusBarBinding?.root?.let { windowManager?.removeView(it) }
+
+        statusBarBinding?.root?.let {
+            try {
+                if (it.parent != null) {
+                    windowManager?.removeViewImmediate(it)
+                }
+            } catch (e: Exception) {
+                Log.e("StatusBar", "removeViewImmediate error: ${e.localizedMessage}")
+            }
+        }
+
         statusBarBinding = null
-        updateReceiver?.let { unregisterReceiver(it) }
+
+        updateReceiver?.let {
+            try {
+                unregisterReceiver(it)
+            } catch (e: Exception) {
+                Log.e("StatusBar", "Receiver not registered or already unregistered")
+            }
+        }
         updateReceiver = null
     }
 
@@ -111,11 +128,13 @@ class NotchAccessibilityService : AccessibilityService() {
         ).apply { gravity = Gravity.TOP }
 
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-        statusBarBinding = CustomStatusBarBinding.inflate(LayoutInflater.from(this))
+        statusBarBinding = CustomStatusBarBinding.inflate(LayoutInflater.from(applicationContext))
 
         updateStatusBarAppearance()
         setupGestures()
         updateBatteryInfo()
+
+
 
         val view = statusBarBinding?.root
         if (::preferences.isInitialized && preferences.isStatusBarEnabled) {
@@ -142,6 +161,7 @@ class NotchAccessibilityService : AccessibilityService() {
         }
 
         animateStatusBarHeight((preferences.statusBarHeight * resources.displayMetrics.density).toInt())
+
         binding.root.setPadding(
             (preferences.statusBarMarginLeft * resources.displayMetrics.density).toInt(), 0,
             (preferences.statusBarMarginRight * resources.displayMetrics.density).toInt(), 0
