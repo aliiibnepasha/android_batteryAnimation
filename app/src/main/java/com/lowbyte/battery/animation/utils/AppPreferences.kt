@@ -154,11 +154,20 @@ class AppPreferences private constructor(context: Context) {
 
 
     fun saveWidgetIcon(widgetId: Int, iconName: String) {
-        sharedPreferences.edit { putString("icon_name_$widgetId", iconName) }
+        Log.e("AppPreferences", "Saving widget icon: $iconName for widget ID: $widgetId")
+        sharedPreferences.edit { 
+            putString("icon_name_$widgetId", iconName)
+            apply() // Ensure immediate write
+        }
+        // Verify the save
+        val savedIcon = getWidgetIcon(widgetId)
+        Log.e("AppPreferences", "Verified saved icon for widget $widgetId: $savedIcon")
     }
 
     fun getWidgetIcon(widgetId: Int): String {
-        return sharedPreferences.getString("icon_name_$widgetId", "emoji_1") ?: "emoji_1"
+        val iconName = sharedPreferences.getString("icon_name_$widgetId", "") ?: ""
+        Log.e("AppPreferences", "Getting widget icon for widget ID: $widgetId -> $iconName")
+        return iconName
     }
 
     fun getInt(key: String, default: Int = 0): Int = sharedPreferences.getInt(key, default)
