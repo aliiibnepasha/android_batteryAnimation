@@ -1,4 +1,4 @@
-package com.lowbyte.battery.animation
+package com.lowbyte.battery.animation.service
 
 import android.accessibilityservice.AccessibilityService
 import android.animation.ValueAnimator
@@ -29,13 +29,14 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.CustomStatusBarBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class NotchAccessibilityService : AccessibilityService() {
+class StatusBarOverlayService : AccessibilityService() {
 
     private var windowManager: WindowManager? = null
     private var layoutParams: WindowManager.LayoutParams? = null
@@ -48,10 +49,9 @@ class NotchAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         preferences = AppPreferences.getInstance(this)
-        registerUpdateReceiver()
         createCustomStatusBar()
         startTimeUpdates()
-
+        registerUpdateReceiver()
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
@@ -60,9 +60,26 @@ class NotchAccessibilityService : AccessibilityService() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
-        statusBarBinding?.root?.let { windowManager?.removeView(it) }
+
+        statusBarBinding?.root?.let {
+            try {
+                if (it.parent != null) {
+                    windowManager?.removeViewImmediate(it)
+                }
+            } catch (e: Exception) {
+                Log.e("StatusBar", "removeViewImmediate error: ${e.localizedMessage}")
+            }
+        }
+
         statusBarBinding = null
-        updateReceiver?.let { unregisterReceiver(it) }
+
+        updateReceiver?.let {
+            try {
+                unregisterReceiver(it)
+            } catch (e: Exception) {
+                Log.e("StatusBar", "Receiver not registered or already unregistered")
+            }
+        }
         updateReceiver = null
     }
 
@@ -70,7 +87,7 @@ class NotchAccessibilityService : AccessibilityService() {
         if (updateReceiver == null) {
             updateReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
-                    Log.d("servicesdd", "Received broadcast: ${intent?.action}")
+                    Log.d("StatusBar", "Received broadcast")
                     updateStatusBarAppearance()
                 }
             }
@@ -80,90 +97,81 @@ class NotchAccessibilityService : AccessibilityService() {
                 addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
                 addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
                 addAction(ConnectivityManager.CONNECTIVITY_ACTION)
-                // Add other actions you need to listen for
+                addAction(Intent.ACTION_BATTERY_CHANGED)
             }
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    registerReceiver(updateReceiver, filter, RECEIVER_EXPORTED)
-                    Log.d("servicesdd", "Registered receiver for API 33+")
-                } else {
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        registerReceiver(
-                            updateReceiver,
-                            IntentFilter("com.lowbyte.UPDATE_STATUSBAR"),
-                            Context.RECEIVER_EXPORTED
-                        )
-                    }else{
-                        registerReceiver(updateReceiver, filter)
-
-                    }
-                    Log.d("servicesdd", "Registered receiver for pre-API 33")
-                }
-            } catch (e: Exception) {
-                Log.e("servicesdd", "Failed to register receiver: ${e.message}")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(updateReceiver, filter, RECEIVER_EXPORTED)
+            } else {
+                registerReceiver(updateReceiver, filter)
             }
         }
     }
-
-
-//    private fun registerUpdateReceiver() {
-//        if (updateReceiver == null) {
-//            updateReceiver = object : BroadcastReceiver() {
-//                override fun onReceive(context: Context?, intent: Intent?) {
-//                    Log.d("servicesdd", "Received broadcast")
-//                    updateStatusBarAppearance()
-//                }
-//            }
-//
-//            val filter = IntentFilter().apply {
-//                addAction("com.lowbyte.UPDATE_STATUSBAR")
-//                addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
-//                addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
-//                addAction(ConnectivityManager.CONNECTIVITY_ACTION)
-//                // You may also listen to custom broadcast if you manually trigger hotspot toggles
-//            }
-//            if (Build.VERSION.SDK_INT >= 33) {
-//                registerReceiver(updateReceiver, filter, RECEIVER_EXPORTED)
-//                Log.d("servicesdd","Received broadcast>= 33")
-//
-//            } else {
-//                registerReceiver(updateReceiver, filter)
-//                Log.d("servicesdd","Received broadcast<33")
-//
-//            }
-//        }
-//    }
-
 
     private fun createCustomStatusBar() {
         layoutParams = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+            } else {
+                WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+            },
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR or
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                    WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS or
+                    WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM,
             PixelFormat.TRANSLUCENT
-        ).apply { gravity = Gravity.TOP }
+        ).apply { 
+            gravity = Gravity.TOP
+            // Set initial height for Pixel 5
+            height = if (Build.MODEL.contains("Pixel 5")) {
+                (48 * resources.displayMetrics.density).toInt()
+            } else {
+                (24 * resources.displayMetrics.density).toInt()
+            }
+        }
 
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-        statusBarBinding = CustomStatusBarBinding.inflate(LayoutInflater.from(this))
+        statusBarBinding = CustomStatusBarBinding.inflate(LayoutInflater.from(applicationContext))
+
+        // Set initial padding
+        statusBarBinding?.root?.setPadding(
+            (preferences.statusBarMarginLeft * resources.displayMetrics.density).toInt(),
+            (0 * resources.displayMetrics.density).toInt(),
+            (preferences.statusBarMarginRight * resources.displayMetrics.density).toInt(),
+            (0 * resources.displayMetrics.density).toInt()
+        )
+
+        // Set initial visibility
+        statusBarBinding?.root?.visibility = View.VISIBLE
 
         updateStatusBarAppearance()
         setupGestures()
         updateBatteryInfo()
 
-        // Add view only if enabled and not already attached
-//        if (::preferences.isInitialized && preferences.isStatusBarEnabled && statusBarBinding?.root?.windowToken == null) {
-//            windowManager?.addView(statusBarBinding?.root, layoutParams)
-//        }
-
         val view = statusBarBinding?.root
         if (::preferences.isInitialized && preferences.isStatusBarEnabled) {
             if (view?.parent == null) {
-                windowManager?.addView(view, layoutParams)
+                try {
+                    windowManager?.addView(view, layoutParams)
+                    // Force an immediate update after adding the view
+                    handler.postDelayed({
+                        updateStatusBarAppearance()
+                        // Ensure view stays visible
+                        view?.visibility = View.VISIBLE
+                        // Force another update after a short delay
+                        handler.postDelayed({
+                            updateStatusBarAppearance()
+                        }, 500)
+                    }, 100)
+                } catch (e: Exception) {
+                    Log.e("StatusBar", "Error adding view: ${e.message}")
+                }
             } else {
                 Log.w("StatusBar", "View already added. Skipping re-add.")
             }
@@ -180,18 +188,49 @@ class NotchAccessibilityService : AccessibilityService() {
             return
         } else {
             if (binding.root.parent == null) {
-                windowManager?.addView(binding.root, layoutParams)
+                try {
+                    windowManager?.addView(binding.root, layoutParams)
+                    // Ensure view is visible after adding
+                    binding.root.visibility = View.VISIBLE
+                    // Force another update after a short delay
+                    handler.postDelayed({
+                        updateStatusBarAppearance()
+                    }, 500)
+                } catch (e: Exception) {
+                    Log.e("StatusBar", "Error adding view in update: ${e.message}")
+                    return
+                }
             }
         }
 
-        animateStatusBarHeight((preferences.statusBarHeight * resources.displayMetrics.density).toInt())
-        binding.root.setPadding(
-            (preferences.statusBarMarginLeft * resources.displayMetrics.density).toInt(), 0,
-            (preferences.statusBarMarginRight * resources.displayMetrics.density).toInt(), 0
+        // Ensure view is visible
+        binding.root.visibility = View.VISIBLE
+
+        // Calculate minimum height based on device
+        val minHeight = if (Build.MODEL.contains("Pixel 5")) {
+            (48 * resources.displayMetrics.density).toInt()
+        } else {
+            (24 * resources.displayMetrics.density).toInt()
+        }
+
+        // Ensure height is never 0 or too small
+        val targetHeight = maxOf(
+            (preferences.statusBarHeight * resources.displayMetrics.density).toInt(),
+            minHeight
         )
+
+        animateStatusBarHeight(targetHeight)
+
+        // Update padding with proper density scaling
+        binding.root.setPadding(
+            (preferences.statusBarMarginLeft * resources.displayMetrics.density).toInt(),
+            (0 * resources.displayMetrics.density).toInt(),
+            (preferences.statusBarMarginRight * resources.displayMetrics.density).toInt(),
+            (0 * resources.displayMetrics.density).toInt()
+        )
+
         binding.root.setBackgroundColor(preferences.statusBarBgColor)
 
-        // ⛔ Real System State Checks — Replace with actual checks
         val isWifiEnabled = isWifiEnabled()
         val isAirplaneModeOn = isAirplaneModeOn()
         val isHotspotOn = isHotspotEnabled()
@@ -222,7 +261,6 @@ class NotchAccessibilityService : AccessibilityService() {
             applyIconSize(airplaneIcon, preferences.getIconSize("size_3", 24))
             applyIconSize(hotspotIcon, preferences.getIconSize("size_4", 24))
             applyIconSize(batteryIcon, preferences.getIconSize("batteryIconSize", 24))
-            applyIconSize(lottieIcon, preferences.getIconSize("lottieView", 24))
 
             timeText.setTextSizeInSp(preferences.getIconSize("size_5", 12))
             batteryPercent.setTextSizeInSp(preferences.getIconSize("percentageSize", 12))
@@ -251,45 +289,31 @@ class NotchAccessibilityService : AccessibilityService() {
                 customIcon.visibility = View.GONE
             }
 
-            // Lottie icon
-            val lottieRes = resources.getIdentifier(preferences.statusLottieName, "raw", packageName)
-            if (preferences.statusLottieName.isNotBlank() && lottieRes != 0) {
-                lottieIcon.setAnimation(lottieRes)
-                lottieIcon.visibility = View.VISIBLE
-                lottieIcon.playAnimation()
-            } else {
-                lottieIcon.visibility = View.GONE
-            }
-
             windowManager?.updateViewLayout(binding.root, layoutParams)
         }
     }
 
-
     @SuppressLint("ClickableViewAccessibility")
     private fun setupGestures() {
         val gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
-
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                if (preferences.isGestureMode){
+                if (preferences.isGestureMode) {
                     handleTap()
                 }
-
                 return true
             }
 
             override fun onDoubleTap(e: MotionEvent): Boolean {
-                if (preferences.isGestureMode){
-                    Toast.makeText(this@NotchAccessibilityService, "Double Tap Detected", Toast.LENGTH_SHORT).show()
+                if (preferences.isGestureMode) {
+                    Toast.makeText(this@StatusBarOverlayService, "Double Tap Detected", Toast.LENGTH_SHORT).show()
                 }
                 return true
             }
 
             override fun onLongPress(e: MotionEvent) {
-                if (preferences.isGestureMode){
+                if (preferences.isGestureMode) {
                     handleLongPress()
                 }
-
             }
 
             override fun onFling(
@@ -297,26 +321,33 @@ class NotchAccessibilityService : AccessibilityService() {
             ): Boolean {
                 val deltaX = (e2?.x ?: 0f) - (e1?.x ?: 0f)
                 val deltaY = (e2?.y ?: 0f) - (e1?.y ?: 0f)
-                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                
+                // Handle vertical fling (swipe down)
+                if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                    if (deltaY > 100) {
+                        // Swipe down detected
+                        statusBarBinding?.root?.visibility = View.VISIBLE
+                        updateStatusBarAppearance()
+                    }
+                } else {
+                    // Handle horizontal fling
                     if (deltaX > 100) {
-                        if (preferences.isGestureMode){
+                        if (preferences.isGestureMode) {
                             performGlobalActionByName(
                                 preferences.getString(
                                     "swipeLeftToRightAction",
                                     getString(R.string.action_do_nothing)
                                 ) ?: getString(R.string.action_do_nothing)
                             )
-
                         }
                     } else if (deltaX < -100) {
-                        if (preferences.isGestureMode){
+                        if (preferences.isGestureMode) {
                             performGlobalActionByName(
                                 preferences.getString(
                                     "swipeRightToLeftAction",
                                     getString(R.string.action_do_nothing)
                                 ) ?: getString(R.string.action_do_nothing)
                             )
-
                         }
                     }
                 }
@@ -324,7 +355,25 @@ class NotchAccessibilityService : AccessibilityService() {
             }
         })
 
-        statusBarBinding?.root?.setOnTouchListener { _, event ->
+        statusBarBinding?.root?.setOnTouchListener { view, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    view.visibility = View.VISIBLE
+                    updateStatusBarAppearance()
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    view.visibility = View.VISIBLE
+                    updateStatusBarAppearance()
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    view.visibility = View.VISIBLE
+                    updateStatusBarAppearance()
+                    // Force another update after touch ends
+                    handler.postDelayed({
+                        updateStatusBarAppearance()
+                    }, 100)
+                }
+            }
             gestureDetector.onTouchEvent(event)
             true
         }
@@ -339,11 +388,20 @@ class NotchAccessibilityService : AccessibilityService() {
     private fun animateStatusBarHeight(targetHeight: Int) {
         val currentHeight = layoutParams?.height ?: return
         if (currentHeight == targetHeight) return
+
+        // Cancel any ongoing animations
+        handler.removeCallbacksAndMessages(null)
+
         ValueAnimator.ofInt(currentHeight, targetHeight).apply {
-            duration = 10
+            duration = 150 // Increased duration for smoother animation
             addUpdateListener {
-                layoutParams?.height = it.animatedValue as Int
-                windowManager?.updateViewLayout(statusBarBinding?.root, layoutParams)
+                val newHeight = it.animatedValue as Int
+                layoutParams?.height = newHeight
+                try {
+                    windowManager?.updateViewLayout(statusBarBinding?.root, layoutParams)
+                } catch (e: Exception) {
+                    Log.e("StatusBar", "Error updating layout: ${e.message}")
+                }
             }
             start()
         }
@@ -365,7 +423,6 @@ class NotchAccessibilityService : AccessibilityService() {
                 getString(R.string.action_do_nothing)
             ) ?: getString(R.string.action_do_nothing)
         )
-
     }
 
     private fun startTimeUpdates() {
@@ -396,7 +453,6 @@ class NotchAccessibilityService : AccessibilityService() {
         return cm.activeNetworkInfo?.type == ConnectivityManager.TYPE_MOBILE && cm.activeNetworkInfo?.isConnected == true
     }
 
-    // Hotspot detection is tricky. Here's an API-30+ example using ConnectivityManager
     private fun isHotspotEnabled(): Boolean {
         val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
         return try {
@@ -407,9 +463,7 @@ class NotchAccessibilityService : AccessibilityService() {
         }
     }
 
-
-    // ========== Extension Utils ==========
-
+    // Extension Utils
     private fun Boolean.toVisibility(): Int = if (this) View.VISIBLE else View.GONE
 
     private fun View.setTint(color: Int) {
@@ -431,21 +485,17 @@ class NotchAccessibilityService : AccessibilityService() {
     fun performGlobalActionByName(actionName: String) {
         when (actionName) {
             getString(R.string.action_do_nothing) -> {
-
+                // Do nothing
             }
-
             getString(R.string.action_back_action) -> {
                 performGlobalAction(GLOBAL_ACTION_BACK)
             }
-
             getString(R.string.action_home_action) -> {
                 performGlobalAction(GLOBAL_ACTION_HOME)
             }
-
             getString(R.string.action_recent_action) -> {
                 performGlobalAction(GLOBAL_ACTION_RECENTS)
             }
-
             getString(R.string.action_lock_screen) -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
@@ -457,23 +507,18 @@ class NotchAccessibilityService : AccessibilityService() {
                     ).show()
                 }
             }
-
             getString(R.string.action_open_notifications) -> {
                 performGlobalAction(GLOBAL_ACTION_NOTIFICATIONS)
             }
-
             getString(R.string.action_power_options) -> {
                 performGlobalAction(GLOBAL_ACTION_POWER_DIALOG)
             }
-
             getString(R.string.action_quick_scroll_to_up) -> {
                 performGlobalAction(GESTURE_SWIPE_UP)
             }
-
             getString(R.string.action_open_control_centre) -> {
                 performGlobalAction(GLOBAL_ACTION_QUICK_SETTINGS)
             }
-
             getString(R.string.action_take_screenshot) -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     performGlobalAction(GLOBAL_ACTION_TAKE_SCREENSHOT)
@@ -485,11 +530,9 @@ class NotchAccessibilityService : AccessibilityService() {
                     ).show()
                 }
             }
-
-
             else -> {
-                // Unsupported
+                // Unsupported action
             }
         }
     }
-}
+} 
