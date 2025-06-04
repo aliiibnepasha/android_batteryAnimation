@@ -43,15 +43,15 @@ class StatusBarIconSettingsActivity : AppCompatActivity() {
         binding.ibBackButton.setOnClickListener {
             finish()
         }
-        binding.openColorPalate.setOnClickListener {
+        binding.customizeStatusBarBgColor.setOnClickListener {
             ColorPickerDialog.Builder(this)
-                .setTitle(getString(R.string.status_bar))
+                .setTitle(label)
                 .setPreferenceName("MyColorPickerDialog")
                 .setPositiveButton(
-                    "Conform",
+                    getString(R.string.apply),
                     ColorEnvelopeListener { envelope, fromUser -> colorOfIcon("tint_$position",envelope) })
                 .setNegativeButton(
-                    "Cancel"
+                    getString(R.string.cancel)
                 ) { dialogInterface, i -> dialogInterface.dismiss() }
                 .attachAlphaSlideBar(false) // the default value is true.
                 .attachBrightnessSlideBar(true) // the default value is true.

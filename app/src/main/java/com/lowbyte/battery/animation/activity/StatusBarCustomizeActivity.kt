@@ -85,7 +85,12 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
 
             }
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
+                if (!binding.switchEnableBatteryEmoji.isChecked){
+                    Toast.makeText(this@StatusBarCustomizeActivity,
+                        getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+                }
+            }
         })
         /*Status bar height Code */
         binding.leftMarginSeekBar.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
@@ -101,7 +106,12 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
             }
 
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
+                if (!binding.switchEnableBatteryEmoji.isChecked){
+                    Toast.makeText(this@StatusBarCustomizeActivity,
+                        getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+                }
+            }
         })
 
         binding.rightMarginSeekBar.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
@@ -118,19 +128,24 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
             }
 
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
+                if (!binding.switchEnableBatteryEmoji.isChecked){
+                    Toast.makeText(this@StatusBarCustomizeActivity,
+                        getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+                }
+            }
         })
 
 
-        binding.openColorPalate.setOnClickListener {
+        binding.customizeStatusBarBgColor.setOnClickListener {
             ColorPickerDialog.Builder(this)
                 .setTitle(getString(R.string.status_bar))
                 .setPreferenceName("MyColorPickerDialog")
                 .setPositiveButton(
-                    "Conform",
+                    getString(R.string.apply),
                     ColorEnvelopeListener { envelope, fromUser -> setLayoutColor(envelope) })
                 .setNegativeButton(
-                    "Cancel"
+                    getString(R.string.cancel)
                 ) { dialogInterface, i -> dialogInterface.dismiss() }
                 .attachAlphaSlideBar(false) // the default value is true.
                 .attachBrightnessSlideBar(true) // the default value is true.
@@ -160,6 +175,10 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
     }
 
     private fun setLayoutColor(envelope: ColorEnvelope?) {
+        if (!binding.switchEnableBatteryEmoji.isChecked){
+            Toast.makeText(this@StatusBarCustomizeActivity,
+                getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+        }
         preferences.statusBarBgColor = envelope?.color!!
         sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
 

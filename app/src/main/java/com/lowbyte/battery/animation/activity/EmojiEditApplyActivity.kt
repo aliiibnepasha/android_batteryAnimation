@@ -57,7 +57,6 @@ class EmojiEditApplyActivity : AppCompatActivity() {
         binding.batteryEmojiSeekbarSize.progress = preferences.getIconSize("batteryIcon", 25)
         binding.batteryEmojiPercentageSeekbarSize.progress = preferences.getIconSize("percentageSize", 25)
 
-        // ✅ Emoji Size SeekBar Listener
         binding.batteryEmojiSeekbarSize.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -93,19 +92,24 @@ class EmojiEditApplyActivity : AppCompatActivity() {
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                if (!binding.enableShowBatteryPercentage.isChecked){
+                    Toast.makeText(this@EmojiEditApplyActivity, getString(R.string.please_turn_on_battery_percentage), Toast.LENGTH_SHORT).show()
+                }
+
+            }
         })
 
         // ✅ Color Picker Click Listener
-        binding.openColorPalate.setOnClickListener {
+        binding.viewPercentageColor.setOnClickListener {
             ColorPickerDialog.Builder(this)
-                .setTitle(getString(R.string.status_bar))
+                .setTitle(getString(R.string.app_name))
                 .setPreferenceName("MyColorPickerDialog")
                 .setPositiveButton(
-                    "Conform",
+                    getString(R.string.apply),
                     ColorEnvelopeListener { envelope, fromUser -> colorOfIcon(envelope) })
                 .setNegativeButton(
-                    "Cancel"
+                    getString(R.string.cancel)
                 ) { dialogInterface, i -> dialogInterface.dismiss() }
                 .attachAlphaSlideBar(false) // the default value is true.
                 .attachBrightnessSlideBar(true) // the default value is true.
@@ -132,6 +136,9 @@ class EmojiEditApplyActivity : AppCompatActivity() {
     }
 
     private fun colorOfIcon(envelope: ColorEnvelope) {
+        if (!binding.enableShowBatteryPercentage.isChecked){
+            Toast.makeText(this, getString(R.string.please_turn_on_battery_percentage), Toast.LENGTH_SHORT).show()
+        }
         preferences.setInt("percentageColor", envelope.color)
         sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
     }

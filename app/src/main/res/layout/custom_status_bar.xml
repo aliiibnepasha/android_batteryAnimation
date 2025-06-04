@@ -5,6 +5,8 @@
     android:id="@+id/statusBarRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="30dp"
+    android:maxHeight="100dp"
     android:background="@color/white"
     android:elevation="1000dp"
     android:paddingHorizontal="4dp">

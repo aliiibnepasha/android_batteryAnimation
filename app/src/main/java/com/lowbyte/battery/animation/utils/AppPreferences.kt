@@ -63,30 +63,26 @@ class AppPreferences private constructor(context: Context) {
         }
     }
 
-
     // For ints
     var statusBarHeight: Int
-        get() = sharedPreferences.getInt(KEY_STATUS_HEIGHT, 24)
+        get() = sharedPreferences.getInt(KEY_STATUS_HEIGHT, 30)
         set(value) = sharedPreferences.edit { putInt(KEY_STATUS_HEIGHT, value) }
 
     var statusBarMarginLeft: Int
-        get() = sharedPreferences.getInt(KEY_STATUS_MARGIN_LEFT, 0)
+        get() = sharedPreferences.getInt(KEY_STATUS_MARGIN_LEFT, 10)
         set(value) = sharedPreferences.edit { putInt(KEY_STATUS_MARGIN_LEFT, value) }
 
     var statusBarMarginRight: Int
-        get() = sharedPreferences.getInt(KEY_STATUS_MARGIN_RIGHT, 0)
+        get() = sharedPreferences.getInt(KEY_STATUS_MARGIN_RIGHT, 10)
         set(value) = sharedPreferences.edit { putInt(KEY_STATUS_MARGIN_RIGHT, value) }
 
     var statusBarBgColor: Int
-        get() = sharedPreferences.getInt(KEY_STATUS_BG_COLOR, Color.WHITE)
+        get() = sharedPreferences.getInt(KEY_STATUS_BG_COLOR, Color.LTGRAY)
         set(value) = sharedPreferences.edit { putInt(KEY_STATUS_BG_COLOR, value) }
-
-
-
 
     // For booleans (show/hide)
     var isVibrateMode: Boolean
-        get() = sharedPreferences.getBoolean(KEY_IS_VIBRATE_MODE, true)
+        get() = sharedPreferences.getBoolean(KEY_IS_VIBRATE_MODE, false)
         set(value) = sharedPreferences.edit { putBoolean(KEY_IS_VIBRATE_MODE, value) }
 
       // For booleans (show/hide)
@@ -98,24 +94,6 @@ class AppPreferences private constructor(context: Context) {
     var showWifi: Boolean
         get() = sharedPreferences.getBoolean(KEY_SHOW_WIFI, true)
         set(value) = sharedPreferences.edit { putBoolean(KEY_SHOW_WIFI, value) }
-
-
-    // --- Widget specific style handling (per widget ID) ---
-    fun saveStyleForWidget(widgetId: Int, styleIndex: Int, iconName: String) {
-        Log.d("STYLEINDEX"," Pref WidgetID: $widgetId -> styleIndex: $styleIndex, icon: $iconName")
-        sharedPreferences.edit {
-            putInt("style_index_$widgetId", styleIndex)
-                .putString("icon_name_$widgetId", iconName)
-        }
-    }
-
-    fun getStyleIndexForWidget(widgetId: Int): Int {
-        return sharedPreferences.getInt("style_index_$widgetId", 0)
-    }
-
-    fun getIconNameForWidget(widgetId: Int): String {
-        return sharedPreferences.getString("icon_name_$widgetId", "emoji_1") ?: "emoji_1"
-    }
 
 
 
@@ -153,21 +131,12 @@ class AppPreferences private constructor(context: Context) {
         set(value) = sharedPreferences.edit { putString(KEY_STATUS_LOTTIE, value) }
 
     var customIconName: String
-        get() = sharedPreferences.getString(KEY_STATUS_ICON, "widget_fantasy_1") ?: "widget_fantasy_1"
+        get() = sharedPreferences.getString(KEY_STATUS_ICON, "widget_39") ?: "widget_39"
         set(value) = sharedPreferences.edit { putString(KEY_STATUS_ICON, value) }
-
-      var widgetIconName: String
-        get() = sharedPreferences.getString(KEY_WIDGET_ICON, "widget_fantasy_1") ?: "widget_fantasy_1"
-        set(value) = sharedPreferences.edit { putString(KEY_WIDGET_ICON, value) }
 
       var batteryIconName: String
         get() = sharedPreferences.getString(KEY_BAT_ICON, "emoji_1") ?: "emoji_1"
         set(value) = sharedPreferences.edit { putString(KEY_BAT_ICON, value) }
-
-    // For widget style
-    var widgetStyleIndex: Int
-        get() = sharedPreferences.getInt("widget_style_index", 0)
-        set(value) = sharedPreferences.edit { putInt("widget_style_index", value) }
 
 
     // For per-icon size (dynamically via key)
@@ -184,10 +153,6 @@ class AppPreferences private constructor(context: Context) {
         set(value) = sharedPreferences.edit { putBoolean(KEY_STATUS_ENABLED, value) }
 
 
-    var isDarkMode: Boolean
-        get() = sharedPreferences.getBoolean(KEY_IS_DARK_MODE, false)
-        set(value) = sharedPreferences.edit { putBoolean(KEY_IS_DARK_MODE, value) }
-
     fun saveWidgetIcon(widgetId: Int, iconName: String) {
         sharedPreferences.edit { putString("icon_name_$widgetId", iconName) }
     }
@@ -200,11 +165,14 @@ class AppPreferences private constructor(context: Context) {
     fun setInt(key: String, value: Int) = sharedPreferences.edit { putInt(key, value) }
 
 
-
-
     fun getString(key: String, default: String = ""): String? = sharedPreferences.getString(key, default)
 
     fun setString(key: String, value: String) = sharedPreferences.edit { putString(key, value) }
+
+    // For widget style
+    var widgetStyleIndex: Int
+        get() = sharedPreferences.getInt("widget_style_index", 0)
+        set(value) = sharedPreferences.edit { putInt("widget_style_index", value) }
 
 
 
@@ -220,6 +188,33 @@ class AppPreferences private constructor(context: Context) {
     fun removeKey(key: String) {
         sharedPreferences.edit { remove(key) }
     }
+
+
+    // --- Widget specific style handling (per widget ID) ---
+    fun saveStyleForWidget(widgetId: Int, styleIndex: Int, iconName: String) {
+        Log.d("STYLEINDEX"," Pref WidgetID: $widgetId -> styleIndex: $styleIndex, icon: $iconName")
+        sharedPreferences.edit {
+            putInt("style_index_$widgetId", styleIndex)
+                .putString("icon_name_$widgetId", iconName)
+        }
+    }
+
+    fun getStyleIndexForWidget(widgetId: Int): Int {
+        return sharedPreferences.getInt("style_index_$widgetId", 0)
+    }
+
+    fun getIconNameForWidget(widgetId: Int): String {
+        return sharedPreferences.getString("icon_name_$widgetId", "emoji_1") ?: "emoji_1"
+    }
+
+    var widgetIconName: String
+        get() = sharedPreferences.getString(KEY_WIDGET_ICON, "widget_39") ?: "widget_39"
+        set(value) = sharedPreferences.edit { putString(KEY_WIDGET_ICON, value) }
+
+    var isDarkMode: Boolean
+        get() = sharedPreferences.getBoolean(KEY_IS_DARK_MODE, false)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_IS_DARK_MODE, value) }
+
 
     fun contains(key: String): Boolean {
         return sharedPreferences.contains(key)
