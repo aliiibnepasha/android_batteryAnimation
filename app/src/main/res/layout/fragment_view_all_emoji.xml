@@ -23,12 +23,12 @@
             android:textStyle="bold"
             android:text="@string/enable_battery_emoji"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/switchEnableBatteryEmoji"
+            app:layout_constraintEnd_toStartOf="@+id/switchEnableBatteryEmojiViewAll"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/switchEnableBatteryEmoji"
+            android:id="@+id/switchEnableBatteryEmojiViewAll"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:checked="false"

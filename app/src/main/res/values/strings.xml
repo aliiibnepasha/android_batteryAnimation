@@ -97,4 +97,8 @@
     <string name="please_turn_on_battery_percentage">Please Turn On Battery Percentage</string>
     <string name="please_enable_battery_emoji_service">Please enable Custom Status Bar.</string>
     <string name="cancel">Cancel</string>
+    <string name="press_back_again_to_exit">Press back again to exit</string>
+    <string name="please_enable_accessibility_service">Please enable accessibility service</string>
+    <string name="please_accept_terms_of_service">Please accept Terms of Service</string>
+    <string name="allow">Allow</string>
 </resources>

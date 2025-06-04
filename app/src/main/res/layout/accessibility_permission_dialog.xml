@@ -77,24 +77,43 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp" />
 
-    <androidx.appcompat.widget.AppCompatCheckBox
+
+    <LinearLayout
         android:id="@+id/checkTerms"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/service_note_3"
-        android:checked="false"
-        android:textColor="@color/white"
-        android:button="@drawable/checkbox_custom_selector"
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="?attr/selectableItemBackground"
         app:layout_constraintTop_toBottomOf="@id/tvWhyDesc"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp" />
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/ivCheckIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="@string/cancel"
+            android:src="@drawable/checkbox_unchecked_circle" />
+
+        <TextView
+            android:id="@+id/tvTermsText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:text="@string/service_note_3"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
     <!-- Buttons -->
     <TextView
         android:id="@+id/btnAllow"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:text="Allow"
+        android:text="@string/allow"
         android:gravity="center"
         android:textColor="@color/white"
         android:background="@drawable/home_button"
@@ -109,7 +128,7 @@
         android:id="@+id/btnCancel"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:text="Cancel"
+        android:text="@string/cancel"
         android:background="@drawable/bg_border_fill_transparent"
         android:textColor="@color/white"
         android:gravity="center"

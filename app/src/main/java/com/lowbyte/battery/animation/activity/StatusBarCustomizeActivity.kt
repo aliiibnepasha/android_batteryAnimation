@@ -17,6 +17,7 @@ import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.CustomIconGridAdapter
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarCustommizeBinding
+import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.model.CustomIconGridItem
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.skydoves.colorpickerview.ColorEnvelope
@@ -54,21 +55,28 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
         binding.statusBarHeightSeekbar.progress = preferences.statusBarHeight
 
 
-        binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled
+        binding.switchEnableBatteryEmojiCustom.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
+        Log.d("TAG_Access", "Create ${preferences.isStatusBarEnabled}")
 
-        binding.switchEnableBatteryEmoji.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked && ::preferences.isInitialized) {
+        binding.switchEnableBatteryEmojiCustom.setOnCheckedChangeListener { _, isChecked ->
+
+            Log.d("TAG_Access", "onCreate check Call $isChecked")
+            preferences.isStatusBarEnabled = isChecked
+
+            if (::preferences.isInitialized && preferences.isStatusBarEnabled && isChecked) {
+                Log.d(
+                    "TAG_Access",
+                    "onViewCreated: $isChecked /  ${preferences.isStatusBarEnabled}"
+                )
                 checkAccessibilityPermission()
             } else {
-                preferences.isStatusBarEnabled = false
+                Log.d(
+                    "TAG_Access",
+                    "onViewCreated false: $isChecked / ${preferences.isStatusBarEnabled}"
+                )
                sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
-
             }
-
-
         }
-
-
 
 
         binding.statusBarHeight.text = getString(R.string.height_dp, preferences.statusBarHeight)
@@ -86,7 +94,7 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
             }
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
-                if (!binding.switchEnableBatteryEmoji.isChecked){
+                if (!binding.switchEnableBatteryEmojiCustom.isChecked){
                     Toast.makeText(this@StatusBarCustomizeActivity,
                         getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
                 }
@@ -107,7 +115,7 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
 
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
-                if (!binding.switchEnableBatteryEmoji.isChecked){
+                if (!binding.switchEnableBatteryEmojiCustom.isChecked){
                     Toast.makeText(this@StatusBarCustomizeActivity,
                         getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
                 }
@@ -129,7 +137,7 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
 
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
-                if (!binding.switchEnableBatteryEmoji.isChecked){
+                if (!binding.switchEnableBatteryEmojiCustom.isChecked){
                     Toast.makeText(this@StatusBarCustomizeActivity,
                         getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
                 }
@@ -175,7 +183,7 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
     }
 
     private fun setLayoutColor(envelope: ColorEnvelope?) {
-        if (!binding.switchEnableBatteryEmoji.isChecked){
+        if (!binding.switchEnableBatteryEmojiCustom.isChecked){
             Toast.makeText(this@StatusBarCustomizeActivity,
                 getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
         }
@@ -183,26 +191,40 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
         sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
 
     }
+
+
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
-            Toast.makeText(
-                this,
-                "Please enable accessibility service",
-                Toast.LENGTH_LONG
-            ).show()
-            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-        }else{
-            preferences.isStatusBarEnabled = true
-            binding.switchEnableBatteryEmoji.isChecked = true
+            val sheet = AccessibilityPermissionBottomSheet(onAllowClicked = {
+                Toast.makeText(
+                   this,
+                    getString(R.string.please_enable_accessibility_service),
+                    Toast.LENGTH_LONG
+                ).show()
+                Log.d("TAG_Access", "No permission but go for permission")
+                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            }, onCancelClicked = {
+                Log.d("TAG_Access", "No permission cancel")
+                preferences.isStatusBarEnabled = false
+                binding.switchEnableBatteryEmojiCustom.isChecked = false
+            })
+            sheet.show(supportFragmentManager, "AccessibilityPermission")
+
+        } else {
+            Log.d(
+                "TAG_Access",
+                "Allowed permission enabling checks ${preferences.isStatusBarEnabled}"
+            )
+            binding.switchEnableBatteryEmojiCustom.isChecked = preferences.isStatusBarEnabled
             sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+
 
         }
         // else, do nothing or show UI as normal
     }
-
     private fun isAccessibilityServiceEnabled(): Boolean {
         val expectedComponentName =
-            "${this.packageName}/${NotchAccessibilityService::class.java.canonicalName}"
+            "${packageName}/${NotchAccessibilityService::class.java.canonicalName}"
         val enabledServices = Settings.Secure.getString(
             contentResolver,
             Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
@@ -214,14 +236,6 @@ class StatusBarCustomizeActivity : AppCompatActivity() {
 
 
     override fun onResume() {
-        preferences = AppPreferences.getInstance(this)
-
-        if (preferences.isStatusBarEnabled && ::preferences.isInitialized){
-            binding.switchEnableBatteryEmoji.isChecked = isAccessibilityServiceEnabled()
-        }else{
-            binding.switchEnableBatteryEmoji.isChecked = false
-            preferences.isStatusBarEnabled = false
-        }
         super.onResume()
     }
     override fun onDestroy() {

@@ -31,9 +31,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             startActivity(Intent(requireContext(), SettingsActivity::class.java))
         }
 
-
-
-
         // Handle back press
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             if (navController.currentDestination?.id == R.id.navigation_view_all_emoji ||
@@ -46,7 +43,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     requireActivity().finish() // Exit the app
                 } else {
                     doubleBackPressedOnce = true
-                    Toast.makeText(requireContext(), "Press back again to exit", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(),
+                        getString(R.string.press_back_again_to_exit), Toast.LENGTH_SHORT).show()
                     Handler(Looper.getMainLooper()).postDelayed({
                         doubleBackPressedOnce = false
                     }, 2000) // 2-second window

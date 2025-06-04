@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.AccessibilityPermissionDialogBinding
 
 class AccessibilityPermissionBottomSheet(
@@ -15,6 +16,8 @@ class AccessibilityPermissionBottomSheet(
 
     private var _binding: AccessibilityPermissionDialogBinding? = null
     private val binding get() = _binding!!
+
+    private var isTermsAccepted = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,21 +30,38 @@ class AccessibilityPermissionBottomSheet(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Allow button click
+        // Toggle listener
+        binding.checkTerms.setOnClickListener {
+            isTermsAccepted = !isTermsAccepted
+            updateToggleUI()
+        }
+
         binding.btnAllow.setOnClickListener {
-            if (binding.checkTerms.isChecked) {
+            if (isTermsAccepted) {
                 onAllowClicked.invoke()
                 dismiss()
             } else {
-                Toast.makeText(requireContext(), "Please accept Terms of Service", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.please_accept_terms_of_service),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
-        // Cancel button click
         binding.btnCancel.setOnClickListener {
             onCancelClicked.invoke()
             dismiss()
         }
+    }
+
+    private fun updateToggleUI() {
+        val iconRes = if (isTermsAccepted) {
+            R.drawable.checkbox_checked_icon
+        } else {
+            R.drawable.checkbox_unchecked_circle
+        }
+        binding.ivCheckIcon.setImageResource(iconRes)
     }
 
     override fun onDestroyView() {

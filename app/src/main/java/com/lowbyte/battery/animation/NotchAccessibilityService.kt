@@ -115,8 +115,17 @@ class NotchAccessibilityService : AccessibilityService() {
         updateBatteryInfo()
 
         // Add view only if enabled and not already attached
-        if (::preferences.isInitialized && preferences.isStatusBarEnabled && statusBarBinding?.root?.windowToken == null) {
-            windowManager?.addView(statusBarBinding?.root, layoutParams)
+//        if (::preferences.isInitialized && preferences.isStatusBarEnabled && statusBarBinding?.root?.windowToken == null) {
+//            windowManager?.addView(statusBarBinding?.root, layoutParams)
+//        }
+
+        val view = statusBarBinding?.root
+        if (::preferences.isInitialized && preferences.isStatusBarEnabled) {
+            if (view?.parent == null) {
+                windowManager?.addView(view, layoutParams)
+            } else {
+                Log.w("StatusBar", "View already added. Skipping re-add.")
+            }
         }
     }
 

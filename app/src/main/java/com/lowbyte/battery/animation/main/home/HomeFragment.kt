@@ -2,8 +2,13 @@ package com.lowbyte.battery.animation.main.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -27,31 +32,57 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var preferences: AppPreferences
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        preferences = AppPreferences.getInstance(requireContext())
+
+
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        preferences = AppPreferences.getInstance(requireContext())
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentHomeBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
-        preferences = AppPreferences.getInstance(requireContext())
 
-        binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled
 
-        binding.switchEnableBatteryEmoji.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked && ::preferences.isInitialized) {
-                val sheet = AccessibilityPermissionBottomSheet(
-                    onAllowClicked = {
-                        checkAccessibilityPermission()
-                    },
-                    onCancelClicked = {
-                        // Handle cancel
-                    }
-                )
-                sheet.show(childFragmentManager, "AccessibilityPermission")
 
-            } else {
-                preferences.isStatusBarEnabled = false
-                requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
+            Log.d("TAG_Access", "Create ${preferences.isStatusBarEnabled}")
 
+            binding.switchEnableBatteryEmoji.setOnCheckedChangeListener { _, isChecked ->
+
+                Log.d("TAG_Access", "onCreate check Call $isChecked")
+                preferences.isStatusBarEnabled = isChecked
+
+                if (::preferences.isInitialized && preferences.isStatusBarEnabled && isChecked) {
+                    Log.d(
+                        "TAG_Access",
+                        "onViewCreated: $isChecked /  ${preferences.isStatusBarEnabled}"
+                    )
+                    checkAccessibilityPermission()
+                } else {
+                    Log.d(
+                        "TAG_Access",
+                        "onViewCreated false: $isChecked / ${preferences.isStatusBarEnabled}"
+                    )
+                    requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+                }
             }
-        }
+        }, 500)
+
+
+
+
+
         val data = listOf(
             MultiViewItem.TitleItem(getString(R.string.cat_emojis)),
             MultiViewItem.ListEmojiOrWidgetItem(emojiCuteListFantasy),
@@ -110,18 +141,36 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     }
 
+
+
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
-            Toast.makeText(
-                requireContext(),
-                "Please enable accessibility service",
-                Toast.LENGTH_LONG
-            ).show()
-            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-        }else{
-            preferences.isStatusBarEnabled = true
-            binding.switchEnableBatteryEmoji.isChecked = true
+            val sheet = AccessibilityPermissionBottomSheet(onAllowClicked = {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.please_enable_accessibility_service),
+                    Toast.LENGTH_LONG
+                ).show()
+
+                Log.d("TAG_Access", "No permission but go for permission")
+                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+
+            }, onCancelClicked = {
+                Log.d("TAG_Access", "No permission cancel")
+                preferences.isStatusBarEnabled = false
+                binding.switchEnableBatteryEmoji.isChecked = false
+
+            })
+            sheet.show(childFragmentManager, "AccessibilityPermission")
+
+        } else {
+            Log.d(
+                "TAG_Access",
+                "Allowed permission enabling checks ${preferences.isStatusBarEnabled}"
+            )
+            binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled
             requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+
 
         }
         // else, do nothing or show UI as normal
@@ -138,15 +187,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             .any { it.equals(expectedComponentName, ignoreCase = true) }
     }
 
-
     override fun onResume() {
-        preferences = AppPreferences.getInstance(requireActivity())
-        if (preferences.isStatusBarEnabled && ::preferences.isInitialized){
-            binding.switchEnableBatteryEmoji.isChecked = isAccessibilityServiceEnabled()
-        }else{
-            binding.switchEnableBatteryEmoji.isChecked = false
-            preferences.isStatusBarEnabled = false
-        }
         super.onResume()
+
     }
+
 }
