@@ -1,35 +1,19 @@
 package com.lowbyte.battery.animation.utils
 
 object AnimationUtils {
+
+    val combinedAnimationList: List<String> by lazy {
+        animationList + animationListNew
+    }
+
     // Lotti Animations
     val animationList: List<String> by lazy {
         List(14) { index -> "anim_${index + 1}" }
     }
   // Lotti Animations
     val animationListNew: List<String> by lazy {
-        List(17) { index -> "a_${index + 1}" }
+        List(16) { index -> "a_${index + 1}" }
     }
-
-//    //  Widgets List all Cat
-//    val widgetListW: List<String> by lazy {
-//        List(12) { index -> "widget_${index + 1}" }
-//    }
-//
-//    val widgetListAction: List<String> by lazy {
-//        List(12) { index -> "widget_${index + 24}" }
-//    }
-//
-//    val widgetListBasic: List<String> by lazy {
-//        List(12) { index -> "widget_${index + 36}" }
-//    }
-//
-//    val widgetListCute: List<String> by lazy {
-//        List(12) { index -> "widget_${index + 48}" }
-//    }
-//
-//    val widgetListFantasy: List<String> by lazy {
-//        List(12) { index -> "widget_${index + 1}" }
-//    }
 
     // Total widgets
     val allWidgets: List<String> = List(54) { i -> "widget_${i + 1}" }

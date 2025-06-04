@@ -48,9 +48,10 @@ class NotchAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         preferences = AppPreferences.getInstance(this)
-        registerUpdateReceiver()
+      //  registerUpdateReceiver()
         createCustomStatusBar()
         startTimeUpdates()
+        updateStatusBarAppearance()
 
     }
 
@@ -65,6 +66,8 @@ class NotchAccessibilityService : AccessibilityService() {
         updateReceiver?.let { unregisterReceiver(it) }
         updateReceiver = null
     }
+
+
 
     private fun registerUpdateReceiver() {
         if (updateReceiver == null) {
@@ -113,11 +116,6 @@ class NotchAccessibilityService : AccessibilityService() {
         updateStatusBarAppearance()
         setupGestures()
         updateBatteryInfo()
-
-        // Add view only if enabled and not already attached
-//        if (::preferences.isInitialized && preferences.isStatusBarEnabled && statusBarBinding?.root?.windowToken == null) {
-//            windowManager?.addView(statusBarBinding?.root, layoutParams)
-//        }
 
         val view = statusBarBinding?.root
         if (::preferences.isInitialized && preferences.isStatusBarEnabled) {

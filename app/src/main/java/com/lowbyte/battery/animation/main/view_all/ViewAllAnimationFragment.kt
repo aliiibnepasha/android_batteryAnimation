@@ -14,6 +14,7 @@ import com.lowbyte.battery.animation.adapter.AnimationAdapter
 import com.lowbyte.battery.animation.databinding.FragmentViewAllAnimationBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.animationList
 import com.lowbyte.battery.animation.utils.AnimationUtils.animationListNew
+import com.lowbyte.battery.animation.utils.AnimationUtils.combinedAnimationList
 import com.lowbyte.battery.animation.utils.AppPreferences
 
 class ViewAllAnimationFragment : Fragment() {
@@ -86,6 +87,6 @@ class ViewAllAnimationFragment : Fragment() {
             layoutManager = GridLayoutManager(context, 2)
             adapter = this@ViewAllAnimationFragment.adapter
         }
-        adapter.submitList(animationList)
+        adapter.submitList(combinedAnimationList)
     }
 }
