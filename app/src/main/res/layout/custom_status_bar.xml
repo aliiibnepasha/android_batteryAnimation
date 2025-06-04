@@ -8,7 +8,6 @@
     android:minHeight="30dp"
     android:maxHeight="100dp"
     android:background="@color/white"
-    android:elevation="1000dp"
     android:paddingHorizontal="4dp">
 
     <LinearLayout
