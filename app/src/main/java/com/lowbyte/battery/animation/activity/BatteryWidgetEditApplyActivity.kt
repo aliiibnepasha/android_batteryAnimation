@@ -14,13 +14,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.broadcastReciver.BatteryLevelReceiver
 import com.lowbyte.battery.animation.broadcastReciver.BatteryWidgetProvider
 import com.lowbyte.battery.animation.databinding.ActivityBatteryWidgetEditApplyBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
 
-class BatteryWidgetEditApplyActivity : AppCompatActivity() {
+class BatteryWidgetEditApplyActivity : BaseActivity() {
 
     private lateinit var binding: ActivityBatteryWidgetEditApplyBinding
     private lateinit var preferences: AppPreferences

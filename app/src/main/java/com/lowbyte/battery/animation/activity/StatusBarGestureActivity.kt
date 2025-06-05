@@ -7,12 +7,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.ActionScrollItem
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarGestureBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
 
-class StatusBarGestureActivity : AppCompatActivity() {
+class StatusBarGestureActivity : BaseActivity() {
 
     private var _binding: ActivityStatusBarGestureBinding? = null
     private val binding get() = _binding!!

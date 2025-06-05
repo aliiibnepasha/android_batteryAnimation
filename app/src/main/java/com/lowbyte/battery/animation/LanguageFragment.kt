@@ -30,7 +30,6 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
             Language("Français", "fr-rFR"),      // French (France) ok
             Language("हिंदी", "hi"),             // Hindi ok
             Language("Italiano", "it-rIT"),      // Italian ok
-           // Language("עברית", "iw"),             // Hebrew ok
             Language("日本語", "ja"),             // Japanese ok
             Language("한국어", "ko"),             // Korean ok
             Language("Bahasa Melayu", "ms-rMY"), // Malay (Malaysia) ok
@@ -42,14 +41,13 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
             Language("Bahasa Indonesia", "in")  // Indonesian ok
         )
 
-        adapter = LanguageAdapter(languages) { language ->
+        val currentLanguageCode = LocaleHelper.getLanguage(requireContext())
+
+        adapter = LanguageAdapter(languages, currentLanguageCode) { language ->
             selectedLanguage = language.name
-            // Save selected language
             LocaleHelper.setLocale(requireContext(), language.code)
-            // Restart activity to apply changes
             requireActivity().apply {
                 recreate()
-               // findNavController().navigate(R.id.action_language_to_intro)
             }
         }
 

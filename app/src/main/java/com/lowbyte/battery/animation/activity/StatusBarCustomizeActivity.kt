@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.CustomIconGridAdapter
@@ -25,7 +26,7 @@ import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 
 
-class StatusBarCustomizeActivity : AppCompatActivity() {
+class StatusBarCustomizeActivity : BaseActivity() {
 
     private var _binding: ActivityStatusBarCustommizeBinding? = null
     private val binding get() = _binding!!

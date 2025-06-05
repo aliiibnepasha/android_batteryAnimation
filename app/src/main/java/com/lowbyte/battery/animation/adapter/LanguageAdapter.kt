@@ -11,19 +11,18 @@ import com.lowbyte.battery.animation.databinding.ItemLanguageBinding
 
 class LanguageAdapter(
     private val items: List<Language>,
+    private val selectedCode: String,
     private val onSelect: (Language) -> Unit
 ) : RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder>() {
 
-    private var selectedPosition = -1
+    private var selectedPosition = items.indexOfFirst { it.code == selectedCode }
 
     inner class LanguageViewHolder(val binding: ItemLanguageBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LanguageViewHolder {
         val binding = ItemLanguageBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+            LayoutInflater.from(parent.context), parent, false
         )
         return LanguageViewHolder(binding)
     }
@@ -43,9 +42,9 @@ class LanguageAdapter(
 
         holder.itemView.setOnClickListener {
             val previous = selectedPosition
-            selectedPosition = holder.getAdapterPosition()
+            selectedPosition = holder.adapterPosition
             notifyItemChanged(previous)
-            notifyItemChanged(position)
+            notifyItemChanged(selectedPosition)
             onSelect(language)
         }
     }

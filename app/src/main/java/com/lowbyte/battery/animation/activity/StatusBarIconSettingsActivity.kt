@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarIconSettingsBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
@@ -13,7 +14,7 @@ import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 
-class StatusBarIconSettingsActivity : AppCompatActivity() {
+class StatusBarIconSettingsActivity : BaseActivity() {
 
     private lateinit var binding: ActivityStatusBarIconSettingsBinding
     private lateinit var preferences: AppPreferences

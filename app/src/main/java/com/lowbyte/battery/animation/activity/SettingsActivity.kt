@@ -10,8 +10,9 @@ import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ActivitySettingsBinding
 import androidx.core.net.toUri
+import com.lowbyte.battery.animation.BaseActivity
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
 
