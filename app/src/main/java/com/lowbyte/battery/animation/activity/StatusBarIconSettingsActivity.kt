@@ -2,12 +2,14 @@ package com.lowbyte.battery.animation.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.activity.StatusBarGestureActivity
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarIconSettingsBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.skydoves.colorpickerview.ColorEnvelope
@@ -75,13 +77,22 @@ class StatusBarIconSettingsActivity : BaseActivity() {
             }
 
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
+                if (!preferences.isStatusBarEnabled ){
+                    Toast.makeText(this@StatusBarIconSettingsActivity,
+                        getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+                }
+            }
         })
     }
 
 
 
     fun colorOfIcon(name: String,envelope: ColorEnvelope?) {
+        if (!preferences.isStatusBarEnabled ){
+            Toast.makeText(this@StatusBarIconSettingsActivity,
+                getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+        }
         when (name) {
             "tint_0" -> {
                 preferences.setInt("tint_0", envelope?.color!!)

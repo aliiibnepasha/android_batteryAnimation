@@ -6,10 +6,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.BatteryAnimationEditApplyActivity
+import com.lowbyte.battery.animation.activity.StatusBarIconSettingsActivity
 import com.lowbyte.battery.animation.adapter.AnimationAdapter
 import com.lowbyte.battery.animation.databinding.FragmentViewAllAnimationBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.animationList
@@ -35,6 +37,10 @@ class ViewAllAnimationFragment : Fragment() {
 
         binding.switchVibrateFeedback.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
+                if (!preferences.isStatusBarEnabled ){
+                    Toast.makeText(requireContext(),
+                        getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+                }
                 preferences.statusLottieName = "a_1"
                 requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
             } else {
@@ -60,7 +66,12 @@ class ViewAllAnimationFragment : Fragment() {
             }
 
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
+                if (!preferences.isStatusBarEnabled ){
+                    Toast.makeText(requireContext(),
+                        getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+                }
+            }
         })
 
 

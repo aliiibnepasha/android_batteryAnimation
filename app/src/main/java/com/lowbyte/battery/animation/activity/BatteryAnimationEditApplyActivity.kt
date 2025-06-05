@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.activity.StatusBarIconSettingsActivity
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ActivityBatteryAnimationEditApplyBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
@@ -56,6 +57,10 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
         }
 
         binding.buttonForApply.setOnClickListener {
+            if (!preferences.isStatusBarEnabled ){
+                Toast.makeText(this@BatteryAnimationEditApplyActivity,
+                    getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+            }
             if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
                 AdManager.showInterstitialAd(this) {
                     Log.e("Ads","FullScreenTobeShoe")

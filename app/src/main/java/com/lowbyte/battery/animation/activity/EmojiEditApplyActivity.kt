@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.activity.StatusBarCustomizeActivity
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ActivityEmojiEditApplayBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
@@ -75,7 +76,12 @@ class EmojiEditApplyActivity : BaseActivity() {
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                if (!preferences.isStatusBarEnabled){
+                    Toast.makeText(this@EmojiEditApplyActivity,
+                        getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+                }
+            }
         })
 
 
@@ -97,6 +103,10 @@ class EmojiEditApplyActivity : BaseActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 if (!binding.enableShowBatteryPercentage.isChecked){
                     Toast.makeText(this@EmojiEditApplyActivity, getString(R.string.please_turn_on_battery_percentage), Toast.LENGTH_SHORT).show()
+                }
+                if (!preferences.isStatusBarEnabled){
+                    Toast.makeText(this@EmojiEditApplyActivity,
+                        getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
                 }
 
             }
@@ -145,6 +155,10 @@ class EmojiEditApplyActivity : BaseActivity() {
     private fun colorOfIcon(envelope: ColorEnvelope) {
         if (!binding.enableShowBatteryPercentage.isChecked){
             Toast.makeText(this, getString(R.string.please_turn_on_battery_percentage), Toast.LENGTH_SHORT).show()
+        }
+        if (!preferences.isStatusBarEnabled){
+            Toast.makeText(this@EmojiEditApplyActivity,
+                getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
         }
         preferences.setInt("percentageColor", envelope.color)
         sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))

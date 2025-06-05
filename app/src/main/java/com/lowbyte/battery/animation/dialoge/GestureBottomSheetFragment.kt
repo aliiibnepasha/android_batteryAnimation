@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.activity.StatusBarGestureActivity
 import com.lowbyte.battery.animation.adapter.ActionScrollAdapter
 import com.lowbyte.battery.animation.adapter.ActionScrollItem
 import com.lowbyte.battery.animation.databinding.FragmentGestureBottomSheetBinding
@@ -45,7 +46,10 @@ class GestureBottomSheetFragment(
         // RecyclerView setup
         binding.recyclerViewActions.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewActions.adapter = ActionScrollAdapter(actions){ position, label ->
-
+            if (!preferences.isStatusBarEnabled ){
+                Toast.makeText(requireContext(),
+                    getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+            }
           //  preferences.setString(gestureAction, label)
             Toast.makeText(context, getString(R.string.action_applied, label), Toast.LENGTH_SHORT).show()
             onActionSelected(actions[position])

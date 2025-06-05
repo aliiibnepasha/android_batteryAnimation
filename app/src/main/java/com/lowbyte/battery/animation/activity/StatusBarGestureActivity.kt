@@ -4,11 +4,13 @@ import GestureBottomSheetFragment
 import android.content.Context
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
 import com.lowbyte.battery.animation.adapter.ActionScrollItem
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarGestureBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
@@ -57,11 +59,20 @@ class StatusBarGestureActivity : BaseActivity() {
         binding.switchVibrateFeedback.setOnCheckedChangeListener { _, isChecked ->
             preferences.isVibrateMode = isChecked
 
+            if (!preferences.isStatusBarEnabled && isChecked){
+                Toast.makeText(this@StatusBarGestureActivity,
+                    getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+            }
+
         }
 
         binding.gestureSwitchEnable.isChecked = preferences.isGestureMode
         binding.gestureSwitchEnable.setOnCheckedChangeListener { _, isChecked ->
             preferences.isGestureMode = isChecked
+            if (!preferences.isStatusBarEnabled && isChecked){
+                Toast.makeText(this@StatusBarGestureActivity,
+                    getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+            }
 
         }
 
