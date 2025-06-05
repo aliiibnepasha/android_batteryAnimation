@@ -65,7 +65,7 @@ class AppPreferences private constructor(context: Context) {
 
     // For ints
     var statusBarHeight: Int
-        get() = sharedPreferences.getInt(KEY_STATUS_HEIGHT, 30)
+        get() = sharedPreferences.getInt(KEY_STATUS_HEIGHT, 40)
         set(value) = sharedPreferences.edit { putInt(KEY_STATUS_HEIGHT, value) }
 
     var statusBarMarginLeft: Int

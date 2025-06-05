@@ -210,7 +210,7 @@ class NotchAccessibilityService : AccessibilityService() {
             val customIconRes = resources.getIdentifier(preferences.customIconName, "drawable", packageName)
             if (preferences.customIconName.isNotBlank() && customIconRes != 0) {
                 customIcon.setImageResource(customIconRes)
-                customIcon.visibility = View.VISIBLE
+                customIcon.visibility = View.GONE
             } else {
                 customIcon.visibility = View.GONE
             }

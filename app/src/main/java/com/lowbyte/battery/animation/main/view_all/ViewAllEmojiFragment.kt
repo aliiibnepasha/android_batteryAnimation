@@ -24,8 +24,6 @@ import com.lowbyte.battery.animation.utils.AppPreferences
 class ViewAllEmojiFragment : Fragment() {
     private lateinit var binding: FragmentViewAllEmojiBinding
 
-
-
     private lateinit var preferences: AppPreferences
 
 
