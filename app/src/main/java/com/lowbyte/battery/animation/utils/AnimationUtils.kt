@@ -1,6 +1,8 @@
 package com.lowbyte.battery.animation.utils
 
 import android.content.Context
+import android.os.VibrationEffect
+import android.os.Vibrator
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.model.Language
 
@@ -98,4 +100,15 @@ object AnimationUtils {
         )
     }
 
+    fun Context.vibrateClick(duration: Long = 5000) {
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+        vibrator?.let {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                it.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.DEFAULT_AMPLITUDE))
+            } else {
+                @Suppress("DEPRECATION")
+                it.vibrate(duration)
+            }
+        }
+    }
 }

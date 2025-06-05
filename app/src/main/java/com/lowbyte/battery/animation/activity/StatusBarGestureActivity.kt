@@ -1,7 +1,11 @@
 package com.lowbyte.battery.animation.activity
 
 import GestureBottomSheetFragment
+import android.content.Context
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.util.Log
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -57,6 +61,7 @@ class StatusBarGestureActivity : BaseActivity() {
         binding.switchVibrateFeedback.isChecked = preferences.isVibrateMode
         binding.switchVibrateFeedback.setOnCheckedChangeListener { _, isChecked ->
             preferences.isVibrateMode = isChecked
+
         }
 
         binding.gestureSwitchEnable.isChecked = preferences.isGestureMode

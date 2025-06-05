@@ -15,6 +15,8 @@ import android.os.BatteryManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.provider.Settings
 import android.util.Log
 import android.view.GestureDetector
@@ -244,7 +246,7 @@ class NotchAccessibilityService : AccessibilityService() {
 
             override fun onDoubleTap(e: MotionEvent): Boolean {
                 if (preferences.isGestureMode){
-                    Toast.makeText(this@NotchAccessibilityService, "Double Tap Detected", Toast.LENGTH_SHORT).show()
+                    //  Toast.makeText(this@NotchAccessibilityService, "Double Tap Detected", Toast.LENGTH_SHORT).show()
                 }
                 return true
             }
@@ -393,6 +395,26 @@ class NotchAccessibilityService : AccessibilityService() {
     }
 
     fun performGlobalActionByName(actionName: String) {
+        if (preferences.isVibrateMode && preferences.isGestureMode) {
+            val vibrator = getSystemService(VIBRATOR_SERVICE) as? Vibrator
+            Log.d("isVIbation", "isVIbation ${vibrator?.hasVibrator()}")
+
+            vibrator?.let {
+                if (it.hasVibrator()) {
+                    Log.d("isVIbation", "isVIbation r ${vibrator?.hasVibrator()}")
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        val timings = longArrayOf(0, 300, 50, 200) // delay, vibrate, pause, vibrate
+                        vibrator.vibrate(VibrationEffect.createWaveform(timings, -1))
+                    } else {
+                        @Suppress("DEPRECATION")
+                        it.vibrate(1000)
+                    }
+                }
+
+            }
+        }
+
+
         when (actionName) {
             getString(R.string.action_do_nothing) -> {
 

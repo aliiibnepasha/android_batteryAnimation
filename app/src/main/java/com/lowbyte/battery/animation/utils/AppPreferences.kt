@@ -82,7 +82,7 @@ class AppPreferences private constructor(context: Context) {
 
     // For booleans (show/hide)
     var isVibrateMode: Boolean
-        get() = sharedPreferences.getBoolean(KEY_IS_VIBRATE_MODE, false)
+        get() = sharedPreferences.getBoolean(KEY_IS_VIBRATE_MODE, true)
         set(value) = sharedPreferences.edit { putBoolean(KEY_IS_VIBRATE_MODE, value) }
 
       // For booleans (show/hide)
