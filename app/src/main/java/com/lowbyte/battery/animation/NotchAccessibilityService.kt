@@ -416,23 +416,23 @@ class NotchAccessibilityService : AccessibilityService() {
 
 
         when (actionName) {
-            getString(R.string.action_do_nothing) -> {
+            "action_do_nothing" -> {
 
             }
 
-            getString(R.string.action_back_action) -> {
+            "action_back_action" -> {
                 performGlobalAction(GLOBAL_ACTION_BACK)
             }
 
-            getString(R.string.action_home_action) -> {
+            "action_home_action" -> {
                 performGlobalAction(GLOBAL_ACTION_HOME)
             }
 
-            getString(R.string.action_recent_action) -> {
+            "action_recent_action" -> {
                 performGlobalAction(GLOBAL_ACTION_RECENTS)
             }
 
-            getString(R.string.action_lock_screen) -> {
+            "action_lock_screen" -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
                 } else {
@@ -444,23 +444,23 @@ class NotchAccessibilityService : AccessibilityService() {
                 }
             }
 
-            getString(R.string.action_open_notifications) -> {
+            "action_open_notifications" -> {
                 performGlobalAction(GLOBAL_ACTION_NOTIFICATIONS)
             }
 
-            getString(R.string.action_power_options) -> {
+            "action_power_options" -> {
                 performGlobalAction(GLOBAL_ACTION_POWER_DIALOG)
             }
 
-            getString(R.string.action_quick_scroll_to_up) -> {
+            "action_quick_scroll_to_up" -> {
                 performGlobalAction(GESTURE_SWIPE_UP)
             }
 
-            getString(R.string.action_open_control_centre) -> {
+            "action_open_control_centre" -> {
                 performGlobalAction(GLOBAL_ACTION_QUICK_SETTINGS)
             }
 
-            getString(R.string.action_take_screenshot) -> {
+           "action_take_screenshot" -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     performGlobalAction(GLOBAL_ACTION_TAKE_SCREENSHOT)
                 } else {

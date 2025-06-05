@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lowbyte.battery.animation.databinding.ItemActionScrollBinding
 
-data class ActionScrollItem(val label: String)
+data class ActionScrollItem(val label: String , val actionName: String)
 
 class ActionScrollAdapter(
     private val items: List<ActionScrollItem>,

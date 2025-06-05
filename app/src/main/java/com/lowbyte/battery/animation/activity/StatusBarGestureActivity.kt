@@ -46,16 +46,15 @@ class StatusBarGestureActivity : BaseActivity() {
             finish()
         }
 
-        singleTapActionText.text =
-            preferences.getString("gestureAction", getString(R.string.action_do_nothing))
-        longTapActionText.text =
-            preferences.getString("longPressAction", getString(R.string.action_do_nothing))
-        swipeLeftToRightActionText.text =
-            preferences.getString("swipeLeftToRightAction", getString(R.string.action_do_nothing))
-        swipeRightToLeftActionText.text =
-            preferences.getString("swipeRightToLeftAction", getString(R.string.action_do_nothing))
+//        singleTapActionText.text = preferences.getString("gestureAction", getString(R.string.action_do_nothing))?.replace("_"," ")
+//        longTapActionText.text = preferences.getString("longPressAction", getString(R.string.action_do_nothing))?.replace("_"," ")
+//        swipeLeftToRightActionText.text = preferences.getString("swipeLeftToRightAction", getString(R.string.action_do_nothing))?.replace("_"," ")
+//        swipeRightToLeftActionText.text = preferences.getString("swipeRightToLeftAction", getString(R.string.action_do_nothing))?.replace("_"," ")
 
-
+        singleTapActionText.text = getLocalizedStringFromPrefKey(this, "gestureAction", R.string.action_do_nothing)
+        longTapActionText.text = getLocalizedStringFromPrefKey(this, "longPressAction", R.string.action_do_nothing)
+        swipeLeftToRightActionText.text = getLocalizedStringFromPrefKey(this, "swipeLeftToRightAction", R.string.action_do_nothing)
+        swipeRightToLeftActionText.text = getLocalizedStringFromPrefKey(this, "swipeRightToLeftAction", R.string.action_do_nothing)
 
 
         binding.switchVibrateFeedback.isChecked = preferences.isVibrateMode
@@ -75,8 +74,8 @@ class StatusBarGestureActivity : BaseActivity() {
                 getString(R.string.single_tap),
                 singleTapActionText.text.toString()
             ) { selected ->
-                singleTapActionText.text = selected
-                preferences.setString("gestureAction", selected)
+                singleTapActionText.text = selected.label
+                preferences.setString("gestureAction", selected.actionName)
             }
         }
 
@@ -85,8 +84,8 @@ class StatusBarGestureActivity : BaseActivity() {
                 getString(R.string.long_press),
                 longTapActionText.text.toString()
             ) { selected ->
-                longTapActionText.text = selected
-                preferences.setString("longPressAction", selected)
+                longTapActionText.text = selected.label
+                preferences.setString("longPressAction", selected.actionName)
             }
         }
 
@@ -95,8 +94,8 @@ class StatusBarGestureActivity : BaseActivity() {
                 getString(R.string.swipe_left_to_right),
                 swipeLeftToRightActionText.text.toString()
             ) { selected ->
-                swipeLeftToRightActionText.text = selected
-                preferences.setString("swipeLeftToRightAction", selected)
+                swipeLeftToRightActionText.text = selected.label
+                preferences.setString("swipeLeftToRightAction", selected.actionName)
             }
         }
 
@@ -105,8 +104,8 @@ class StatusBarGestureActivity : BaseActivity() {
                 getString(R.string.swipe_right_to_left),
                 swipeRightToLeftActionText.text.toString()
             ) { selected ->
-                swipeRightToLeftActionText.text = selected
-                preferences.setString("swipeRightToLeftAction", selected)
+                swipeRightToLeftActionText.text = selected.label
+                preferences.setString("swipeRightToLeftAction", selected.actionName)
             }
         }
 
@@ -120,19 +119,19 @@ class StatusBarGestureActivity : BaseActivity() {
     private fun showGestureBottomSheet(
         title: String,
         currentAction: String,
-        onActionSelected: (String) -> Unit
+        onActionSelected: (ActionScrollItem) -> Unit
     ) {
         val items = listOf(
-            ActionScrollItem(getString(R.string.action_quick_scroll_to_up)),
-            ActionScrollItem(getString(R.string.action_open_notifications)),
-            ActionScrollItem(getString(R.string.action_open_control_centre)),
-            ActionScrollItem(getString(R.string.action_power_options)),
-            ActionScrollItem(getString(R.string.action_do_nothing)),
-            ActionScrollItem(getString(R.string.action_back_action)),
-            ActionScrollItem(getString(R.string.action_home_action)),
-            ActionScrollItem(getString(R.string.action_recent_action)),
-            ActionScrollItem(getString(R.string.action_take_screenshot)),
-            ActionScrollItem(getString(R.string.action_lock_screen)),
+            ActionScrollItem(getString(R.string.action_quick_scroll_to_up),"action_quick_scroll_to_up"),
+            ActionScrollItem(getString(R.string.action_open_notifications),"action_open_notifications"),
+            ActionScrollItem(getString(R.string.action_open_control_centre),"action_open_control_centre"),
+            ActionScrollItem(getString(R.string.action_power_options),"action_power_options"),
+            ActionScrollItem(getString(R.string.action_do_nothing),"action_do_nothing"),
+            ActionScrollItem(getString(R.string.action_back_action),"action_back_action"),
+            ActionScrollItem(getString(R.string.action_home_action),"action_home_action"),
+            ActionScrollItem(getString(R.string.action_recent_action),"action_recent_action"),
+            ActionScrollItem(getString(R.string.action_take_screenshot),"action_take_screenshot"),
+            ActionScrollItem(getString(R.string.action_lock_screen),"action_lock_screen"),
         )
 
         val bottomSheet =
@@ -141,5 +140,17 @@ class StatusBarGestureActivity : BaseActivity() {
             }
 
         bottomSheet.show(supportFragmentManager, "GestureBottomSheet")
+    }
+
+    fun getLocalizedStringFromPrefKey(context: Context, key: String, defaultResId: Int): String {
+        val savedKey = preferences.getString(key, "")
+
+        savedKey?.let {
+            val resId = context.resources.getIdentifier(it, "string", context.packageName)
+            if (resId != 0) {
+                return context.getString(resId)
+            }
+        }
+        return context.getString(defaultResId)
     }
 }

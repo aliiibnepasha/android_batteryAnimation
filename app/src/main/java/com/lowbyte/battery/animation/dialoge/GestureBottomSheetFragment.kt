@@ -16,7 +16,7 @@ class GestureBottomSheetFragment(
     private val gestureTitle: String,
     private val gestureAction: String,
     private val actions: List<ActionScrollItem>,
-    private val onActionSelected: (String) -> Unit // ✅ New callback
+    private val onActionSelected: (ActionScrollItem) -> Unit // ✅ New callback
 
 ) : BottomSheetDialogFragment() {
 
@@ -48,7 +48,7 @@ class GestureBottomSheetFragment(
 
           //  preferences.setString(gestureAction, label)
             Toast.makeText(context, getString(R.string.action_applied, label), Toast.LENGTH_SHORT).show()
-            onActionSelected(label)
+            onActionSelected(actions[position])
             dismiss() // Close the bottom sheet
         }
 
