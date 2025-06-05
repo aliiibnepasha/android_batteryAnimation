@@ -99,34 +99,6 @@ class NotchAccessibilityService : AccessibilityService() {
     }
 
 
-//    private fun registerUpdateReceiver() {
-//        if (updateReceiver == null) {
-//            updateReceiver = object : BroadcastReceiver() {
-//                override fun onReceive(context: Context?, intent: Intent?) {
-//                    Log.d("servicesdd", "Received broadcast")
-//                    updateStatusBarAppearance()
-//                }
-//            }
-//
-//            val filter = IntentFilter().apply {
-//                addAction("com.lowbyte.UPDATE_STATUSBAR")
-//                addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
-//                addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
-//                addAction(ConnectivityManager.CONNECTIVITY_ACTION)
-//                // You may also listen to custom broadcast if you manually trigger hotspot toggles
-//            }
-//            if (Build.VERSION.SDK_INT >= 33) {
-//                registerReceiver(updateReceiver, filter, RECEIVER_EXPORTED)
-//                Log.d("servicesdd","Received broadcast>= 33")
-//
-//            } else {
-//                registerReceiver(updateReceiver, filter)
-//                Log.d("servicesdd","Received broadcast<33")
-//
-//            }
-//        }
-//    }
-
 
     private fun createCustomStatusBar() {
         layoutParams = WindowManager.LayoutParams(

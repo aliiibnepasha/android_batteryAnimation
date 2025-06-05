@@ -6,6 +6,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.ActionScrollAdapter
 import com.lowbyte.battery.animation.adapter.ActionScrollItem
 import com.lowbyte.battery.animation.databinding.FragmentGestureBottomSheetBinding
@@ -46,7 +47,7 @@ class GestureBottomSheetFragment(
         binding.recyclerViewActions.adapter = ActionScrollAdapter(actions){ position, label ->
 
           //  preferences.setString(gestureAction, label)
-            Toast.makeText(context, "Action Applied - $label", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.action_applied, label), Toast.LENGTH_SHORT).show()
             onActionSelected(label)
             dismiss() // Close the bottom sheet
         }

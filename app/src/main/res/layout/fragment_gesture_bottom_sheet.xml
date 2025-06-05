@@ -10,7 +10,7 @@
         android:id="@+id/tvGestureTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Gesture Title"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -20,7 +20,7 @@
         android:id="@+id/tvGestureAction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Gesture Action"
+        android:text="@string/gesture_action"
         android:textColor="@color/gray_unselected"
         android:textSize="16sp"
         android:layout_marginBottom="16dp" />
@@ -38,5 +38,5 @@
         android:id="@+id/btnClose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Close"/>
+        android:text="@string/cancel"/>
 </LinearLayout>

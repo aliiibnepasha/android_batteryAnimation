@@ -1,104 +1,119 @@
 <resources>
-    <string name="app_name">AABattery Emoji</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="app_name">Biểu tượng cảm xúc Pin</string>
+    <string name="title_home">Trang chủ</string>
+    <string name="title_dashboard">Bảng điều khiển</string>
+    <string name="title_notifications">Thông báo</string>
     <string name="accessibility_service_description">
-        Enables custom notification notch overlay when new notifications arrive. Required for advanced notification access and user interface enhancements.
+        Kích hoạt lớp phủ notch thông báo tùy chỉnh khi có thông báo mới. Cần thiết để truy cập thông báo nâng cao và cải thiện giao diện người dùng.
     </string>
-    <string name="battery_emoji_widget">Battery Emoji Widget</string>
-    <string name="this_action_may_contain_ads">This action may contain Ads.</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="done">Done</string>
-    <string name="next">Next</string>
-    <string name="getStarted">Get Started</string>
-    <string name="select_language">Select language</string>
-    <string name="language">Language</string>
-    <string name="intro_title_1">Unique Status Bar</string>
-    <string name="intro_title_2">Easy Dynamic Island</string>
-    <string name="welcome">Welcome!</string>
-    <string name="intro_description_1">Emojis, widgets and animation\nto customize your screen</string>
-    <string name="intro_description_2">Setup and display custom notch,\ngestures, styles and more</string>
-    <string name="intro_description_3">Personalize your screens with unique battery emojis, widgets and animations</string>
-    <string name="menu_customize">Customization</string>
+    <string name="battery_emoji_widget">Tiện ích Biểu tượng cảm xúc Pin</string>
+    <string name="this_action_may_contain_ads">Hành động này có thể chứa quảng cáo.</string>
+    <string name="hello_blank_fragment">Xin chào fragment trống</string>
+    <string name="done">Hoàn tất</string>
+    <string name="next">Tiếp theo</string>
+    <string name="getStarted">Bắt đầu</string>
+    <string name="select_language">Chọn ngôn ngữ</string>
+    <string name="language">Ngôn ngữ</string>
+    <string name="intro_title_1">Thanh trạng thái độc đáo</string>
+    <string name="intro_title_2">Dynamic Island dễ dàng</string>
+    <string name="welcome">Chào mừng!</string>
+    <string name="intro_description_1">Biểu tượng cảm xúc, tiện ích và hoạt ảnh\ntùy chỉnh màn hình của bạn</string>
+    <string name="intro_description_2">Thiết lập và hiển thị notch tùy chỉnh,\ncử chỉ, kiểu dáng và nhiều hơn nữa</string>
+    <string name="intro_description_3">Cá nhân hóa màn hình của bạn với biểu tượng cảm xúc pin, tiện ích và hoạt ảnh độc đáo</string>
+    <string name="menu_customize">Tùy chỉnh</string>
     <string name="menu_dynamic_island">Dynamic Island</string>
-    <string name="view_all">See All</string>
-    <string name="cat_emojis">Emojis</string>
-    <string name="emoji">Emoji</string>
-    <string name="cat_widgets">Widgets</string>
-    <string name="cat_animations">Animations</string>
-    <string name="view_all_battery_emoji">Battery Emoji</string>
-    <string name="view_all_battery_widget">Battery Widget</string>
-    <string name="view_all_battery_animation">Battery Animation</string>
-    <string name="enable_battery_emoji">Enable Battery Emoji</string>
-    <string name="enable_battery_anim">Enable Battery Animation</string>
-    <string name="height_12_dp">Height : 12 dp</string>
-    <string name="status_bar">Status Bar</string>
-    <string name="statusbar_menu_details">Customize your\nemoji battery\nstatus bas</string>
-    <string name="gesture">Gesture</string>
-    <string name="gesture_menu_details">Setup customized\ngestures for\nyour device.</string>
-    <string name="custom_status_bar">Custom Status Bar</string>
-    <string name="left_margin_16_dp">Left Margin : 16 dp</string>
-    <string name="right_margin_30_dp">Right Margin : 30 dp</string>
-    <string name="customize_icon">Customize Icon</string>
+    <string name="view_all">Xem tất cả</string>
+    <string name="cat_emojis">Biểu tượng cảm xúc</string>
+    <string name="emoji">Biểu tượng cảm xúc</string>
+    <string name="cat_widgets">Tiện ích</string>
+    <string name="cat_animations">Hoạt ảnh</string>
+    <string name="view_all_battery_emoji">Biểu tượng cảm xúc Pin</string>
+    <string name="view_all_battery_widget">Tiện ích Pin</string>
+    <string name="view_all_battery_animation">Hoạt ảnh Pin</string>
+    <string name="enable_battery_emoji">Bật Biểu tượng cảm xúc Pin</string>
+    <string name="enable_battery_anim">Bật Hoạt ảnh Pin</string>
+    <string name="status_bar">Thanh trạng thái</string>
+    <string name="statusbar_menu_details">Tùy chỉnh\nbiểu tượng cảm xúc pin\nthanh trạng thái của bạn</string>
+    <string name="gesture">Cử chỉ</string>
+    <string name="gesture_menu_details">Thiết lập cử chỉ tùy chỉnh\ncho thiết bị của bạn.</string>
+    <string name="custom_status_bar">Thanh trạng thái tùy chỉnh</string>
+    <string name="customize_icon">Tùy chỉnh Biểu tượng</string>
     <string name="wifi">Wifi</string>
-    <string name="data">Data</string>
-    <string name="signals">Signals</string>
-    <string name="airplane">Airplane</string>
-    <string name="hotspot">Hotspot</string>
-    <string name="time">Time</string>
-    <string name="icon_colour">Icon Colour</string>
-    <string name="vibrate_feedback">Vibrate Feedback</string>
-    <string name="long_press">Long Press</string>
-    <string name="swipe_left_to_right">Swipe left to right</string>
-    <string name="back_action">Back Action</string>
-    <string name="single_tap">Single-tap</string>
-    <string name="swipe_right_to_left">Swipe right to left</string>
+    <string name="data">Dữ liệu</string>
+    <string name="signals">Tín hiệu</string>
+    <string name="airplane">Chế độ máy bay</string>
+    <string name="hotspot">Điểm phát sóng</string>
+    <string name="time">Thời gian</string>
+    <string name="icon_colour">Màu biểu tượng</string>
+    <string name="vibrate_feedback">Phản hồi rung</string>
+    <string name="long_press">Nhấn lâu</string>
+    <string name="swipe_left_to_right">Vuốt từ trái sang phải</string>
+    <string name="back_action">Hành động quay lại</string>
+    <string name="single_tap">Chạm một lần</string>
+    <string name="swipe_right_to_left">Vuốt từ phải sang trái</string>
 
-    <string name="action_quick_scroll_to_up">Quick Scroll to up</string>
-    <string name="action_open_notifications">Open Notifications</string>
-    <string name="action_open_control_centre">Open Control Centre</string>
-    <string name="action_power_options">Power Options</string>
-    <string name="action_do_nothing">Do Nothing</string>
-    <string name="action_back_action">Back Action</string>
-    <string name="action_home_action">Home Action</string>
-    <string name="action_recent_action">Recent Action</string>
-    <string name="action_take_screenshot">Take Screenshot</string>
-    <string name="action_lock_screen">Lock Screen</string>
+    <string name="action_quick_scroll_to_up">Cuộn nhanh lên trên</string>
+    <string name="action_open_notifications">Mở Thông báo</string>
+    <string name="action_open_control_centre">Mở Trung tâm điều khiển</string>
+    <string name="action_power_options">Tùy chọn Nguồn</string>
+    <string name="action_do_nothing">Không làm gì</string>
+    <string name="action_back_action">Hành động Quay lại</string>
+    <string name="action_home_action">Hành động Trang chủ</string>
+    <string name="action_recent_action">Hành động Gần đây</string>
+    <string name="action_take_screenshot">Chụp ảnh màn hình</string>
+    <string name="action_lock_screen">Khóa màn hình</string>
 
-    <string name="size_dp">%1$s Size : %2$d dp</string>
-    <string name="right_margin_dp">Right Margin : %1$d dp</string>
-    <string name="left_margin_dp">Left Margin : %1$d dp</string>
-    <string name="height_dp">Height : %1$d dp</string>
-    <string name="edit">Edit</string>
-    <string name="battery_emoji_12_dp">Battery emoji : 12 dp</string>
-    <string name="show_battery_percentage">Show battery percentage</string>
-    <string name="percentage_size">Percentage Size</string>
-    <string name="percentage_colour">Percentage Colour</string>
-    <string name="percentage_size_16_dp">Percentage size : 16 dp</string>
-    <string name="apply">Apply</string>
-    <string name="applied_successfully">Applied successfully!</string>
-    <string name="the_changes_have_been_saved_successfully">The changes have been saved successfully</string>
-    <string name="customize">Customize</string>
-    <string name="setting">Settings</string>
-    <string name="get_premium">Get Premium</string>
-    <string name="dark_mode">Dark mode</string>
-    <string name="terms_of_service">Terms of service</string>
-    <string name="privacy_policy">Privacy policy</string>
-    <string name="accessibility_permission">Accessibility Permission</string>
-    <string name="service_note_1">This Service Ensures The Application Control\nPanel Maintains Layout Functionality.</string>
-    <string name="why_we_need_accessibility_permission">Why we need accessibility permission?</string>
-    <string name="service_note_2">We Need Permission To Enhance Your App\nExperience And Functionality.</string>
-    <string name="service_note_3">I Have Read And Accepted Terms Of Service</string>
-    <string name="lock_screen_not_supported_on_your_device">Lock screen not supported on your device.</string>
-    <string name="take_screenshot_not_supported_on_your_device">Take screenshot not supported on your device.</string>
-    <string name="widget_design_preview">Take screenshot not supported on your device.</string>
-    <string name="please_turn_on_battery_percentage">Please Turn On Battery Percentage</string>
-    <string name="please_enable_battery_emoji_service">Please enable Custom Status Bar.</string>
-    <string name="cancel">Cancel</string>
-    <string name="press_back_again_to_exit">Press back again to exit</string>
-    <string name="please_enable_accessibility_service">Please enable accessibility service</string>
-    <string name="please_accept_terms_of_service">Please accept Terms of Service</string>
-    <string name="allow">Allow</string>
+    <string name="edit">Chỉnh sửa</string>
+    <string name="show_battery_percentage">Hiển thị phần trăm pin</string>
+    <string name="percentage_size">Kích thước phần trăm</string>
+    <string name="percentage_colour">Màu phần trăm</string>
+    <string name="apply">Áp dụng</string>
+    <string name="applied_successfully">Áp dụng thành công!</string>
+    <string name="the_changes_have_been_saved_successfully">Các thay đổi đã được lưu thành công</string>
+    <string name="customize">Tùy chỉnh</string>
+    <string name="setting">Cài đặt</string>
+    <string name="get_premium">Nâng cấp Premium</string>
+    <string name="dark_mode">Chế độ tối</string>
+    <string name="terms_of_service">Điều khoản dịch vụ</string>
+    <string name="privacy_policy">Chính sách bảo mật</string>
+    <string name="accessibility_permission">Quyền truy cập</string>
+    <string name="service_note_1">Dịch vụ này đảm bảo bảng điều khiển ứng dụng\nduy trì chức năng bố cục.</string>
+    <string name="why_we_need_accessibility_permission">Tại sao chúng tôi cần quyền truy cập?</string>
+    <string name="service_note_2">Chúng tôi cần quyền để nâng cao trải nghiệm và chức năng ứng dụng của bạn.</string>
+    <string name="service_note_3">Tôi đã đọc và chấp nhận Điều khoản dịch vụ</string>
+    <string name="lock_screen_not_supported_on_your_device">Khóa màn hình không được hỗ trợ trên thiết bị của bạn.</string>
+    <string name="take_screenshot_not_supported_on_your_device">Chụp ảnh màn hình không được hỗ trợ trên thiết bị của bạn.</string>
+    <string name="widget_design_preview">Xem trước thiết kế tiện ích</string>
+    <string name="please_turn_on_battery_percentage">Vui lòng bật phần trăm pin</string>
+    <string name="please_enable_battery_emoji_service">Vui lòng bật Thanh trạng thái tùy chỉnh.</string>
+    <string name="cancel">Hủy</string>
+    <string name="press_back_again_to_exit">Nhấn quay lại lần nữa để thoát</string>
+    <string name="please_enable_accessibility_service">Vui lòng bật dịch vụ truy cập</string>
+    <string name="please_accept_terms_of_service">Vui lòng chấp nhận Điều khoản dịch vụ</string>
+    <string name="allow">Cho phép</string>
+    <string name="animation_applied_successfully">Áp dụng hoạt ảnh thành công.</string>
+    <string name="widget_applied_successfully">Áp dụng tiện ích thành công.</string>
+    <string name="emoji_applied_successfully">Áp dụng biểu tượng cảm xúc thành công.</string>
+    <string name="all">Tất cả</string>
+    <string name="cat_1">Phổ biến</string>
+    <string name="cat_2">Dễ thương</string>
+    <string name="cat_3">Hài hước</string>
+    <string name="cat_4">Nổi bật</string>
+    <string name="cat_5">Mới</string>
+    <string name="cat_6">Dễ thương</string>
+    <string name="gesture_action">Hành động Cử chỉ</string>
+
+    <!-- Manual localization -->
+    <string name="terms_of_service_url" translatable="false">https://sites.google.com/view/theswiftvision-termsofservice/home</string>
+    <string name="privacy_policy_url" translatable="false">https://sites.google.com/view/theswiftvision-privacypolicy/home</string>
+    <string name="height_12_dp" translatable="false">Chiều cao: 12 dp</string>
+    <string name="left_margin_16_dp" translatable="false">Lề trái: 16 dp</string>
+    <string name="right_margin_30_dp" translatable="false">Lề phải: 30 dp</string>
+    <string name="size_dp" translatable="false">%1$s Kích thước: %2$d dp</string>
+    <string name="right_margin_dp" translatable="false">Lề phải: %1$d dp</string>
+    <string name="left_margin_dp" translatable="false">Lề trái: %1$d dp</string>
+    <string name="height_dp" translatable="false">Chiều cao: %1$d dp</string>
+    <string name="battery_emoji_12_dp" translatable="false">Biểu tượng cảm xúc pin: 12 dp</string>
+    <string name="percentage_size_16_dp" translatable="false">Kích thước phần trăm: 16 dp</string>
+    <string name="action_applied" translatable="false">Hành động đã áp dụng - %1$s</string>
 </resources>

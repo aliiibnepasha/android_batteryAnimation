@@ -192,7 +192,8 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
                     appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.battery_icon)
                 }
 
-                Toast.makeText(this, "Widget Applied Successfully.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,
+                    getString(R.string.widget_applied_successfully), Toast.LENGTH_SHORT).show()
 
                 if (!isNewWidget) {
                     val resultIntent = Intent().apply {
@@ -210,7 +211,7 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
         binding.buttonSetAsEmoji.setOnClickListener {
             preferences.customIconName = label
             sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
-            Toast.makeText(this, "Emoji Applied Successfully.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.emoji_applied_successfully), Toast.LENGTH_SHORT).show()
         }
     }
 }

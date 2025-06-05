@@ -17,12 +17,15 @@ import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.FragmentViewAllEmojiBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
+import com.lowbyte.battery.animation.utils.AnimationUtils.getTabTitlesEmoji
 import com.lowbyte.battery.animation.utils.AppPreferences
 
 
 class ViewAllEmojiFragment : Fragment() {
     private lateinit var binding: FragmentViewAllEmojiBinding
-    private val tabTitles = listOf("All", "Popular", "Cute", "Comic", "Hot", "New", "Cute")
+
+
+
     private lateinit var preferences: AppPreferences
 
 
@@ -68,7 +71,7 @@ class ViewAllEmojiFragment : Fragment() {
 
     private fun setupViewPager() {
         binding.viewPager.adapter = object : FragmentStateAdapter(this) {
-            override fun getItemCount(): Int = tabTitles.size
+            override fun getItemCount(): Int = getTabTitlesEmoji(requireContext()).size
 
             override fun createFragment(position: Int): Fragment {
                 return ViewPagerEmojiItemFragment.newInstance(position)
@@ -76,7 +79,7 @@ class ViewAllEmojiFragment : Fragment() {
         }
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = tabTitles[position]
+            tab.text = getTabTitlesEmoji(requireContext())[position]
         }.attach()
 
 

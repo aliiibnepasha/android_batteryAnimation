@@ -52,7 +52,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.viewPrivacy.setOnClickListener {
-            val url = getString(R.string.privacy_policy_url)
+            val url = getString(R.string.terms_of_service_url)
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 data = url.toUri()
             }

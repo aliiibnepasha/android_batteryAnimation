@@ -58,7 +58,8 @@ class BatteryAnimationEditApplyActivity : AppCompatActivity() {
             // Add apply logic here
             preferences.statusLottieName = label
             sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
-            Toast.makeText(this, "Animation Applied Successfully.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,
+                getString(R.string.animation_applied_successfully), Toast.LENGTH_SHORT).show()
         }
 
         binding.buttonHome.setOnClickListener {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AABattery Emoji</string>
+    <string name="app_name">Battery Emoji</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -33,14 +33,11 @@
     <string name="view_all_battery_animation">Battery Animation</string>
     <string name="enable_battery_emoji">Enable Battery Emoji</string>
     <string name="enable_battery_anim">Enable Battery Animation</string>
-    <string name="height_12_dp">Height : 12 dp</string>
     <string name="status_bar">Status Bar</string>
     <string name="statusbar_menu_details">Customize your\nemoji battery\nstatus bas</string>
     <string name="gesture">Gesture</string>
     <string name="gesture_menu_details">Setup customized\ngestures for\nyour device.</string>
     <string name="custom_status_bar">Custom Status Bar</string>
-    <string name="left_margin_16_dp">Left Margin : 16 dp</string>
-    <string name="right_margin_30_dp">Right Margin : 30 dp</string>
     <string name="customize_icon">Customize Icon</string>
     <string name="wifi">Wifi</string>
     <string name="data">Data</string>
@@ -67,16 +64,10 @@
     <string name="action_take_screenshot">Take Screenshot</string>
     <string name="action_lock_screen">Lock Screen</string>
 
-    <string name="size_dp">%1$s Size : %2$d dp</string>
-    <string name="right_margin_dp">Right Margin : %1$d dp</string>
-    <string name="left_margin_dp">Left Margin : %1$d dp</string>
-    <string name="height_dp">Height : %1$d dp</string>
     <string name="edit">Edit</string>
-    <string name="battery_emoji_12_dp">Battery emoji : 12 dp</string>
     <string name="show_battery_percentage">Show battery percentage</string>
     <string name="percentage_size">Percentage Size</string>
     <string name="percentage_colour">Percentage Colour</string>
-    <string name="percentage_size_16_dp">Percentage size : 16 dp</string>
     <string name="apply">Apply</string>
     <string name="applied_successfully">Applied successfully!</string>
     <string name="the_changes_have_been_saved_successfully">The changes have been saved successfully</string>
@@ -101,5 +92,31 @@
     <string name="please_enable_accessibility_service">Please enable accessibility service</string>
     <string name="please_accept_terms_of_service">Please accept Terms of Service</string>
     <string name="allow">Allow</string>
-    <string name="privacy_policy_url">https://www.google.co.uk</string>
+    <string name="animation_applied_successfully">Animation Applied Successfully.</string>
+    <string name="widget_applied_successfully">Widget Applied Successfully.</string>
+    <string name="emoji_applied_successfully">Emoji Applied Successfully.</string>
+    <string name="all">All</string>
+    <string name="cat_1">Popular</string>
+    <string name="cat_2">Cute</string>
+    <string name="cat_3">Comic</string>
+    <string name="cat_4">Hot</string>
+    <string name="cat_5">New</string>
+    <string name="cat_6">Cute</string>
+    <string name="gesture_action">Gesture Action</string>
+
+
+    <!--Manual localization -->
+    <string name="terms_of_service_url" translatable="false">https://sites.google.com/view/theswiftvision-termsofservice/home</string>
+    <string name="privacy_policy_url" translatable="false">https://sites.google.com/view/theswiftvision-privacypolicy/home</string>
+    <string name="height_12_dp" translatable="false"> Height : 12 dp</string>
+    <string name="left_margin_16_dp" translatable="false">Left Margin : 16 dp</string>
+    <string name="right_margin_30_dp" translatable="false">Right Margin : 30 dp</string>
+    <string name="size_dp" translatable="false">%1$s Size : %2$d dp</string>
+    <string name="right_margin_dp" translatable="false">Right Margin : %1$d dp</string>
+    <string name="left_margin_dp" translatable="false">Left Margin : %1$d dp</string>
+    <string name="height_dp" translatable="false">Height : %1$d dp</string>
+    <string name="battery_emoji_12_dp" translatable="false">Battery emoji : 12 dp</string>
+    <string name="percentage_size_16_dp" translatable="false">Percentage size : 16 dp</string>
+    <string name="action_applied" translatable="false">Action Applied - %1$s</string>
+
 </resources>

@@ -1,5 +1,8 @@
 package com.lowbyte.battery.animation.utils
 
+import android.content.Context
+import com.lowbyte.battery.animation.R
+
 object AnimationUtils {
 
     val combinedAnimationList: List<String> by lazy {
@@ -51,5 +54,27 @@ object AnimationUtils {
     val emojiComicListFantasy = lists[5]
 
 
+    fun getTabTitlesEmoji(context: Context): List<String> {
+        return listOf(
+            context.getString(R.string.all),
+            context.getString(R.string.cat_1),
+            context.getString(R.string.cat_2),
+            context.getString(R.string.cat_3),
+            context.getString(R.string.cat_4),
+            context.getString(R.string.cat_5),
+            context.getString(R.string.cat_6)
+        )
+    }
+
+  fun getTabTitlesWidget(context: Context): List<String> {
+        return listOf(
+            context.getString(R.string.all),
+            context.getString(R.string.cat_1),
+            context.getString(R.string.cat_2),
+            context.getString(R.string.cat_3),
+            context.getString(R.string.cat_4),
+            context.getString(R.string.cat_5)
+        )
+    }
 
 }

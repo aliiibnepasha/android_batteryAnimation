@@ -25,10 +25,21 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
 
         val languages = listOf(
             Language("English", "en"),
-            Language("Español", "es"),
-            Language("Français", "fr"),
-            Language("हिंदी", "hi"),
-            Language("العربية", "ar")
+            Language("العربية", "ar"),           // Arabic ok
+            Language("Español", "es-rES"),       // Spanish (Spain) ok
+            Language("Français", "fr-rFR"),      // French (France) ok
+            Language("हिंदी", "hi"),             // Hindi ok
+            Language("Italiano", "it-rIT"),      // Italian ok
+           // Language("עברית", "iw"),             // Hebrew ok
+            Language("日本語", "ja"),             // Japanese ok
+            Language("한국어", "ko"),             // Korean ok
+            Language("Bahasa Melayu", "ms-rMY"), // Malay (Malaysia) ok
+            Language("Filipino", "phi"),         // Filipino  ok
+            Language("ไทย", "th"),               // Thai ok
+            Language("Türkçe", "tr-rTR"),        // Turkish (Turkey) ok
+            Language("Tiếng Việt", "vi"),         // Vietnamese ok
+            Language("Português", "pt-rPT"),     // Portuguese (Portugal) ok
+            Language("Bahasa Indonesia", "in")  // Indonesian ok
         )
 
         adapter = LanguageAdapter(languages) { language ->

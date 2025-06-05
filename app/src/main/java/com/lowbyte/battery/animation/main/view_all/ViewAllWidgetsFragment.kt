@@ -7,12 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.FragmentViewAllWidgetsBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.getTabTitlesWidget
 
 
 class ViewAllWidgetsFragment : Fragment() {
     private lateinit var binding: FragmentViewAllWidgetsBinding
-    private val tabTitles = listOf("All", "Popular", "Cute", "Comic", "Hot", "New")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentViewAllWidgetsBinding.inflate(inflater, container, false)
@@ -26,7 +27,7 @@ class ViewAllWidgetsFragment : Fragment() {
 
     private fun setupViewPager() {
         binding.viewPager.adapter = object : FragmentStateAdapter(this) {
-            override fun getItemCount(): Int = tabTitles.size
+            override fun getItemCount(): Int = getTabTitlesWidget(requireContext()).size
 
             override fun createFragment(position: Int): Fragment {
                 return ViewPagerWidgetItemFragment.newInstance(position)
@@ -34,7 +35,7 @@ class ViewAllWidgetsFragment : Fragment() {
         }
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = tabTitles[position]
+            tab.text = getTabTitlesWidget(requireContext())[position]
         }.attach()
     }
 
