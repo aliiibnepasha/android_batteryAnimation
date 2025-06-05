@@ -19,7 +19,7 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
         val items = listOf(
             IntroItem(getString(R.string.intro_title_1), getString(R.string.intro_description_1), R.drawable.intro_1),
             IntroItem(getString(R.string.intro_title_2), getString(R.string.intro_description_2), R.drawable.intro_2),
-            IntroItem(getString(R.string.welcome), getString(R.string.intro_description_3), R.drawable.intro_3)
+           // IntroItem(getString(R.string.welcome), getString(R.string.intro_description_3), R.drawable.intro_3)
         )
 
         binding.viewPager.adapter = IntroAdapter(requireContext(), items)
@@ -35,8 +35,8 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                binding.btnNext.text = if (position == 2) {
-                    getString(R.string.getStarted)
+                binding.btnNext.text = if (position == 1) {
+                    getString(R.string.next)
                 } else {
                     getString(R.string.next)
                 }
