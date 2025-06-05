@@ -24,20 +24,20 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
 
         val languages = listOf(
             Language("English", "en"),
-            Language("العربية", "ar"),           // Arabic ok
-            Language("Español", "es-rES"),       // Spanish (Spain) ok
-            Language("Français", "fr-rFR"),      // French (France) ok
-            Language("हिंदी", "hi"),             // Hindi ok
-            Language("Italiano", "it-rIT"),      // Italian ok
-            Language("日本語", "ja"),             // Japanese ok
-            Language("한국어", "ko"),             // Korean ok
-            Language("Bahasa Melayu", "ms-rMY"), // Malay (Malaysia) ok
-            Language("Filipino", "phi"),         // Filipino  ok
-            Language("ไทย", "th"),               // Thai ok
-            Language("Türkçe", "tr-rTR"),        // Turkish (Turkey) ok
-            Language("Tiếng Việt", "vi"),         // Vietnamese ok
-            Language("Português", "pt-rPT"),     // Portuguese (Portugal) ok
-            Language("Bahasa Indonesia", "in")  // Indonesian ok
+            Language("العربية", "ar"),           // Arabic
+            Language("Español", "es-rES"),       // Spanish (Spain)
+            Language("Français", "fr-rFR"),      // French (France)
+            Language("हिंदी", "hi"),             // Hindi
+            Language("Italiano", "it-rIT"),      // Italian
+            Language("日本語", "ja"),             // Japanese
+            Language("한국어", "ko"),             // Korean
+            Language("Bahasa Melayu", "ms-rMY"), // Malay (Malaysia)
+            Language("Filipino", "phi"),         // Filipino
+            Language("ไทย", "th"),               // Thai
+            Language("Türkçe", "tr-rTR"),        // Turkish (Turkey)
+            Language("Tiếng Việt", "vi"),         // Vietnamese
+            Language("Português", "pt-rPT"),     // Portuguese (Portugal)
+            Language("Bahasa Indonesia", "in")  // Indonesian
         )
 
         val currentLanguageCode = LocaleHelper.getLanguage(requireContext())

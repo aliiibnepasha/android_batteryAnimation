@@ -21,32 +21,44 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BatteryAnimation"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713"/>
         <activity
             android:name=".activity.LanguagesActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activity.BatteryAnimationEditApplyActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activity.SettingsActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activity.ApplySuccessfullyActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activity.EmojiEditApplyActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activity.StatusBarGestureActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activity.StatusBarIconSettingsActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activity.StatusBarCustomizeActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activity.SplashActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,6 +68,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
         <service
@@ -97,6 +110,7 @@
         </receiver> <!-- This declares your config activity -->
         <activity
             android:name=".activity.BatteryWidgetEditApplyActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />

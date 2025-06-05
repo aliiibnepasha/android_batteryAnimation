@@ -116,4 +116,6 @@
     <string name="battery_emoji_12_dp" translatable="false">Biểu tượng cảm xúc pin: 12 dp</string>
     <string name="percentage_size_16_dp" translatable="false">Kích thước phần trăm: 16 dp</string>
     <string name="action_applied" translatable="false">Hành động đã áp dụng - %1$s</string>
-</resources>
+
+    <string name="loading_ad">Đang tải quảng cáo…</string>
+   </resources>

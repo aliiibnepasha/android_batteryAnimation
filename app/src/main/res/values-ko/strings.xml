@@ -100,4 +100,18 @@
     <string name="cat_5">신규</string>
     <string name="cat_6">귀여운</string>
     <string name="gesture_action">제스처 동작</string>
+
+
+    <string name="loading_ad">광고 로딩 중…</string>
+    <string name="height_12_dp">높이: 12 dp</string>
+    <string name="left_margin_16_dp">왼쪽 여백: 16 dp</string>
+    <string name="right_margin_30_dp">오른쪽 여백: 30 dp</string>
+    <string name="size_dp">%1$s 크기: %2$d dp</string>
+    <string name="right_margin_dp">오른쪽 여백: %1$d dp</string>
+    <string name="left_margin_dp">왼쪽 여백: %1$d dp</string>
+    <string name="height_dp">높이: %1$d dp</string>
+    <string name="battery_emoji_12_dp">배터리 이모지: 12 dp</string>
+    <string name="percentage_size_16_dp">백분율 크기: 16 dp</string>
+    <string name="action_applied">적용된 작업 - %1$s</string>
+
 </resources>

@@ -98,4 +98,15 @@
     <string name="cat_5">Nuevo</string>
     <string name="cat_6">Lindo</string>
     <string name="gesture_action">Acción de gesto</string>
-</resources>
+
+    <string name="loading_ad">Cargando anuncio…</string>
+    <string name="height_12_dp">Altura: 12 dp</string>
+    <string name="left_margin_16_dp">Margen izquierdo: 16 dp</string>
+    <string name="right_margin_30_dp">Margen derecho: 30 dp</string>
+    <string name="size_dp">%1$s Tamaño: %2$d dp</string>
+    <string name="right_margin_dp">Margen derecho: %1$d dp</string>
+    <string name="left_margin_dp">Margen izquierdo: %1$d dp</string>
+    <string name="height_dp">Altura: %1$d dp</string>
+    <string name="battery_emoji_12_dp">Emoji de batería: 12 dp</string>
+    <string name="percentage_size_16_dp">Tamaño del porcentaje: 16 dp</string>
+    <string name="action_applied">Acción aplicada - %1$s</string></resources>

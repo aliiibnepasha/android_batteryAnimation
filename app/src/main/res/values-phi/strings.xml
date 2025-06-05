@@ -102,4 +102,16 @@
     <string name="cat_5">Bago</string>
     <string name="cat_6">Cute</string>
     <string name="gesture_action">Aksyon ng Galaw</string>
+
+    <string name="loading_ad">Naglo-load ng ad…</string>
+    <string name="height_12_dp">Taas: 12 dp</string>
+    <string name="left_margin_16_dp">Kaliwang margin: 16 dp</string>
+    <string name="right_margin_30_dp">Kanang margin: 30 dp</string>
+    <string name="size_dp">%1$s Laki: %2$d dp</string>
+    <string name="right_margin_dp">Kanang margin: %1$d dp</string>
+    <string name="left_margin_dp">Kaliwang margin: %1$d dp</string>
+    <string name="height_dp">Taas: %1$d dp</string>
+    <string name="battery_emoji_12_dp">Emoji ng baterya: 12 dp</string>
+    <string name="percentage_size_16_dp">Laki ng porsyento: 16 dp</string>
+    <string name="action_applied">Inilapat na aksyon - %1$s</string>
 </resources>

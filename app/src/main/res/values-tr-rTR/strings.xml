@@ -102,6 +102,7 @@
     <string name="cat_5">Yeni</string>
     <string name="cat_6">Sevimli</string>
     <string name="gesture_action">Hareket Eylemi</string>
+    <string name="loading_ad">Reklam yükleniyor…</string>
 
     <!-- Manual Localization -->
     <string name="terms_of_service_url" translatable="false">https://sites.google.com/view/theswiftvision-termsofservice/home</string>

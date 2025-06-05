@@ -102,14 +102,17 @@
     <string name="gesture_action">Azione gesto</string>
     <string name="terms_of_service_url" translatable="false">https://sites.google.com/view/theswiftvision-termsofservice/home</string>
     <string name="privacy_policy_url" translatable="false">https://sites.google.com/view/theswiftvision-privacypolicy/home</string>
-    <string name="height_12_dp" translatable="false">Altezza: 12 dp</string>
-    <string name="left_margin_16_dp" translatable="false">Margine sinistro: 16 dp</string>
-    <string name="right_margin_30_dp" translatable="false">Margine destro: 30 dp</string>
-    <string name="size_dp" translatable="false">%1$s Dimensione: %2$d dp</string>
-    <string name="right_margin_dp" translatable="false">Margine destro: %1$d dp</string>
-    <string name="left_margin_dp" translatable="false">Margine sinistro: %1$d dp</string>
-    <string name="height_dp" translatable="false">Altezza: %1$d dp</string>
-    <string name="battery_emoji_12_dp" translatable="false">Emoji batteria: 12 dp</string>
-    <string name="percentage_size_16_dp" translatable="false">Dimensione percentuale: 16 dp</string>
-    <string name="action_applied" translatable="false">Azione applicata - %1$s</string>
+
+    <string name="loading_ad">Caricamento annuncio…</string>
+    <string name="height_12_dp">Altezza: 12 dp</string>
+    <string name="left_margin_16_dp">Margine sinistro: 16 dp</string>
+    <string name="right_margin_30_dp">Margine destro: 30 dp</string>
+    <string name="size_dp">%1$s Dimensione: %2$d dp</string>
+    <string name="right_margin_dp">Margine destro: %1$d dp</string>
+    <string name="left_margin_dp">Margine sinistro: %1$d dp</string>
+    <string name="height_dp">Altezza: %1$d dp</string>
+    <string name="battery_emoji_12_dp">Emoji batteria: 12 dp</string>
+    <string name="percentage_size_16_dp">Dimensione percentuale: 16 dp</string>
+    <string name="action_applied">Azione applicata - %1$s</string>
+
 </resources>

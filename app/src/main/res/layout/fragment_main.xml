@@ -97,11 +97,30 @@
         app:layout_constraintTop_toBottomOf="@+id/nav_host_fragment"
         app:itemIconTint="@color/bottom_nav_item_color"
         app:itemTextColor="@color/bottom_nav_item_color"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bannerAdHome"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 
+    <LinearLayout
+        android:id="@+id/bannerAdHome"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="gone"
+        android:background="@color/bg_statusbar_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:textColor="@color/blue_app_color"
+            android:text="@string/loading_ad"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

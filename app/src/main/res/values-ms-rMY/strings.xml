@@ -105,14 +105,17 @@
     <!-- Manual localization -->
     <string name="terms_of_service_url" translatable="false">https://sites.google.com/view/theswiftvision-termsofservice/home</string>
     <string name="privacy_policy_url" translatable="false">https://sites.google.com/view/theswiftvision-privacypolicy/home</string>
-    <string name="height_12_dp" translatable="false"> Tinggi : 12 dp</string>
-    <string name="left_margin_16_dp" translatable="false">Margin Kiri : 16 dp</string>
-    <string name="right_margin_30_dp" translatable="false">Margin Kanan : 30 dp</string>
-    <string name="size_dp" translatable="false">%1$s Saiz : %2$d dp</string>
-    <string name="right_margin_dp" translatable="false">Margin Kanan : %1$d dp</string>
-    <string name="left_margin_dp" translatable="false">Margin Kiri : %1$d dp</string>
-    <string name="height_dp" translatable="false">Tinggi : %1$d dp</string>
-    <string name="battery_emoji_12_dp" translatable="false">Emoji bateri : 12 dp</string>
-    <string name="percentage_size_16_dp" translatable="false">Saiz peratusan : 16 dp</string>
-    <string name="action_applied" translatable="false">Tindakan Diterapkan - %1$s</string>
+
+    <string name="loading_ad">Memuatkan iklan…</string>
+    <string name="height_12_dp">Ketinggian: 12 dp</string>
+    <string name="left_margin_16_dp">Margin kiri: 16 dp</string>
+    <string name="right_margin_30_dp">Margin kanan: 30 dp</string>
+    <string name="size_dp">%1$s Saiz: %2$d dp</string>
+    <string name="right_margin_dp">Margin kanan: %1$d dp</string>
+    <string name="left_margin_dp">Margin kiri: %1$d dp</string>
+    <string name="height_dp">Ketinggian: %1$d dp</string>
+    <string name="battery_emoji_12_dp">Emoji bateri: 12 dp</string>
+    <string name="percentage_size_16_dp">Saiz peratusan: 16 dp</string>
+    <string name="action_applied">Tindakan digunakan - %1$s</string>
+
 </resources>

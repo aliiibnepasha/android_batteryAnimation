@@ -98,4 +98,17 @@
     <string name="cat_5">नया</string>
     <string name="cat_6">प्यारा</string>
     <string name="gesture_action">जेस्चर क्रिया</string>
+
+    <string name="loading_ad">विज्ञापन लोड हो रहा है…</string>
+    <string name="height_12_dp">ऊंचाई: 12 dp</string>
+    <string name="left_margin_16_dp">बायां मार्जिन: 16 dp</string>
+    <string name="right_margin_30_dp">दायां मार्जिन: 30 dp</string>
+    <string name="size_dp">%1$s आकार: %2$d dp</string>
+    <string name="right_margin_dp">दायां मार्जिन: %1$d dp</string>
+    <string name="left_margin_dp">बायां मार्जिन: %1$d dp</string>
+    <string name="height_dp">ऊंचाई: %1$d dp</string>
+    <string name="battery_emoji_12_dp">बैटरी इमोजी: 12 dp</string>
+    <string name="percentage_size_16_dp">प्रतिशत आकार: 16 dp</string>
+    <string name="action_applied">कार्रवाई लागू - %1$s</string>
+
 </resources>

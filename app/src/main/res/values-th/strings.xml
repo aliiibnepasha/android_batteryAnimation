@@ -100,4 +100,17 @@
     <string name="cat_5">ใหม่</string>
     <string name="cat_6">น่ารัก</string>
     <string name="gesture_action">การดำเนินการด้วยท่าทาง</string>
+
+    <string name="loading_ad">กำลังโหลดโฆษณา…</string>
+    <string name="height_12_dp">ความสูง: 12 dp</string>
+    <string name="left_margin_16_dp">ระยะขอบซ้าย: 16 dp</string>
+    <string name="right_margin_30_dp">ระยะขอบขวา: 30 dp</string>
+    <string name="size_dp">%1$s ขนาด: %2$d dp</string>
+    <string name="right_margin_dp">ระยะขอบขวา: %1$d dp</string>
+    <string name="left_margin_dp">ระยะขอบซ้าย: %1$d dp</string>
+    <string name="height_dp">ความสูง: %1$d dp</string>
+    <string name="battery_emoji_12_dp">อีโมจิแบตเตอรี่: 12 dp</string>
+    <string name="percentage_size_16_dp">ขนาดเปอร์เซ็นต์: 16 dp</string>
+    <string name="action_applied">ดำเนินการแล้ว - %1$s</string>
+
 </resources>

@@ -38,7 +38,7 @@
     <string name="gesture_menu_details">デバイス用にカスタマイズされた\nジェスチャーを設定</string>
     <string name="custom_status_bar">カスタムステータスバー</string>
     <string name="customize_icon">アイコンをカスタマイズ</string>
-    <string name="wifi">WiFi</string>
+    <string name="wifi">ワイファイ</string>
     <string name="data">データ</string>
     <string name="signals">信号</string>
     <string name="airplane">機内モード</string>
@@ -100,4 +100,17 @@
     <string name="cat_5">新着</string>
     <string name="cat_6">かわいい</string>
     <string name="gesture_action">ジェスチャーアクション</string>
+
+    <string name="loading_ad">広告を読み込んでいます…</string>
+    <string name="height_12_dp">高さ：12 dp</string>
+    <string name="left_margin_16_dp">左マージン：16 dp</string>
+    <string name="right_margin_30_dp">右マージン：30 dp</string>
+    <string name="size_dp">%1$s サイズ：%2$d dp</string>
+    <string name="right_margin_dp">右マージン：%1$d dp</string>
+    <string name="left_margin_dp">左マージン：%1$d dp</string>
+    <string name="height_dp">高さ：%1$d dp</string>
+    <string name="battery_emoji_12_dp">バッテリー絵文字：12 dp</string>
+    <string name="percentage_size_16_dp">パーセンテージサイズ：16 dp</string>
+    <string name="action_applied">適用されたアクション - %1$s</string>
+
 </resources>
