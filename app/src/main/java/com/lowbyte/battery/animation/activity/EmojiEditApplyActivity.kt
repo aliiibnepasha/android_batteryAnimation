@@ -1,6 +1,7 @@
 package com.lowbyte.battery.animation.activity
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.SeekBar
@@ -53,6 +54,13 @@ class EmojiEditApplyActivity : BaseActivity() {
 
         binding.ibBackButton.setOnClickListener {
             finish()
+        }
+        binding.ibNextButton.setOnClickListener {
+//            preferences.setIconSize("batteryIconSize", 24)
+//            preferences.setIconSize("percentageSize", 12)
+            preferences.setInt("percentageColor", Color.BLACK)
+            binding.batteryEmojiPercentageSeekbarSize.progress = 12
+            binding.batteryEmojiSeekbarSize.progress = 24
         }
 
 
@@ -144,6 +152,8 @@ class EmojiEditApplyActivity : BaseActivity() {
                     Log.e("Ads","FullScreenTobeShoe")
                 }
             }
+
+            preferences
             preferences.batteryIconName = drawable
             sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
             startActivity(Intent(this, ApplySuccessfullyActivity::class.java))

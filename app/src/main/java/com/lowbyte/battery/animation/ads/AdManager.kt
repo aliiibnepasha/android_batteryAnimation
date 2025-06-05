@@ -14,7 +14,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 object AdManager {
     private const val TAG = "AdManager"
-    private const val AD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712" // Test ID
+    private const val AD_UNIT_ID_TEST = "ca-app-pub-3940256099942544/1033173712" // Test ID
+    private const val AD_UNIT_ID = "ca-app-pub-9844943887550892/2857359904" // Test ID
+
     private var interstitialAd: InterstitialAd? = null
     private var adIsLoading = false
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)
@@ -38,7 +40,7 @@ object AdManager {
         adIsLoading = true
         InterstitialAd.load(
             context,
-            AD_UNIT_ID,
+            AD_UNIT_ID_TEST,
             AdRequest.Builder().build(),
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {

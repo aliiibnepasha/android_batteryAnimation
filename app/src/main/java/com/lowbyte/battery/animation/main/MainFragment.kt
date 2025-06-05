@@ -94,7 +94,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         }
     }
 
-
     private fun loadBannerAd() {
         binding.bannerAdHome.visibility = View.VISIBLE
         val adWidthPixels = Resources.getSystem().displayMetrics.widthPixels
@@ -102,7 +101,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val adSize =
             AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(requireContext(), adWidth)
         val adView = AdManagerAdView(requireContext()).apply {
-            adUnitId = "ca-app-pub-3940256099942544/9214589741" // Test Ad Unit ID
+            adUnitId = "ca-app-pub-3940256099942544/9214589741" //"ca-app-pub-9844943887550892/2195014922"
             setAdSize(adSize) // ✅ Set ad size correctly
         }
 

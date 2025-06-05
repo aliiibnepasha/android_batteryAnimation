@@ -2,11 +2,13 @@ package com.lowbyte.battery.animation.activity
 
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -44,6 +46,27 @@ class StatusBarCustomizeActivity : BaseActivity() {
             finish()
         }
 
+        _binding?.restoreSetting?.setOnClickListener {
+            preferences.setInt("tint_0", Color.BLACK)
+            preferences.setInt("tint_1", Color.BLACK)
+            preferences.setInt("tint_2", Color.BLACK)
+            preferences.setInt("tint_3", Color.BLACK)
+            preferences.setInt("tint_4", Color.BLACK)
+            preferences.setInt("tint_5", Color.BLACK)
+            preferences.setIconSize("size_0", 24)
+            preferences.setIconSize("size_1", 24)
+            preferences.setIconSize("size_2", 24)
+            preferences.setIconSize("size_3", 24)
+            preferences.setIconSize("size_4", 24)
+            preferences.setIconSize("size_5", 12)
+            preferences.statusBarBgColor = Color.LTGRAY
+            binding.statusBarHeightSeekbar.progress = 35
+            binding.leftMarginSeekBar.progress = 10
+            binding.rightMarginSeekBar.progress = 10
+
+        }
+
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -53,7 +76,6 @@ class StatusBarCustomizeActivity : BaseActivity() {
         binding.statusBarHeightSeekbar.progress = preferences.statusBarHeight
         binding.leftMarginSeekBar.progress = preferences.statusBarMarginLeft
         binding.rightMarginSeekBar.progress = preferences.statusBarMarginRight
-        binding.statusBarHeightSeekbar.progress = preferences.statusBarHeight
 
 
         binding.switchEnableBatteryEmojiCustom.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
@@ -85,23 +107,26 @@ class StatusBarCustomizeActivity : BaseActivity() {
         binding.rightMarginLabel.text = getString(R.string.right_margin_dp, preferences.statusBarMarginRight)
 
 
-        binding.statusBarHeightSeekbar.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: android.widget.SeekBar?, progress: Int, fromUser: Boolean) {
-                val safeProgress = progress
+        binding.statusBarHeightSeekbar.max = 50
+        binding.statusBarHeightSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val safeProgress = progress.coerceIn(0, 50)
                 preferences.statusBarHeight = safeProgress
                 binding.statusBarHeight.text = getString(R.string.height_dp, safeProgress)
                 sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
-
             }
-            override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
-                if (!binding.switchEnableBatteryEmojiCustom.isChecked){
-                    Toast.makeText(this@StatusBarCustomizeActivity,
-                        getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                if (!binding.switchEnableBatteryEmojiCustom.isChecked) {
+                    Toast.makeText(
+                        this@StatusBarCustomizeActivity,
+                        getString(R.string.please_enable_battery_emoji_service),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
-        })
-        /*Status bar height Code */
+        })        /*Status bar height Code */
         binding.leftMarginSeekBar.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(
                 seekBar: android.widget.SeekBar?,
