@@ -131,6 +131,41 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
                             }
                             sendBroadcast(updateIntent)
                             Log.e("BatteryWidgetEditApplyActivity", "Sent update broadcast with icon: $label")
+                            
+                            // Send multiple delayed update broadcasts to ensure the widget is created and updated
+                            for (delay in listOf(500, 1000, 2000)) {
+                                binding.root.postDelayed({
+                                    // Get all widget IDs
+                                    val widgetIds = appWidgetManager.getAppWidgetIds(widgetProvider)
+                                    Log.e("BatteryWidgetEditApplyActivity", "Found ${widgetIds.size} widgets after $delay ms delay")
+                                    
+                                    if (widgetIds.isNotEmpty()) {
+                                        // Get the most recently created widget ID
+                                        val newWidgetId = widgetIds.last()
+                                        Log.e("BatteryWidgetEditApplyActivity", "Using widget ID: $newWidgetId for delayed update")
+                                        
+                                        // Save the icon with the actual widget ID
+                                        preferences.saveWidgetIcon(newWidgetId, label)
+                                        Log.e("BatteryWidgetEditApplyActivity", "Saved icon: $label for widget ID: $newWidgetId")
+                                        
+                                        // Verify the saved icon
+                                        val savedIcon = preferences.getWidgetIcon(newWidgetId)
+                                        Log.e("BatteryWidgetEditApplyActivity", "Verified saved icon for widget $newWidgetId: $savedIcon")
+                                        
+                                        // Send update broadcast with the widget ID
+                                        val delayedUpdateIntent = Intent(this, BatteryLevelReceiver::class.java).apply {
+                                            action = BatteryWidgetProvider.ACTION_UPDATE_WIDGET
+                                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, newWidgetId)
+                                            putExtra("WIDGET_ICON", label)
+                                        }
+                                        sendBroadcast(delayedUpdateIntent)
+                                        Log.e("BatteryWidgetEditApplyActivity", "Sent delayed update broadcast for widget $newWidgetId with icon: $label")
+                                        
+                                        // Force an immediate widget update
+                                        appWidgetManager.notifyAppWidgetViewDataChanged(newWidgetId, R.id.battery_icon)
+                                    }
+                                }, delay.toLong())
+                            }
                         }
                     } else {
                         Toast.makeText(this, "Device not supported", Toast.LENGTH_SHORT).show()
@@ -151,6 +186,10 @@ class BatteryWidgetEditApplyActivity : AppCompatActivity() {
                     }
                     sendBroadcast(updateIntent)
                     Log.e("BatteryWidgetEditApplyActivity", "Sent update broadcast for existing widget $appWidgetId with icon: $label")
+                    
+                    // Force an immediate widget update
+                    val appWidgetManager = AppWidgetManager.getInstance(this)
+                    appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.battery_icon)
                 }
 
                 Toast.makeText(this, "Widget Applied Successfully.", Toast.LENGTH_SHORT).show()
