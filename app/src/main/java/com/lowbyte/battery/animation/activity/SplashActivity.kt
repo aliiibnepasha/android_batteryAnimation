@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.MobileAds
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.MyApplication
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ActivitySplashBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +21,9 @@ class SplashActivity : BaseActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             MobileAds.initialize(this@SplashActivity) {}
         }
+        AdManager.initializeAds(this)
+
+
 
 
     }

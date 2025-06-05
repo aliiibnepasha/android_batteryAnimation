@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ActivityEmojiEditApplayBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.skydoves.colorpickerview.ColorEnvelope
@@ -128,6 +129,11 @@ class EmojiEditApplyActivity : BaseActivity() {
 
         // ✅ Apply Button Click Listener
         binding.btnNext.setOnClickListener {
+            if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
+                AdManager.showInterstitialAd(this) {
+                    Log.e("Ads","FullScreenTobeShoe")
+                }
+            }
             preferences.batteryIconName = drawable
             sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
             startActivity(Intent(this, ApplySuccessfullyActivity::class.java))

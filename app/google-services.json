@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:403636444526:android:b9524918ded3463300f57f",
+        "mobilesdk_app_id": "1:403636444526:android:3c65a2608d801a5700f57f",
         "android_client_info": {
-          "package_name": "com.emojibattery.widget.statusbar"
+          "package_name": "emojibattery.widget.statusbar"
         }
       },
       "oauth_client": [],

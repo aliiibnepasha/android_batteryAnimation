@@ -115,7 +115,7 @@
         android:layout_marginVertical="?actionBarSize"
         android:background="@drawable/bg_border_fill_transparent"
         android:gravity="center"
-        android:text="@string/emoji"
+        android:text="@string/title_home"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"

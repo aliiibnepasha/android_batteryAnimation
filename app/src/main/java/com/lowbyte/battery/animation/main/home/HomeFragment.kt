@@ -19,6 +19,7 @@ import com.lowbyte.battery.animation.activity.BatteryAnimationEditApplyActivity
 import com.lowbyte.battery.animation.activity.BatteryWidgetEditApplyActivity
 import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
 import com.lowbyte.battery.animation.adapter.MultiViewAdapter
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.FragmentHomeBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.model.MultiViewItem
@@ -52,9 +53,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentHomeBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
-
-
-
+        AdManager.loadInterstitialAd(requireContext())
         Handler(Looper.getMainLooper()).postDelayed({
             binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
             Log.d("TAG_Access", "Create ${preferences.isStatusBarEnabled}")

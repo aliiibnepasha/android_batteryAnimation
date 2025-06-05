@@ -1,15 +1,22 @@
 package com.lowbyte.battery.animation.main
 
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.admanager.AdManagerAdView
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.SettingsActivity
 import com.lowbyte.battery.animation.databinding.FragmentMainBinding
@@ -26,6 +33,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         binding.bottomNavigation.setupWithNavController(navController)
+        loadBannerAd()
 
         binding.ifvSetting.setOnClickListener {
             startActivity(Intent(requireContext(), SettingsActivity::class.java))
@@ -84,5 +92,55 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 }
             }
         }
+    }
+
+
+    private fun loadBannerAd() {
+        binding.bannerAdHome.visibility = View.VISIBLE
+        val adWidthPixels = Resources.getSystem().displayMetrics.widthPixels
+        val adWidth = (adWidthPixels / Resources.getSystem().displayMetrics.density).toInt()
+        val adSize =
+            AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(requireContext(), adWidth)
+        val adView = AdManagerAdView(requireContext()).apply {
+            adUnitId = "ca-app-pub-3940256099942544/9214589741" // Test Ad Unit ID
+            setAdSize(adSize) // ✅ Set ad size correctly
+        }
+
+        // Add ad listeners
+        adView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                Log.d("BannerAd", "Ad Loaded")
+                binding.bannerAdHome.visibility = View.VISIBLE
+
+            }
+
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                Log.e("BannerAd", "Ad Failed to Load: ${adError.message}")
+                binding.bannerAdHome.visibility = View.GONE
+
+            }
+
+            override fun onAdOpened() {
+                Log.d("BannerAd", "Ad Opened")
+            }
+
+            override fun onAdClicked() {
+                Log.d("BannerAd", "Ad Clicked")
+            }
+
+            override fun onAdClosed() {
+                Log.d("BannerAd", "Ad Closed")
+            }
+
+            override fun onAdImpression() {
+                Log.d("BannerAd", "Ad Impression Logged")
+            }
+        }
+
+        binding.bannerAdHome.removeAllViews()
+        binding.bannerAdHome.addView(adView)
+
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
     }
 }

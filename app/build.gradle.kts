@@ -9,7 +9,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.emojibattery.widget.statusbar"
+        applicationId = "emojibattery.widget.statusbar"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -20,8 +20,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -61,6 +61,8 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.play.services.ads)
+    implementation (libs.billing)
+
 
 
 }

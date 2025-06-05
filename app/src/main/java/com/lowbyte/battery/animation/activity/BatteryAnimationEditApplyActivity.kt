@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ActivityBatteryAnimationEditApplyBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
 
@@ -55,6 +56,11 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
         }
 
         binding.buttonForApply.setOnClickListener {
+            if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
+                AdManager.showInterstitialAd(this) {
+                    Log.e("Ads","FullScreenTobeShoe")
+                }
+            }
             Log.d("BUTTON_CLICK", "Apply clicked")
             // Add apply logic here
             preferences.statusLottieName = label

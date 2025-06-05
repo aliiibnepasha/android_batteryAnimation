@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.FragmentGetStartedBinding
 import com.lowbyte.battery.animation.databinding.FragmentIntroBinding
 
@@ -18,7 +19,9 @@ class GetStartedFragment : Fragment(R.layout.fragment_get_started)  {
 
 
         binding.btnNext.setOnClickListener {
-            findNavController().navigate(R.id.action_getStarted_to_main)
+            AdManager.showInterstitialAd(requireActivity()) {
+                findNavController().navigate(R.id.action_getStarted_to_main)
+            }
         }
     }
 

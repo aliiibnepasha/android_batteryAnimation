@@ -1,5 +1,6 @@
 [versions]
 agp = "8.10.1"
+billing = "7.1.1"
 colorpickerview = "2.3.0"
 firebaseBom = "33.14.0"
 kotlin = "2.0.21"
@@ -20,6 +21,7 @@ playServicesAds = "24.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+billing = { module = "com.android.billingclient:billing", version.ref = "billing" }
 colorpickerview = { module = "com.github.skydoves:colorpickerview", version.ref = "colorpickerview" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }

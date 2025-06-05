@@ -82,12 +82,12 @@ class AppPreferences private constructor(context: Context) {
 
     // For booleans (show/hide)
     var isVibrateMode: Boolean
-        get() = sharedPreferences.getBoolean(KEY_IS_VIBRATE_MODE, true)
+        get() = sharedPreferences.getBoolean(KEY_IS_VIBRATE_MODE, false)
         set(value) = sharedPreferences.edit { putBoolean(KEY_IS_VIBRATE_MODE, value) }
 
       // For booleans (show/hide)
     var isGestureMode: Boolean
-        get() = sharedPreferences.getBoolean(KEY_IS_GESTURE_MODE, true)
+        get() = sharedPreferences.getBoolean(KEY_IS_GESTURE_MODE, false)
         set(value) = sharedPreferences.edit { putBoolean(KEY_IS_GESTURE_MODE, value) }
 
       // For booleans (show/hide)
@@ -172,6 +172,13 @@ class AppPreferences private constructor(context: Context) {
 
     fun getInt(key: String, default: Int = 0): Int = sharedPreferences.getInt(key, default)
     fun setInt(key: String, value: Int) = sharedPreferences.edit { putInt(key, value) }
+
+
+    fun shouldTriggerEveryThirdTime(key: String ="AdsToBeShow"): Boolean {
+        val count = getInt(key, 0) + 1
+        setInt(key, count)
+        return count % 3 == 0
+    }
 
 
     fun getString(key: String, default: String = ""): String? = sharedPreferences.getString(key, default)

@@ -2,10 +2,12 @@ package com.lowbyte.battery.animation
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.lowbyte.battery.animation.adapter.IntroAdapter
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.FragmentIntroBinding
 import com.lowbyte.battery.animation.model.IntroItem
 
@@ -15,6 +17,7 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentIntroBinding.bind(view)
+
 
         val items = listOf(
             IntroItem(getString(R.string.intro_title_1), getString(R.string.intro_description_1), R.drawable.intro_1),

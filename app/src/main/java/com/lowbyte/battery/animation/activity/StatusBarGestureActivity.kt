@@ -3,12 +3,8 @@ package com.lowbyte.battery.animation.activity
 import GestureBottomSheetFragment
 import android.content.Context
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.util.Log
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity

@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.broadcastReciver.BatteryLevelReceiver
 import com.lowbyte.battery.animation.broadcastReciver.BatteryWidgetProvider
 import com.lowbyte.battery.animation.databinding.ActivityBatteryWidgetEditApplyBinding
@@ -89,6 +90,13 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
         }
 
         binding.buttonForApply.setOnClickListener {
+            if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
+                AdManager.showInterstitialAd(this) {
+                Log.e("Ads","FullScreenTobeShoe")
+                }
+            }
+
+
             try {
                 if (isNewWidget) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -210,9 +218,10 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
         }
 
         binding.buttonSetAsEmoji.setOnClickListener {
-            preferences.customIconName = label
-            sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
-            Toast.makeText(this, getString(R.string.emoji_applied_successfully), Toast.LENGTH_SHORT).show()
+            finish()
+//            preferences.customIconName = label
+//            sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+//            Toast.makeText(this, getString(R.string.emoji_applied_successfully), Toast.LENGTH_SHORT).show()
         }
     }
 }
