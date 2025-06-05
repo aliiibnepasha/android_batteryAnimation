@@ -6,15 +6,16 @@ import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.LocaleHelper
 
 class MyApplication : Application() {
-
-    override fun attachBaseContext(base: Context?) {
-        val newBase = base?.let { LocaleHelper.setLocale(it, LocaleHelper.getLanguage(it)) }
-        super.attachBaseContext(newBase)
-    }
-
     override fun onCreate() {
         super.onCreate()
         AppPreferences.getInstance(this)
-        // This is optional now, attachBaseContext already sets locale early
+
+        val lang = LocaleHelper.getLanguage(this)
+        // Save "en" only if nothing is saved
+        if (lang.isEmpty() || lang.isBlank()) {
+            LocaleHelper.setLocale(this, "en")
+        } else {
+            LocaleHelper.setLocale(this, lang)
+        }
     }
 }

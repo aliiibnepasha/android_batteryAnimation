@@ -35,7 +35,7 @@ class SplashFragment : Fragment() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             if (preferences.isFirstRun) {
-                //preferences.isFirstRun = false
+                preferences.isFirstRun = false
                 findNavController().navigate(R.id.action_splash_to_language)
             }else{
               //  preferences.isFirstRun = true

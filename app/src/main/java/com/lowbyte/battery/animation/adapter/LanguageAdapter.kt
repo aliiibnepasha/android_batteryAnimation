@@ -5,9 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.lowbyte.battery.animation.LanguageFragment.Language
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ItemLanguageBinding
+import com.lowbyte.battery.animation.model.Language
 
 class LanguageAdapter(
     private val items: List<Language>,

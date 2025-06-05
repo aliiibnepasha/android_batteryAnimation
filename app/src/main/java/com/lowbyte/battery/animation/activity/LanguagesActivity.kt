@@ -1,26 +1,28 @@
-package com.lowbyte.battery.animation
-
+package com.lowbyte.battery.animation.activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.adapter.LanguageAdapter
-import com.lowbyte.battery.animation.databinding.FragmentLanguageBinding
+import com.lowbyte.battery.animation.databinding.ActivityLanguagesBinding
 import com.lowbyte.battery.animation.model.Language
 import com.lowbyte.battery.animation.utils.LocaleHelper
 
-class LanguageFragment : Fragment(R.layout.fragment_language) {
+class LanguagesActivity : BaseActivity() {
 
-    private var _binding: FragmentLanguageBinding? = null
-    private val binding get() = _binding!!
-
+    private lateinit var binding: ActivityLanguagesBinding
     private lateinit var adapter: LanguageAdapter
-    private var selectedLanguage: String = "English"
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentLanguageBinding.bind(view)
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.setLocale(newBase, LocaleHelper.getLanguage(newBase)))
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityLanguagesBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val languages = listOf(
             Language("English", "en"),
@@ -40,31 +42,24 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
             Language("Bahasa Indonesia", "in")  // Indonesian ok
         )
 
-        val currentLanguageCode = LocaleHelper.getLanguage(requireContext())
+        val currentLanguageCode = LocaleHelper.getLanguage(this)
 
         adapter = LanguageAdapter(languages, currentLanguageCode) { language ->
-            selectedLanguage = language.name
-            LocaleHelper.setLocale(requireContext(), language.code)
-            requireActivity().apply {
-                recreate()
-            }
+            LocaleHelper.setLocale(this, language.code)
+            recreate()
         }
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
         binding.ibBackButton.setOnClickListener {
-            requireActivity().finish()
+            finish()
         }
 
         binding.ibNextButton.setOnClickListener {
-            findNavController().navigate(R.id.action_language_to_intro)
+            startActivity(Intent(this, SplashActivity::class.java))
+           finishAffinity()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 
