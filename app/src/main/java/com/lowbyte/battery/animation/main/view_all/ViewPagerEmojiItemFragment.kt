@@ -13,6 +13,8 @@ import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
 import com.lowbyte.battery.animation.activity.StatusBarIconSettingsActivity
 import com.lowbyte.battery.animation.adapter.AllEmojiAdapter
 import com.lowbyte.battery.animation.databinding.ItemViewPagerBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.allEmojis
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiAnimListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiBasicListFantasy
@@ -51,8 +53,8 @@ class ViewPagerEmojiItemFragment : Fragment() {
     private fun setupRecyclerView() {
         adapter = AllEmojiAdapter { position,label ->
             val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java)
-            intent.putExtra("EXTRA_POSITION", position)
-            intent.putExtra("EXTRA_LABEL", label)
+            intent.putExtra(EXTRA_POSITION, position)
+            intent.putExtra(EXTRA_LABEL, label)
             startActivity(intent)
 
 

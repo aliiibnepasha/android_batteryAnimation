@@ -23,6 +23,9 @@ import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.FragmentHomeBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.model.MultiViewItem
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.animationList
 import com.lowbyte.battery.animation.utils.AnimationUtils.combinedAnimationList
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
@@ -74,7 +77,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         "TAG_Access",
                         "onViewCreated false: $isChecked / ${preferences.isStatusBarEnabled}"
                     )
-                    requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+                    requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
                 }
             }
         }, 500)
@@ -98,20 +101,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 when (parentPos) {
                     1 -> {
                         val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java)
-                        intent.putExtra("EXTRA_POSITION", parentPosition)
-                        intent.putExtra("EXTRA_LABEL", name)
+                        intent.putExtra(EXTRA_POSITION, parentPosition)
+                        intent.putExtra(EXTRA_LABEL, name)
                         startActivity(intent)
                     }
                     3 -> {
                         val intent = Intent(requireActivity(), BatteryWidgetEditApplyActivity::class.java)
-                        intent.putExtra("EXTRA_POSITION", parentPosition)
-                        intent.putExtra("EXTRA_LABEL", name)
+                        intent.putExtra(EXTRA_POSITION, parentPosition)
+                        intent.putExtra(EXTRA_LABEL, name)
                         startActivity(intent)
                     }
                     5 -> {
                         val intent = Intent(requireActivity(), BatteryAnimationEditApplyActivity::class.java)
-                        intent.putExtra("EXTRA_POSITION", parentPosition)
-                        intent.putExtra("EXTRA_LABEL", name)
+                        intent.putExtra(EXTRA_POSITION, parentPosition)
+                        intent.putExtra(EXTRA_LABEL, name)
                         startActivity(intent)
                     }
                 }
@@ -169,7 +172,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 "Allowed permission enabling checks ${preferences.isStatusBarEnabled}"
             )
             binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled
-            requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+            requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
 
 
         }

@@ -17,6 +17,7 @@ import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.FragmentViewAllEmojiBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getTabTitlesEmoji
 import com.lowbyte.battery.animation.utils.AppPreferences
 
@@ -59,7 +60,7 @@ class ViewAllEmojiFragment : Fragment() {
                         "TAG_Access",
                         "onViewCreated false: $isChecked / ${preferences.isStatusBarEnabled}"
                     )
-                    requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+                    requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
                 }
             }, 500)
         }
@@ -109,7 +110,7 @@ class ViewAllEmojiFragment : Fragment() {
                 "Allowed permission enabling checks ${preferences.isStatusBarEnabled}"
             )
             binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled
-            requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+            requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
 
 
         }

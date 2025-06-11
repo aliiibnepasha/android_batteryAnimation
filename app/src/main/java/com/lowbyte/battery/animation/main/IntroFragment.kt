@@ -1,13 +1,12 @@
-package com.lowbyte.battery.animation
+package com.lowbyte.battery.animation.main
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.IntroAdapter
-import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.FragmentIntroBinding
 import com.lowbyte.battery.animation.model.IntroItem
 

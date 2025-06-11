@@ -20,6 +20,8 @@ import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.broadcastReciver.BatteryLevelReceiver
 import com.lowbyte.battery.animation.broadcastReciver.BatteryWidgetProvider
 import com.lowbyte.battery.animation.databinding.ActivityBatteryWidgetEditApplyBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AppPreferences
 
 class BatteryWidgetEditApplyActivity : BaseActivity() {
@@ -50,8 +52,8 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
             insets
         }
 
-        position = intent.getIntExtra("EXTRA_POSITION", -1)
-        label = intent.getStringExtra("EXTRA_LABEL") ?: getString(R.string.wifi)
+        position = intent.getIntExtra(EXTRA_POSITION, -1)
+        label = intent.getStringExtra(EXTRA_LABEL) ?: getString(R.string.wifi)
 
         Log.e("BatteryWidgetEditApplyActivity", "Widget ID: $appWidgetId, Position: $position, Label: $label, IsNew: $isNewWidget")
 
@@ -220,7 +222,7 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
         binding.buttonSetAsEmoji.setOnClickListener {
             finish()
 //            preferences.customIconName = label
-//            sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+//            sendBroadcast(Intent(BROADCAST_ACTION))
 //            Toast.makeText(this, getString(R.string.emoji_applied_successfully), Toast.LENGTH_SHORT).show()
         }
     }

@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.lowbyte.battery.animation.SplashFragment"
+        android:name="com.lowbyte.battery.animation.main.SplashFragment"
         android:label="Splash" >
         <action
             android:id="@+id/action_splash_to_language"
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/languageFragment"
-        android:name="com.lowbyte.battery.animation.LanguageFragment"
+        android:name="com.lowbyte.battery.animation.main.LanguageFragment"
         android:label="Select Language" >
         <action
             android:id="@+id/action_language_to_intro"
@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/introFragment"
-        android:name="com.lowbyte.battery.animation.IntroFragment"
+        android:name="com.lowbyte.battery.animation.main.IntroFragment"
         android:label="Intro Screens" >
         <action
             android:id="@+id/action_intro_to_getStarted"
@@ -36,7 +36,7 @@
 
     <fragment
         android:id="@+id/getStartedFragment"
-        android:name="com.lowbyte.battery.animation.GetStartedFragment"
+        android:name="com.lowbyte.battery.animation.main.GetStartedFragment"
         android:label="Get Started">
                 <action
                     android:id="@+id/action_getStarted_to_main"

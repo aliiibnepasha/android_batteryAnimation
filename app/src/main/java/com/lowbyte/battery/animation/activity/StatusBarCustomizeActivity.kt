@@ -22,6 +22,9 @@ import com.lowbyte.battery.animation.adapter.CustomIconGridAdapter
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarCustommizeBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.model.CustomIconGridItem
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerDialog
@@ -97,7 +100,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
                     "TAG_Access",
                     "onViewCreated false: $isChecked / ${preferences.isStatusBarEnabled}"
                 )
-               sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+               sendBroadcast(Intent(BROADCAST_ACTION))
             }
         }
 
@@ -113,7 +116,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
                 val safeProgress = progress.coerceIn(0, 50)
                 preferences.statusBarHeight = safeProgress
                 binding.statusBarHeight.text = getString(R.string.height_dp, safeProgress)
-                sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+                sendBroadcast(Intent(BROADCAST_ACTION))
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -127,7 +130,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
                 }
             }
         })        /*Status bar height Code */
-        binding.leftMarginSeekBar.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
+        binding.leftMarginSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(
                 seekBar: android.widget.SeekBar?,
                 progress: Int,
@@ -136,11 +139,11 @@ class StatusBarCustomizeActivity : BaseActivity() {
                 preferences.statusBarMarginLeft = progress
                 binding.leftMarginLabel.text = getString(R.string.left_margin_dp, preferences.statusBarMarginLeft)
                 Log.d("servicesdd", "Broadcast sent ff!")
-                sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+                sendBroadcast(Intent(BROADCAST_ACTION))
             }
 
-            override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 if (!binding.switchEnableBatteryEmojiCustom.isChecked){
                     Toast.makeText(this@StatusBarCustomizeActivity,
                         getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
@@ -148,21 +151,21 @@ class StatusBarCustomizeActivity : BaseActivity() {
             }
         })
 
-        binding.rightMarginSeekBar.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
+        binding.rightMarginSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(
-                seekBar: android.widget.SeekBar?,
+                seekBar: SeekBar?,
                 progress: Int,
                 fromUser: Boolean
             ) {
                 preferences.statusBarMarginRight = progress
                 binding.rightMarginLabel.text = getString(R.string.right_margin_dp, preferences.statusBarMarginRight)
-                Log.d("servicesdd", "Broadcast sent gg!")
-                sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+                Log.d("service_sdd", "Broadcast sent gg!")
+                sendBroadcast(Intent(BROADCAST_ACTION))
 
             }
 
-            override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 if (!binding.switchEnableBatteryEmojiCustom.isChecked){
                     Toast.makeText(this@StatusBarCustomizeActivity,
                         getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
@@ -199,8 +202,8 @@ class StatusBarCustomizeActivity : BaseActivity() {
 
         val adapter = CustomIconGridAdapter(items) { position, label ->
             val intent = Intent(this, StatusBarIconSettingsActivity::class.java)
-            intent.putExtra("EXTRA_POSITION", position)
-            intent.putExtra("EXTRA_LABEL", label)
+            intent.putExtra(EXTRA_POSITION, position)
+            intent.putExtra(EXTRA_LABEL, label)
             startActivity(intent)
         }
         binding.recyclerViewCustomIcon.adapter = adapter
@@ -214,7 +217,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
                 getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
         }
         preferences.statusBarBgColor = envelope?.color!!
-        sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+        sendBroadcast(Intent(BROADCAST_ACTION))
 
     }
 
@@ -242,7 +245,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
                 "Allowed permission enabling checks ${preferences.isStatusBarEnabled}"
             )
             binding.switchEnableBatteryEmojiCustom.isChecked = preferences.isStatusBarEnabled
-            sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+            sendBroadcast(Intent(BROADCAST_ACTION))
 
 
         }

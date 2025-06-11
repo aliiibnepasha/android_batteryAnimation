@@ -32,6 +32,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.lowbyte.battery.animation.databinding.CustomStatusBarBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AppPreferences
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -79,7 +80,7 @@ class NotchAccessibilityService : AccessibilityService() {
             }
 
             val filter = IntentFilter().apply {
-                addAction("com.lowbyte.UPDATE_STATUSBAR")
+                addAction(BROADCAST_ACTION)
                 addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
                 addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
                 addAction(ConnectivityManager.CONNECTIVITY_ACTION)

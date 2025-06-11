@@ -44,11 +44,6 @@ class StatusBarGestureActivity : BaseActivity() {
             finish()
         }
 
-//        singleTapActionText.text = preferences.getString("gestureAction", getString(R.string.action_do_nothing))?.replace("_"," ")
-//        longTapActionText.text = preferences.getString("longPressAction", getString(R.string.action_do_nothing))?.replace("_"," ")
-//        swipeLeftToRightActionText.text = preferences.getString("swipeLeftToRightAction", getString(R.string.action_do_nothing))?.replace("_"," ")
-//        swipeRightToLeftActionText.text = preferences.getString("swipeRightToLeftAction", getString(R.string.action_do_nothing))?.replace("_"," ")
-
         singleTapActionText.text = getLocalizedStringFromPrefKey(this, "gestureAction", R.string.action_do_nothing)
         longTapActionText.text = getLocalizedStringFromPrefKey(this, "longPressAction", R.string.action_do_nothing)
         swipeLeftToRightActionText.text = getLocalizedStringFromPrefKey(this, "swipeLeftToRightAction", R.string.action_do_nothing)

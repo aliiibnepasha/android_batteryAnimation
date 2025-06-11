@@ -13,6 +13,9 @@ import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.StatusBarIconSettingsActivity
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ActivityBatteryAnimationEditApplyBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AppPreferences
 
 class BatteryAnimationEditApplyActivity : BaseActivity() {
@@ -36,8 +39,8 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
         }
 
         // Get intent extras
-        position = intent.getIntExtra("EXTRA_POSITION", -1)
-        label = intent.getStringExtra("EXTRA_LABEL") ?: getString(R.string.wifi)
+        position = intent.getIntExtra(EXTRA_POSITION, -1)
+        label = intent.getStringExtra(EXTRA_LABEL) ?: getString(R.string.wifi)
         Log.i("ITEMCLICK", "$position $label")
 
         val resId = resources.getIdentifier(label, "raw", packageName)
@@ -69,7 +72,7 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
             Log.d("BUTTON_CLICK", "Apply clicked")
             // Add apply logic here
             preferences.statusLottieName = label
-            sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+            sendBroadcast(Intent(BROADCAST_ACTION))
             Toast.makeText(this,
                 getString(R.string.animation_applied_successfully), Toast.LENGTH_SHORT).show()
         }

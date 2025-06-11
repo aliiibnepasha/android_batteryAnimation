@@ -15,6 +15,9 @@ import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.StatusBarCustomizeActivity
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ActivityEmojiEditApplayBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerDialog
@@ -34,8 +37,8 @@ class EmojiEditApplyActivity : BaseActivity() {
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
 
-        val position = intent.getIntExtra("EXTRA_POSITION", -1)
-         drawable = intent.getStringExtra("EXTRA_LABEL") ?: getString(R.string.wifi)
+        val position = intent.getIntExtra(EXTRA_POSITION, -1)
+         drawable = intent.getStringExtra(EXTRA_LABEL) ?: getString(R.string.wifi)
 
         Log.i("ITEMCLICK", "$position $drawable")
         val resId = resources.getIdentifier(drawable, "drawable", packageName)
@@ -73,7 +76,7 @@ class EmojiEditApplyActivity : BaseActivity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 // Update emoji size or preview
                 preferences.setIconSize("batteryIconSize", progress)
-                sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+                sendBroadcast(Intent(BROADCAST_ACTION))
                 binding.batteryEmojiLabel.text = getString(
                     R.string.size_dp,
                     getString(R.string.view_all_battery_emoji),
@@ -98,7 +101,7 @@ class EmojiEditApplyActivity : BaseActivity() {
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 preferences.setIconSize("percentageSize", progress)
-                sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+                sendBroadcast(Intent(BROADCAST_ACTION))
                 binding.batteryPercentageEmojiLabel.text = getString(
                     R.string.size_dp,
                     getString(R.string.percentage_size),
@@ -140,7 +143,7 @@ class EmojiEditApplyActivity : BaseActivity() {
         // ✅ Switch Toggle Listener
         binding.enableShowBatteryPercentage.setOnCheckedChangeListener { _, isChecked ->
             preferences.showBatteryPercent = isChecked
-            sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+            sendBroadcast(Intent(BROADCAST_ACTION))
 
             // Handle toggle logic
         }
@@ -155,7 +158,7 @@ class EmojiEditApplyActivity : BaseActivity() {
 
             preferences
             preferences.batteryIconName = drawable
-            sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+            sendBroadcast(Intent(BROADCAST_ACTION))
             startActivity(Intent(this, ApplySuccessfullyActivity::class.java))
             finish()
 
@@ -171,7 +174,7 @@ class EmojiEditApplyActivity : BaseActivity() {
                 getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
         }
         preferences.setInt("percentageColor", envelope.color)
-        sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+        sendBroadcast(Intent(BROADCAST_ACTION))
     }
 }
 

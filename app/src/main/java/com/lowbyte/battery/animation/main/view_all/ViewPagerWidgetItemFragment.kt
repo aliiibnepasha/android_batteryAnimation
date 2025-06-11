@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.activity.BatteryWidgetEditApplyActivity
 import com.lowbyte.battery.animation.adapter.AllWidgetAdapter
 import com.lowbyte.battery.animation.databinding.ItemViewPagerBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.allWidgets
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListAction
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListBasic
@@ -49,8 +51,8 @@ class ViewPagerWidgetItemFragment : Fragment() {
     private fun setupRecyclerView() {
         adapter = AllWidgetAdapter { position, label ->
             val intent = Intent(requireActivity(), BatteryWidgetEditApplyActivity::class.java)
-            intent.putExtra("EXTRA_POSITION", position)
-            intent.putExtra("EXTRA_LABEL", label)
+            intent.putExtra(EXTRA_POSITION, position)
+            intent.putExtra(EXTRA_LABEL, label)
             startActivity(intent)
         }
 

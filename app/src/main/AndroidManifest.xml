@@ -67,7 +67,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.ProActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
 

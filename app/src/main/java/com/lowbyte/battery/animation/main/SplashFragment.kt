@@ -1,4 +1,4 @@
-package com.lowbyte.battery.animation
+package com.lowbyte.battery.animation.main
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
@@ -8,10 +8,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.GoogleMobileAdsConsentManager
 import com.lowbyte.battery.animation.databinding.FragmentSplashBinding

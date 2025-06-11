@@ -11,6 +11,8 @@ import android.view.View
 import android.widget.RemoteViews
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.BatteryWidgetEditApplyActivity
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AppPreferences
 
 class BatteryLevelReceiver : BroadcastReceiver() {
@@ -114,8 +116,8 @@ class BatteryLevelReceiver : BroadcastReceiver() {
                     // Create a unique PendingIntent for each widget
                     val clickIntent = Intent(context, BatteryWidgetEditApplyActivity::class.java).apply {
                         putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
-                        putExtra("EXTRA_POSITION", -1)
-                        putExtra("EXTRA_LABEL", widgetIconName)
+                        putExtra(EXTRA_POSITION, -1)
+                        putExtra(EXTRA_LABEL, widgetIconName)
                     }
                     val pendingIntent = android.app.PendingIntent.getActivity(
                         context,

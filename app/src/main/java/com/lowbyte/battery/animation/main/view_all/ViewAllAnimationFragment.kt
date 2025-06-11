@@ -14,6 +14,9 @@ import com.lowbyte.battery.animation.activity.BatteryAnimationEditApplyActivity
 import com.lowbyte.battery.animation.activity.StatusBarIconSettingsActivity
 import com.lowbyte.battery.animation.adapter.AnimationAdapter
 import com.lowbyte.battery.animation.databinding.FragmentViewAllAnimationBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.animationList
 import com.lowbyte.battery.animation.utils.AnimationUtils.animationListNew
 import com.lowbyte.battery.animation.utils.AnimationUtils.combinedAnimationList
@@ -42,10 +45,10 @@ class ViewAllAnimationFragment : Fragment() {
                         getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
                 }
                 preferences.statusLottieName = "a_1"
-                requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+                requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
             } else {
                 preferences.statusLottieName = ""
-                requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+                requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
 
             }
         }
@@ -62,7 +65,7 @@ class ViewAllAnimationFragment : Fragment() {
             ) {
                 preferences.setIconSize("lottieView",progress)
                 binding.enableSizeAnim.text = getString(R.string.height_dp, preferences.getIconSize("lottieView", 24))
-                requireActivity().sendBroadcast(Intent("com.lowbyte.UPDATE_STATUSBAR"))
+                requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
             }
 
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
@@ -89,8 +92,8 @@ class ViewAllAnimationFragment : Fragment() {
         adapter = AnimationAdapter { position, name ->
             Log.d("Click", "Clicked position: $position, animation: $name")
             val intent = Intent(requireActivity(), BatteryAnimationEditApplyActivity::class.java)
-            intent.putExtra("EXTRA_POSITION", position)
-            intent.putExtra("EXTRA_LABEL", name)
+            intent.putExtra(EXTRA_POSITION, position)
+            intent.putExtra(EXTRA_LABEL, name)
             startActivity(intent)
         }
 
