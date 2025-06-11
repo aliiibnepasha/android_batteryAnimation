@@ -23,6 +23,8 @@ class AppOpenAdManager(private val app: Application) : Application.ActivityLifec
     private var isAdShowing = false
     private var dialog: Dialog? = null
     private var shouldShowAdWhenReady = false
+    private var isInBackground = true
+    private var activityStartCount = 0
 
     init {
         Log.d("AppOpenAdManager", "Initialized and registering lifecycle callbacks")
@@ -58,14 +60,16 @@ class AppOpenAdManager(private val app: Application) : Application.ActivityLifec
 
     fun showAdIfAvailable(activity: Activity, autoRequest: Boolean) {
         if (isAdShowing || appOpenAd == null) return
+        if (!AdStateController.isOpenAdEnabled || AdStateController.isInterstitialShowing) return
+
+        AdStateController.isOpenAdShowing = true
 
         appOpenAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
                 isAdShowing = false
                 appOpenAd = null
-                if (autoRequest) {
-                    loadAdIfNotAvailable()
-                }
+                AdStateController.isOpenAdShowing = false
+                if (autoRequest) loadAdIfNotAvailable()
                 Log.d("AppOpenAdManager", "Ad dismissed")
             }
 
@@ -77,11 +81,17 @@ class AppOpenAdManager(private val app: Application) : Application.ActivityLifec
             override fun onAdFailedToShowFullScreenContent(error: com.google.android.gms.ads.AdError) {
                 isAdShowing = false
                 appOpenAd = null
+                AdStateController.isOpenAdShowing = false
                 Log.d("AppOpenAdManager", "Ad failed to show")
             }
         }
 
-        appOpenAd?.show(activity)
+        // Show 2-second dialog then the ad
+        showLoadingDialog(activity)
+        Handler(Looper.getMainLooper()).postDelayed({
+            dismissDialog()
+            appOpenAd?.show(activity)
+        }, 2000)
     }
 
     fun loadAndShowAdWithDialog(activity: Activity) {
@@ -148,15 +158,7 @@ class AppOpenAdManager(private val app: Application) : Application.ActivityLifec
     }
 
     override fun onActivityResumed(activity: Activity) {
-        Log.d("AppOpenAdManager", "onActivityResumed called for ${activity.localClassName}")
-        currentActivity = activity
 
-        if (appOpenAd != null) {
-            showAdIfAvailable(activity, false)
-        } else if (!isLoadingAd) {
-            shouldShowAdWhenReady = true
-            loadAdIfNotAvailable()
-        }
     }
 
     override fun onActivityDestroyed(activity: Activity) {
@@ -170,9 +172,32 @@ class AppOpenAdManager(private val app: Application) : Application.ActivityLifec
         isAdShowing = false
     }
 
-    // Unused lifecycle callbacks
-    override fun onActivityStarted(activity: Activity) {}
+    override fun onActivityStarted(activity: Activity) {
+        activityStartCount++
+        currentActivity = activity
+        Log.d("AppOpenAdManager", "onActivityStarted: ${activity.localClassName}")
+
+        if (isInBackground && activityStartCount == 1) {
+            Log.d("AppOpenAdManager", "App returned to foreground")
+
+            if (appOpenAd != null) {
+                showAdIfAvailable(activity, false)
+            } else if (!isLoadingAd) {
+                shouldShowAdWhenReady = true
+                loadAdIfNotAvailable()
+            }
+            isInBackground = false
+        }
+    }
+
+    override fun onActivityStopped(activity: Activity) {
+        activityStartCount--
+        if (activityStartCount == 0) {
+            isInBackground = true
+            Log.d("AppOpenAdManager", "App went to background")
+        }
+    }
+
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
-    override fun onActivityStopped(activity: Activity) {}
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
 }

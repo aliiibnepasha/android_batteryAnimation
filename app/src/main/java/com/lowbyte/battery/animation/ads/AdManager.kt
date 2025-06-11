@@ -58,29 +58,38 @@ object AdManager {
     }
 
     fun showInterstitialAd(activity: Activity, onDismiss: () -> Unit) {
+        if (AdStateController.isOpenAdShowing) {
+            Log.d(TAG, "Skipping interstitial because Open Ad is showing")
+            onDismiss()
+            return
+        }
+
         if (interstitialAd == null) {
             onDismiss()
             loadInterstitialAd(activity)
             return
         }
 
+        AdStateController.isInterstitialShowing = true
+
         interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
-                Log.d(TAG, "Ad Dismissed")
                 interstitialAd = null
+                AdStateController.isInterstitialShowing = false
                 onDismiss()
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                Log.e(TAG, "Ad Failed to Show")
                 interstitialAd = null
+                AdStateController.isInterstitialShowing = false
                 onDismiss()
             }
 
             override fun onAdShowedFullScreenContent() {
-                Log.d(TAG, "Ad Showed")
+                Log.d(TAG, "Interstitial Ad Shown")
             }
         }
+
         interstitialAd?.show(activity)
     }
 }
