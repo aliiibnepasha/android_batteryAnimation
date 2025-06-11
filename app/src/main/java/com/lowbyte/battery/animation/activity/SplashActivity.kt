@@ -1,7 +1,6 @@
 package com.lowbyte.battery.animation.activity
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.MobileAds
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.MyApplication
@@ -14,6 +13,7 @@ import kotlinx.coroutines.launch
 class SplashActivity : BaseActivity() {
     private lateinit var binding: ActivitySplashBinding
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
@@ -22,9 +22,9 @@ class SplashActivity : BaseActivity() {
             MobileAds.initialize(this@SplashActivity) {}
         }
         AdManager.initializeAds(this)
+    }
 
-
-
-
+    override fun onResume() {
+        super.onResume()
     }
 }

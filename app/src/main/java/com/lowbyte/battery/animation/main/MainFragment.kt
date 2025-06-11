@@ -20,6 +20,7 @@ import com.google.android.gms.ads.admanager.AdManagerAdView
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.SettingsActivity
 import com.lowbyte.battery.animation.databinding.FragmentMainBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
@@ -101,7 +102,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val adSize =
             AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(requireContext(), adWidth)
         val adView = AdManagerAdView(requireContext()).apply {
-            adUnitId = "ca-app-pub-3940256099942544/9214589741" //"ca-app-pub-9844943887550892/2195014922"
+            adUnitId = getBannerId()
             setAdSize(adSize) // ✅ Set ad size correctly
         }
 

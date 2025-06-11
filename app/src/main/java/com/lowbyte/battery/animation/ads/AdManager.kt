@@ -7,6 +7,7 @@ import android.widget.Toast
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,8 +15,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 object AdManager {
     private const val TAG = "AdManager"
-    private const val AD_UNIT_ID_TEST = "ca-app-pub-3940256099942544/1033173712" // Test ID
-    private const val AD_UNIT_ID = "ca-app-pub-9844943887550892/2857359904" // Test ID
 
     private var interstitialAd: InterstitialAd? = null
     private var adIsLoading = false
@@ -40,7 +39,7 @@ object AdManager {
         adIsLoading = true
         InterstitialAd.load(
             context,
-            AD_UNIT_ID_TEST,
+            getFullscreenId(),
             AdRequest.Builder().build(),
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {

@@ -3,16 +3,43 @@ package com.lowbyte.battery.animation.utils
 import android.content.Context
 import android.os.VibrationEffect
 import android.os.Vibrator
+import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.model.Language
 
 object AnimationUtils {
-
-
-
     const val BROADCAST_ACTION = "com.lowbyte.UPDATE_STATUSBAR"
     const val EXTRA_POSITION = "EXTRA_POSITION"
     const val EXTRA_LABEL = "EXTRA_LABEL"
+
+    const val SKU_WEEKLY = "weekly"
+    const val SKU_MONTHLY = "monthly"
+    const val SKU_YEARLY = "yearly"
+
+
+    fun getBannerId(): String {
+        return if (BuildConfig.DEBUG) {
+            "ca-app-pub-3940256099942544/9214589741"
+        } else {
+            "ca-app-pub-9844943887550892/2195014922"
+        }
+    }
+
+    fun getFullscreenId(): String {
+        return if (BuildConfig.DEBUG) {
+            "ca-app-pub-3940256099942544/1033173712"
+        } else {
+            "ca-app-pub-9844943887550892/2857359904"
+        }
+    }
+
+    fun getOpenAppId(): String {
+        return if (BuildConfig.DEBUG) {
+            "ca-app-pub-3940256099942544/9257395921"
+        } else {
+            "ca-app-pub-9844943887550892/3065243460"
+        }
+    }
 
     val combinedAnimationList: List<String> by lazy {
        animationListNew

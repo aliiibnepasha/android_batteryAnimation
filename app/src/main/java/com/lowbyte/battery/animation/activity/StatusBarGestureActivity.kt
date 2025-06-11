@@ -126,7 +126,7 @@ class StatusBarGestureActivity : BaseActivity() {
         val items = listOf(
             ActionScrollItem(getString(R.string.action_quick_scroll_to_up),"action_quick_scroll_to_up"),
             ActionScrollItem(getString(R.string.action_open_notifications),"action_open_notifications"),
-            ActionScrollItem(getString(R.string.action_open_control_centre),"action_open_control_centre"),
+           // ActionScrollItem(getString(R.string.action_open_control_centre),"action_open_control_centre"),
             ActionScrollItem(getString(R.string.action_power_options),"action_power_options"),
             ActionScrollItem(getString(R.string.action_do_nothing),"action_do_nothing"),
             ActionScrollItem(getString(R.string.action_back_action),"action_back_action"),
