@@ -121,8 +121,6 @@
     <string name="percentage_size_16_dp">Percentage size : 16 dp</string>
     <string name="action_applied">Action Applied - %1$s</string>
 
-    <string name="string_something_went_wrong_please_try_again">Something went wrong, please try again</string>
-    <string name="string_missing_permission_to_scan_qr_codes">Missing permission to scan QR codes.</string>
     <string name="upgrade_to_pro">Upgrade to Pro</string>
     <string name="remove_adds">Remove adds</string>
     <string name="faster_processing">Faster processing</string>
@@ -134,7 +132,7 @@
     <string name="weekly">Weekly</string>
     <string name="and">and</string>
     <string name="subscription_note">Subscription is billed after the trial ends and will auto-renew. You can cancel your subscription anytime before your trial ends to avoid charges.</string>
-    <string name="restore_purchase">Restore Purchase</string>
+    <string name="restore_purchase">Restore\nPurchase</string>
 
 
 </resources>

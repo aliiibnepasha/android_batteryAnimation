@@ -12,20 +12,24 @@ import androidx.core.view.WindowInsetsCompat
 import com.android.billingclient.api.*
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ActivityProBinding
+import com.lowbyte.battery.animation.databinding.ActivitySplashBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_MONTHLY
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_WEEKLY
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_YEARLY
+import com.lowbyte.battery.animation.utils.AppPreferences
 
 class ProActivity : AppCompatActivity() {
 
-
     private lateinit var binding: ActivityProBinding
     private lateinit var billingClient: BillingClient
+    private var selectedPlanSku: String? = SKU_WEEKLY // <-- Track user selection
+    private lateinit var preferences: AppPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        preferences = AppPreferences.getInstance(this)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -35,6 +39,7 @@ class ProActivity : AppCompatActivity() {
 
         setupBillingClient()
         setupListeners()
+        highlightSelection("weekly")
     }
 
     private fun setupBillingClient() {
@@ -65,26 +70,40 @@ class ProActivity : AppCompatActivity() {
     private fun setupListeners() {
         binding.viewWeekly.setOnClickListener {
             highlightSelection("weekly")
-            launchPurchase(SKU_WEEKLY)
+            selectedPlanSku = SKU_WEEKLY
         }
+
         binding.viewMonthly.setOnClickListener {
             highlightSelection("monthly")
-            launchPurchase(SKU_MONTHLY)
+            selectedPlanSku = SKU_MONTHLY
         }
+
         binding.viewYearly.setOnClickListener {
             highlightSelection("yearly")
-            launchPurchase(SKU_YEARLY)
+            selectedPlanSku = SKU_YEARLY
         }
+
         binding.llPremiumRestore.setOnClickListener {
             openUrl(this, getString(R.string.terms_of_service_url))
         }
+
         binding.tvPremiumTermOfUse.setOnClickListener {
             openUrl(this, getString(R.string.terms_of_service_url))
         }
+
         binding.tvPremiumPrivacyPolicy.setOnClickListener {
             openUrl(this, getString(R.string.privacy_policy_url))
         }
+
+        binding.buyNow.setOnClickListener {
+            if (selectedPlanSku != null) {
+                launchPurchase(selectedPlanSku!!)
+            } else {
+                Toast.makeText(this, "Please select a plan", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
+
     private fun launchPurchase(sku: String) {
         val params = QueryProductDetailsParams.newBuilder()
             .setProductList(
@@ -95,6 +114,7 @@ class ProActivity : AppCompatActivity() {
                         .build()
                 )
             ).build()
+
         billingClient.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && productDetailsList.isNotEmpty()) {
                 val productDetails = productDetailsList[0]
@@ -121,9 +141,9 @@ class ProActivity : AppCompatActivity() {
         saveSubscription(sku)
         Toast.makeText(this, "Subscribed to $sku", Toast.LENGTH_SHORT).show()
     }
+
     private fun saveSubscription(sku: String) {
-        val prefs = getSharedPreferences("subscription_prefs", Context.MODE_PRIVATE)
-        prefs.edit().putString("active_subscription", sku).apply()
+        preferences.setString("active_subscription", sku)
     }
 
     private fun openUrl(context: Context, url: String) {
@@ -133,7 +153,6 @@ class ProActivity : AppCompatActivity() {
             context.startActivity(intent)
         } catch (e: Exception) {
             Toast.makeText(context, "Unable to open URL", Toast.LENGTH_SHORT).show()
-            Log.e("URL_OPEN_ERROR", "Error opening URL: $url", e)
         }
     }
 
