@@ -26,7 +26,7 @@ class ProActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityProBinding
     private lateinit var billingClient: BillingClient
-    private var selectedPlanSku: String? = SKU_WEEKLY // <-- Track user selection
+    private var selectedPlanSku: String? = SKU_WEEKLY
     private lateinit var preferences: AppPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,7 +106,7 @@ class ProActivity : AppCompatActivity() {
 
                     // Find first offer that has pricing phases
                     val validOffer =
-                        offerDetailsList.firstOrNull { it.pricingPhases?.pricingPhaseList?.isNotEmpty() == true }
+                        offerDetailsList.firstOrNull { it.pricingPhases.pricingPhaseList?.isNotEmpty() == true }
 
                     if (validOffer == null) {
                         Log.e(
@@ -235,7 +235,7 @@ class ProActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW, url.toUri())
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(intent)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             Toast.makeText(context, "Unable to open URL", Toast.LENGTH_SHORT).show()
         }
     }

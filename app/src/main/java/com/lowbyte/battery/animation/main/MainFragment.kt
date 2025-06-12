@@ -1,7 +1,11 @@
 package com.lowbyte.battery.animation.main
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,6 +13,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -22,6 +28,7 @@ import com.lowbyte.battery.animation.activity.ProActivity
 import com.lowbyte.battery.animation.activity.SettingsActivity
 import com.lowbyte.battery.animation.databinding.FragmentMainBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
+import androidx.core.content.edit
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
@@ -100,6 +107,77 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 }
             }
         }
+        askNotificationPermission()
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (!isGranted && shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+            showRationaleDialog()
+        } else if (!isGranted) {
+            Toast.makeText(requireContext(), "Notification permission denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun askNotificationPermission(forceShow: Boolean = false) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val isGranted = ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if (isGranted) return
+
+            if (forceShow || !hasShownNotificationDialogBefore()) {
+                showPermissionDialog()
+            }
+        }
+    }
+
+    private fun showPermissionDialog() {
+        val dialog = android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Enable Notifications")
+            .setMessage("Stay updated with latest battery animations and updates by enabling notifications.")
+            .setPositiveButton("Allow") { _, _ ->
+                markNotificationDialogShown()
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+            .setNegativeButton("Later") { dialogInterface, _ ->
+                markNotificationDialogShown()
+                dialogInterface.dismiss()
+            }
+            .setCancelable(false)
+            .create()
+        dialog.show()
+    }
+
+    private fun showRationaleDialog() {
+        val dialog = android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Why We Need Notification Access")
+            .setMessage("We use notifications to alert you of new battery animations and updates. Please allow it from app settings if you want to stay informed.")
+            .setPositiveButton("Open Settings") { _, _ ->
+                val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = android.net.Uri.fromParts("package", requireContext().packageName, null)
+                }
+                startActivity(intent)
+            }
+            .setNegativeButton("Cancel", null)
+            .create()
+        dialog.show()
+    }
+    private fun hasShownNotificationDialogBefore(): Boolean {
+        return requireContext()
+            .getSharedPreferences("prefs", Context.MODE_PRIVATE)
+            .getBoolean("notification_dialog_shown", false)
+    }
+
+    private fun markNotificationDialogShown() {
+        requireContext()
+            .getSharedPreferences("prefs", Context.MODE_PRIVATE)
+            .edit {
+                putBoolean("notification_dialog_shown", true)
+            }
     }
 
     private fun loadBannerAd() {

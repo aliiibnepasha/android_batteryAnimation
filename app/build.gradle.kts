@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
+
 }
 
 android {
@@ -68,7 +70,6 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.play.services.ads)
     implementation (libs.billing)
-
-
-
+    implementation(libs.firebase.config)
+    implementation(libs.firebase.crashlytics)
 }

@@ -3,7 +3,6 @@ package com.lowbyte.battery.animation.activity
 import android.os.Bundle
 import com.google.android.gms.ads.MobileAds
 import com.lowbyte.battery.animation.BaseActivity
-import com.lowbyte.battery.animation.MyApplication
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ActivitySplashBinding
 import kotlinx.coroutines.CoroutineScope
