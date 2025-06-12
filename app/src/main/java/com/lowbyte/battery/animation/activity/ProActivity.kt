@@ -9,10 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.android.billingclient.api.*
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.QueryProductDetailsParams
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ActivityProBinding
-import com.lowbyte.battery.animation.databinding.ActivitySplashBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_MONTHLY
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_WEEKLY
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_YEARLY
@@ -47,7 +51,11 @@ class ProActivity : AppCompatActivity() {
             .enablePendingPurchases()
             .setListener { billingResult, purchases ->
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
+                    Log.d("BillingForce", "Billing response via custom listener")
+
                     for (purchase in purchases) {
+                        Log.d("BillingForce", "Billing loop via custom listener")
+
                         handlePurchase(purchase)
                     }
                 }
@@ -58,6 +66,7 @@ class ProActivity : AppCompatActivity() {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     Log.d("Billing", "Setup finished")
+                    loadAllPrices()
                 }
             }
 
@@ -67,6 +76,78 @@ class ProActivity : AppCompatActivity() {
         })
     }
 
+    private fun loadAllPrices() {
+        val productList = listOf(SKU_WEEKLY, SKU_MONTHLY, SKU_YEARLY).map { sku ->
+            QueryProductDetailsParams.Product.newBuilder()
+                .setProductId(sku)
+                .setProductType(BillingClient.ProductType.SUBS)
+                .build()
+        }
+
+        val params = QueryProductDetailsParams.newBuilder()
+            .setProductList(productList)
+            .build()
+
+        billingClient.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
+            Log.d("BillingDebug", "Returned Product Count: ${productDetailsList.size}")
+            productDetailsList.forEach {
+                Log.d("BillingDebug", "Received Product ID: ${it.productId}")
+            }
+
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                for (productDetails in productDetailsList) {
+                    val productId = productDetails.productId
+                    val offerDetailsList = productDetails.subscriptionOfferDetails
+
+                    if (offerDetailsList.isNullOrEmpty()) {
+                        Log.e("BillingDebug", "❌ No offers found for $productId")
+                        continue
+                    }
+
+                    // Find first offer that has pricing phases
+                    val validOffer =
+                        offerDetailsList.firstOrNull { it.pricingPhases?.pricingPhaseList?.isNotEmpty() == true }
+
+                    if (validOffer == null) {
+                        Log.e(
+                            "BillingDebug",
+                            "❌ No valid pricing phase in any offer for $productId"
+                        )
+                        continue
+                    }
+
+                    val pricingPhase = validOffer.pricingPhases.pricingPhaseList.firstOrNull()
+                    val formattedPrice = pricingPhase?.formattedPrice ?: "—"
+
+                    Log.d(
+                        "BillingDebug", """
+                ▶ Product ID: $productId
+                ▶ Price: $formattedPrice
+                ▶ OfferToken: ${validOffer.offerToken}
+                ▶ BasePlanId: ${validOffer.basePlanId}
+                """.trimIndent()
+                    )
+
+                    try {
+                        runOnUiThread {
+                            when (productId) {
+                                SKU_WEEKLY -> binding.priceWeekly.text = formattedPrice
+                                SKU_MONTHLY -> binding.priceMonthly.text = formattedPrice
+                                SKU_YEARLY -> binding.priceYearly.text = formattedPrice
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e("BillingUIError", "UI update failed for $productId", e)
+                    }
+                }
+            } else {
+                Log.e(
+                    "BillingError",
+                    "Failed to fetch product details: ${billingResult.debugMessage}"
+                )
+            }
+        }
+    }
     private fun setupListeners() {
         binding.viewWeekly.setOnClickListener {
             highlightSelection("weekly")
@@ -84,7 +165,10 @@ class ProActivity : AppCompatActivity() {
         }
 
         binding.llPremiumRestore.setOnClickListener {
-            openUrl(this, getString(R.string.terms_of_service_url))
+            openUrl(this, getString(R.string.restore_sub_url))
+        }
+        binding.closeScreen.setOnClickListener {
+            finish()
         }
 
         binding.tvPremiumTermOfUse.setOnClickListener {

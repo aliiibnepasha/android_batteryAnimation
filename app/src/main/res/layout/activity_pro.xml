@@ -18,16 +18,33 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/bg_header_pro" />
 
+
+
     <TextView
         android:id="@+id/llPremiumRestore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:gravity="center"
+        android:textSize="12sp"
         android:text="@string/restore_purchase"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+     <ImageView
+        android:id="@+id/closeScreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+         android:src="@drawable/ic_close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+
+
 
     <TextView
         android:id="@+id/titlePro"
@@ -69,7 +86,7 @@
             android:gravity="center"
             android:text="@string/remove_adds"
             android:textColor="@color/black"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/icFreeFeature1"
@@ -95,7 +112,7 @@
             android:gravity="center"
             android:text="@string/faster_processing"
             android:textColor="@color/black"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/icFreeFeature2"
@@ -130,7 +147,7 @@
             android:gravity="center"
             android:text="@string/high_resolution"
             android:textColor="@color/black"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/icFreeFeature3"
@@ -156,7 +173,7 @@
             android:gravity="center"
             android:text="@string/no_watermark"
             android:textColor="@color/black"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/icFreeFeature4"
@@ -217,7 +234,7 @@
 
                     <TextView
                         android:id="@+id/priceYearly"
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="20dp"
                         android:text="99.99"
@@ -232,7 +249,7 @@
                         android:id="@+id/offerYearly"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="30dp"
+                        android:layout_marginEnd="20dp"
                         android:text="@string/app_name"
                         android:textColor="@color/blue_app_color"
                         android:textSize="13sp"
@@ -272,7 +289,7 @@
 
                     <TextView
                         android:id="@+id/priceMonthly"
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="20dp"
                         android:text="99.99"
@@ -287,7 +304,7 @@
                         android:id="@+id/offerMonthly"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="30dp"
+                        android:layout_marginEnd="20dp"
                         android:text="@string/app_name"
                         android:textColor="@color/blue_app_color"
                         android:textSize="13sp"
@@ -328,7 +345,7 @@
 
                     <TextView
                         android:id="@+id/priceWeekly"
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="20dp"
                         android:text="99.99"
@@ -343,7 +360,7 @@
                         android:id="@+id/offerWeekly"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="30dp"
+                        android:layout_marginEnd="20dp"
                         android:text="@string/app_name"
                         android:textColor="@color/blue_app_color"
                         android:textSize="13sp"

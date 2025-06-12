@@ -19,6 +19,10 @@ object AnimationUtils {
     const val SKU_MONTHLY = "monthly"
     const val SKU_YEARLY = "yearly"
 
+    const val SKU_WEEKLY_BASE = "weekly-base"
+    const val SKU_MONTHLY_BASE = "monthly-base"
+    const val SKU_YEARLY_BASE = "yearly-base"
+
 
 
 

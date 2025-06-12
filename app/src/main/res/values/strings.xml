@@ -122,7 +122,7 @@
     <string name="action_applied">Action Applied - %1$s</string>
 
     <string name="upgrade_to_pro">Upgrade to Pro</string>
-    <string name="remove_adds">Remove adds</string>
+    <string name="remove_adds">Remove ads</string>
     <string name="faster_processing">Faster processing</string>
     <string name="subscribe_now">Subscribe Now</string>
     <string name="high_resolution">High-Resolution</string>
@@ -131,7 +131,7 @@
     <string name="monthly">Monthly</string>
     <string name="weekly">Weekly</string>
     <string name="and">and</string>
-    <string name="subscription_note">Subscription is billed after the trial ends and will auto-renew. You can cancel your subscription anytime before your trial ends to avoid charges.</string>
+    <string name="subscription_note">Subscription is billed and will auto-renew. You can cancel your subscription anytime to avoid charges.</string>
     <string name="restore_purchase">Restore\nPurchase</string>
 
 
