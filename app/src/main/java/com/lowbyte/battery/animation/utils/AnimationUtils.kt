@@ -19,9 +19,6 @@ object AnimationUtils {
     const val SKU_MONTHLY = "monthly"
     const val SKU_YEARLY = "yearly"
 
-    const val monthlySubId = "monthly_plan"
-    const val lifeTimePorductId = "lifetime_pro"
-    const val yearlySubId = "yearly_sub"
 
 
 
