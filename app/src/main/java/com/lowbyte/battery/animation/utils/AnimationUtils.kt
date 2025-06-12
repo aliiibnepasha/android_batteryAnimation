@@ -1,8 +1,11 @@
 package com.lowbyte.battery.animation.utils
 
+import android.app.Activity
 import android.content.Context
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.model.Language
@@ -15,6 +18,11 @@ object AnimationUtils {
     const val SKU_WEEKLY = "weekly"
     const val SKU_MONTHLY = "monthly"
     const val SKU_YEARLY = "yearly"
+
+    const val monthlySubId = "monthly_plan"
+    const val lifeTimePorductId = "lifetime_pro"
+    const val yearlySubId = "yearly_sub"
+
 
 
     fun getBannerId(): String {
@@ -131,6 +139,20 @@ object AnimationUtils {
             Language("Português", "pt-rPT"),     // Portuguese (Portugal)
             Language("Bahasa Indonesia", "in")   // Indonesian
         )
+    }
+    fun Fragment.showCustomToast(strMessage: String) {
+        requireActivity().let { mContext ->
+            Toast.makeText(mContext.applicationContext, strMessage, Toast.LENGTH_SHORT).show()
+
+        }
+    }
+
+    fun Activity.showCustomToast(strMessage: String) {
+        this.let { mContext ->
+
+            Toast.makeText(mContext.applicationContext, strMessage, Toast.LENGTH_SHORT).show()
+
+        }
     }
 
     fun Context.vibrateClick(duration: Long = 5000) {

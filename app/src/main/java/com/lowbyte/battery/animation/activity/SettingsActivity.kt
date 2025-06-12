@@ -2,16 +2,14 @@ package com.lowbyte.battery.animation.activity
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ActivitySettingsBinding
-import androidx.core.net.toUri
-import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.utils.LocaleHelper
 
 class SettingsActivity : BaseActivity() {
@@ -45,7 +43,7 @@ class SettingsActivity : BaseActivity() {
         }
 
         binding.proView.setOnClickListener {
-
+            startActivity(Intent(this, ProActivity::class.java))
         }
 
         binding.ivNextDark.setOnCheckedChangeListener { _, isChecked ->

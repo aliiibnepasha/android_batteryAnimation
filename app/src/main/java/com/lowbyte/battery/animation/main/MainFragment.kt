@@ -18,6 +18,7 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.activity.ProActivity
 import com.lowbyte.battery.animation.activity.SettingsActivity
 import com.lowbyte.battery.animation.databinding.FragmentMainBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
@@ -39,7 +40,13 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         binding.ifvSetting.setOnClickListener {
             startActivity(Intent(requireContext(), SettingsActivity::class.java))
         }
-
+        binding.ifvPro.setOnClickListener {
+            startActivity(Intent(requireContext(), ProActivity::class.java))
+        }
+// TODO InApp Purchases / Subscriptions
+// TODO InApp Firebase Basic Navigation and Clicks Events
+// TODO ProGuard App Size Optimize in Bundle
+// TODO Short QA, Open Ad
         // Handle back press
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             if (navController.currentDestination?.id == R.id.navigation_view_all_emoji ||
