@@ -21,24 +21,42 @@ object AnimationUtils {
     const val SKU_MONTHLY = "monthly"
     const val SKU_YEARLY = "yearly"
 
-    const val SKU_WEEKLY_BASE = "weekly-base"
-    const val SKU_MONTHLY_BASE = "monthly-base"
-    const val SKU_YEARLY_BASE = "yearly-base"
+// TODO Update Native Id
+    fun getNativeLanguageId(): String {
+        return if (BuildConfig.DEBUG) {
+            "ca-app-pub-3940256099942544/2247696110"
+        } else {
+            "ca-app-pub-9844943887550892/2606120023"
+        }
+    }
+    fun getNativeOnBoardingId(): String {
+        return if (BuildConfig.DEBUG) {
+            "ca-app-pub-3940256099942544/2247696110"
+        } else {
+            "ca-app-pub-9844943887550892/3042084357"
+        }
+    }
+    fun getNativeCustomizeId(): String {
+        return if (BuildConfig.DEBUG) {
+            "ca-app-pub-3940256099942544/2247696110"
+        } else {
+            "ca-app-pub-9844943887550892/2298998267"
+        }
+    }
 
-
-
-     fun openUrl(context: Context, url: String) {
-        try {
-            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(intent)
-        } catch (_: Exception) {
-            Toast.makeText(context, "Unable to open URL", Toast.LENGTH_SHORT).show()
+     fun getNativeInsideId(): String {
+        return if (BuildConfig.DEBUG) {
+            "ca-app-pub-3940256099942544/2247696110"
+        } else {
+            "ca-app-pub-9844943887550892/1729002688"
         }
     }
 
 
-    fun getBannerId(): String {
+// TODO Update Banner Id
+
+
+      fun getBannerId(): String {
         return if (BuildConfig.DEBUG) {
             "ca-app-pub-3940256099942544/9214589741"
         } else {
@@ -46,6 +64,17 @@ object AnimationUtils {
         }
     }
 
+
+
+
+  fun getBannerSplashId(): String {
+        return if (BuildConfig.DEBUG) {
+            "ca-app-pub-3940256099942544/9214589741"
+        } else {
+            "ca-app-pub-9844943887550892/5668247690"
+        }
+    }
+// TODO Update Fullscreen Ad Id
     fun getFullscreenId(): String {
         return if (BuildConfig.DEBUG) {
             "ca-app-pub-3940256099942544/1033173712"
@@ -54,6 +83,15 @@ object AnimationUtils {
         }
     }
 
+    fun getFullscreenSplashId(): String {
+        return if (BuildConfig.DEBUG) {
+            "ca-app-pub-3940256099942544/1033173712"
+        } else {
+            "ca-app-pub-9844943887550892/3919201698"
+        }
+    }
+// TODO Update Open Ad Id
+
     fun getOpenAppId(): String {
         return if (BuildConfig.DEBUG) {
             "ca-app-pub-3940256099942544/9257395921"
@@ -61,6 +99,7 @@ object AnimationUtils {
             "ca-app-pub-9844943887550892/3065243460"
         }
     }
+
 
     val combinedAnimationList: List<String> by lazy {
        animationListNew
@@ -79,7 +118,8 @@ object AnimationUtils {
     val allWidgets: List<String> = List(54) { i -> "widget_${i + 1}" }
 
     // Force even count per group
-    val widgetEvenCount = (54 / 5) / 2 * 2 // = 10
+    const val widgetEvenCount = (54 / 5) / 2 * 2 // = 10
+
     val widgetLists = List(5) { i ->
         allWidgets.subList(i * widgetEvenCount, (i + 1) * widgetEvenCount)
     }
@@ -94,7 +134,9 @@ object AnimationUtils {
 
 
     //  Emoji List
-    val evenCount = (92 / 6) / 2 * 2 // Force even count
+    const val evenCount = (92 / 6) / 2 * 2 // Force even count
+
+
     val emojis = List(92) { i -> "emoji_${i + 1}" }
 
     val lists = List(6) { i ->
@@ -179,4 +221,15 @@ object AnimationUtils {
             }
         }
     }
+
+    fun openUrl(context: Context, url: String) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            context.startActivity(intent)
+        } catch (_: Exception) {
+            Toast.makeText(context, "Unable to open URL", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 }

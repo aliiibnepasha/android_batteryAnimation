@@ -3,7 +3,6 @@ package com.lowbyte.battery.animation.ads
 import android.app.Activity
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
@@ -22,11 +21,8 @@ object AdManager {
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)
     private lateinit var preferences: AppPreferences
 
-
     fun initializeAds(context: Context) {
         preferences = AppPreferences.getInstance(context)
-
-
         if (isMobileAdsInitializeCalled.getAndSet(true) || preferences.isProUser) return
 
         MobileAds.setRequestConfiguration(
@@ -42,11 +38,12 @@ object AdManager {
 
     fun loadInterstitialAd(context: Context) {
         preferences = AppPreferences.getInstance(context)
-        if (preferences.isProUser){
+        if (preferences.isProUser) {
             Log.d(TAG, "Skipping interstitial because user is a pro")
             return
         }
         if (adIsLoading || interstitialAd != null) return
+
         adIsLoading = true
         InterstitialAd.load(
             context,
@@ -69,9 +66,12 @@ object AdManager {
     }
 
     fun showInterstitialAd(activity: Activity, onDismiss: () -> Unit) {
-        if (preferences.isProUser){
+        if (preferences.isProUser) {
             Log.d(TAG, "Skipping interstitial to show because user is a pro")
+            onDismiss()
+            return
         }
+
         if (AdStateController.isOpenAdShowing) {
             Log.d(TAG, "Skipping interstitial because Open Ad is showing")
             onDismiss()

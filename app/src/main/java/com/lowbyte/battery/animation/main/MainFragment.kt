@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -19,13 +18,11 @@ import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.gms.ads.*
-import com.google.android.gms.ads.admanager.AdManagerAdView
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.ProActivity
 import com.lowbyte.battery.animation.activity.SettingsActivity
+import com.lowbyte.battery.animation.ads.BannerAdHelper
 import com.lowbyte.battery.animation.databinding.FragmentMainBinding
-import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -196,45 +193,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 
     private fun loadBannerAd() {
-        if (preferences.isProUser) {
-            binding.bannerAdHome.visibility = View.GONE
-            return
-        }
-
-        binding.bannerAdHome.visibility = View.VISIBLE
-
-        val adWidthPixels = Resources.getSystem().displayMetrics.widthPixels
-        val adWidth = (adWidthPixels / Resources.getSystem().displayMetrics.density).toInt()
-        val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(requireContext(), adWidth)
-
-        val adView = AdManagerAdView(requireContext()).apply {
-            adUnitId = getBannerId()
-            setAdSize(adSize)
-        }
-
-        adView.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                binding.bannerAdHome.visibility = View.VISIBLE
-            }
-
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                binding.bannerAdHome.visibility = View.GONE
-            }
-
-            override fun onAdClicked() {
-                FirebaseAnalyticsUtils.logClickEvent(requireContext(), "ad_banner_clicked")
-            }
-
-            override fun onAdImpression() {
-                FirebaseAnalyticsUtils.logClickEvent(requireContext(), "ad_banner_impression")
-            }
-        }
-
-        binding.bannerAdHome.removeAllViews()
-        binding.bannerAdHome.addView(adView)
-
-        val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
+        BannerAdHelper.loadBannerAd(
+            context = requireContext(),
+            container = binding.bannerAdHome,
+            isProUser = preferences.isProUser
+        )
     }
 
     override fun onResume() {

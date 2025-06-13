@@ -31,12 +31,33 @@
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@+id/glowCircleAnimation" />
 
+      <LinearLayout
+          android:id="@+id/bannerAdSplash"
+          android:layout_width="match_parent"
+          android:layout_height="150dp"
+          android:background="@color/bg_statusbar_menu"
+          android:gravity="center"
+          android:orientation="horizontal"
+          android:visibility="visible"
+          app:layout_constraintBottom_toTopOf="@+id/tvContainAds"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/tvSplashAppTitle">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loading_ad"
+                android:textColor="@color/blue_app_color"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+      </LinearLayout>
 
       <TextView
           android:id="@+id/tvContainAds"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginVertical="20dp"
+          android:layout_marginVertical="15dp"
           android:text="@string/this_action_may_contain_ads"
           android:textColor="@color/blue_app_color"
           app:layout_constraintBottom_toTopOf="@+id/progressBar"

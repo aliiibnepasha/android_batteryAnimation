@@ -93,7 +93,6 @@ class SettingsActivity : BaseActivity() {
         }else{
             binding.viewRestoreSub.visibility = View.GONE
             binding.proView.visibility = View.VISIBLE
-
         }
     }
 

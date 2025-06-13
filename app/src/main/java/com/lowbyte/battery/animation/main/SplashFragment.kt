@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.GoogleMobileAdsConsentManager
+import com.lowbyte.battery.animation.ads.SplashBannerHelper
 import com.lowbyte.battery.animation.databinding.FragmentSplashBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
@@ -24,6 +25,13 @@ class SplashFragment : Fragment() {
 
     private lateinit var preferences: AppPreferences
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
+
+    private var bannerLoaded = false
+    private var interstitialLoaded = false
+    private var adsHandled = false
+    private var hasResumed = false
+    private val splashTimeout = 15000L
+    private val progressDuration = 3000L
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,44 +48,75 @@ class SplashFragment : Fragment() {
                 if (consentError != null) {
                     Log.w("Consent", "${consentError.errorCode}: ${consentError.message}")
                     FirebaseAnalyticsUtils.logClickEvent(requireContext(), "ads_consent_fail")
-
                 } else {
                     FirebaseAnalyticsUtils.logClickEvent(requireContext(), "ads_consent_success")
                 }
             }
-        } else {
-            Log.d("Splash", "Pro user, skipping ad consent flow.")
         }
 
-        animateProgressAndProceed()
+        hasResumed = false
+
+        SplashBannerHelper.loadInlineAdaptiveBanner(
+            context = requireContext(),
+            container = binding.bannerAdSplash,
+            isProUser = preferences.isProUser,
+            maxHeightDp = 150,
+            onAdLoaded = {
+                bannerLoaded = true
+                handleAdEvents()
+            },
+            onAdFailed = {
+                bannerLoaded = true
+                handleAdEvents()
+            }
+        )
+
+        AdManager.loadInterstitialAd(requireContext())
+        Handler(Looper.getMainLooper()).postDelayed({
+            interstitialLoaded = true
+            handleAdEvents()
+        }, 3000)
 
         return binding.root
     }
 
-    private fun animateProgressAndProceed() {
-        val animator = ObjectAnimator.ofInt(binding.progressBar, "progress", 0, 100)
-        animator.duration = if (preferences.isFirstRun) 5000 else 8000
-        animator.start()
+    override fun onResume() {
+        super.onResume()
+        hasResumed = true
+        handleAdEvents()
 
-        AdManager.loadInterstitialAd(requireContext())
-        FirebaseAnalyticsUtils.logClickEvent(requireContext(), "splash_progress_started", mapOf(
-            "first_time" to preferences.isFirstRun.toString(),
-            "duration_ms" to animator.duration.toString()
-        ))
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (!adsHandled && hasResumed) {
+                adsHandled = true
+                showProgressAndNavigate()
+            }
+        }, splashTimeout)
+    }
+
+    private fun handleAdEvents() {
+        if ((bannerLoaded || preferences.isProUser) && (interstitialLoaded || preferences.isProUser)) {
+            if (!adsHandled && hasResumed) {
+                adsHandled = true
+                showProgressAndNavigate()
+            }
+        }
+    }
+
+    private fun showProgressAndNavigate() {
+        val animator = ObjectAnimator.ofInt(binding.progressBar, "progress", 0, 100)
+        animator.duration = progressDuration
+        animator.start()
 
         Handler(Looper.getMainLooper()).postDelayed({
             if (preferences.isFirstRun) {
                 preferences.isFirstRun = false
-                FirebaseAnalyticsUtils.logClickEvent(requireContext(), "navigate_language_screen")
                 findNavController().navigate(R.id.action_splash_to_language)
             } else {
-                FirebaseAnalyticsUtils.logClickEvent(requireContext(), "navigate_main_screen_attempt")
                 AdManager.showInterstitialAd(requireActivity()) {
-                    FirebaseAnalyticsUtils.logClickEvent(requireContext(), "interstitial_ad_shown_on_splash")
                     findNavController().navigate(R.id.action_splash_to_main)
                 }
             }
-        }, animator.duration)
+        }, progressDuration)
     }
 
     override fun onDestroyView() {
