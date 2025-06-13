@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.lowbyte.battery.animation.MyApplication
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.GoogleMobileAdsConsentManager
@@ -40,7 +41,7 @@ class SplashFragment : Fragment() {
     ): View {
         _binding = FragmentSplashBinding.inflate(inflater, container, false)
         preferences = AppPreferences.getInstance(requireContext())
-
+        MyApplication.enableOpenAd(false) // To disable
         FirebaseAnalyticsUtils.logScreenView(this, "splash_screen")
 
         if (!preferences.isProUser) {
@@ -122,6 +123,7 @@ class SplashFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        MyApplication.enableOpenAd(true) // To disable
         _binding = null
     }
 }

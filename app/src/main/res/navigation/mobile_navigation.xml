@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_intro_to_getStarted"
             app:destination="@id/getStartedFragment" />
+        <action
+            android:id="@+id/action_intro_to_main"
+            app:destination="@id/getMainFragment" />
     </fragment>
 
     <fragment
