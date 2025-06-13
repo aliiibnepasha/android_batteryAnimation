@@ -182,9 +182,9 @@ class AppPreferences private constructor(context: Context) {
 
 
     fun shouldTriggerEveryThirdTime(key: String ="AdsToBeShow"): Boolean {
-        val count = getInt(key, 0) + 1
+        val count = getInt(key, 1) + 1
         setInt(key, count)
-        return count % 3 == 0
+        return count % 2 == 0
     }
 
 

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/shimmerNativeDark"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    app:shimmer_auto_start="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Ad Tag -->
+        <TextView
+            android:id="@+id/ad_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_shimmer_rect"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:text="@string/ad"
+            android:textColor="@android:color/white"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Icon -->
+        <View
+            android:id="@+id/shimmer_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_shimmer_circle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ad_badge"
+            app:layout_constraintBottom_toTopOf="@+id/cta_button"
+            app:layout_constraintVertical_bias="0.0"
+            android:layout_marginTop="8dp" />
+
+        <!-- Headline + Body -->
+        <LinearLayout
+            android:id="@+id/shimmer_texts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="12dp"
+            app:layout_constraintStart_toEndOf="@id/shimmer_icon"
+            app:layout_constraintTop_toTopOf="@id/shimmer_icon"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="14dp"
+                android:background="@drawable/bg_shimmer_rect" />
+
+            <View
+                android:layout_width="70dp"
+                android:layout_height="12dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_shimmer_rect" />
+        </LinearLayout>
+
+        <!-- CTA Button -->
+        <View
+            android:id="@+id/cta_button"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bg_shimmer_rect"
+            app:layout_constraintTop_toBottomOf="@id/shimmer_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.facebook.shimmer.ShimmerFrameLayout>

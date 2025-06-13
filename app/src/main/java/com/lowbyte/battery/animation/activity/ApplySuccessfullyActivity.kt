@@ -2,16 +2,21 @@ package com.lowbyte.battery.animation.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
+import com.lowbyte.battery.animation.ads.NativeAnimationHelper
+import com.lowbyte.battery.animation.ads.NativeEmojiHelper
 import com.lowbyte.battery.animation.databinding.ActivityApplySuccessfullyBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeInsideId
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils // Make sure this exists
 
 class ApplySuccessfullyActivity : BaseActivity() {
 
     private lateinit var binding: ActivityApplySuccessfullyBinding
+    private var nativeAdHelper: NativeEmojiHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,10 +49,28 @@ class ApplySuccessfullyActivity : BaseActivity() {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_close_button", mapOf("source" to "ApplySuccessfullyScreen"))
             finish()
         }
+
+        nativeAdHelper = NativeEmojiHelper(
+            context = this,
+            adId = getNativeInsideId(), // Replace with your ad unit ID
+            showAdRemoteFlag = true,  // From remote config or your logic
+            isProUser = false,        // Check from your user settings
+            onAdLoaded = {
+                Log.d("Ad", "Native ad loaded successfully")
+            },
+            onAdFailed = {
+                Log.d("Ad", "Failed to load native ad")
+            },
+            adContainer = binding.nativeAdContainer   // Optional: Pass only if you want to show immediately
+        )
     }
 
     override fun onPause() {
         super.onPause()
         FirebaseAnalyticsUtils.stopScreenTimer(this, "ApplySuccessfullyScreen")
+    }
+    override fun onDestroy() {
+        nativeAdHelper?.destroy()
+        super.onDestroy()
     }
 }

@@ -10,10 +10,14 @@ import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.AdManager
+import com.lowbyte.battery.animation.ads.NativeAnimationHelper
+import com.lowbyte.battery.animation.ads.NativeWidgetHelper
 import com.lowbyte.battery.animation.databinding.ActivityBatteryAnimationEditApplyBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
+import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
+import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeInsideId
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -24,12 +28,16 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
     private var position: Int = -1
     private lateinit var label: String
 
+    private var nativeAdHelper: NativeAnimationHelper? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityBatteryAnimationEditApplyBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
+        AdManager.loadInterstitialAd(this, getFullscreenId())
 
         // Track screen view & time
         FirebaseAnalyticsUtils.logScreenView(this, "BatteryAnimationEditApplyScreen")
@@ -62,6 +70,20 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
         }
 
         setupClickListeners()
+
+        nativeAdHelper = NativeAnimationHelper(
+            context = this,
+            adId = getNativeInsideId(), // Replace with your ad unit ID
+            showAdRemoteFlag = true,  // From remote config or your logic
+            isProUser = false,        // Check from your user settings
+            onAdLoaded = {
+                Log.d("Ad", "Native ad loaded successfully")
+            },
+            onAdFailed = {
+                Log.d("Ad", "Failed to load native ad")
+            },
+            adContainer = binding.nativeAdContainer   // Optional: Pass only if you want to show immediately
+        )
     }
 
     private fun setupClickListeners() {
@@ -80,13 +102,6 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
                     Toast.LENGTH_LONG
                 ).show()
             }
-
-            if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
-                AdManager.showInterstitialAd(this, true) {
-                    Log.e("Ads", "FullScreenTobeShoe")
-                }
-            }
-
             preferences.statusLottieName = label
             sendBroadcast(Intent(BROADCAST_ACTION))
 
@@ -95,6 +110,14 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
                 getString(R.string.animation_applied_successfully),
                 Toast.LENGTH_SHORT
             ).show()
+
+            if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
+                AdManager.showInterstitialAd(this, true) {
+                    Log.e("Ads", "FullScreenTobeShoe")
+                }
+            }
+
+
         }
 
         binding.buttonHome.setOnClickListener {
@@ -106,5 +129,10 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
     override fun onPause() {
         super.onPause()
         FirebaseAnalyticsUtils.stopScreenTimer(this, "BatteryAnimationEditApplyScreen")
+    }
+
+    override fun onDestroy() {
+        nativeAdHelper?.destroy()
+        super.onDestroy()
     }
 }

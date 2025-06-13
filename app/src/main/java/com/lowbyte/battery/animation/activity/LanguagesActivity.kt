@@ -3,11 +3,16 @@ package com.lowbyte.battery.animation.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.adapter.LanguageAdapter
+import com.lowbyte.battery.animation.ads.AdManager
+import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.ActivityLanguagesBinding
 import com.lowbyte.battery.animation.model.Language
+import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeLanguageId
+import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.lowbyte.battery.animation.utils.LocaleHelper
 
@@ -15,6 +20,7 @@ class LanguagesActivity : BaseActivity() {
 
     private lateinit var binding: ActivityLanguagesBinding
     private lateinit var adapter: LanguageAdapter
+    private lateinit var preferences: AppPreferences
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.setLocale(newBase, LocaleHelper.getLanguage(newBase)))
@@ -24,6 +30,7 @@ class LanguagesActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLanguagesBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        preferences = AppPreferences.getInstance(this)
 
         FirebaseAnalyticsUtils.logScreenView(this, "LanguagesScreen")
         FirebaseAnalyticsUtils.startScreenTimer("LanguagesScreen")
@@ -71,6 +78,16 @@ class LanguagesActivity : BaseActivity() {
             startActivity(Intent(this, SplashActivity::class.java))
             finishAffinity()
         }
+
+        NativeLanguageHelper(
+            context = this,
+            adId = getNativeLanguageId(),
+            showAdRemoteFlag = true,
+            isProUser = preferences.isProUser,
+            adContainer = binding.nativeAdContainer,
+            onAdLoaded = { Log.d("AD", "Native ad shown") },
+            onAdFailed = { Log.d("AD", "Ad failed to load") }
+        )
     }
 
     override fun onPause() {

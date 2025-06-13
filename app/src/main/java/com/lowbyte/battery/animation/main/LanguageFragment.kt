@@ -1,14 +1,18 @@
 package com.lowbyte.battery.animation.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.LanguageAdapter
+import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.FragmentLanguageBinding
 import com.lowbyte.battery.animation.model.Language
+import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeLanguageId
+import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.lowbyte.battery.animation.utils.LocaleHelper
 
@@ -19,10 +23,12 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
 
     private lateinit var adapter: LanguageAdapter
     private var selectedLanguage: String = "English"
+    private lateinit var preferences: AppPreferences
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentLanguageBinding.bind(view)
+        preferences = AppPreferences.getInstance(requireContext())
 
         // Log screen view
         FirebaseAnalyticsUtils.logScreenView(this, "language_screen")
@@ -73,6 +79,16 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "click_language_next")
             findNavController().navigate(R.id.action_language_to_intro)
         }
+
+        NativeLanguageHelper(
+            context = requireContext(),
+            adId = getNativeLanguageId(),
+            showAdRemoteFlag = true,
+            isProUser = preferences.isProUser,
+            adContainer = binding.nativeAdLangFirstContainer,
+            onAdLoaded = { Log.d("AD", "Native ad shown") },
+            onAdFailed = { Log.d("AD", "Ad failed to load") }
+        )
     }
 
     override fun onDestroyView() {

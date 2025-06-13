@@ -114,7 +114,7 @@ class SplashFragment : Fragment() {
                 findNavController().navigate(R.id.action_splash_to_language)
             } else {
                 AdManager.showInterstitialAd(requireActivity(), false) {
-                    findNavController().navigate(R.id.action_splash_to_main)
+                    findNavController().navigate(R.id.action_splash_to_language)
                 }
             }
         }, progressDuration)

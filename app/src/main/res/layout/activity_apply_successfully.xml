@@ -8,62 +8,64 @@
     android:background="@color/black"
     tools:context=".activity.ApplySuccessfullyActivity">
 
+    <!-- Close Button -->
     <androidx.constraintlayout.utils.widget.ImageFilterView
         android:id="@+id/actionClose"
-        android:layout_width="0dp"
+        android:layout_width="?actionBarSize"
         android:layout_height="0dp"
-        android:padding="30dp"
+        android:padding="25dp"
         android:src="@drawable/ic_close"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.2" />
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-
+    <!-- Title -->
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/applied_successfully"
         android:textColor="@color/blue_app_color"
         android:textSize="30sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/actionClose" />
 
+    <!-- Description -->
     <TextView
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="@string/the_changes_have_been_saved_successfully"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/iconGreeting"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
 
+    <!-- Greeting Icon -->
     <androidx.constraintlayout.utils.widget.ImageFilterView
         android:id="@+id/iconGreeting"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="12dp"
         android:src="@drawable/icon_applied_successfully"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/description"
         app:layout_constraintWidth_percent="0.4" />
 
-
+    <!-- Home Button -->
     <TextView
         android:id="@+id/buttonHome"
         android:layout_width="0dp"
         android:layout_height="45dp"
-        android:layout_marginVertical="?actionBarSize"
+        android:layout_marginTop="12dp"
         android:background="@drawable/home_button"
         android:gravity="center"
         android:text="@string/title_home"
@@ -72,25 +74,36 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/buttonCustomizeAgain"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iconGreeting"
+        app:layout_constraintTop_toBottomOf="@id/iconGreeting"
         app:layout_constraintWidth_percent="0.4" />
 
-
+    <!-- Customize Again Button -->
     <TextView
         android:id="@+id/buttonCustomizeAgain"
         android:layout_width="0dp"
         android:layout_height="45dp"
-        android:layout_marginVertical="?actionBarSize"
+        android:layout_marginTop="12dp"
         android:background="@drawable/bg_border_fill_transparent"
         android:gravity="center"
         android:text="@string/customize"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/buttonHome"
+        app:layout_constraintTop_toBottomOf="@id/iconGreeting"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonHome"
-        app:layout_constraintTop_toBottomOf="@+id/iconGreeting"
         app:layout_constraintWidth_percent="0.4" />
 
-
+    <!-- Native Ad Container -->
+    <FrameLayout
+        android:id="@+id/nativeAdContainer"
+        android:layout_width="0dp"
+        android:layout_height="270dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/bg_statusbar_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttonHome"
+        app:layout_constraintWidth_percent="0.95" />
 </androidx.constraintlayout.widget.ConstraintLayout>
