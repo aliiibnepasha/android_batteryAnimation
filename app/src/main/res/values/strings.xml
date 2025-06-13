@@ -136,6 +136,7 @@
     <string name="restore_subscription">Restore Subscription</string>
     <string name="subscription_not_available">Subscription not available</string>
     <string name="please_select_a_plan">Please select a plan</string>
+    <string name="ad">Ad</string>
 
 
 </resources>

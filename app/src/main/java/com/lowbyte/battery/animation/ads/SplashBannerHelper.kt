@@ -3,9 +3,15 @@ package com.lowbyte.battery.animation.ads
 import android.content.Context
 import android.content.res.Resources
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
-import com.google.android.gms.ads.*
+import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdView
+import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerSplashId
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -17,69 +23,64 @@ object SplashBannerHelper {
         context: Context,
         container: ViewGroup,
         isProUser: Boolean,
-        maxHeightDp: Int? = null,
+        maxHeightDp: Int? = 150,
         onAdLoaded: (() -> Unit)? = null,
         onAdFailed: (() -> Unit)? = null
     ) {
+        val shimmer = container.findViewById<ShimmerFrameLayout?>(R.id.shimmerSplashBanner)
+        val adPlaceholder = container.findViewById<ViewGroup?>(R.id.inlineAdSplashContainer)
+
         if (isProUser) {
-            Log.d(TAG, "Pro user — skipping banner ad display")
-            container.visibility = ViewGroup.GONE
+            Log.d(TAG, "Pro user — hiding splash banner")
+            shimmer?.visibility = View.GONE
+            adPlaceholder?.removeAllViews()
+            container.visibility = View.GONE
             return
         }
 
-        Log.d(TAG, "Loading inline adaptive banner ad...")
-
-        container.visibility = ViewGroup.VISIBLE
+        shimmer?.visibility = View.VISIBLE
+        container.visibility = View.VISIBLE
 
         val adWidthPixels = Resources.getSystem().displayMetrics.widthPixels
         val adWidthDp = (adWidthPixels / Resources.getSystem().displayMetrics.density).toInt()
-        Log.d(TAG, "Calculated ad width in dp: $adWidthDp")
+        Log.d(TAG, "Calculated ad width dp: $adWidthDp, height: ${maxHeightDp ?: 50}")
 
-        val adSize = if (maxHeightDp != null) {
-            Log.d(TAG, "Using custom max height: ${maxHeightDp}dp")
-            AdSize.getInlineAdaptiveBannerAdSize(adWidthDp, maxHeightDp)
-        } else {
-            Log.d(TAG, "Using default max height: 50dp")
-            AdSize.getInlineAdaptiveBannerAdSize(adWidthDp, 50)
-        }
+        val adSize = AdSize.getInlineAdaptiveBannerAdSize(adWidthDp, maxHeightDp ?: 50)
 
         val adView = AdManagerAdView(context).apply {
             adUnitId = getBannerSplashId()
             setAdSize(adSize)
         }
 
-        Log.d(TAG, "Ad unit ID: ${adView.adUnitId}")
-        Log.d(TAG, "Ad size set: ${adSize.width}x${adSize.height}")
-
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                Log.d(TAG, "Banner ad loaded successfully")
-                container.visibility = ViewGroup.VISIBLE
+                Log.d(TAG, "Splash banner loaded")
+                shimmer?.visibility = View.GONE
+                container.visibility = View.VISIBLE
                 onAdLoaded?.invoke()
             }
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
-                Log.e(TAG, "Banner ad failed to load: ${adError.message}")
-                container.visibility = ViewGroup.GONE
+                Log.e(TAG, "Splash banner failed to load: ${adError.message}")
+                shimmer?.visibility = View.GONE
+                container.visibility = View.GONE
                 onAdFailed?.invoke()
             }
 
             override fun onAdClicked() {
-                Log.d(TAG, "Banner ad clicked")
                 FirebaseAnalyticsUtils.logClickEvent(context, "inline_ad_banner_clicked")
             }
 
             override fun onAdImpression() {
-                Log.d(TAG, "Banner ad impression recorded")
                 FirebaseAnalyticsUtils.logClickEvent(context, "inline_ad_banner_impression")
             }
         }
 
-        container.removeAllViews()
-        container.addView(adView)
+        adPlaceholder?.removeAllViews()
+        adPlaceholder?.addView(adView)
 
         val adRequest = AdRequest.Builder().build()
-        Log.d(TAG, "Requesting ad now...")
+        Log.d(TAG, "Requesting splash ad...")
         adView.loadAd(adRequest)
     }
 }

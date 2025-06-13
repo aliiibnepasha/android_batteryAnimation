@@ -3,9 +3,14 @@ package com.lowbyte.battery.animation.ads
 import android.content.Context
 import android.content.res.Resources
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
-import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdView
+import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -20,21 +25,22 @@ object BannerAdHelper {
         onAdLoaded: (() -> Unit)? = null,
         onAdFailed: (() -> Unit)? = null
     ) {
+        val shimmer = container.findViewById<ViewGroup>(R.id.shimmerBanner)
+        val adPlaceholder = container.findViewById<ViewGroup>(R.id.bannerAdContainer)
+
         if (isProUser) {
             Log.d(TAG, "User is Pro — Banner ad will not be shown")
-            container.visibility = ViewGroup.GONE
+            container.visibility = View.GONE
+            shimmer?.visibility = View.GONE
+            adPlaceholder?.removeAllViews()
             return
         }
 
-        Log.d(TAG, "Loading anchored adaptive banner ad...")
-
-        container.visibility = ViewGroup.VISIBLE
+        shimmer?.visibility = View.VISIBLE
+        container.visibility = View.VISIBLE
 
         val adWidthPixels = Resources.getSystem().displayMetrics.widthPixels
         val adWidth = (adWidthPixels / Resources.getSystem().displayMetrics.density).toInt()
-
-        Log.d(TAG, "Calculated ad width in dp: $adWidth")
-
         val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, adWidth)
 
         val adView = AdManagerAdView(context).apply {
@@ -45,13 +51,15 @@ object BannerAdHelper {
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 Log.d(TAG, "Banner ad loaded successfully")
-                container.visibility = ViewGroup.VISIBLE
+                shimmer?.visibility = View.GONE
+                container.visibility = View.VISIBLE
                 onAdLoaded?.invoke()
             }
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 Log.e(TAG, "Banner ad failed to load: ${adError.message}")
-                container.visibility = ViewGroup.GONE
+                shimmer?.visibility = View.GONE
+                container.visibility = View.GONE
                 onAdFailed?.invoke()
             }
 
@@ -66,8 +74,8 @@ object BannerAdHelper {
             }
         }
 
-        container.removeAllViews()
-        container.addView(adView)
+        adPlaceholder?.removeAllViews()
+        adPlaceholder?.addView(adView)
 
         val adRequest = AdRequest.Builder().build()
         Log.d(TAG, "Requesting banner ad with ad unit: ${adView.adUnitId}")

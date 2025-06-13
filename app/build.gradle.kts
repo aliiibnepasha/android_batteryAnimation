@@ -74,5 +74,6 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation (libs.androidx.lifecycle.process)
     implementation (libs.androidx.multidex)
+    implementation(libs.shimmer)
 
 }
