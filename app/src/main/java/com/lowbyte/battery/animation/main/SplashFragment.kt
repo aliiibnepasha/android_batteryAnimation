@@ -112,10 +112,12 @@ class SplashFragment : Fragment() {
         Handler(Looper.getMainLooper()).postDelayed({
             if (preferences.isFirstRun) {
                 preferences.isFirstRun = false
-                findNavController().navigate(R.id.action_splash_to_language)
-            } else {
                 AdManager.showInterstitialAd(requireActivity(), false) {
                     findNavController().navigate(R.id.action_splash_to_language)
+                }
+            } else {
+                AdManager.showInterstitialAd(requireActivity(), false) {
+                    findNavController().navigate(R.id.action_splash_to_main)
                 }
             }
         }, progressDuration)

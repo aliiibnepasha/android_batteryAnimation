@@ -101,7 +101,9 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
                     getString(R.string.please_enable_battery_emoji_service),
                     Toast.LENGTH_LONG
                 ).show()
+                return@setOnClickListener
             }
+
             preferences.statusLottieName = label
             sendBroadcast(Intent(BROADCAST_ACTION))
 

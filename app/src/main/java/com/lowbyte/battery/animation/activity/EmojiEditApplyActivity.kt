@@ -137,6 +137,15 @@ class EmojiEditApplyActivity : BaseActivity() {
         }
 
         binding.btnNext.setOnClickListener {
+            if (!preferences.isStatusBarEnabled) {
+                Toast.makeText(
+                    this,
+                    getString(R.string.please_enable_battery_emoji_service),
+                    Toast.LENGTH_LONG
+                ).show()
+
+                return@setOnClickListener
+            }
             FirebaseAnalyticsUtils.logClickEvent(this, "click_apply_emoji", mapOf("drawable" to drawable))
             preferences.batteryIconName = drawable
             sendBroadcast(Intent(BROADCAST_ACTION))
