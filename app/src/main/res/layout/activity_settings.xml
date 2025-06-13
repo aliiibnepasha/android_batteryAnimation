@@ -245,6 +245,7 @@
         android:layout_marginBottom="15dp"
         android:background="@drawable/bg_lang_item"
         android:gravity="center_vertical"
+        android:visibility="gone"
         android:orientation="horizontal"
         android:paddingHorizontal="20dp"
         app:layout_constraintEnd_toEndOf="parent"

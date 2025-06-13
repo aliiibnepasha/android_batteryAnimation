@@ -90,6 +90,10 @@ class SettingsActivity : BaseActivity() {
         if (preferences.isProUser) {
             binding.proView.visibility = View.GONE
             binding.viewRestoreSub.visibility = View.VISIBLE
+        }else{
+            binding.viewRestoreSub.visibility = View.GONE
+            binding.proView.visibility = View.VISIBLE
+
         }
     }
 
