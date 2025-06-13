@@ -2,9 +2,11 @@ package com.lowbyte.battery.animation.utils
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.R
@@ -24,6 +26,16 @@ object AnimationUtils {
     const val SKU_YEARLY_BASE = "yearly-base"
 
 
+
+     fun openUrl(context: Context, url: String) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            context.startActivity(intent)
+        } catch (_: Exception) {
+            Toast.makeText(context, "Unable to open URL", Toast.LENGTH_SHORT).show()
+        }
+    }
 
 
     fun getBannerId(): String {

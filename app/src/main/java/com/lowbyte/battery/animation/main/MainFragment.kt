@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -28,16 +29,18 @@ import com.lowbyte.battery.animation.activity.ProActivity
 import com.lowbyte.battery.animation.activity.SettingsActivity
 import com.lowbyte.battery.animation.databinding.FragmentMainBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
-import androidx.core.content.edit
+import com.lowbyte.battery.animation.utils.AppPreferences
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
     private lateinit var binding: FragmentMainBinding
     private var doubleBackPressedOnce = false
+    private lateinit var preferences: AppPreferences
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentMainBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
+        preferences = AppPreferences.getInstance(requireContext())
 
         val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
@@ -50,7 +53,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         binding.ifvPro.setOnClickListener {
             startActivity(Intent(requireContext(), ProActivity::class.java))
         }
-// TODO InApp Purchases / Subscriptions
+//  InApp Purchases / Subscriptions
 // TODO InApp Firebase Basic Navigation and Clicks Events
 // TODO ProGuard App Size Optimize in Bundle
 // TODO Short QA, Open Ad
@@ -181,6 +184,10 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 
     private fun loadBannerAd() {
+        if (preferences.isProUser) {
+            binding.bannerAdHome.visibility = View.GONE
+            return
+        }
         binding.bannerAdHome.visibility = View.VISIBLE
         val adWidthPixels = Resources.getSystem().displayMetrics.widthPixels
         val adWidth = (adWidthPixels / Resources.getSystem().displayMetrics.density).toInt()
@@ -227,5 +234,13 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
+    }
+
+    override fun onResume() {
+        if (preferences.isProUser) {
+            binding.bannerAdHome.visibility = View.GONE
+            binding.ifvPro.visibility = View.GONE
+        }
+        super.onResume()
     }
 }

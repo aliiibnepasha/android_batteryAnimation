@@ -21,9 +21,7 @@ class SplashFragment : Fragment() {
     private var _binding: FragmentSplashBinding? = null
     private val binding get() = _binding!!
     private lateinit var preferences: AppPreferences
-
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,20 +30,19 @@ class SplashFragment : Fragment() {
         _binding = FragmentSplashBinding.inflate(inflater, container, false)
         preferences = AppPreferences.getInstance(requireContext())
 
+        if (preferences.isProUser) {
+            Log.d("TAG", "Skipping AdsConsentManager to show because user is a pro")
+        } else {
+            googleMobileAdsConsentManager = GoogleMobileAdsConsentManager.getInstance(requireContext())
+            googleMobileAdsConsentManager.gatherConsent(requireActivity()) { consentError ->
+                if (consentError != null) {
+                    Log.w("TAGLine", "${consentError.errorCode}: ${consentError.message}")
+                }
 
-        googleMobileAdsConsentManager = GoogleMobileAdsConsentManager.getInstance(requireContext())
-        googleMobileAdsConsentManager.gatherConsent(requireActivity()) { consentError ->
-            if (consentError != null) {
-                // Consent not obtained in current session.
-                Log.w("TAG", "${consentError.errorCode}: ${consentError.message}")
             }
-
         }
-
-
         val progressBar = binding.progressBar
         progressBar.max = 100
-
         val animator = ObjectAnimator.ofInt(progressBar, "progress", 0, 100)
         animator.duration = if (preferences.isFirstRun) 5000 else 8000 // Adjust duration as needed
         animator.start()
@@ -58,9 +55,7 @@ class SplashFragment : Fragment() {
             }else{
                 AdManager.showInterstitialAd(requireActivity()) {
                     findNavController().navigate(R.id.action_splash_to_main)
-
                 }
-
             }
         }, animator.duration)
 

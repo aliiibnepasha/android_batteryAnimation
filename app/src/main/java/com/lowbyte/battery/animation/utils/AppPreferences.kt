@@ -21,6 +21,7 @@ class AppPreferences private constructor(context: Context) {
         private const val KEY_IS_DARK_MODE = "is_dark_mode"
         private const val KEY_IS_VIBRATE_MODE = "is_vibrate_mode"
         private const val KEY_IS_GESTURE_MODE = "is_gesture_mode"
+        private const val KEY_IS_PRO_USER = "isProUser"
 
 
         // String keys
@@ -84,6 +85,12 @@ class AppPreferences private constructor(context: Context) {
     var isVibrateMode: Boolean
         get() = sharedPreferences.getBoolean(KEY_IS_VIBRATE_MODE, false)
         set(value) = sharedPreferences.edit { putBoolean(KEY_IS_VIBRATE_MODE, value) }
+
+
+    var isProUser: Boolean
+        get() = sharedPreferences.getBoolean(KEY_IS_PRO_USER, false)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_IS_PRO_USER, value) }
+
 
       // For booleans (show/hide)
     var isGestureMode: Boolean

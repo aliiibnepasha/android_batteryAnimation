@@ -133,6 +133,9 @@
     <string name="and">and</string>
     <string name="subscription_note">Subscription is billed and will auto-renew. You can cancel your subscription anytime to avoid charges.</string>
     <string name="restore_purchase">Restore\nPurchase</string>
+    <string name="restore_subscription">Restore Subscription</string>
+    <string name="subscription_not_available">Subscription not available</string>
+    <string name="please_select_a_plan">Please select a plan</string>
 
 
 </resources>

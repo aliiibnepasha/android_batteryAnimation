@@ -20,6 +20,7 @@ import com.lowbyte.battery.animation.databinding.ActivityProBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_MONTHLY
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_WEEKLY
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_YEARLY
+import com.lowbyte.battery.animation.utils.AnimationUtils.openUrl
 import com.lowbyte.battery.animation.utils.AppPreferences
 
 class ProActivity : AppCompatActivity() {
@@ -52,15 +53,12 @@ class ProActivity : AppCompatActivity() {
             .setListener { billingResult, purchases ->
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
                     Log.d("BillingForce", "Billing response via custom listener")
-
                     for (purchase in purchases) {
                         Log.d("BillingForce", "Billing loop via custom listener")
-
                         handlePurchase(purchase)
                     }
                 }
-            }
-            .build()
+            }.build()
 
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
@@ -106,7 +104,7 @@ class ProActivity : AppCompatActivity() {
 
                     // Find first offer that has pricing phases
                     val validOffer =
-                        offerDetailsList.firstOrNull { it.pricingPhases.pricingPhaseList?.isNotEmpty() == true }
+                        offerDetailsList.firstOrNull { it.pricingPhases.pricingPhaseList.isNotEmpty() == true }
 
                     if (validOffer == null) {
                         Log.e(
@@ -183,7 +181,7 @@ class ProActivity : AppCompatActivity() {
             if (selectedPlanSku != null) {
                 launchPurchase(selectedPlanSku!!)
             } else {
-                Toast.makeText(this, "Please select a plan", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.please_select_a_plan), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -215,7 +213,8 @@ class ProActivity : AppCompatActivity() {
                     .build()
                 billingClient.launchBillingFlow(this, billingFlowParams)
             } else {
-                Toast.makeText(this, "Product not available", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,
+                    getString(R.string.subscription_not_available), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -224,21 +223,15 @@ class ProActivity : AppCompatActivity() {
         val sku = purchase.products.firstOrNull() ?: return
         saveSubscription(sku)
         Toast.makeText(this, "Subscribed to $sku", Toast.LENGTH_SHORT).show()
+        finish()
     }
 
     private fun saveSubscription(sku: String) {
+        preferences.isProUser = true
         preferences.setString("active_subscription", sku)
     }
 
-    private fun openUrl(context: Context, url: String) {
-        try {
-            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(intent)
-        } catch (_: Exception) {
-            Toast.makeText(context, "Unable to open URL", Toast.LENGTH_SHORT).show()
-        }
-    }
+
 
     private fun highlightSelection(plan: String) {
         val selectedColor = resources.getColor(R.color.text_color_pro)

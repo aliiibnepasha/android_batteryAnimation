@@ -32,29 +32,30 @@ class AppOpenAdManager(private val app: Application) : Application.ActivityLifec
     }
 
     private fun loadAdIfNotAvailable() {
+
         if (appOpenAd == null && !isLoadingAd) {
             isLoadingAd = true
             val adRequest = AdRequest.Builder().build()
 
-            AppOpenAd.load(
-                app, getOpenAppId(), adRequest,
-                object : AppOpenAd.AppOpenAdLoadCallback() {
-                    override fun onAdLoaded(ad: AppOpenAd) {
-                        appOpenAd = ad
-                        isLoadingAd = false
-                        Log.d("AppOpenAdManager", "Ad loaded")
-
-                        if (shouldShowAdWhenReady && currentActivity != null) {
-                            shouldShowAdWhenReady = false
-                            showAdIfAvailable(currentActivity!!, false)
-                        }
-                    }
-
-                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                        Log.d("AppOpenAdManager", "Ad failed to load: ${loadAdError.message}")
-                        isLoadingAd = false
-                    }
-                })
+//            AppOpenAd.load(
+//                app, getOpenAppId(), adRequest,
+//                object : AppOpenAd.AppOpenAdLoadCallback() {
+//                    override fun onAdLoaded(ad: AppOpenAd) {
+//                        appOpenAd = ad
+//                        isLoadingAd = false
+//                        Log.d("AppOpenAdManager", "Ad loaded")
+//
+//                        if (shouldShowAdWhenReady && currentActivity != null) {
+//                            shouldShowAdWhenReady = false
+//                            showAdIfAvailable(currentActivity!!, false)
+//                        }
+//                    }
+//
+//                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+//                        Log.d("AppOpenAdManager", "Ad failed to load: ${loadAdError.message}")
+//                        isLoadingAd = false
+//                    }
+//                })
         }
     }
 
