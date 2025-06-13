@@ -22,8 +22,18 @@ object AdManager {
     private lateinit var preferences: AppPreferences
 
     fun initializeAds(context: Context) {
+        Log.d(TAG, "Initializing Mobile Ads SDK")
         preferences = AppPreferences.getInstance(context)
-        if (isMobileAdsInitializeCalled.getAndSet(true) || preferences.isProUser) return
+
+        if (isMobileAdsInitializeCalled.getAndSet(true)) {
+            Log.d(TAG, "Ads SDK already initialized")
+            return
+        }
+
+        if (preferences.isProUser) {
+            Log.d(TAG, "User is pro — skipping ads initialization")
+            return
+        }
 
         MobileAds.setRequestConfiguration(
             RequestConfiguration.Builder()
@@ -32,75 +42,105 @@ object AdManager {
         )
 
         CoroutineScope(Dispatchers.IO).launch {
+            Log.d(TAG, "Calling MobileAds.initialize()")
             MobileAds.initialize(context)
         }
     }
 
-    fun loadInterstitialAd(context: Context) {
+    fun loadInterstitialAd(context: Context, fullscreenAdId: String) {
         preferences = AppPreferences.getInstance(context)
         if (preferences.isProUser) {
-            Log.d(TAG, "Skipping interstitial because user is a pro")
+            Log.d(TAG, "Pro user — skipping interstitial ad load")
             return
         }
-        if (adIsLoading || interstitialAd != null) return
+
+        if (adIsLoading) {
+            Log.d(TAG, "Interstitial ad is already loading")
+            return
+        }
+
+        if (interstitialAd != null) {
+            Log.d(TAG, "Interstitial ad already loaded")
+            return
+        }
 
         adIsLoading = true
+        Log.d(TAG, "Loading interstitial ad with ID: $fullscreenAdId")
+
         InterstitialAd.load(
             context,
-            getFullscreenId(),
+            fullscreenAdId,
             AdRequest.Builder().build(),
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
                     interstitialAd = ad
                     adIsLoading = false
-                    Log.d(TAG, "Interstitial Ad Loaded")
+                    Log.d(TAG, "Interstitial Ad successfully loaded")
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.e(TAG, "Ad Failed to Load: ${adError.message}")
                     interstitialAd = null
                     adIsLoading = false
+                    Log.e(TAG, "Interstitial Ad failed to load: ${adError.message}")
                 }
             }
         )
     }
 
-    fun showInterstitialAd(activity: Activity, onDismiss: () -> Unit) {
+    fun showInterstitialAd(activity: Activity, isFromActivity: Boolean, onDismiss: () -> Unit) {
+        Log.d(TAG, "Attempting to show interstitial ad")
+
         if (preferences.isProUser) {
-            Log.d(TAG, "Skipping interstitial to show because user is a pro")
+            Log.d(TAG, "Pro user — skipping interstitial ad show")
             onDismiss()
             return
         }
 
         if (AdStateController.isOpenAdShowing) {
-            Log.d(TAG, "Skipping interstitial because Open Ad is showing")
+            Log.d(TAG, "Open Ad is currently showing — skipping interstitial")
             onDismiss()
             return
         }
 
         if (interstitialAd == null) {
+            Log.d(TAG, "Interstitial ad not ready — fallback and reload")
             onDismiss()
-            loadInterstitialAd(activity)
+            loadInterstitialAd(activity, getFullscreenId())
             return
         }
 
         AdStateController.isInterstitialShowing = true
+        Log.d(TAG, "Showing interstitial ad now")
 
         interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
+                Log.d(TAG, "Interstitial ad dismissed")
                 interstitialAd = null
                 AdStateController.isInterstitialShowing = false
-                onDismiss()
+
+                if (isFromActivity) {
+                    Log.d(TAG, "Callback: isFromActivity=true — executing onDismiss()")
+                    onDismiss()
+                }
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                Log.e(TAG, "Interstitial failed to show: ${adError.message}")
                 interstitialAd = null
                 AdStateController.isInterstitialShowing = false
                 onDismiss()
             }
 
+            override fun onAdImpression() {
+                Log.d(TAG, "Interstitial ad impression recorded")
+                if (!isFromActivity) {
+                    Log.d(TAG, "Callback: isFromActivity=false — executing onDismiss() after impression")
+                    onDismiss()
+                }
+            }
+
             override fun onAdShowedFullScreenContent() {
-                Log.d(TAG, "Interstitial Ad Shown")
+                Log.d(TAG, "Interstitial ad is now visible")
             }
         }
 

@@ -26,11 +26,8 @@ class GetStartedFragment : Fragment(R.layout.fragment_get_started) {
                 requireActivity(),
                 "get_started_next_click"
             )
+             findNavController().navigate(R.id.action_getStarted_to_main)
 
-            // Show ad then navigate
-            AdManager.showInterstitialAd(requireActivity()) {
-                findNavController().navigate(R.id.action_getStarted_to_main)
-            }
         }
     }
 }

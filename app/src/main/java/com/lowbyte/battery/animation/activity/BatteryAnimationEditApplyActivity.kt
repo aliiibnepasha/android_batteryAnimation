@@ -82,7 +82,7 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
             }
 
             if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
-                AdManager.showInterstitialAd(this) {
+                AdManager.showInterstitialAd(this, true) {
                     Log.e("Ads", "FullScreenTobeShoe")
                 }
             }

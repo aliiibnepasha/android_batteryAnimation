@@ -5,13 +5,16 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.ActionScrollItem
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarGestureBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -32,7 +35,16 @@ class StatusBarGestureActivity : BaseActivity() {
         _binding = ActivityStatusBarGestureBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
+        AdManager.loadInterstitialAd(this, getFullscreenId())
 
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                AdManager.showInterstitialAd(this@StatusBarGestureActivity, true) {
+                    finish()
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
         FirebaseAnalyticsUtils.logScreenView(this, "StatusBarGestureScreen")
         FirebaseAnalyticsUtils.startScreenTimer("StatusBarGestureScreen")
 

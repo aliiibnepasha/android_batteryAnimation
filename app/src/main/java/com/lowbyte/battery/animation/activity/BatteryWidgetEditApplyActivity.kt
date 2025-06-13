@@ -103,7 +103,7 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
 
             if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
                 FirebaseAnalyticsUtils.logClickEvent(this, "trigger_interstitial_ad", mapOf("screen" to "BatteryWidgetEditApplyScreen"))
-                AdManager.showInterstitialAd(this) {
+                AdManager.showInterstitialAd(this,true) {
                     Log.e("Ads", "FullScreenTobeShoe")
                 }
             }

@@ -28,6 +28,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.combinedAnimationList
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
+import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListAction
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
@@ -58,7 +59,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         // Log screen view
         FirebaseAnalyticsUtils.logScreenView(this, "HomeFragment")
 
-        AdManager.loadInterstitialAd(requireContext())
+        AdManager.loadInterstitialAd(requireContext(), getFullscreenId())
 
         Handler(Looper.getMainLooper()).postDelayed({
             binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()

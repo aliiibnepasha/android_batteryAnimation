@@ -15,6 +15,7 @@ import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.GoogleMobileAdsConsentManager
 import com.lowbyte.battery.animation.ads.SplashBannerHelper
 import com.lowbyte.battery.animation.databinding.FragmentSplashBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenSplashId
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -71,7 +72,7 @@ class SplashFragment : Fragment() {
             }
         )
 
-        AdManager.loadInterstitialAd(requireContext())
+        AdManager.loadInterstitialAd(requireContext(),getFullscreenSplashId())
         Handler(Looper.getMainLooper()).postDelayed({
             interstitialLoaded = true
             handleAdEvents()
@@ -112,7 +113,7 @@ class SplashFragment : Fragment() {
                 preferences.isFirstRun = false
                 findNavController().navigate(R.id.action_splash_to_language)
             } else {
-                AdManager.showInterstitialAd(requireActivity()) {
+                AdManager.showInterstitialAd(requireActivity(), false) {
                     findNavController().navigate(R.id.action_splash_to_main)
                 }
             }
