@@ -10,12 +10,20 @@ object FirebaseAnalyticsUtils {
 
     private val screenStartTimes = mutableMapOf<String, Long>()
 
-    fun logClickEvent(activity: Activity, eventName: String, params: Map<String, String>? = null) {
-        val bundle = Bundle()
-        params?.forEach { bundle.putString(it.key, it.value) }
-        FirebaseAnalytics.getInstance(activity).logEvent(eventName, bundle)
+    /** Log simple click event from Activity or Fragment */
+    fun logClickEvent(source: Any, eventName: String, params: Map<String, String>? = null) {
+        val context = when (source) {
+            is Activity -> source
+            is Fragment -> source.requireContext()
+            else -> return
+        }
+        val bundle = Bundle().apply {
+            params?.forEach { putString(it.key, it.value) }
+        }
+        FirebaseAnalytics.getInstance(context).logEvent(eventName, bundle)
     }
 
+    /** Log screen view from Activity */
     fun logScreenView(activity: Activity, screenName: String) {
         val bundle = Bundle().apply {
             putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
@@ -24,22 +32,24 @@ object FirebaseAnalyticsUtils {
         FirebaseAnalytics.getInstance(activity).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
     }
 
+    /** Log screen view from Fragment */
     fun logScreenView(fragment: Fragment, screenName: String) {
         val bundle = Bundle().apply {
             putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
-            putString(FirebaseAnalytics.Param.SCREEN_CLASS, fragment.javaClass.simpleName)
+            putString(FirebaseAnalytics.Param.SCREEN_CLASS, fragment::class.java.simpleName)
         }
         FirebaseAnalytics.getInstance(fragment.requireContext()).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
     }
 
+    /** Start screen timer — recommended in onCreate/onResume */
     fun startScreenTimer(screenId: String) {
         screenStartTimes[screenId] = SystemClock.elapsedRealtime()
     }
 
+    /** Stop screen timer — recommended in onPause/onDestroy — for Activity */
     fun stopScreenTimer(activity: Activity, screenId: String) {
-        val startTime = screenStartTimes.remove(screenId)
-        startTime?.let {
-            val duration = SystemClock.elapsedRealtime() - it
+        screenStartTimes.remove(screenId)?.let { startTime ->
+            val duration = SystemClock.elapsedRealtime() - startTime
             val bundle = Bundle().apply {
                 putString("screen_id", screenId)
                 putLong("screen_duration_ms", duration)
@@ -48,10 +58,10 @@ object FirebaseAnalyticsUtils {
         }
     }
 
+    /** Stop screen timer — for Fragment */
     fun stopScreenTimer(fragment: Fragment, screenId: String) {
-        val startTime = screenStartTimes.remove(screenId)
-        startTime?.let {
-            val duration = SystemClock.elapsedRealtime() - it
+        screenStartTimes.remove(screenId)?.let { startTime ->
+            val duration = SystemClock.elapsedRealtime() - startTime
             val bundle = Bundle().apply {
                 putString("screen_id", screenId)
                 putLong("screen_duration_ms", duration)

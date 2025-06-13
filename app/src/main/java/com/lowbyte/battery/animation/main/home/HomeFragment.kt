@@ -26,11 +26,11 @@ import com.lowbyte.battery.animation.model.MultiViewItem
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
-import com.lowbyte.battery.animation.utils.AnimationUtils.animationList
 import com.lowbyte.battery.animation.utils.AnimationUtils.combinedAnimationList
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListAction
 import com.lowbyte.battery.animation.utils.AppPreferences
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -43,8 +43,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         savedInstanceState: Bundle?
     ): View? {
         preferences = AppPreferences.getInstance(requireContext())
-
-
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -56,35 +54,30 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentHomeBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
+
+        // Log screen view
+        FirebaseAnalyticsUtils.logScreenView(this, "HomeFragment")
+
         AdManager.loadInterstitialAd(requireContext())
+
         Handler(Looper.getMainLooper()).postDelayed({
             binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
             Log.d("TAG_Access", "Create ${preferences.isStatusBarEnabled}")
 
             binding.switchEnableBatteryEmoji.setOnCheckedChangeListener { _, isChecked ->
-
-                Log.d("TAG_Access", "onCreate check Call $isChecked")
                 preferences.isStatusBarEnabled = isChecked
+                FirebaseAnalyticsUtils.logClickEvent(
+                    requireActivity(), "toggle_battery_emoji_service",
+                    mapOf("enabled" to isChecked.toString())
+                )
 
                 if (::preferences.isInitialized && preferences.isStatusBarEnabled && isChecked) {
-                    Log.d(
-                        "TAG_Access",
-                        "onViewCreated: $isChecked /  ${preferences.isStatusBarEnabled}"
-                    )
                     checkAccessibilityPermission()
                 } else {
-                    Log.d(
-                        "TAG_Access",
-                        "onViewCreated false: $isChecked / ${preferences.isStatusBarEnabled}"
-                    )
                     requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
                 }
             }
         }, 500)
-
-
-
-
 
         val data = listOf(
             MultiViewItem.TitleItem(getString(R.string.cat_emojis)),
@@ -98,42 +91,39 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val adapter = MultiViewAdapter(
             data,
             onChildItemClick = { parentPosition, name, parentPos ->
-                when (parentPos) {
-                    1 -> {
-                        val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java)
-                        intent.putExtra(EXTRA_POSITION, parentPosition)
-                        intent.putExtra(EXTRA_LABEL, name)
-                        startActivity(intent)
-                    }
-                    3 -> {
-                        val intent = Intent(requireActivity(), BatteryWidgetEditApplyActivity::class.java)
-                        intent.putExtra(EXTRA_POSITION, parentPosition)
-                        intent.putExtra(EXTRA_LABEL, name)
-                        startActivity(intent)
-                    }
-                    5 -> {
-                        val intent = Intent(requireActivity(), BatteryAnimationEditApplyActivity::class.java)
-                        intent.putExtra(EXTRA_POSITION, parentPosition)
-                        intent.putExtra(EXTRA_LABEL, name)
-                        startActivity(intent)
-                    }
-                }
+                val label = name.ifBlank { "unknown" }
 
+                FirebaseAnalyticsUtils.logClickEvent(
+                    requireActivity(), "click_list_item",
+                    mapOf("category_index" to "$parentPos", "item_label" to label)
+                )
+
+                val intent = when (parentPos) {
+                    1 -> Intent(requireActivity(), EmojiEditApplyActivity::class.java)
+                    3 -> Intent(requireActivity(), BatteryWidgetEditApplyActivity::class.java)
+                    5 -> Intent(requireActivity(), BatteryAnimationEditApplyActivity::class.java)
+                    else -> null
+                }
+                intent?.apply {
+                    putExtra(EXTRA_POSITION, parentPosition)
+                    putExtra(EXTRA_LABEL, label)
+                    startActivity(this)
+                }
             },
             onChildViewAllClick = { titlePosition ->
+                val eventMap = mapOf("section_index" to "$titlePosition")
                 when (titlePosition) {
                     0 -> {
+                        FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_emojis", eventMap)
                         findNavController().navigate(R.id.action_home_to_viewAllEmoji)
                     }
-
                     2 -> {
+                        FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_widgets", eventMap)
                         findNavController().navigate(R.id.action_home_to_viewAllWidget)
-
                     }
-
                     4 -> {
+                        FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_animations", eventMap)
                         findNavController().navigate(R.id.action_home_to_viewAllAnim)
-
                     }
                 }
             }
@@ -141,43 +131,35 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         binding.recyclerViewParent.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewParent.adapter = adapter
-
     }
-
-
 
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
-            val sheet = AccessibilityPermissionBottomSheet(onAllowClicked = {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.please_enable_accessibility_service),
-                    Toast.LENGTH_LONG
-                ).show()
+            FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "accessibility_prompt_shown")
 
-                Log.d("TAG_Access", "No permission but go for permission")
-                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-
-            }, onCancelClicked = {
-                Log.d("TAG_Access", "No permission cancel")
-                preferences.isStatusBarEnabled = false
-                binding.switchEnableBatteryEmoji.isChecked = false
-
-            })
-            sheet.show(childFragmentManager, "AccessibilityPermission")
-
-        } else {
-            Log.d(
-                "TAG_Access",
-                "Allowed permission enabling checks ${preferences.isStatusBarEnabled}"
+            val sheet = AccessibilityPermissionBottomSheet(
+                onAllowClicked = {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.please_enable_accessibility_service),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "accessibility_allow_clicked")
+                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                },
+                onCancelClicked = {
+                    FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "accessibility_cancel_clicked")
+                    preferences.isStatusBarEnabled = false
+                    binding.switchEnableBatteryEmoji.isChecked = false
+                }
             )
+            sheet.show(childFragmentManager, "AccessibilityPermission")
+        } else {
             binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled
             requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
-
-
         }
-        // else, do nothing or show UI as normal
     }
+
     private fun isAccessibilityServiceEnabled(): Boolean {
         val expectedComponentName =
             "${requireContext().packageName}/${NotchAccessibilityService::class.java.canonicalName}"
@@ -186,13 +168,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
         ) ?: return false
 
-        return enabledServices.split(':')
-            .any { it.equals(expectedComponentName, ignoreCase = true) }
+        return enabledServices.split(':').any {
+            it.equals(expectedComponentName, ignoreCase = true)
+        }
     }
-
-    override fun onResume() {
-        super.onResume()
-
-    }
-
 }

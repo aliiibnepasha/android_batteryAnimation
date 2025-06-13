@@ -20,13 +20,12 @@ import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getTabTitlesEmoji
 import com.lowbyte.battery.animation.utils.AppPreferences
-
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class ViewAllEmojiFragment : Fragment() {
+
     private lateinit var binding: FragmentViewAllEmojiBinding
-
     private lateinit var preferences: AppPreferences
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +34,9 @@ class ViewAllEmojiFragment : Fragment() {
         binding = FragmentViewAllEmojiBinding.inflate(inflater, container, false)
         preferences = AppPreferences.getInstance(requireContext())
 
+        // Log screen view
+        FirebaseAnalyticsUtils.logScreenView(this, "ViewAllEmojiFragment")
+
         return binding.root
     }
 
@@ -42,80 +44,74 @@ class ViewAllEmojiFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupViewPager()
 
-        binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
+        binding.switchEnableBatteryEmojiViewAll.isChecked =
+            preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
 
         binding.switchEnableBatteryEmojiViewAll.setOnCheckedChangeListener { _, isChecked ->
             Handler(Looper.getMainLooper()).postDelayed({
-                Log.d("TAG_Access", "onCreate check Call")
                 preferences.isStatusBarEnabled = isChecked
 
-                if (::preferences.isInitialized && preferences.isStatusBarEnabled && isChecked) {
-                    Log.d(
-                        "TAG_Access",
-                        "onViewCreated: $isChecked /  ${preferences.isStatusBarEnabled}"
-                    )
+                // Log toggle
+                FirebaseAnalyticsUtils.logClickEvent(
+                    requireActivity(),
+                    "toggle_statusbar_emoji_from_emoji_screen",
+                    mapOf("enabled" to isChecked.toString())
+                )
+
+                if (preferences.isStatusBarEnabled && isChecked) {
                     checkAccessibilityPermission()
                 } else {
-                    Log.d(
-                        "TAG_Access",
-                        "onViewCreated false: $isChecked / ${preferences.isStatusBarEnabled}"
-                    )
                     requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
                 }
             }, 500)
         }
-
-
     }
 
     private fun setupViewPager() {
-        binding.viewPager.adapter = object : FragmentStateAdapter(this) {
-            override fun getItemCount(): Int = getTabTitlesEmoji(requireContext()).size
+        val tabTitles = getTabTitlesEmoji(requireContext())
 
+        binding.viewPager.adapter = object : FragmentStateAdapter(this) {
+            override fun getItemCount(): Int = tabTitles.size
             override fun createFragment(position: Int): Fragment {
                 return ViewPagerEmojiItemFragment.newInstance(position)
             }
         }
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = getTabTitlesEmoji(requireContext())[position]
+            tab.text = tabTitles[position]
         }.attach()
-
-
     }
 
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
-            val sheet = AccessibilityPermissionBottomSheet(onAllowClicked = {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.please_enable_accessibility_service),
-                    Toast.LENGTH_LONG
-                ).show()
-
-                Log.d("TAG_Access", "No permission but go for permission")
-                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-
-            }, onCancelClicked = {
-                Log.d("TAG_Access", "No permission cancel")
-                preferences.isStatusBarEnabled = false
-                binding.switchEnableBatteryEmojiViewAll.isChecked = false
-
-            })
-            sheet.show(childFragmentManager, "AccessibilityPermission")
-
+            AccessibilityPermissionBottomSheet(
+                onAllowClicked = {
+                    FirebaseAnalyticsUtils.logClickEvent(
+                        requireActivity(),
+                        "allow_accessibility_click"
+                    )
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.please_enable_accessibility_service),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                },
+                onCancelClicked = {
+                    FirebaseAnalyticsUtils.logClickEvent(
+                        requireActivity(),
+                        "cancel_accessibility_permission"
+                    )
+                    preferences.isStatusBarEnabled = false
+                    binding.switchEnableBatteryEmojiViewAll.isChecked = false
+                }
+            ).show(childFragmentManager, "AccessibilityPermission")
         } else {
-            Log.d(
-                "TAG_Access",
-                "Allowed permission enabling checks ${preferences.isStatusBarEnabled}"
-            )
             binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled
             requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
-
-
         }
-        // else, do nothing or show UI as normal
     }
+
     private fun isAccessibilityServiceEnabled(): Boolean {
         val expectedComponentName =
             "${requireContext().packageName}/${NotchAccessibilityService::class.java.canonicalName}"
@@ -124,12 +120,8 @@ class ViewAllEmojiFragment : Fragment() {
             Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
         ) ?: return false
 
-        return enabledServices.split(':')
-            .any { it.equals(expectedComponentName, ignoreCase = true) }
-    }
-
-
-    override fun onResume() {
-        super.onResume()
+        return enabledServices.split(':').any {
+            it.equals(expectedComponentName, ignoreCase = true)
+        }
     }
 }

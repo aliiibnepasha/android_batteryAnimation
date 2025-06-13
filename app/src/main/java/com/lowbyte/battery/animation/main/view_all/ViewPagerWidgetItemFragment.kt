@@ -19,19 +19,27 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListBasic
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListCute
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListFashion
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class ViewPagerWidgetItemFragment : Fragment() {
+
     private lateinit var binding: ItemViewPagerBinding
     private lateinit var adapter: AllWidgetAdapter
     private var currentPos: Int = 0
 
     companion object {
+        private const val ARG_POSITION = "position"
+
         fun newInstance(position: Int) = ViewPagerWidgetItemFragment().apply {
             arguments = Bundle().apply {
-                putInt("position", position)
-                currentPos = position
+                putInt(ARG_POSITION, position)
             }
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        currentPos = arguments?.getInt(ARG_POSITION) ?: 0
     }
 
     override fun onCreateView(
@@ -40,6 +48,10 @@ class ViewPagerWidgetItemFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = ItemViewPagerBinding.inflate(inflater, container, false)
+
+        // Log screen view event
+        FirebaseAnalyticsUtils.logScreenView(this, "WidgetTab_$currentPos")
+
         return binding.root
     }
 
@@ -50,9 +62,21 @@ class ViewPagerWidgetItemFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = AllWidgetAdapter { position, label ->
-            val intent = Intent(requireActivity(), BatteryWidgetEditApplyActivity::class.java)
-            intent.putExtra(EXTRA_POSITION, position)
-            intent.putExtra(EXTRA_LABEL, label)
+            // Log widget click event
+            FirebaseAnalyticsUtils.logClickEvent(
+                requireActivity(),
+                "widget_selected",
+                mapOf(
+                    "tab_index" to currentPos.toString(),
+                    "widget_label" to label,
+                    "widget_position" to position.toString()
+                )
+            )
+
+            val intent = Intent(requireActivity(), BatteryWidgetEditApplyActivity::class.java).apply {
+                putExtra(EXTRA_POSITION, position)
+                putExtra(EXTRA_LABEL, label)
+            }
             startActivity(intent)
         }
 
@@ -61,44 +85,17 @@ class ViewPagerWidgetItemFragment : Fragment() {
             adapter = this@ViewPagerWidgetItemFragment.adapter
         }
 
-        when (currentPos) {
-            0 -> {
-
-                adapter.submitList(allWidgets)
-                Log.d("listDrawable","$allWidgets")
-            }
-
-            1 -> {
-
-                adapter.submitList(widgetListFantasy)
-                Log.d("listDrawable","$widgetListFantasy")
-            }
-
-            2 -> {
-
-                adapter.submitList(widgetListAction)
-                Log.d("listDrawable","$widgetListAction")
-            }
-
-            3 -> {
-
-                adapter.submitList(widgetListBasic)
-                Log.d("listDrawable","$widgetListBasic")
-            }
-
-            4 -> {
-
-                adapter.submitList(widgetListCute)
-                Log.d("listDrawable","$widgetListCute")
-            }
-            5 -> {
-
-                adapter.submitList(widgetListFashion)
-                Log.d("listDrawable","$widgetListFashion")
-            }
-
-
-
+        val widgetList = when (currentPos) {
+            0 -> allWidgets
+            1 -> widgetListFantasy
+            2 -> widgetListAction
+            3 -> widgetListBasic
+            4 -> widgetListCute
+            5 -> widgetListFashion
+            else -> emptyList()
         }
+
+        Log.d("WidgetTab", "Tab $currentPos loaded with ${widgetList.size} items.")
+        adapter.submitList(widgetList)
     }
-} 
+}

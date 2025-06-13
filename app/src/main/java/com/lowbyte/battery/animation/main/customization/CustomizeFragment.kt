@@ -9,12 +9,11 @@ import androidx.fragment.app.Fragment
 import com.lowbyte.battery.animation.activity.StatusBarCustomizeActivity
 import com.lowbyte.battery.animation.activity.StatusBarGestureActivity
 import com.lowbyte.battery.animation.databinding.FragmentCustomizeBinding
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class CustomizeFragment : Fragment() {
 
     private var _binding: FragmentCustomizeBinding? = null
-
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -22,30 +21,26 @@ class CustomizeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentCustomizeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        _binding?.menuStatusBar?.setOnClickListener {
+        // Log screen view event
+        FirebaseAnalyticsUtils.logScreenView(this, "CustomizeFragment")
+
+        // Status bar customization click
+        binding.menuStatusBar.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_status_customize")
             startActivity(Intent(requireContext(), StatusBarCustomizeActivity::class.java))
         }
 
-        _binding?.menuGesture?.setOnClickListener {
+        // Gesture customization click
+        binding.menuGesture.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_gesture_customize")
             startActivity(Intent(requireContext(), StatusBarGestureActivity::class.java))
         }
 
         return root
     }
-
-
-
-//    private fun updateNotchPosition(x: Int, y: Int) {
-//        // Send broadcast to update notch position
-//        val intent = Intent("com.lowbyte.battery.animation.UPDATE_NOTCH_POSITION")
-//        intent.putExtra("x_position", x)
-//        intent.putExtra("y_position", y)
-//        requireContext().sendBroadcast(intent)
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

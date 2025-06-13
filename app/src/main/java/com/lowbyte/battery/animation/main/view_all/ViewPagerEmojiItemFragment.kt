@@ -8,9 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.lowbyte.battery.animation.activity.ApplySuccessfullyActivity
 import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
-import com.lowbyte.battery.animation.activity.StatusBarIconSettingsActivity
 import com.lowbyte.battery.animation.adapter.AllEmojiAdapter
 import com.lowbyte.battery.animation.databinding.ItemViewPagerBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
@@ -22,18 +20,27 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.emojiComicListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiFashionListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiListFantasy
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class ViewPagerEmojiItemFragment : Fragment() {
+
     private lateinit var binding: ItemViewPagerBinding
     private lateinit var adapter: AllEmojiAdapter
     private var currentPos: Int = 0
 
     companion object {
+        private const val ARG_POSITION = "arg_position"
+
         fun newInstance(position: Int) = ViewPagerEmojiItemFragment().apply {
             arguments = Bundle().apply {
-                currentPos = position
+                putInt(ARG_POSITION, position)
             }
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        currentPos = arguments?.getInt(ARG_POSITION) ?: 0
     }
 
     override fun onCreateView(
@@ -42,6 +49,10 @@ class ViewPagerEmojiItemFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = ItemViewPagerBinding.inflate(inflater, container, false)
+
+        // Log screen view for emoji tab
+        FirebaseAnalyticsUtils.logScreenView(this, "EmojiTab_$currentPos")
+
         return binding.root
     }
 
@@ -51,13 +62,24 @@ class ViewPagerEmojiItemFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = AllEmojiAdapter { position,label ->
-            val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java)
-            intent.putExtra(EXTRA_POSITION, position)
-            intent.putExtra(EXTRA_LABEL, label)
+        adapter = AllEmojiAdapter { position, label ->
+            // Log emoji click
+            FirebaseAnalyticsUtils.logClickEvent(
+                requireActivity(),
+                "emoji_selected",
+                mapOf(
+                    "tab_index" to currentPos.toString(),
+                    "emoji_label" to label,
+                    "emoji_position" to position.toString()
+                )
+            )
+
+            // Navigate to edit screen
+            val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java).apply {
+                putExtra(EXTRA_POSITION, position)
+                putExtra(EXTRA_LABEL, label)
+            }
             startActivity(intent)
-
-
         }
 
         binding.recyclerView.apply {
@@ -65,54 +87,18 @@ class ViewPagerEmojiItemFragment : Fragment() {
             adapter = this@ViewPagerEmojiItemFragment.adapter
         }
 
-        when (currentPos) {
-            0 -> {
-
-                adapter.submitList(allEmojis)
-                Log.d("TAG", "setupRecyclerView:0  ${allEmojis}")
-            }
-
-            1 -> {
-
-                adapter.submitList(emojiListFantasy)
-                Log.d("TAG", "setupRecyclerView:1 ${emojiListFantasy}")
-
-            }
-
-            2 -> {
-
-                adapter.submitList(emojiAnimListFantasy)
-                Log.d("TAG", "setupRecyclerView:2 ${emojiAnimListFantasy}")
-
-            }
-
-            3 -> {
-
-                adapter.submitList(emojiBasicListFantasy)
-                Log.d("TAG", "setupRecyclerView:3 ${emojiBasicListFantasy}")
-
-            }
-
-            4 -> {
-
-                adapter.submitList(emojiCuteListFantasy)
-                Log.d("TAG", "setupRecyclerView:4 ${emojiCuteListFantasy}")
-
-            }
-
-            5 -> {
-
-                adapter.submitList(emojiFashionListFantasy)
-                Log.d("TAG", "setupRecyclerView:5 ${emojiFashionListFantasy}")
-
-            }
-            6 -> {
-
-                adapter.submitList(emojiComicListFantasy)
-                Log.d("TAG", "setupRecyclerView:5 ${emojiComicListFantasy}")
-
-            }
+        val emojiList = when (currentPos) {
+            0 -> allEmojis
+            1 -> emojiListFantasy
+            2 -> emojiAnimListFantasy
+            3 -> emojiBasicListFantasy
+            4 -> emojiCuteListFantasy
+            5 -> emojiFashionListFantasy
+            6 -> emojiComicListFantasy
+            else -> emptyList()
         }
 
+        Log.d("EmojiTab", "Tab $currentPos loaded with ${emojiList.size} items.")
+        adapter.submitList(emojiList)
     }
-} 
+}

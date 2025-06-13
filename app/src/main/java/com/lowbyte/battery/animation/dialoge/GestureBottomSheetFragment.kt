@@ -17,7 +17,7 @@ class GestureBottomSheetFragment(
     private val gestureTitle: String,
     private val gestureAction: String,
     private val actions: List<ActionScrollItem>,
-    private val onActionSelected: (ActionScrollItem) -> Unit // ✅ New callback
+    private val onActionSelected: (ActionScrollItem) -> Unit
 
 ) : BottomSheetDialogFragment() {
 

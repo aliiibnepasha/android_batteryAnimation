@@ -8,13 +8,11 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.lowbyte.battery.animation.databinding.FragmentIslandBinding
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class IslandFragment : Fragment() {
 
     private var _binding: FragmentIslandBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -22,16 +20,25 @@ class IslandFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val notificationsViewModel =
-            ViewModelProvider(this).get(IslandViewModel::class.java)
-
         _binding = FragmentIslandBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textNotifications
-        notificationsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        // Log screen view event
+        FirebaseAnalyticsUtils.logScreenView(this, "IslandFragment")
+
+        val viewModel = ViewModelProvider(this)[IslandViewModel::class.java]
+
+        viewModel.text.observe(viewLifecycleOwner) { value ->
+            binding.textNotifications.text = value
+
+            // Optional: Log dynamic content load if useful
+            FirebaseAnalyticsUtils.logClickEvent(
+                requireActivity(),
+                "island_fragment_text_observed",
+                mapOf("value" to value)
+            )
         }
+
         return root
     }
 

@@ -10,149 +10,136 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
-import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
 import com.lowbyte.battery.animation.adapter.ActionScrollItem
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarGestureBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class StatusBarGestureActivity : BaseActivity() {
 
     private var _binding: ActivityStatusBarGestureBinding? = null
     private val binding get() = _binding!!
     private lateinit var preferences: AppPreferences
+
     private lateinit var singleTapActionText: TextView
     private lateinit var longTapActionText: TextView
     private lateinit var swipeLeftToRightActionText: TextView
     private lateinit var swipeRightToLeftActionText: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         _binding = ActivityStatusBarGestureBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        preferences = AppPreferences.getInstance(this)
+
+        FirebaseAnalyticsUtils.logScreenView(this, "StatusBarGestureScreen")
+        FirebaseAnalyticsUtils.startScreenTimer("StatusBarGestureScreen")
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        preferences = AppPreferences.getInstance(this)
 
         singleTapActionText = binding.statusBarSingleTapAction
         longTapActionText = binding.statusBarLongAction
         swipeLeftToRightActionText = binding.swipeLeftToRightAction
         swipeRightToLeftActionText = binding.actionOnSwipeRightToLeft
-        _binding?.ibBackButton?.setOnClickListener {
+
+        binding.ibBackButton.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(this, "click_back_button", null)
             finish()
         }
 
+        // Load saved actions
         singleTapActionText.text = getLocalizedStringFromPrefKey(this, "gestureAction", R.string.action_do_nothing)
         longTapActionText.text = getLocalizedStringFromPrefKey(this, "longPressAction", R.string.action_do_nothing)
         swipeLeftToRightActionText.text = getLocalizedStringFromPrefKey(this, "swipeLeftToRightAction", R.string.action_do_nothing)
         swipeRightToLeftActionText.text = getLocalizedStringFromPrefKey(this, "swipeRightToLeftAction", R.string.action_do_nothing)
 
-
         binding.switchVibrateFeedback.isChecked = preferences.isVibrateMode
         binding.switchVibrateFeedback.setOnCheckedChangeListener { _, isChecked ->
             preferences.isVibrateMode = isChecked
-
-            if (!preferences.isStatusBarEnabled && isChecked){
-                Toast.makeText(this@StatusBarGestureActivity,
-                    getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+            FirebaseAnalyticsUtils.logClickEvent(this, "toggle_vibration_feedback", mapOf("enabled" to isChecked.toString()))
+            if (!preferences.isStatusBarEnabled && isChecked) {
+                Toast.makeText(this, getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
             }
-
         }
 
         binding.gestureSwitchEnable.isChecked = preferences.isGestureMode
         binding.gestureSwitchEnable.setOnCheckedChangeListener { _, isChecked ->
             preferences.isGestureMode = isChecked
-            if (!preferences.isStatusBarEnabled && isChecked){
-                Toast.makeText(this@StatusBarGestureActivity,
-                    getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+            FirebaseAnalyticsUtils.logClickEvent(this, "toggle_gesture_mode", mapOf("enabled" to isChecked.toString()))
+            if (!preferences.isStatusBarEnabled && isChecked) {
+                Toast.makeText(this, getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
             }
-
         }
 
         binding.viewSingleTap.setOnClickListener {
-            showGestureBottomSheet(
-                getString(R.string.single_tap),
-                singleTapActionText.text.toString()
-            ) { selected ->
-                singleTapActionText.text = selected.label
-                preferences.setString("gestureAction", selected.actionName)
-            }
+            openGestureSheet("single_tap", singleTapActionText, "gestureAction")
         }
 
         binding.viewLongTap.setOnClickListener {
-            showGestureBottomSheet(
-                getString(R.string.long_press),
-                longTapActionText.text.toString()
-            ) { selected ->
-                longTapActionText.text = selected.label
-                preferences.setString("longPressAction", selected.actionName)
-            }
+            openGestureSheet("long_press", longTapActionText, "longPressAction")
         }
 
         binding.swipeLeftToRightView.setOnClickListener {
-            showGestureBottomSheet(
-                getString(R.string.swipe_left_to_right),
-                swipeLeftToRightActionText.text.toString()
-            ) { selected ->
-                swipeLeftToRightActionText.text = selected.label
-                preferences.setString("swipeLeftToRightAction", selected.actionName)
-            }
+            openGestureSheet("swipe_left_to_right", swipeLeftToRightActionText, "swipeLeftToRightAction")
         }
 
         binding.swipeRightToLeftView.setOnClickListener {
-            showGestureBottomSheet(
-                getString(R.string.swipe_right_to_left),
-                swipeRightToLeftActionText.text.toString()
-            ) { selected ->
-                swipeRightToLeftActionText.text = selected.label
-                preferences.setString("swipeRightToLeftAction", selected.actionName)
-            }
+            openGestureSheet("swipe_right_to_left", swipeRightToLeftActionText, "swipeRightToLeftAction")
         }
-
-
-
-
-
-
     }
-    // Add this helper function in your activity:
-    private fun showGestureBottomSheet(
-        title: String,
-        currentAction: String,
-        onActionSelected: (ActionScrollItem) -> Unit
-    ) {
+
+    private fun openGestureSheet(gestureKey: String, targetTextView: TextView, prefKey: String) {
+        FirebaseAnalyticsUtils.logClickEvent(this, "gesture_bottomsheet_opened", mapOf("gesture" to gestureKey))
+
         val items = listOf(
-            ActionScrollItem(getString(R.string.action_quick_scroll_to_up),"action_quick_scroll_to_up"),
-            ActionScrollItem(getString(R.string.action_open_notifications),"action_open_notifications"),
-           // ActionScrollItem(getString(R.string.action_open_control_centre),"action_open_control_centre"),
-            ActionScrollItem(getString(R.string.action_power_options),"action_power_options"),
-            ActionScrollItem(getString(R.string.action_do_nothing),"action_do_nothing"),
-            ActionScrollItem(getString(R.string.action_back_action),"action_back_action"),
-            ActionScrollItem(getString(R.string.action_home_action),"action_home_action"),
-            ActionScrollItem(getString(R.string.action_recent_action),"action_recent_action"),
-            ActionScrollItem(getString(R.string.action_take_screenshot),"action_take_screenshot"),
-            ActionScrollItem(getString(R.string.action_lock_screen),"action_lock_screen"),
+            ActionScrollItem(getString(R.string.action_quick_scroll_to_up), "action_quick_scroll_to_up"),
+            ActionScrollItem(getString(R.string.action_open_notifications), "action_open_notifications"),
+            ActionScrollItem(getString(R.string.action_power_options), "action_power_options"),
+            ActionScrollItem(getString(R.string.action_do_nothing), "action_do_nothing"),
+            ActionScrollItem(getString(R.string.action_back_action), "action_back_action"),
+            ActionScrollItem(getString(R.string.action_home_action), "action_home_action"),
+            ActionScrollItem(getString(R.string.action_recent_action), "action_recent_action"),
+            ActionScrollItem(getString(R.string.action_take_screenshot), "action_take_screenshot"),
+            ActionScrollItem(getString(R.string.action_lock_screen), "action_lock_screen"),
         )
 
-        val bottomSheet =
-            GestureBottomSheetFragment(title, currentAction, items) { selectedAction ->
-                onActionSelected(selectedAction)
-            }
-
-        bottomSheet.show(supportFragmentManager, "GestureBottomSheet")
+        GestureBottomSheetFragment(getStringResourceTitle(gestureKey), targetTextView.text.toString(), items) { selected ->
+            targetTextView.text = selected.label
+            preferences.setString(prefKey, selected.actionName)
+            FirebaseAnalyticsUtils.logClickEvent(
+                this,
+                "gesture_action_selected",
+                mapOf("gesture" to gestureKey, "action" to selected.actionName)
+            )
+        }.show(supportFragmentManager, "GestureBottomSheet")
     }
 
-    fun getLocalizedStringFromPrefKey(context: Context, key: String, defaultResId: Int): String {
-        val savedKey = preferences.getString(key, "")
+    private fun getStringResourceTitle(gestureKey: String): String {
+        return when (gestureKey) {
+            "single_tap" -> getString(R.string.single_tap)
+            "long_press" -> getString(R.string.long_press)
+            "swipe_left_to_right" -> getString(R.string.swipe_left_to_right)
+            "swipe_right_to_left" -> getString(R.string.swipe_right_to_left)
+            else -> gestureKey
+        }
+    }
 
+    private fun getLocalizedStringFromPrefKey(context: Context, key: String, defaultResId: Int): String {
+        val savedKey = preferences.getString(key, "")
         savedKey?.let {
             val resId = context.resources.getIdentifier(it, "string", context.packageName)
-            if (resId != 0) {
-                return context.getString(resId)
-            }
+            if (resId != 0) return context.getString(resId)
         }
         return context.getString(defaultResId)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        FirebaseAnalyticsUtils.stopScreenTimer(this, "StatusBarGestureScreen")
     }
 }

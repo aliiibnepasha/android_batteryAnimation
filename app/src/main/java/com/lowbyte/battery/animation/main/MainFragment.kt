@@ -5,11 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.addCallback
@@ -19,10 +19,7 @@ import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.*
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.ProActivity
@@ -30,6 +27,7 @@ import com.lowbyte.battery.animation.activity.SettingsActivity
 import com.lowbyte.battery.animation.databinding.FragmentMainBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
 import com.lowbyte.battery.animation.utils.AppPreferences
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
@@ -40,74 +38,89 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentMainBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
+
         preferences = AppPreferences.getInstance(requireContext())
+        FirebaseAnalyticsUtils.logScreenView(this, "main_screen")
 
         val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         binding.bottomNavigation.setupWithNavController(navController)
+
         loadBannerAd()
 
         binding.ifvSetting.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_settings")
             startActivity(Intent(requireContext(), SettingsActivity::class.java))
         }
+
         binding.ifvPro.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_pro")
             startActivity(Intent(requireContext(), ProActivity::class.java))
         }
-//  InApp Purchases / Subscriptions
-// TODO InApp Firebase Basic Navigation and Clicks Events
-// TODO ProGuard App Size Optimize in Bundle
-// TODO Short QA, Open Ad
-        // Handle back press
+
+        // Handle back press logic
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            if (navController.currentDestination?.id == R.id.navigation_view_all_emoji ||
-                navController.currentDestination?.id == R.id.navigation_view_all_widget ||
-                navController.currentDestination?.id == R.id.navigation_view_all_animation
+            if (navController.currentDestination?.id in listOf(
+                    R.id.navigation_view_all_emoji,
+                    R.id.navigation_view_all_widget,
+                    R.id.navigation_view_all_animation)
             ) {
                 navController.navigateUp()
             } else {
                 if (doubleBackPressedOnce) {
-                    requireActivity().finish() // Exit the app
+                    FirebaseAnalyticsUtils.logClickEvent(requireContext(), "double_back_exit_confirm")
+                    requireActivity().finish()
                 } else {
                     doubleBackPressedOnce = true
-                    Toast.makeText(requireContext(),
-                        getString(R.string.press_back_again_to_exit), Toast.LENGTH_SHORT).show()
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        doubleBackPressedOnce = false
-                    }, 2000) // 2-second window
+                    FirebaseAnalyticsUtils.logClickEvent(requireContext(), "double_back_exit_attempt")
+                    Toast.makeText(requireContext(), getString(R.string.press_back_again_to_exit), Toast.LENGTH_SHORT).show()
+                    Handler(Looper.getMainLooper()).postDelayed({ doubleBackPressedOnce = false }, 2000)
                 }
             }
         }
 
         binding.ibBackButton.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_nav_item_back")
             navController.navigateUp()
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
+            val screenName = when (destination.id) {
                 R.id.navigation_home -> {
                     binding.tvTitle.text = getString(R.string.title_home)
                     binding.ibBackButton.visibility = View.INVISIBLE
+                    "home_screen"
                 }
                 R.id.navigation_customize -> {
                     binding.tvTitle.text = getString(R.string.menu_customize)
                     binding.ibBackButton.visibility = View.INVISIBLE
+                    "customize_screen"
                 }
                 R.id.navigation_island -> {
                     binding.tvTitle.text = getString(R.string.menu_dynamic_island)
                     binding.ibBackButton.visibility = View.INVISIBLE
+                    "island_screen"
                 }
                 R.id.navigation_view_all_emoji -> {
                     binding.tvTitle.text = getString(R.string.view_all_battery_emoji)
                     binding.ibBackButton.visibility = View.VISIBLE
+                    "view_all_emoji_screen"
                 }
                 R.id.navigation_view_all_widget -> {
                     binding.tvTitle.text = getString(R.string.view_all_battery_widget)
                     binding.ibBackButton.visibility = View.VISIBLE
+                    "view_all_widget_screen"
                 }
                 R.id.navigation_view_all_animation -> {
                     binding.tvTitle.text = getString(R.string.view_all_battery_animation)
                     binding.ibBackButton.visibility = View.VISIBLE
+                    "view_all_animation_screen"
                 }
+                else -> null
+            }
+
+            screenName?.let {
+                FirebaseAnalyticsUtils.logClickEvent(requireContext(), "nav_screen_view", mapOf("screen_name" to it))
             }
         }
         askNotificationPermission()
@@ -161,7 +174,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             .setMessage("We use notifications to alert you of new battery animations and updates. Please allow it from app settings if you want to stay informed.")
             .setPositiveButton("Open Settings") { _, _ ->
                 val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = android.net.Uri.fromParts("package", requireContext().packageName, null)
+                    data = Uri.fromParts("package", requireContext().packageName, null)
                 }
                 startActivity(intent)
             }
@@ -169,15 +182,14 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             .create()
         dialog.show()
     }
+
     private fun hasShownNotificationDialogBefore(): Boolean {
-        return requireContext()
-            .getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        return requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE)
             .getBoolean("notification_dialog_shown", false)
     }
 
     private fun markNotificationDialogShown() {
-        requireContext()
-            .getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        requireContext().getSharedPreferences("prefs", Context.MODE_PRIVATE)
             .edit {
                 putBoolean("notification_dialog_shown", true)
             }
@@ -188,44 +200,33 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             binding.bannerAdHome.visibility = View.GONE
             return
         }
+
         binding.bannerAdHome.visibility = View.VISIBLE
+
         val adWidthPixels = Resources.getSystem().displayMetrics.widthPixels
         val adWidth = (adWidthPixels / Resources.getSystem().displayMetrics.density).toInt()
-        val adSize =
-            AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(requireContext(), adWidth)
+        val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(requireContext(), adWidth)
+
         val adView = AdManagerAdView(requireContext()).apply {
             adUnitId = getBannerId()
-            setAdSize(adSize) // ✅ Set ad size correctly
+            setAdSize(adSize)
         }
 
-        // Add ad listeners
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                Log.d("BannerAd", "Ad Loaded")
                 binding.bannerAdHome.visibility = View.VISIBLE
-
             }
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
-                Log.e("BannerAd", "Ad Failed to Load: ${adError.message}")
                 binding.bannerAdHome.visibility = View.GONE
-
-            }
-
-            override fun onAdOpened() {
-                Log.d("BannerAd", "Ad Opened")
             }
 
             override fun onAdClicked() {
-                Log.d("BannerAd", "Ad Clicked")
-            }
-
-            override fun onAdClosed() {
-                Log.d("BannerAd", "Ad Closed")
+                FirebaseAnalyticsUtils.logClickEvent(requireContext(), "ad_banner_clicked")
             }
 
             override fun onAdImpression() {
-                Log.d("BannerAd", "Ad Impression Logged")
+                FirebaseAnalyticsUtils.logClickEvent(requireContext(), "ad_banner_impression")
             }
         }
 

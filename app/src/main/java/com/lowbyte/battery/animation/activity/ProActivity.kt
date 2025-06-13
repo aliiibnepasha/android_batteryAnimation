@@ -1,20 +1,12 @@
 package com.lowbyte.battery.animation.activity
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingClientStateListener
-import com.android.billingclient.api.BillingFlowParams
-import com.android.billingclient.api.BillingResult
-import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.QueryProductDetailsParams
+import com.android.billingclient.api.*
+import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ActivityProBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_MONTHLY
@@ -22,8 +14,9 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_WEEKLY
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_YEARLY
 import com.lowbyte.battery.animation.utils.AnimationUtils.openUrl
 import com.lowbyte.battery.animation.utils.AppPreferences
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
-class ProActivity : AppCompatActivity() {
+class ProActivity : BaseActivity() {
 
     private lateinit var binding: ActivityProBinding
     private lateinit var billingClient: BillingClient
@@ -35,6 +28,9 @@ class ProActivity : AppCompatActivity() {
         binding = ActivityProBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
+
+        FirebaseAnalyticsUtils.logScreenView(this, "ProScreen")
+        FirebaseAnalyticsUtils.startScreenTimer("ProScreen")
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -52,18 +48,13 @@ class ProActivity : AppCompatActivity() {
             .enablePendingPurchases()
             .setListener { billingResult, purchases ->
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
-                    Log.d("BillingForce", "Billing response via custom listener")
-                    for (purchase in purchases) {
-                        Log.d("BillingForce", "Billing loop via custom listener")
-                        handlePurchase(purchase)
-                    }
+                    for (purchase in purchases) handlePurchase(purchase)
                 }
             }.build()
 
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    Log.d("Billing", "Setup finished")
                     loadAllPrices()
                 }
             }
@@ -82,103 +73,68 @@ class ProActivity : AppCompatActivity() {
                 .build()
         }
 
-        val params = QueryProductDetailsParams.newBuilder()
-            .setProductList(productList)
-            .build()
+        val params = QueryProductDetailsParams.newBuilder().setProductList(productList).build()
 
         billingClient.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
-            Log.d("BillingDebug", "Returned Product Count: ${productDetailsList.size}")
-            productDetailsList.forEach {
-                Log.d("BillingDebug", "Received Product ID: ${it.productId}")
-            }
-
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 for (productDetails in productDetailsList) {
-                    val productId = productDetails.productId
-                    val offerDetailsList = productDetails.subscriptionOfferDetails
-
-                    if (offerDetailsList.isNullOrEmpty()) {
-                        Log.e("BillingDebug", "❌ No offers found for $productId")
-                        continue
-                    }
-
-                    // Find first offer that has pricing phases
-                    val validOffer =
-                        offerDetailsList.firstOrNull { it.pricingPhases.pricingPhaseList.isNotEmpty() == true }
-
-                    if (validOffer == null) {
-                        Log.e(
-                            "BillingDebug",
-                            "❌ No valid pricing phase in any offer for $productId"
-                        )
-                        continue
-                    }
-
-                    val pricingPhase = validOffer.pricingPhases.pricingPhaseList.firstOrNull()
-                    val formattedPrice = pricingPhase?.formattedPrice ?: "—"
-
-                    Log.d(
-                        "BillingDebug", """
-                ▶ Product ID: $productId
-                ▶ Price: $formattedPrice
-                ▶ OfferToken: ${validOffer.offerToken}
-                ▶ BasePlanId: ${validOffer.basePlanId}
-                """.trimIndent()
-                    )
-
-                    try {
-                        runOnUiThread {
-                            when (productId) {
-                                SKU_WEEKLY -> binding.priceWeekly.text = formattedPrice
-                                SKU_MONTHLY -> binding.priceMonthly.text = formattedPrice
-                                SKU_YEARLY -> binding.priceYearly.text = formattedPrice
-                            }
+                    val pricing = productDetails.subscriptionOfferDetails?.firstOrNull()
+                        ?.pricingPhases?.pricingPhaseList?.firstOrNull()?.formattedPrice ?: continue
+                    runOnUiThread {
+                        when (productDetails.productId) {
+                            SKU_WEEKLY -> binding.priceWeekly.text = pricing
+                            SKU_MONTHLY -> binding.priceMonthly.text = pricing
+                            SKU_YEARLY -> binding.priceYearly.text = pricing
                         }
-                    } catch (e: Exception) {
-                        Log.e("BillingUIError", "UI update failed for $productId", e)
                     }
                 }
             } else {
-                Log.e(
-                    "BillingError",
-                    "Failed to fetch product details: ${billingResult.debugMessage}"
-                )
+                FirebaseAnalyticsUtils.logClickEvent(this, "billing_error", mapOf("message" to billingResult.debugMessage))
             }
         }
     }
+
     private fun setupListeners() {
         binding.viewWeekly.setOnClickListener {
             highlightSelection("weekly")
             selectedPlanSku = SKU_WEEKLY
+            FirebaseAnalyticsUtils.logClickEvent(this, "select_subscription_plan", mapOf("plan" to "weekly"))
         }
 
         binding.viewMonthly.setOnClickListener {
             highlightSelection("monthly")
             selectedPlanSku = SKU_MONTHLY
+            FirebaseAnalyticsUtils.logClickEvent(this, "select_subscription_plan", mapOf("plan" to "monthly"))
         }
 
         binding.viewYearly.setOnClickListener {
             highlightSelection("yearly")
             selectedPlanSku = SKU_YEARLY
+            FirebaseAnalyticsUtils.logClickEvent(this, "select_subscription_plan", mapOf("plan" to "yearly"))
         }
 
         binding.llPremiumRestore.setOnClickListener {
             openUrl(this, getString(R.string.restore_sub_url))
+            FirebaseAnalyticsUtils.logClickEvent(this, "click_restore", mapOf("screen" to "ProScreen"))
         }
+
         binding.closeScreen.setOnClickListener {
             finish()
         }
 
         binding.tvPremiumTermOfUse.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(this, "click_terms", null)
             openUrl(this, getString(R.string.terms_of_service_url))
         }
 
         binding.tvPremiumPrivacyPolicy.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(this, "click_privacy", null)
             openUrl(this, getString(R.string.privacy_policy_url))
         }
 
         binding.buyNow.setOnClickListener {
             if (selectedPlanSku != null) {
+                FirebaseAnalyticsUtils.logClickEvent(this, "click_buy_now", mapOf("selected_plan" to selectedPlanSku!!))
                 launchPurchase(selectedPlanSku!!)
             } else {
                 Toast.makeText(this, getString(R.string.please_select_a_plan), Toast.LENGTH_SHORT).show()
@@ -187,15 +143,14 @@ class ProActivity : AppCompatActivity() {
     }
 
     private fun launchPurchase(sku: String) {
-        val params = QueryProductDetailsParams.newBuilder()
-            .setProductList(
-                listOf(
-                    QueryProductDetailsParams.Product.newBuilder()
-                        .setProductId(sku)
-                        .setProductType(BillingClient.ProductType.SUBS)
-                        .build()
-                )
-            ).build()
+        val params = QueryProductDetailsParams.newBuilder().setProductList(
+            listOf(
+                QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId(sku)
+                    .setProductType(BillingClient.ProductType.SUBS)
+                    .build()
+            )
+        ).build()
 
         billingClient.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && productDetailsList.isNotEmpty()) {
@@ -209,12 +164,11 @@ class ProActivity : AppCompatActivity() {
                                 .setOfferToken(offerToken)
                                 .build()
                         )
-                    )
-                    .build()
+                    ).build()
                 billingClient.launchBillingFlow(this, billingFlowParams)
             } else {
-                Toast.makeText(this,
-                    getString(R.string.subscription_not_available), Toast.LENGTH_SHORT).show()
+                FirebaseAnalyticsUtils.logClickEvent(this, "billing_error", mapOf("message" to billingResult.debugMessage))
+                Toast.makeText(this, getString(R.string.subscription_not_available), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -222,6 +176,7 @@ class ProActivity : AppCompatActivity() {
     private fun handlePurchase(purchase: Purchase) {
         val sku = purchase.products.firstOrNull() ?: return
         saveSubscription(sku)
+        FirebaseAnalyticsUtils.logClickEvent(this, "purchase_success", mapOf("sku" to sku))
         Toast.makeText(this, "Subscribed to $sku", Toast.LENGTH_SHORT).show()
         finish()
     }
@@ -230,8 +185,6 @@ class ProActivity : AppCompatActivity() {
         preferences.isProUser = true
         preferences.setString("active_subscription", sku)
     }
-
-
 
     private fun highlightSelection(plan: String) {
         val selectedColor = resources.getColor(R.color.text_color_pro)
@@ -248,5 +201,10 @@ class ProActivity : AppCompatActivity() {
         binding.titleWeekly.setTextColor(if (plan == "weekly") selectedColor else defaultColor)
         binding.priceWeekly.setTextColor(if (plan == "weekly") selectedColor else defaultColor)
         binding.offerWeekly.setTextColor(if (plan == "weekly") selectedColor else defaultColor)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        FirebaseAnalyticsUtils.stopScreenTimer(this, "ProScreen")
     }
 }

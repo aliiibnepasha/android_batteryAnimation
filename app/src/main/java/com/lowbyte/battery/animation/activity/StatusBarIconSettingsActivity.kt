@@ -4,17 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
-import com.lowbyte.battery.animation.activity.StatusBarGestureActivity
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarIconSettingsBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AppPreferences
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
@@ -24,6 +23,9 @@ class StatusBarIconSettingsActivity : BaseActivity() {
     private lateinit var binding: ActivityStatusBarIconSettingsBinding
     private lateinit var preferences: AppPreferences
 
+    private var position: Int = -1
+    private lateinit var label: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -31,31 +33,34 @@ class StatusBarIconSettingsActivity : BaseActivity() {
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
 
+        FirebaseAnalyticsUtils.logScreenView(this, "StatusBarIconSettingsScreen")
+        FirebaseAnalyticsUtils.startScreenTimer("StatusBarIconSettingsScreen")
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        val position = intent.getIntExtra(EXTRA_POSITION, -1)
-        val label = intent.getStringExtra(EXTRA_LABEL) ?: getString(R.string.wifi)
+        position = intent.getIntExtra(EXTRA_POSITION, -1)
+        label = intent.getStringExtra(EXTRA_LABEL) ?: getString(R.string.wifi)
         binding.tvTitle.text = label
 
-        // Restore saved icon size for this label/icon
         binding.seekBarIconSize.progress = preferences.getIconSize("size_$position", 25)
-
         binding.labelIconSize.text = getString(R.string.size_dp, label, preferences.getIconSize("size_$position", 25))
 
         binding.ibBackButton.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(this, "click_back_button", null)
             finish()
         }
+
         binding.customizeStatusBarBgColor.setOnClickListener {
             ColorPickerDialog.Builder(this)
                 .setTitle(label)
                 .setPreferenceName("MyColorPickerDialog")
                 .setPositiveButton(
                     getString(R.string.apply),
-                    ColorEnvelopeListener { envelope, fromUser -> colorOfIcon("tint_$position",envelope) })
+                    ColorEnvelopeListener { envelope, fromUser -> applyIconColor("tint_$position",envelope) })
                 .setNegativeButton(
                     getString(R.string.cancel)
                 ) { dialogInterface, i -> dialogInterface.dismiss() }
@@ -65,158 +70,45 @@ class StatusBarIconSettingsActivity : BaseActivity() {
                 .show()
         }
 
-
-        // Save SeekBar value when changed
-        binding.seekBarIconSize.setOnSeekBarChangeListener(object :
-            android.widget.SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(
-                seekBar: android.widget.SeekBar?,
-                progress: Int,
-                fromUser: Boolean
-            ) {
-                sizeOfIcon("size_$position",progress)
-                binding.labelIconSize.text = getString(R.string.size_dp, label, preferences.getIconSize("size_$position", 25))
-
+        binding.seekBarIconSize.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: android.widget.SeekBar?, progress: Int, fromUser: Boolean) {
+                applyIconSize("size_$position", progress)
+                binding.labelIconSize.text = getString(R.string.size_dp, label, progress)
+                FirebaseAnalyticsUtils.logClickEvent(this@StatusBarIconSettingsActivity, "change_icon_size", mapOf(
+                    "position" to position.toString(),
+                    "size" to progress.toString(),
+                    "label" to label
+                ))
             }
 
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
-                if (!preferences.isStatusBarEnabled ){
+                if (!preferences.isStatusBarEnabled) {
                     Toast.makeText(this@StatusBarIconSettingsActivity,
-                        getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+                        getString(R.string.please_enable_battery_emoji_service),
+                        Toast.LENGTH_LONG).show()
                 }
             }
         })
     }
 
-
-
-    fun colorOfIcon(name: String,envelope: ColorEnvelope?) {
-        if (!preferences.isStatusBarEnabled ){
-            Toast.makeText(this@StatusBarIconSettingsActivity,
-                getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+    private fun applyIconColor(name: String, envelope: ColorEnvelope?) {
+        if (!preferences.isStatusBarEnabled) {
+            Toast.makeText(this, getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
         }
-        when (name) {
-            "tint_0" -> {
-                preferences.setInt("tint_0", envelope?.color!!)
-                sendBroadcast(Intent(BROADCAST_ACTION))
-            }
-
-            "tint_1" -> {
-                preferences.setInt("tint_1", envelope?.color!!)
-                sendBroadcast(Intent(BROADCAST_ACTION))
-
-            }
-
-            "tint_2" -> {
-                preferences.setInt("tint_2", envelope?.color!!)
-                sendBroadcast(Intent(BROADCAST_ACTION))
-
-            }
-
-            "tint_3" -> {
-                preferences.setInt("tint_3", envelope?.color!!)
-                sendBroadcast(Intent(BROADCAST_ACTION))
-
-            }
-
-            "tint_4" -> {
-                preferences.setInt("tint_4", envelope?.color!!)
-                sendBroadcast(Intent(BROADCAST_ACTION))
-
-            }
-
-            "tint_5" -> {
-                preferences.setInt("tint_5", envelope?.color!!)
-                sendBroadcast(Intent(BROADCAST_ACTION))
-            }
-
-
+        envelope?.color?.let { color ->
+            preferences.setInt(name, color)
+            sendBroadcast(Intent(BROADCAST_ACTION))
         }
     }
 
-     fun sizeOfIcon(name: String,iconSize: Int) {
-        when (name) {
-            "size_0" -> {
-                preferences.setIconSize("size_0", iconSize)
-                sendBroadcast(Intent(BROADCAST_ACTION))
-            }
-
-            "size_1" -> {
-                preferences.setIconSize("size_1", iconSize)
-                sendBroadcast(Intent(BROADCAST_ACTION))
-
-            }
-
-            "size_2" -> {
-                preferences.setIconSize("size_2", iconSize)
-                sendBroadcast(Intent(BROADCAST_ACTION))
-
-            }
-
-            "size_3" -> {
-                preferences.setIconSize("size_3", iconSize)
-                sendBroadcast(Intent(BROADCAST_ACTION))
-
-            }
-
-            "size_4" -> {
-                preferences.setIconSize("size_4", iconSize)
-                sendBroadcast(Intent(BROADCAST_ACTION))
-
-            }
-
-            "size_5" -> {
-                preferences.setIconSize("size_5", iconSize)
-                sendBroadcast(Intent(BROADCAST_ACTION))
-            }
-
-
-        }
+    private fun applyIconSize(name: String, iconSize: Int) {
+        preferences.setIconSize(name, iconSize)
+        sendBroadcast(Intent(BROADCAST_ACTION))
     }
 
-
-    fun enableDisableIcon(name: String,isEnable: Boolean) {
-        when (name) {
-            getString(R.string.wifi) -> {
-                preferences.showWifi = isEnable
-                sendBroadcast(Intent(BROADCAST_ACTION))
-
-            }
-
-            getString(R.string.data) -> {
-                preferences.showHotspot = isEnable
-                sendBroadcast(Intent(BROADCAST_ACTION))
-
-            }
-
-            getString(R.string.signals) -> {
-                preferences.showSignal = isEnable
-                sendBroadcast(Intent(BROADCAST_ACTION))
-
-            }
-
-            getString(R.string.airplane) -> {
-                preferences.showAirplane = isEnable
-                sendBroadcast(Intent(BROADCAST_ACTION))
-
-            }
-
-            getString(R.string.hotspot) -> {
-                preferences.showHotspot = isEnable
-                sendBroadcast(Intent(BROADCAST_ACTION))
-
-            }
-
-            getString(R.string.time) -> {
-                preferences.showTime = isEnable
-                sendBroadcast(Intent(BROADCAST_ACTION))
-
-            }
-
-
-        }
+    override fun onPause() {
+        super.onPause()
+        FirebaseAnalyticsUtils.stopScreenTimer(this, "StatusBarIconSettingsScreen")
     }
-
-
 }

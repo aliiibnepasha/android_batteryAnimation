@@ -9,6 +9,7 @@ import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.LanguageAdapter
 import com.lowbyte.battery.animation.databinding.FragmentLanguageBinding
 import com.lowbyte.battery.animation.model.Language
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.lowbyte.battery.animation.utils.LocaleHelper
 
 class LanguageFragment : Fragment(R.layout.fragment_language) {
@@ -23,22 +24,25 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentLanguageBinding.bind(view)
 
+        // Log screen view
+        FirebaseAnalyticsUtils.logScreenView(this, "language_screen")
+
         val languages = listOf(
             Language("English", "en"),
-            Language("العربية", "ar"),           // Arabic
-            Language("Español", "es-rES"),       // Spanish (Spain)
-            Language("Français", "fr-rFR"),      // French (France)
-            Language("हिंदी", "hi"),             // Hindi
-            Language("Italiano", "it-rIT"),      // Italian
-            Language("日本語", "ja"),             // Japanese
-            Language("한국어", "ko"),             // Korean
-            Language("Bahasa Melayu", "ms-rMY"), // Malay (Malaysia)
-            Language("Filipino", "phi"),         // Filipino
-            Language("ไทย", "th"),               // Thai
-            Language("Türkçe", "tr-rTR"),        // Turkish (Turkey)
-            Language("Tiếng Việt", "vi"),         // Vietnamese
-            Language("Português", "pt-rPT"),     // Portuguese (Portugal)
-            Language("Bahasa Indonesia", "in")  // Indonesian
+            Language("العربية", "ar"),
+            Language("Español", "es-rES"),
+            Language("Français", "fr-rFR"),
+            Language("हिंदी", "hi"),
+            Language("Italiano", "it-rIT"),
+            Language("日本語", "ja"),
+            Language("한국어", "ko"),
+            Language("Bahasa Melayu", "ms-rMY"),
+            Language("Filipino", "phi"),
+            Language("ไทย", "th"),
+            Language("Türkçe", "tr-rTR"),
+            Language("Tiếng Việt", "vi"),
+            Language("Português", "pt-rPT"),
+            Language("Bahasa Indonesia", "in")
         )
 
         val currentLanguageCode = LocaleHelper.getLanguage(requireContext())
@@ -46,19 +50,27 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
         adapter = LanguageAdapter(languages, currentLanguageCode) { language ->
             selectedLanguage = language.name
             LocaleHelper.setLocale(requireContext(), language.code)
-            requireActivity().apply {
-                recreate()
-            }
+
+            // Log language selection event
+            FirebaseAnalyticsUtils.logClickEvent(
+                requireActivity(),
+                "language_selected",
+                mapOf("language_name" to language.name, "language_code" to language.code)
+            )
+
+            requireActivity().recreate()
         }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
         binding.ibBackButton.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "click_language_back")
             requireActivity().finish()
         }
 
         binding.ibNextButton.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "click_language_next")
             findNavController().navigate(R.id.action_language_to_intro)
         }
     }
@@ -67,6 +79,4 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
         super.onDestroyView()
         _binding = null
     }
-
-
 }
