@@ -4,19 +4,20 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.CustomIconGridAdapter
 import com.lowbyte.battery.animation.ads.AdManager
+import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarCustommizeBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.model.CustomIconGridItem
@@ -24,6 +25,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
+import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeCustomizeId
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.skydoves.colorpickerview.ColorPickerDialog
@@ -33,6 +35,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
 
     private var _binding: ActivityStatusBarCustommizeBinding? = null
     private val binding get() = _binding!!
+    private var nativeHelper: NativeBannerSizeHelper? = null
 
     private lateinit var preferences: AppPreferences
 
@@ -53,6 +56,16 @@ class StatusBarCustomizeActivity : BaseActivity() {
         }
         onBackPressedDispatcher.addCallback(this, callback)
 
+
+        nativeHelper = NativeBannerSizeHelper(
+            context = this,
+            adId = getNativeCustomizeId(), // Replace with your real AdMob ID
+            showAdRemoteFlag = true, // Or get from remote config
+            isProUser = preferences.isProUser,       // Or from preferences
+            adContainer = binding.nativeAdContainer,
+            onAdLoaded = { Log.d("AD", "Banner Ad loaded!") },
+            onAdFailed = { Log.d("AD", "Banner Ad failed!") }
+        )
 
 
         FirebaseAnalyticsUtils.logScreenView(this, "StatusBarCustomizeScreen")
@@ -226,5 +239,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        nativeHelper?.destroy()
+        nativeHelper = null
     }
 }

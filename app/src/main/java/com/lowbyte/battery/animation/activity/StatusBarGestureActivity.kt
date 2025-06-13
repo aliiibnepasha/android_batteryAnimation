@@ -3,6 +3,7 @@ package com.lowbyte.battery.animation.activity
 import GestureBottomSheetFragment
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -13,8 +14,10 @@ import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.ActionScrollItem
 import com.lowbyte.battery.animation.ads.AdManager
+import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarGestureBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
+import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeCustomizeId
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -28,6 +31,7 @@ class StatusBarGestureActivity : BaseActivity() {
     private lateinit var longTapActionText: TextView
     private lateinit var swipeLeftToRightActionText: TextView
     private lateinit var swipeRightToLeftActionText: TextView
+    private var nativeHelper: NativeBannerSizeHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +57,17 @@ class StatusBarGestureActivity : BaseActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        nativeHelper = NativeBannerSizeHelper(
+            context = this,
+            adId = getNativeCustomizeId(), // Replace with your real AdMob ID
+            showAdRemoteFlag = true, // Or get from remote config
+            isProUser = preferences.isProUser,       // Or from preferences
+            adContainer = binding.nativeAdContainer,
+            onAdLoaded = { Log.d("AD", "Banner Ad loaded!") },
+            onAdFailed = { Log.d("AD", "Banner Ad failed!") }
+        )
+
+
 
         singleTapActionText = binding.statusBarSingleTapAction
         longTapActionText = binding.statusBarLongAction
@@ -153,5 +168,11 @@ class StatusBarGestureActivity : BaseActivity() {
     override fun onPause() {
         super.onPause()
         FirebaseAnalyticsUtils.stopScreenTimer(this, "StatusBarGestureScreen")
+    }
+
+    override fun onDestroy() {
+        nativeHelper?.destroy()
+        nativeHelper = null
+        super.onDestroy()
     }
 }

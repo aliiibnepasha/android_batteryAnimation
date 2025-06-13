@@ -75,7 +75,7 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
             context = this,
             adId = getNativeInsideId(), // Replace with your ad unit ID
             showAdRemoteFlag = true,  // From remote config or your logic
-            isProUser = false,        // Check from your user settings
+            isProUser = preferences.isProUser,        // Check from your user settings
             onAdLoaded = {
                 Log.d("Ad", "Native ad loaded successfully")
             },

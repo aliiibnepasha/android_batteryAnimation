@@ -11,12 +11,14 @@ import com.lowbyte.battery.animation.ads.NativeAnimationHelper
 import com.lowbyte.battery.animation.ads.NativeEmojiHelper
 import com.lowbyte.battery.animation.databinding.ActivityApplySuccessfullyBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeInsideId
+import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils // Make sure this exists
 
 class ApplySuccessfullyActivity : BaseActivity() {
 
     private lateinit var binding: ActivityApplySuccessfullyBinding
     private var nativeAdHelper: NativeEmojiHelper? = null
+    private lateinit var preferences: AppPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +26,7 @@ class ApplySuccessfullyActivity : BaseActivity() {
 
         binding = ActivityApplySuccessfullyBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        preferences = AppPreferences.getInstance(this)
 
         FirebaseAnalyticsUtils.logScreenView(this, "ApplySuccessfullyScreen")
         FirebaseAnalyticsUtils.startScreenTimer("ApplySuccessfullyScreen")
@@ -54,7 +57,7 @@ class ApplySuccessfullyActivity : BaseActivity() {
             context = this,
             adId = getNativeInsideId(), // Replace with your ad unit ID
             showAdRemoteFlag = true,  // From remote config or your logic
-            isProUser = false,        // Check from your user settings
+            isProUser = preferences.isProUser,        // Check from your user settings
             onAdLoaded = {
                 Log.d("Ad", "Native ad loaded successfully")
             },
