@@ -44,24 +44,47 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val navController = navHostFragment.navController
         binding.bottomNavigation.setupWithNavController(navController)
 
-//        binding.bottomNavigation.setOnItemSelectedListener {
-//            Log.d("navCustome", "Selected: ${it.itemId}")
-//            when (it.itemId) {
-//                R.id.navigation_customize -> {
-//                    Log.d("navCustome", "Customize Reselected")
-//                    val current = navController.currentDestination?.id
-//                    if (current in listOf(
-//                            R.id.navigation_view_all_emoji,
-//                            R.id.navigation_view_all_widget,
-//                            R.id.navigation_view_all_animation
-//                        )
-//                    ) {
-//                        navController.navigateUp()
-//                    }
-//                }
-//            }
-//            false // let navController handle navigation
-//        }
+        binding.bottomNavigation.setOnItemSelectedListener {
+            Log.d("navCustom", "Selected: ${it.itemId}")
+            when (it.itemId) {
+                R.id.navigation_customize -> {
+                    Log.d("navCustom", "Customize Reselected")
+                    val current = navController.currentDestination?.id
+                    if (current in listOf(R.id.navigation_view_all_emoji, R.id.navigation_view_all_widget, R.id.navigation_view_all_animation)) {
+                        navController.navigateUp()
+                        Log.d("navCustom", "Customize Reselected")
+                        navHostFragment.navController.navigate(R.id.navigation_customize)
+
+                    } else {
+                        Log.d("navCustom", "Customize Reselected r")
+                        navHostFragment.navController.navigate(R.id.navigation_customize)
+
+                    }
+                }
+
+                R.id.navigation_home -> {
+                    Log.d("navCustom", "Customize Reselected")
+                    val current = navController.currentDestination?.id
+                    if (current in listOf(
+                            R.id.navigation_view_all_emoji,
+                            R.id.navigation_view_all_widget,
+                            R.id.navigation_view_all_animation
+                        )
+                    ) {
+                        navController.navigateUp()
+                        Log.d("navCustom", "Customize Reselected")
+                        navHostFragment.navController.navigate(R.id.navigation_home)
+
+                    } else {
+                        Log.d("navCustom", "Customize Reselected r")
+                        navHostFragment.navController.navigate(R.id.navigation_home)
+
+                    }
+                }
+
+            }
+            false // let navController handle navigation
+        }
 
         loadBannerAd()
 
@@ -77,25 +100,37 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         // Handle back press logic
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            if (navController.currentDestination?.id in listOf(
+            val currentChildDestId = (childFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment)
+                ?.navController?.currentDestination?.id
+
+            when (currentChildDestId) {
+                in listOf(
                     R.id.navigation_view_all_emoji,
                     R.id.navigation_view_all_widget,
-                    R.id.navigation_view_all_animation)
-            ) {
-                navController.navigateUp()
-            } else {
-                if (doubleBackPressedOnce) {
-                    FirebaseAnalyticsUtils.logClickEvent(requireContext(), "double_back_exit_confirm")
-                    requireActivity().finish()
-                } else {
-                    doubleBackPressedOnce = true
-                    FirebaseAnalyticsUtils.logClickEvent(requireContext(), "double_back_exit_attempt")
-                    Toast.makeText(requireContext(), getString(R.string.press_back_again_to_exit), Toast.LENGTH_SHORT).show()
-                    Handler(Looper.getMainLooper()).postDelayed({ doubleBackPressedOnce = false }, 2000)
+                    R.id.navigation_view_all_animation
+                ) -> {
+                    Log.d("navCustom", "Back from child inner screen")
+                    navController.navigateUp()
+                }
+                // If currently in Home child fragment, handle double back to exit
+                R.id.navigation_home -> {
+                    if (doubleBackPressedOnce) {
+                        requireActivity().finish()
+                        Log.d("navCustom", "Back Finish")
+                    } else {
+                        doubleBackPressedOnce = true
+                        Toast.makeText(requireContext(), getString(R.string.press_back_again_to_exit), Toast.LENGTH_SHORT).show()
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            doubleBackPressedOnce = false
+                        }, 2000)
+                    }
+                }
+                // Else, just navigate up
+                else -> {
+                    navController.navigateUp()
                 }
             }
         }
-
         binding.ibBackButton.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_nav_item_back")
             navController.navigateUp()
