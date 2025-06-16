@@ -66,6 +66,7 @@ class EmojiEditApplyActivity : BaseActivity() {
             binding.batteryEmojiPercentageSeekbarSize.progress = 12
             binding.batteryEmojiSeekbarSize.progress = 24
             FirebaseAnalyticsUtils.logClickEvent(this, "click_reset_sizes", null)
+            Toast.makeText(this, getString(R.string.restore_successfully), Toast.LENGTH_SHORT).show()
         }
 
         binding.enableShowBatteryPercentage.isChecked = preferences.showBatteryPercent
@@ -117,7 +118,7 @@ class EmojiEditApplyActivity : BaseActivity() {
 
         binding.viewPercentageColor.setOnClickListener {
             ColorPickerDialog.Builder(this)
-                .setTitle(getString(R.string.app_name))
+                .setTitle(getString(R.string.percentage_color))
                 .setPreferenceName("MyColorPickerDialog")
                 .setPositiveButton(getString(R.string.apply), ColorEnvelopeListener { envelope, _ ->
                     colorOfIcon(envelope)
@@ -137,6 +138,7 @@ class EmojiEditApplyActivity : BaseActivity() {
         }
 
         binding.btnNext.setOnClickListener {
+
             if (!preferences.isStatusBarEnabled) {
                 Toast.makeText(
                     this,
@@ -144,14 +146,12 @@ class EmojiEditApplyActivity : BaseActivity() {
                     Toast.LENGTH_LONG
                 ).show()
 
-                return@setOnClickListener
-            }
+            }else{
             FirebaseAnalyticsUtils.logClickEvent(this, "click_apply_emoji", mapOf("drawable" to drawable))
             preferences.batteryIconName = drawable
             sendBroadcast(Intent(BROADCAST_ACTION))
             startActivity(Intent(this, ApplySuccessfullyActivity::class.java))
             finish()
-
             if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
                 FirebaseAnalyticsUtils.logClickEvent(this, "trigger_interstitial_ad", mapOf("screen" to "EmojiEditApplyScreen"))
                 AdManager.showInterstitialAd(this,true) {
@@ -159,7 +159,7 @@ class EmojiEditApplyActivity : BaseActivity() {
                 }
             }
 
-
+            }
         }
     }
 

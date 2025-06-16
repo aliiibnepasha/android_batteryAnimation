@@ -2,7 +2,12 @@ package com.lowbyte.battery.animation.activity
 
 import android.os.Bundle
 import android.util.Log
-import com.android.billingclient.api.*
+import android.view.WindowManager
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.QueryPurchasesParams
 import com.google.android.gms.ads.MobileAds
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.ads.AdManager
@@ -11,6 +16,7 @@ import com.lowbyte.battery.animation.utils.AppPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 
 class SplashActivity : BaseActivity() {
 
@@ -21,7 +27,6 @@ class SplashActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("SplashActivityLog", "onCreate called")
-
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

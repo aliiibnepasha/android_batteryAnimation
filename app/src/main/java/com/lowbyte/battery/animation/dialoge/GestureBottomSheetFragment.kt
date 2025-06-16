@@ -49,6 +49,8 @@ class GestureBottomSheetFragment(
             if (!preferences.isStatusBarEnabled ){
                 Toast.makeText(requireContext(),
                     getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+
+                return@ActionScrollAdapter
             }
           //  preferences.setString(gestureAction, label)
             Toast.makeText(context, getString(R.string.action_applied, label), Toast.LENGTH_SHORT).show()

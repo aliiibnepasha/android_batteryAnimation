@@ -84,6 +84,7 @@ class NotchAccessibilityService : AccessibilityService() {
                 addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
                 addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
                 addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+                addAction(Intent.ACTION_BATTERY_CHANGED)
                 // Add other actions you need to listen for
             }
             try {
@@ -120,7 +121,7 @@ class NotchAccessibilityService : AccessibilityService() {
 
         updateStatusBarAppearance()
         setupGestures()
-        updateBatteryInfo()
+
 
         // Add view only if enabled and not already attached
 //        if (::preferences.isInitialized && preferences.isStatusBarEnabled && statusBarBinding?.root?.windowToken == null) {
@@ -230,6 +231,7 @@ class NotchAccessibilityService : AccessibilityService() {
 
             windowManager?.updateViewLayout(binding.root, layoutParams)
         }
+        updateBatteryInfo()
     }
 
 
@@ -345,7 +347,7 @@ class NotchAccessibilityService : AccessibilityService() {
     }
 
     private fun updateTime() {
-        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
         statusBarBinding?.timeText?.text = timeFormat.format(Date())
     }
 

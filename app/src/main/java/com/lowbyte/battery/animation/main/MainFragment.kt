@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.addCallback
@@ -42,6 +43,25 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         binding.bottomNavigation.setupWithNavController(navController)
+
+//        binding.bottomNavigation.setOnItemSelectedListener {
+//            Log.d("navCustome", "Selected: ${it.itemId}")
+//            when (it.itemId) {
+//                R.id.navigation_customize -> {
+//                    Log.d("navCustome", "Customize Reselected")
+//                    val current = navController.currentDestination?.id
+//                    if (current in listOf(
+//                            R.id.navigation_view_all_emoji,
+//                            R.id.navigation_view_all_widget,
+//                            R.id.navigation_view_all_animation
+//                        )
+//                    ) {
+//                        navController.navigateUp()
+//                    }
+//                }
+//            }
+//            false // let navController handle navigation
+//        }
 
         loadBannerAd()
 

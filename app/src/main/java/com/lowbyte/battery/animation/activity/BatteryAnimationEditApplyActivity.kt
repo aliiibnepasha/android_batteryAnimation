@@ -93,6 +93,14 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
         }
 
         binding.buttonForApply.setOnClickListener {
+            if (preferences.statusLottieName==""){
+                Toast.makeText(
+                    this,
+                    getString(R.string.please_enable_animation),
+                    Toast.LENGTH_LONG
+                ).show()
+                return@setOnClickListener
+            }
             FirebaseAnalyticsUtils.logClickEvent(this, "click_apply_animation", mapOf("label" to label))
 
             if (!preferences.isStatusBarEnabled) {

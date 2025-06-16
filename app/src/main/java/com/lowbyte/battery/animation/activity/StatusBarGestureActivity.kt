@@ -104,18 +104,34 @@ class StatusBarGestureActivity : BaseActivity() {
         }
 
         binding.viewSingleTap.setOnClickListener {
+            if (!preferences.isGestureMode){
+                Toast.makeText(this, getString(R.string.please_enable_gesture_mode), Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             openGestureSheet("single_tap", singleTapActionText, "gestureAction")
         }
 
         binding.viewLongTap.setOnClickListener {
+            if (!preferences.isGestureMode){
+                Toast.makeText(this, getString(R.string.please_enable_gesture_mode), Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             openGestureSheet("long_press", longTapActionText, "longPressAction")
         }
 
         binding.swipeLeftToRightView.setOnClickListener {
+            if (!preferences.isGestureMode){
+                Toast.makeText(this, getString(R.string.please_enable_gesture_mode), Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             openGestureSheet("swipe_left_to_right", swipeLeftToRightActionText, "swipeLeftToRightAction")
         }
 
         binding.swipeRightToLeftView.setOnClickListener {
+            if (!preferences.isGestureMode){
+                Toast.makeText(this, getString(R.string.please_enable_gesture_mode), Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             openGestureSheet("swipe_right_to_left", swipeRightToLeftActionText, "swipeRightToLeftAction")
         }
     }
@@ -124,7 +140,7 @@ class StatusBarGestureActivity : BaseActivity() {
         FirebaseAnalyticsUtils.logClickEvent(this, "gesture_bottomsheet_opened", mapOf("gesture" to gestureKey))
 
         val items = listOf(
-            ActionScrollItem(getString(R.string.action_quick_scroll_to_up), "action_quick_scroll_to_up"),
+            ActionScrollItem(getString(R.string.action_open_control_centre), "action_open_control_centre"),
             ActionScrollItem(getString(R.string.action_open_notifications), "action_open_notifications"),
             ActionScrollItem(getString(R.string.action_power_options), "action_power_options"),
             ActionScrollItem(getString(R.string.action_do_nothing), "action_do_nothing"),

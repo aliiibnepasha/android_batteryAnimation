@@ -40,7 +40,7 @@
             android:gravity="center"
             android:text="@string/title_home"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="19sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/ifvPro"
@@ -91,16 +91,15 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
         android:background="@color/black"
         app:layout_constraintTop_toBottomOf="@+id/nav_host_fragment"
-        app:itemIconTint="@color/bottom_nav_item_color"
-        app:itemTextColor="@color/bottom_nav_item_color"
         app:layout_constraintBottom_toTopOf="@+id/bannerAdHome"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu"
+        app:itemIconTint="@color/bottom_nav_item_color"
+        app:itemTextColor="@color/bottom_nav_item_color"
+        app:itemBackground="@android:color/transparent" />
 
     <LinearLayout
         android:id="@+id/bannerAdHome"

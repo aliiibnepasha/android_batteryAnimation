@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".main.customization.CustomizeFragment">
 
 
@@ -23,11 +24,12 @@
 
         <TextView
             android:id="@+id/menuStatusTitle"
-            android:layout_width="match_parent"
-            android:gravity="center"
+            android:layout_width="0dp"
+            android:gravity="start"
             android:text="@string/status_bar"
             android:textColor="@color/white"
             android:textSize="20sp"
+            android:layout_marginStart="10dp"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -36,15 +38,15 @@
 
         <TextView
             android:id="@+id/menuStatusDetails"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="start|center_vertical"
             android:text="@string/statusbar_menu_details"
             android:textColor="@color/white"
-            android:textSize="13sp"
+            android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@+id/icMenuStatusBar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/menuStatusTitle"
             app:layout_constraintTop_toBottomOf="@+id/menuStatusTitle" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -53,9 +55,8 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintWidth_percent="0.4"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.50"
+            app:layout_constraintStart_toStartOf="@+id/menuStatusDetails"
             app:srcCompat="@drawable/ic_menu_statusbar" />
 
 
@@ -76,12 +77,13 @@
 
         <TextView
             android:id="@+id/menuGestureTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="start"
             android:text="@string/gesture"
             android:textColor="@color/white"
             android:textSize="20sp"
+            android:layout_marginStart="10dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -89,15 +91,15 @@
 
         <TextView
             android:id="@+id/menuGestureDetails"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="start|center_vertical"
             android:text="@string/gesture_menu_details"
             android:textColor="@color/white"
-            android:textSize="13sp"
+            android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@+id/icMenuGestureBar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/menuGestureTitle"
             app:layout_constraintTop_toBottomOf="@+id/menuGestureTitle" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -106,9 +108,8 @@
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_percent="0.4"
+            app:layout_constraintStart_toStartOf="@+id/menuGestureDetails"
+            app:layout_constraintWidth_percent="0.50"
             app:srcCompat="@drawable/ic_menu_gasture" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

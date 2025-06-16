@@ -13,7 +13,7 @@
     <string name="done">Done</string>
     <string name="next">Next</string>
     <string name="getStarted">Get Started</string>
-    <string name="select_language">Select language</string>
+    <string name="select_language">Select Language</string>
     <string name="language">Language</string>
     <string name="intro_title_1">Unique Status Bar</string>
     <string name="intro_title_2">Easy Dynamic Island</string>
@@ -144,6 +144,10 @@
     <string name="notification_mesg_2">We use notifications to alert you of new battery animations and updates. Please allow it from app settings if you want to stay informed.</string>
     <string name="open_settings">Open Settings</string>
     <string name="later">Later</string>
+    <string name="restore_successfully">Restore successfully.</string>
+    <string name="please_enable_gesture_mode">Please enable gesture</string>
+    <string name="please_enable_animation">Please enable battery animation.</string>
+    <string name="percentage_color">Percentage Color</string>
 
 
 </resources>
