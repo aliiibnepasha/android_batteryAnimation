@@ -150,13 +150,13 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     private fun showPermissionDialog() {
         val dialog = android.app.AlertDialog.Builder(requireContext())
-            .setTitle("Enable Notifications")
-            .setMessage("Stay updated with latest battery animations and updates by enabling notifications.")
-            .setPositiveButton("Allow") { _, _ ->
+            .setTitle(getString(R.string.enable_notifications))
+            .setMessage(getString(R.string.notification_mesg))
+            .setPositiveButton(getString(R.string.allow)) { _, _ ->
                 markNotificationDialogShown()
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
-            .setNegativeButton("Later") { dialogInterface, _ ->
+            .setNegativeButton(getString(R.string.later)) { dialogInterface, _ ->
                 markNotificationDialogShown()
                 dialogInterface.dismiss()
             }
@@ -167,15 +167,15 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     private fun showRationaleDialog() {
         val dialog = android.app.AlertDialog.Builder(requireContext())
-            .setTitle("Why We Need Notification Access")
-            .setMessage("We use notifications to alert you of new battery animations and updates. Please allow it from app settings if you want to stay informed.")
-            .setPositiveButton("Open Settings") { _, _ ->
+            .setTitle(getString(R.string.why_we_need_notification_access))
+            .setMessage(getString(R.string.notification_mesg_2))
+            .setPositiveButton(getString(R.string.open_settings)) { _, _ ->
                 val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                     data = Uri.fromParts("package", requireContext().packageName, null)
                 }
                 startActivity(intent)
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .create()
         dialog.show()
     }
