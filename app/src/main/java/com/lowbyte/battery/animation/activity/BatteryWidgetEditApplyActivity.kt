@@ -123,7 +123,6 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
                 )
             )
 
-
             if (isScreenFirstOpen){
                 isScreenFirstOpen = false
                 if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
@@ -292,10 +291,6 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
                 }
 
             }
-
-
-
-
 
         }
 
