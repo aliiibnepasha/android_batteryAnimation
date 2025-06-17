@@ -15,16 +15,36 @@ class BatteryWidgetProvider : AppWidgetProvider() {
     }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         val preferences = AppPreferences.getInstance(context)
 
-        for (appWidgetId in appWidgetIds) {
-            val widgetIcon = preferences.getWidgetIcon(appWidgetId)
+//        for (appWidgetId in appWidgetIds) {
+//            val widgetIcon = preferences.getWidgetIcon(appWidgetId)
+//            Log.d(TAG,"onUpdate $widgetIcon  $appWidgetId")
+//            sendUpdateBroadcast(context, appWidgetId, widgetIcon)
+//        }
 
-            Log.d(TAG,"onUpdate $widgetIcon  $appWidgetId")
+        appWidgetIds.forEach { widgetId ->
+            Log.e("BatteryWidgetProvider", "onUpdate called for widgetId: $widgetId")
 
-            sendUpdateBroadcast(context, appWidgetId, widgetIcon)
+            // Check if any icon was saved temporarily under INVALID_APPWIDGET_ID
+            val tempIcon = preferences.getWidgetIcon(AppWidgetManager.INVALID_APPWIDGET_ID)
+            if (tempIcon.isNotEmpty()) {
+                Log.e("BatteryWidgetProvider", "Assigning temp icon: $tempIcon to widgetId: $widgetId")
+                preferences.saveWidgetIcon(widgetId, tempIcon)
+                preferences.saveWidgetIcon(AppWidgetManager.INVALID_APPWIDGET_ID, "") // clear
+            }
+
+            // Send update broadcast to draw the widget
+            val intent = Intent(context, BatteryLevelReceiver::class.java).apply {
+                action = ACTION_UPDATE_WIDGET
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+                putExtra("WIDGET_ICON", preferences.getWidgetIcon(widgetId))
+            }
+            context.sendBroadcast(intent)
         }
+
     }
 
     override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, newOptions: Bundle) {

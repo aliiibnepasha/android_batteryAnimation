@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Build
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -111,6 +112,7 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
         }
 
         binding.buttonForApply.setOnClickListener {
+
             FirebaseAnalyticsUtils.logClickEvent(
                 this,
                 "click_apply_widget",
@@ -124,12 +126,11 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
             val appWidgetManager = AppWidgetManager.getInstance(this)
             val widgetProvider = ComponentName(this, BatteryWidgetProvider::class.java)
 
-          //  if (isNewWidget) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && appWidgetManager.isRequestPinAppWidgetSupported) {
-                    preferences.saveWidgetIcon(AppWidgetManager.INVALID_APPWIDGET_ID, label)
+                if (!(Build.VERSION.SDK_INT < VERSION_CODES.O || !appWidgetManager.isRequestPinAppWidgetSupported)) {
                     val options = Bundle().apply {
                         putString("WIDGET_ICON", label)
                     }
+
                     val successIntent = Intent(this, BatteryWidgetProvider::class.java).apply {
                         action = BatteryWidgetProvider.ACTION_UPDATE_WIDGET
                         putExtra("WIDGET_ICON", label)
@@ -138,156 +139,40 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
                     val successCallback = PendingIntent.getBroadcast(this, 0, successIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                     appWidgetManager.requestPinAppWidget(widgetProvider, options, successCallback)
 
+
                     val updateIntent = Intent(this, BatteryLevelReceiver::class.java).apply {
                         action = BatteryWidgetProvider.ACTION_UPDATE_WIDGET
                         putExtra("WIDGET_ICON", label)
                     }
-                    sendBroadcast(updateIntent)
 
-                    for (delay in listOf(500, 1000, 2000)) {
-                        binding.root.postDelayed({
-                            val widgetIds = appWidgetManager.getAppWidgetIds(widgetProvider)
-                            if (widgetIds.isNotEmpty()) {
-                                val newWidgetId = widgetIds.last()
-                                preferences.saveWidgetIcon(newWidgetId, label)
 
-                                val delayedUpdateIntent = Intent(this, BatteryLevelReceiver::class.java).apply {
-                                    action = BatteryWidgetProvider.ACTION_UPDATE_WIDGET
-                                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, newWidgetId)
-                                    putExtra("WIDGET_ICON", label)
-                                }
-                                sendBroadcast(delayedUpdateIntent)
-                                appWidgetManager.notifyAppWidgetViewDataChanged(newWidgetId, R.id.battery_icon)
-                            }
-                        }, delay.toLong())
+                    Log.e("BatteryWidgetVV", "Loading image for label 2: $label")
+                    val widgetIds = appWidgetManager.getAppWidgetIds(widgetProvider)
+                    Log.e("BatteryWidgetVV", "Total widgets: ${widgetIds.size}")
+
+                    if (widgetIds.isNotEmpty()) {
+                        val newWidgetId = widgetIds.last()
+                        preferences.saveWidgetIcon(newWidgetId, label)
+
+                        val delayedUpdateIntent = Intent(this, BatteryLevelReceiver::class.java).apply {
+                            action = BatteryWidgetProvider.ACTION_UPDATE_WIDGET
+                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, newWidgetId)
+                            putExtra("WIDGET_ICON", label)
+                        }
+
+                        Log.e("BatteryWidgetVV", "Widget created - ID: $newWidgetId, Label: $label")
+
+                        sendBroadcast(delayedUpdateIntent)
+                        appWidgetManager.notifyAppWidgetViewDataChanged(newWidgetId, R.id.battery_icon)
+                    } else {
+                        Log.e("BatteryWidgetVV", "No widget IDs available yet - likely pending pin approval")
                     }
 
                 } else {
                     Toast.makeText(this, "Device not supported", Toast.LENGTH_SHORT).show()
                 }
-         //   }
-//            else {
-//                preferences.saveWidgetIcon(appWidgetId, label)
-//
-//                val updateIntent = Intent(this, BatteryLevelReceiver::class.java).apply {
-//                    action = BatteryWidgetProvider.ACTION_UPDATE_WIDGET
-//                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-//                    putExtra("WIDGET_ICON", label)
-//                }
-//                sendBroadcast(updateIntent)
-//                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.battery_icon)
-//            }
 
             Toast.makeText(this, getString(R.string.widget_applied_successfully), Toast.LENGTH_SHORT).show()
-
-//            if (!isNewWidget) {
-//                val resultIntent = Intent().apply {
-//                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-//                }
-//                setResult(RESULT_OK, resultIntent)
-//                finish()
-//            }
-
-          /*  if (isScreenFirstOpen){
-                isScreenFirstOpen = false
-                if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
-                    AdManager.showInterstitialAd(this,true) {
-                        Log.e("Ads", "FullScreenTobeShoe")
-                        FirebaseAnalyticsUtils.logClickEvent(this, "trigger_interstitial_ad", mapOf("screen" to "BatteryWidgetEditApplyScreen"))
-                        try {
-
-
-                        } catch (e: Exception) {
-                            Log.e("BatteryWidgetEditApplyActivity", "Error in buttonForApply click", e)
-                        }
-
-                    }
-                }
-
-            }
-            else{
-                FirebaseAnalyticsUtils.logClickEvent(this, "trigger_interstitial_ad", mapOf("screen" to "BatteryWidgetEditApplyScreen"))
-                try {
-                    val appWidgetManager = AppWidgetManager.getInstance(this)
-                    val widgetProvider = ComponentName(this, BatteryWidgetProvider::class.java)
-
-                    if (isNewWidget) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && appWidgetManager.isRequestPinAppWidgetSupported) {
-
-                            preferences.saveWidgetIcon(AppWidgetManager.INVALID_APPWIDGET_ID, label)
-
-                            val options = Bundle().apply {
-                                putString("WIDGET_ICON", label)
-                            }
-
-                            val successIntent = Intent(this, BatteryWidgetProvider::class.java).apply {
-                                action = BatteryWidgetProvider.ACTION_UPDATE_WIDGET
-                                putExtra("WIDGET_ICON", label)
-                            }
-
-                            val successCallback = PendingIntent.getBroadcast(
-                                this, 0, successIntent,
-                                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-                            )
-
-                            appWidgetManager.requestPinAppWidget(widgetProvider, options, successCallback)
-
-                            val updateIntent = Intent(this, BatteryLevelReceiver::class.java).apply {
-                                action = BatteryWidgetProvider.ACTION_UPDATE_WIDGET
-                                putExtra("WIDGET_ICON", label)
-                            }
-                            sendBroadcast(updateIntent)
-
-                            for (delay in listOf(500, 1000, 2000)) {
-                                binding.root.postDelayed({
-                                    val widgetIds = appWidgetManager.getAppWidgetIds(widgetProvider)
-                                    if (widgetIds.isNotEmpty()) {
-                                        val newWidgetId = widgetIds.last()
-                                        preferences.saveWidgetIcon(newWidgetId, label)
-
-                                        val delayedUpdateIntent = Intent(this, BatteryLevelReceiver::class.java).apply {
-                                            action = BatteryWidgetProvider.ACTION_UPDATE_WIDGET
-                                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, newWidgetId)
-                                            putExtra("WIDGET_ICON", label)
-                                        }
-                                        sendBroadcast(delayedUpdateIntent)
-                                        appWidgetManager.notifyAppWidgetViewDataChanged(newWidgetId, R.id.battery_icon)
-                                    }
-                                }, delay.toLong())
-                            }
-
-                        } else {
-                            Toast.makeText(this, "Device not supported", Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        preferences.saveWidgetIcon(appWidgetId, label)
-
-                        val updateIntent = Intent(this, BatteryLevelReceiver::class.java).apply {
-                            action = BatteryWidgetProvider.ACTION_UPDATE_WIDGET
-                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                            putExtra("WIDGET_ICON", label)
-                        }
-                        sendBroadcast(updateIntent)
-                        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.battery_icon)
-                    }
-
-                    Toast.makeText(this, getString(R.string.widget_applied_successfully), Toast.LENGTH_SHORT).show()
-
-                    if (!isNewWidget) {
-                        val resultIntent = Intent().apply {
-                            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                        }
-                        setResult(RESULT_OK, resultIntent)
-                        finish()
-                    }
-
-                } catch (e: Exception) {
-                    Log.e("BatteryWidgetEditApplyActivity", "Error in buttonForApply click", e)
-                }
-
-            }
-
-            */
 
         }
 
