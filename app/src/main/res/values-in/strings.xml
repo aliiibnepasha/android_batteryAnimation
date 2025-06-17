@@ -114,4 +114,32 @@
     <string name="battery_emoji_12_dp">Emoji baterai: 12 dp</string>
     <string name="percentage_size_16_dp">Ukuran persentase: 16 dp</string>
     <string name="action_applied">Aksi Diterapkan - %1$s</string>
+
+    <string name="ad" translatable="false">Iklan</string>
+    <string name="upgrade_to_pro">Tingkatkan ke Pro</string>
+    <string name="remove_adds">Hapus iklan</string>
+    <string name="faster_processing">Pemrosesan lebih cepat</string>
+    <string name="subscribe_now">Langganan Sekarang</string>
+    <string name="high_resolution">Resolusi Tinggi</string>
+    <string name="no_watermark">Tanpa Watermark</string>
+    <string name="yearly">Tahunan</string>
+    <string name="monthly">Bulanan</string>
+    <string name="weekly">Mingguan</string>
+    <string name="and">dan</string>
+    <string name="subscription_note">Langganan akan ditagihkan dan diperpanjang otomatis. Anda dapat membatalkannya kapan saja untuk menghindari biaya.</string>
+    <string name="restore_purchase">Pulihkan\nPembelian</string>
+    <string name="restore_subscription">Pulihkan Langganan</string>
+    <string name="subscription_not_available">Langganan tidak tersedia</string>
+    <string name="please_select_a_plan">Silakan pilih paket</string>
+    <string name="google_play">Google Play</string>
+    <string name="enable_notifications">Aktifkan Notifikasi</string>
+    <string name="notification_mesg">Tetap up-to-date dengan animasi baterai terbaru dengan mengaktifkan notifikasi.</string>
+    <string name="why_we_need_notification_access">Mengapa Kami Membutuhkan Akses Notifikasi</string>
+    <string name="notification_mesg_2">Kami menggunakan notifikasi untuk memberi tahu Anda tentang animasi baterai baru. Harap aktifkan dari pengaturan aplikasi jika Anda ingin tetap mendapat informasi.</string>
+    <string name="open_settings">Buka Pengaturan</string>
+    <string name="later">Nanti</string>
+    <string name="restore_successfully">Berhasil dipulihkan.</string>
+    <string name="please_enable_gesture_mode">Harap aktifkan mode gerakan</string>
+    <string name="please_enable_animation">Harap aktifkan animasi baterai.</string>
+    <string name="percentage_color">Warna Persentase</string>
 </resources>

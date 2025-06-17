@@ -112,4 +112,33 @@
     <string name="battery_emoji_12_dp">رمز البطارية التعبيري: 12 نقطة</string>
     <string name="percentage_size_16_dp">حجم النسبة المئوية: 16 نقطة</string>
     <string name="action_applied">تم تنفيذ الإجراء - %1$s</string>
+
+        <string name="ad" translatable="false">Ad</string>
+        <string name="upgrade_to_pro">الترقية إلى برو</string>
+        <string name="remove_adds">إزالة الإعلانات</string>
+        <string name="faster_processing">معالجة أسرع</string>
+        <string name="subscribe_now">اشترك الآن</string>
+        <string name="high_resolution">دقة عالية</string>
+        <string name="no_watermark">بدون علامة مائية</string>
+        <string name="yearly">سنوياً</string>
+        <string name="monthly">شهرياً</string>
+        <string name="weekly">أسبوعياً</string>
+        <string name="and">و</string>
+        <string name="subscription_note">سيتم خصم الاشتراك وتجديده تلقائيًا. يمكنك إلغاء اشتراكك في أي وقت لتجنب الرسوم.</string>
+        <string name="restore_purchase">استعادة\nالشراء</string>
+        <string name="restore_subscription">استعادة الاشتراك</string>
+        <string name="subscription_not_available">الاشتراك غير متوفر</string>
+        <string name="please_select_a_plan">يرجى اختيار خطة</string>
+        <string name="google_play">جوجل بلاي</string>
+        <string name="enable_notifications">تمكين الإشعارات</string>
+        <string name="notification_mesg">ابقَ على اطلاع بأحدث رسوم البطارية والتحديثات من خلال تمكين الإشعارات.</string>
+        <string name="why_we_need_notification_access">لماذا نحتاج إلى الوصول إلى الإشعارات</string>
+        <string name="notification_mesg_2">نستخدم الإشعارات لتنبيهك برسوم البطارية الجديدة والتحديثات. يرجى السماح بذلك من إعدادات التطبيق إذا كنت ترغب في البقاء على اطلاع.</string>
+        <string name="open_settings">افتح الإعدادات</string>
+        <string name="later">لاحقًا</string>
+        <string name="restore_successfully">تم الاستعادة بنجاح.</string>
+        <string name="please_enable_gesture_mode">يرجى تمكين وضع الإيماءات</string>
+        <string name="please_enable_animation">يرجى تمكين رسوم البطارية المتحركة.</string>
+        <string name="percentage_color">لون النسبة المئوية</string>
 </resources>
+

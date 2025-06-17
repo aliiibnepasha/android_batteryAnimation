@@ -118,4 +118,32 @@
     <string name="action_applied" translatable="false">Hành động đã áp dụng - %1$s</string>
 
     <string name="loading_ad">Đang tải quảng cáo…</string>
+
+    <string name="ad" translatable="false">Quảng cáo</string>
+    <string name="upgrade_to_pro">Nâng cấp lên Pro</string>
+    <string name="remove_adds">Xóa quảng cáo</string>
+    <string name="faster_processing">Xử lý nhanh hơn</string>
+    <string name="subscribe_now">Đăng ký ngay</string>
+    <string name="high_resolution">Độ phân giải cao</string>
+    <string name="no_watermark">Không có hình mờ</string>
+    <string name="yearly">Hàng năm</string>
+    <string name="monthly">Hàng tháng</string>
+    <string name="weekly">Hàng tuần</string>
+    <string name="and">và</string>
+    <string name="subscription_note">Đăng ký sẽ bị tính phí và tự động gia hạn. Bạn có thể hủy bất cứ lúc nào để tránh bị tính phí.</string>
+    <string name="restore_purchase">Khôi phục\nmua hàng</string>
+    <string name="restore_subscription">Khôi phục đăng ký</string>
+    <string name="subscription_not_available">Không có đăng ký</string>
+    <string name="please_select_a_plan">Vui lòng chọn một gói</string>
+    <string name="google_play">Google Play</string>
+    <string name="enable_notifications">Bật thông báo</string>
+    <string name="notification_mesg">Luôn cập nhật các hoạt ảnh pin mới nhất bằng cách bật thông báo.</string>
+    <string name="why_we_need_notification_access">Tại sao chúng tôi cần quyền thông báo</string>
+    <string name="notification_mesg_2">Chúng tôi sử dụng thông báo để cập nhật các hoạt ảnh pin mới. Vui lòng cho phép trong cài đặt nếu bạn muốn nhận thông tin.</string>
+    <string name="open_settings">Mở cài đặt</string>
+    <string name="later">Để sau</string>
+    <string name="restore_successfully">Khôi phục thành công.</string>
+    <string name="please_enable_gesture_mode">Vui lòng bật chế độ cử chỉ</string>
+    <string name="please_enable_animation">Vui lòng bật hoạt ảnh pin.</string>
+    <string name="percentage_color">Màu phần trăm</string>
    </resources>

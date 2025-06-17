@@ -109,4 +109,34 @@
     <string name="height_dp">Altura: %1$d dp</string>
     <string name="battery_emoji_12_dp">Emoji de batería: 12 dp</string>
     <string name="percentage_size_16_dp">Tamaño del porcentaje: 16 dp</string>
-    <string name="action_applied">Acción aplicada - %1$s</string></resources>
+    <string name="action_applied">Acción aplicada - %1$s</string>
+
+    <string name="ad" translatable="false">Ad</string>
+    <string name="upgrade_to_pro">Actualizar a Pro</string>
+    <string name="remove_adds">Eliminar anuncios</string>
+    <string name="faster_processing">Procesamiento más rápido</string>
+    <string name="subscribe_now">Suscribirse ahora</string>
+    <string name="high_resolution">Alta resolución</string>
+    <string name="no_watermark">Sin marca de agua</string>
+    <string name="yearly">Anual</string>
+    <string name="monthly">Mensual</string>
+    <string name="weekly">Semanal</string>
+    <string name="and">y</string>
+    <string name="subscription_note">La suscripción se cobrará y renovará automáticamente. Puedes cancelarla en cualquier momento para evitar cargos.</string>
+    <string name="restore_purchase">Restaurar\ncompra</string>
+    <string name="restore_subscription">Restaurar suscripción</string>
+    <string name="subscription_not_available">Suscripción no disponible</string>
+    <string name="please_select_a_plan">Por favor, selecciona un plan</string>
+    <string name="google_play">Google Play</string>
+    <string name="enable_notifications">Activar notificaciones</string>
+    <string name="notification_mesg">Mantente al día con las últimas animaciones de batería y actualizaciones activando las notificaciones.</string>
+    <string name="why_we_need_notification_access">Por qué necesitamos acceso a notificaciones</string>
+    <string name="notification_mesg_2">Usamos notificaciones para informarte sobre nuevas animaciones de batería y actualizaciones. Actívalas desde la configuración si deseas estar informado.</string>
+    <string name="open_settings">Abrir configuración</string>
+    <string name="later">Más tarde</string>
+    <string name="restore_successfully">Restaurado correctamente.</string>
+    <string name="please_enable_gesture_mode">Por favor, activa el modo de gestos</string>
+    <string name="please_enable_animation">Por favor, activa la animación de batería.</string>
+    <string name="percentage_color">Color del porcentaje</string>
+
+</resources>

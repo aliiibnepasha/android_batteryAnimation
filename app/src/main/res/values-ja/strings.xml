@@ -113,4 +113,32 @@
     <string name="percentage_size_16_dp">パーセンテージサイズ：16 dp</string>
     <string name="action_applied">適用されたアクション - %1$s</string>
 
+    <string name="ad" translatable="false">Ad</string>
+    <string name="upgrade_to_pro">Pro版にアップグレード</string>
+    <string name="remove_adds">広告を削除</string>
+    <string name="faster_processing">高速処理</string>
+    <string name="subscribe_now">今すぐ購読</string>
+    <string name="high_resolution">高解像度</string>
+    <string name="no_watermark">透かしなし</string>
+    <string name="yearly">年額</string>
+    <string name="monthly">月額</string>
+    <string name="weekly">週額</string>
+    <string name="and">と</string>
+    <string name="subscription_note">サブスクリプションは請求され、自動的に更新されます。課金を回避するにはいつでもキャンセルできます。</string>
+    <string name="restore_purchase">購入を\n復元</string>
+    <string name="restore_subscription">サブスクリプションを復元</string>
+    <string name="subscription_not_available">サブスクリプションは利用できません</string>
+    <string name="please_select_a_plan">プランを選択してください</string>
+    <string name="google_play">Google Play</string>
+    <string name="enable_notifications">通知を有効にする</string>
+    <string name="notification_mesg">通知を有効にして最新のバッテリーアニメーションや更新情報を受け取りましょう。</string>
+    <string name="why_we_need_notification_access">なぜ通知アクセスが必要なのか</string>
+    <string name="notification_mesg_2">新しいバッテリーアニメーションや更新情報を通知でお知らせします。情報を受け取りたい場合はアプリ設定から許可してください。</string>
+    <string name="open_settings">設定を開く</string>
+    <string name="later">あとで</string>
+    <string name="restore_successfully">復元に成功しました。</string>
+    <string name="please_enable_gesture_mode">ジェスチャーモードを有効にしてください</string>
+    <string name="please_enable_animation">バッテリーアニメーションを有効にしてください。</string>
+    <string name="percentage_color">パーセンテージの色</string>
+
 </resources>

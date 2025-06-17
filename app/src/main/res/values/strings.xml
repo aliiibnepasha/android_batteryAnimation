@@ -121,6 +121,7 @@
     <string name="percentage_size_16_dp">Percentage size : 16 dp</string>
     <string name="action_applied">Action Applied - %1$s</string>
 
+    <string name="ad" translatable="false">Ad</string>
     <string name="upgrade_to_pro">Upgrade to Pro</string>
     <string name="remove_adds">Remove ads</string>
     <string name="faster_processing">Faster processing</string>
@@ -136,7 +137,6 @@
     <string name="restore_subscription">Restore Subscription</string>
     <string name="subscription_not_available">Subscription not available</string>
     <string name="please_select_a_plan">Please select a plan</string>
-    <string name="ad">Ad</string>
     <string name="google_play">Google Play</string>
     <string name="enable_notifications">Enable Notifications</string>
     <string name="notification_mesg">Stay updated with latest battery animations and updates by enabling notifications.</string>

@@ -115,4 +115,32 @@
     <string name="percentage_size_16_dp">Dimensione percentuale: 16 dp</string>
     <string name="action_applied">Azione applicata - %1$s</string>
 
+    <string name="ad" translatable="false">Ad</string>
+    <string name="upgrade_to_pro">Passa a Pro</string>
+    <string name="remove_adds">Rimuovi annunci</string>
+    <string name="faster_processing">Elaborazione più veloce</string>
+    <string name="subscribe_now">Abbonati ora</string>
+    <string name="high_resolution">Alta risoluzione</string>
+    <string name="no_watermark">Nessuna filigrana</string>
+    <string name="yearly">Annuale</string>
+    <string name="monthly">Mensile</string>
+    <string name="weekly">Settimanale</string>
+    <string name="and">e</string>
+    <string name="subscription_note">L abbonamento verrà addebitato e si rinnoverà automaticamente. Puoi annullarlo in qualsiasi momento per evitare addebiti.</string>
+    <string name="restore_purchase">Ripristina\nacquisto</string>
+    <string name="restore_subscription">Ripristina abbonamento</string>
+    <string name="subscription_not_available">Abbonamento non disponibile</string>
+    <string name="please_select_a_plan">Seleziona un piano</string>
+    <string name="google_play">Google Play</string>
+    <string name="enable_notifications">Abilita notifiche</string>
+    <string name="notification_mesg">Rimani aggiornato con le ultime animazioni della batteria e aggiornamenti abilitando le notifiche.</string>
+    <string name="why_we_need_notification_access">Perché abbiamo bisogno dell accesso alle notifiche</string>
+    <string name="notification_mesg_2">Utilizziamo le notifiche per avvisarti delle nuove animazioni della batteria e degli aggiornamenti. Abilita dalle impostazioni dell app se vuoi rimanere informato.</string>
+    <string name="open_settings">Apri impostazioni</string>
+    <string name="later">Più tardi</string>
+    <string name="restore_successfully">Ripristino effettuato con successo.</string>
+    <string name="please_enable_gesture_mode">Abilita la modalità gesto</string>
+    <string name="please_enable_animation">Abilita l animazione della batteria.</string>
+    <string name="percentage_color">Colore della percentuale</string>
+
 </resources>

@@ -115,4 +115,32 @@
     <string name="percentage_size_16_dp">Tamanho da percentagem: 16 dp</string>
     <string name="action_applied">Ação Aplicada - %1$s</string>
 
+    <string name="ad" translatable="false">Anúncio</string>
+    <string name="upgrade_to_pro">Atualizar para Pro</string>
+    <string name="remove_adds">Remover anúncios</string>
+    <string name="faster_processing">Processamento mais rápido</string>
+    <string name="subscribe_now">Subscrever agora</string>
+    <string name="high_resolution">Alta resolução</string>
+    <string name="no_watermark">Sem marca de água</string>
+    <string name="yearly">Anual</string>
+    <string name="monthly">Mensal</string>
+    <string name="weekly">Semanal</string>
+    <string name="and">e</string>
+    <string name="subscription_note">A assinatura será cobrada e renovada automaticamente. Pode cancelar a qualquer momento para evitar cobranças.</string>
+    <string name="restore_purchase">Restaurar\ncompra</string>
+    <string name="restore_subscription">Restaurar assinatura</string>
+    <string name="subscription_not_available">Assinatura não disponível</string>
+    <string name="please_select_a_plan">Por favor, selecione um plano</string>
+    <string name="google_play">Google Play</string>
+    <string name="enable_notifications">Ativar notificações</string>
+    <string name="notification_mesg">Fique atualizado com as animações de bateria mais recentes ativando as notificações.</string>
+    <string name="why_we_need_notification_access">Por que precisamos de acesso às notificações</string>
+    <string name="notification_mesg_2">Usamos notificações para alertá-lo sobre novas animações de bateria. Ative nas configurações se quiser ser informado.</string>
+    <string name="open_settings">Abrir definições</string>
+    <string name="later">Mais tarde</string>
+    <string name="restore_successfully">Restaurado com sucesso.</string>
+    <string name="please_enable_gesture_mode">Por favor, ative o modo de gestos</string>
+    <string name="please_enable_animation">Por favor, ative a animação da bateria.</string>
+    <string name="percentage_color">Cor da percentagem</string>
+
 </resources>

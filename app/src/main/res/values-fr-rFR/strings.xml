@@ -110,4 +110,33 @@
     <string name="battery_emoji_12_dp">Emoji de batería: 12 dp</string>
     <string name="percentage_size_16_dp">Tamaño del porcentaje: 16 dp</string>
     <string name="action_applied">Acción aplicada - %1$s</string>
+
+
+    <string name="ad" translatable="false">Ad</string>
+    <string name="upgrade_to_pro">Passer à Pro</string>
+    <string name="remove_adds">Supprimer les publicités</string>
+    <string name="faster_processing">Traitement plus rapide</string>
+    <string name="subscribe_now">S abonner maintenant</string>
+    <string name="high_resolution">Haute résolution</string>
+    <string name="no_watermark">Sans filigrane</string>
+    <string name="yearly">Annuel</string>
+    <string name="monthly">Mensuel</string>
+    <string name="weekly">Hebdomadaire</string>
+    <string name="and">et</string>
+    <string name="subscription_note">L abonnement est facturé et sera renouvelé automatiquement. Vous pouvez l annuler à tout moment pour éviter des frais.</string>
+    <string name="restore_purchase">Restaurer\nl achat</string>
+    <string name="restore_subscription">Restaurer l abonnement</string>
+    <string name="subscription_not_available">Abonnement non disponible</string>
+    <string name="please_select_a_plan">Veuillez sélectionner un plan</string>
+    <string name="google_play">Google Play</string>
+    <string name="enable_notifications">Activer les notifications</string>
+    <string name="notification_mesg">Restez informé des dernières animations de batterie et mises à jour en activant les notifications.</string>
+    <string name="why_we_need_notification_access">Pourquoi nous avons besoin de l accès aux notifications</string>
+    <string name="notification_mesg_2">Nous utilisons les notifications pour vous alerter des nouvelles animations de batterie et mises à jour. Veuillez les activer dans les paramètres si vous souhaitez rester informé.</string>
+    <string name="open_settings">Ouvrir les paramètres</string>
+    <string name="later">Plus tard</string>
+    <string name="restore_successfully">Restauration réussie.</string>
+    <string name="please_enable_gesture_mode">Veuillez activer le mode gestuel</string>
+    <string name="please_enable_animation">Veuillez activer l animation de batterie.</string>
+    <string name="percentage_color">Couleur du pourcentage</string>
 </resources>

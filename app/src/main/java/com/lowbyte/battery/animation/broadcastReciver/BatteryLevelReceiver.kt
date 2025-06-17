@@ -10,7 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import com.lowbyte.battery.animation.R
-import com.lowbyte.battery.animation.activity.BatteryWidgetEditApplyActivity
+import com.lowbyte.battery.animation.activity.SplashActivity
 import com.lowbyte.battery.animation.utils.AnimationUtils
 import com.lowbyte.battery.animation.utils.AppPreferences
 
@@ -51,7 +51,7 @@ class BatteryLevelReceiver : BroadcastReceiver() {
                 setImageViewResource(R.id.battery_icon, R.drawable.emoji_1)
             }
 
-            val intentClick = Intent(context, BatteryWidgetEditApplyActivity::class.java).apply {
+            val intentClick = Intent(context, SplashActivity::class.java).apply {
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
                 putExtra(AnimationUtils.EXTRA_LABEL, iconName)
                 putExtra(AnimationUtils.EXTRA_POSITION, -1)

@@ -117,4 +117,32 @@
     <string name="battery_emoji_12_dp" translatable="false">Pil emojisi : 12 dp</string>
     <string name="percentage_size_16_dp" translatable="false">Yüzde boyutu : 16 dp</string>
     <string name="action_applied" translatable="false">Eylem Uygulandı - %1$s</string>
+
+    <string name="ad" translatable="false">Reklam</string>
+    <string name="upgrade_to_pro">Pro’ya Yükselt</string>
+    <string name="remove_adds">Reklamları Kaldır</string>
+    <string name="faster_processing">Daha Hızlı İşleme</string>
+    <string name="subscribe_now">Şimdi Abone Ol</string>
+    <string name="high_resolution">Yüksek Çözünürlük</string>
+    <string name="no_watermark">Filigran Yok</string>
+    <string name="yearly">Yıllık</string>
+    <string name="monthly">Aylık</string>
+    <string name="weekly">Haftalık</string>
+    <string name="and">ve</string>
+    <string name="subscription_note">Abonelik faturalandırılır ve otomatik olarak yenilenir. Ücretlendirilmemek için istediğiniz zaman iptal edebilirsiniz.</string>
+    <string name="restore_purchase">Satın Almayı\nGeri Yükle</string>
+    <string name="restore_subscription">Aboneliği Geri Yükle</string>
+    <string name="subscription_not_available">Abonelik mevcut değil</string>
+    <string name="please_select_a_plan">Lütfen bir plan seçin</string>
+    <string name="google_play">Google Play</string>
+    <string name="enable_notifications">Bildirimleri Etkinleştir</string>
+    <string name="notification_mesg">Yeni pil animasyonları ve güncellemeler hakkında bilgilendirilmek için bildirimleri etkinleştirin.</string>
+    <string name="why_we_need_notification_access">Neden Bildirim Erişimine İhtiyacımız Var</string>
+    <string name="notification_mesg_2">Yeni pil animasyonları ve güncellemeler hakkında sizi bilgilendirmek için bildirimleri kullanıyoruz. Bilgi almak istiyorsanız lütfen uygulama ayarlarından izin verin.</string>
+    <string name="open_settings">Ayarları Aç</string>
+    <string name="later">Daha Sonra</string>
+    <string name="restore_successfully">Başarıyla geri yüklendi.</string>
+    <string name="please_enable_gesture_mode">Lütfen jest modunu etkinleştirin</string>
+    <string name="please_enable_animation">Lütfen pil animasyonunu etkinleştirin.</string>
+    <string name="percentage_color">Yüzde Rengi</string>
 </resources>

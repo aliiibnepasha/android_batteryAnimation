@@ -118,4 +118,31 @@
     <string name="percentage_size_16_dp">Saiz peratusan: 16 dp</string>
     <string name="action_applied">Tindakan digunakan - %1$s</string>
 
+    <string name="ad" translatable="false">Ad</string>
+    <string name="upgrade_to_pro">Naik Taraf ke Pro</string>
+    <string name="remove_adds">Buang Iklan</string>
+    <string name="faster_processing">Pemprosesan Lebih Pantas</string>
+    <string name="subscribe_now">Langgan Sekarang</string>
+    <string name="high_resolution">Resolusi Tinggi</string>
+    <string name="no_watermark">Tiada Tanda Air</string>
+    <string name="yearly">Tahunan</string>
+    <string name="monthly">Bulanan</string>
+    <string name="weekly">Mingguan</string>
+    <string name="and">dan</string>
+    <string name="subscription_note">Langganan akan dibil dan diperbaharui secara automatik. Anda boleh batalkan langganan pada bila-bila masa untuk mengelakkan caj.</string>
+    <string name="restore_purchase">Pulihkan Pembelian</string>
+    <string name="restore_subscription">Pulihkan Langganan</string>
+    <string name="subscription_not_available">Langganan tidak tersedia</string>
+    <string name="please_select_a_plan">Sila pilih pelan</string>
+    <string name="google_play">Google Play</string>
+    <string name="enable_notifications">Benarkan Pemberitahuan</string>
+    <string name="notification_mesg">Aktifkan pemberitahuan untuk dapatkan kemas kini animasi bateri terkini.</string>
+    <string name="why_we_need_notification_access">Kenapa Kami Perlukan Akses Pemberitahuan</string>
+    <string name="notification_mesg_2">Kami menggunakan pemberitahuan untuk memberitahu anda tentang animasi dan kemas kini bateri baru. Sila benarkan dari tetapan aplikasi jika anda ingin terus dimaklumkan.</string>
+    <string name="open_settings">Buka Tetapan</string>
+    <string name="later">Nanti</string>
+    <string name="restore_successfully">Pulih dengan berjaya.</string>
+    <string name="please_enable_gesture_mode">Sila aktifkan mod isyarat</string>
+    <string name="please_enable_animation">Sila aktifkan animasi bateri.</string>
+    <string name="percentage_color">Warna Peratus</string>
 </resources>

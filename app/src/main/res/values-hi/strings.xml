@@ -111,4 +111,32 @@
     <string name="percentage_size_16_dp">प्रतिशत आकार: 16 dp</string>
     <string name="action_applied">कार्रवाई लागू - %1$s</string>
 
+    <string name="ad" translatable="false">Ad</string>
+    <string name="upgrade_to_pro">प्रो में अपग्रेड करें</string>
+    <string name="remove_adds">विज्ञापन हटाएं</string>
+    <string name="faster_processing">तेज़ प्रोसेसिंग</string>
+    <string name="subscribe_now">अभी सदस्यता लें</string>
+    <string name="high_resolution">हाई रेजोल्यूशन</string>
+    <string name="no_watermark">वॉटरमार्क नहीं</string>
+    <string name="yearly">वार्षिक</string>
+    <string name="monthly">मासिक</string>
+    <string name="weekly">साप्ताहिक</string>
+    <string name="and">और</string>
+    <string name="subscription_note">सदस्यता बिल की जाएगी और स्वचालित रूप से नवीनीकृत होगी। शुल्क से बचने के लिए आप कभी भी सदस्यता रद्द कर सकते हैं।</string>
+    <string name="restore_purchase">खरीदारी\nपुनर्स्थापित करें</string>
+    <string name="restore_subscription">सदस्यता पुनर्स्थापित करें</string>
+    <string name="subscription_not_available">सदस्यता उपलब्ध नहीं है</string>
+    <string name="please_select_a_plan">कृपया एक योजना चुनें</string>
+    <string name="google_play">गूगल प्ले</string>
+    <string name="enable_notifications">सूचनाएँ सक्षम करें</string>
+    <string name="notification_mesg">नवीनतम बैटरी एनीमेशन और अपडेट के लिए सूचनाएँ सक्षम करें।</string>
+    <string name="why_we_need_notification_access">हमें नोटिफिकेशन एक्सेस की आवश्यकता क्यों है</string>
+    <string name="notification_mesg_2">हम आपको बैटरी एनीमेशन और अपडेट की सूचनाएँ भेजने के लिए नोटिफिकेशन का उपयोग करते हैं। यदि आप अपडेट रहना चाहते हैं तो कृपया ऐप सेटिंग्स से इसे सक्षम करें।</string>
+    <string name="open_settings">सेटिंग्स खोलें</string>
+    <string name="later">बाद में</string>
+    <string name="restore_successfully">सफलतापूर्वक पुनर्स्थापित किया गया।</string>
+    <string name="please_enable_gesture_mode">कृपया जेस्चर मोड सक्षम करें</string>
+    <string name="please_enable_animation">कृपया बैटरी एनीमेशन सक्षम करें।</string>
+    <string name="percentage_color">प्रतिशत रंग</string>
+
 </resources>

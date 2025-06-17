@@ -38,6 +38,8 @@ class BatteryWidgetProvider : AppWidgetProvider() {
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
                 putExtra("WIDGET_ICON", preferences.getString("tempImageForWidget"))
             }
+            preferences.saveWidgetIcon(widgetId, preferences.getString("tempImageForWidget").toString())
+
             //                    preferences.setString("tempImageForWidget",label)
             Log.e("BatteryWidgetProvider", "from Receiver ---/--$widgetId / -${preferences.getWidgetIcon(widgetId)}")
 

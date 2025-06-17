@@ -114,4 +114,33 @@
     <string name="battery_emoji_12_dp">Emoji ng baterya: 12 dp</string>
     <string name="percentage_size_16_dp">Laki ng porsyento: 16 dp</string>
     <string name="action_applied">Inilapat na aksyon - %1$s</string>
+
+    <string name="ad" translatable="false">Ad</string>
+    <string name="upgrade_to_pro">Mag-upgrade sa Pro</string>
+    <string name="remove_adds">Alisin ang mga Ad</string>
+    <string name="faster_processing">Mas Mabilis na Pagproseso</string>
+    <string name="subscribe_now">Mag-subscribe Ngayon</string>
+    <string name="high_resolution">Mataas na Resolusyon</string>
+    <string name="no_watermark">Walang Watermark</string>
+    <string name="yearly">Taun-taon</string>
+    <string name="monthly">Buwan-buwan</string>
+    <string name="weekly">Lingguhan</string>
+    <string name="and">at</string>
+    <string name="subscription_note">Ang subscription ay may bayad at awtomatikong magre-renew. Maaari mong kanselahin ito anumang oras upang maiwasan ang mga singil.</string>
+    <string name="restore_purchase">Ibalik ang Pagbili</string>
+    <string name="restore_subscription">Ibalik ang Subscription</string>
+    <string name="subscription_not_available">Hindi available ang subscription</string>
+    <string name="please_select_a_plan">Pumili ng isang plano</string>
+    <string name="google_play">Google Play</string>
+    <string name="enable_notifications">Paganahin ang mga Notification</string>
+    <string name="notification_mesg">Manatiling updated sa mga bagong animation ng baterya sa pamamagitan ng pag-enable ng notifications.</string>
+    <string name="why_we_need_notification_access">Bakit Kailangan Namin ng Access sa Notification</string>
+    <string name="notification_mesg_2">Ginagamit namin ang notifications upang ipaalam sa iyo ang tungkol sa mga bagong animation at update ng baterya. Payagan ito sa settings kung gusto mong manatiling updated.</string>
+    <string name="open_settings">Buksan ang Settings</string>
+    <string name="later">Mamaya</string>
+    <string name="restore_successfully">Matagumpay na naibalik.</string>
+    <string name="please_enable_gesture_mode">Paki-enable ang gesture mode</string>
+    <string name="please_enable_animation">Paki-enable ang animation ng baterya.</string>
+    <string name="percentage_color">Kulay ng Porsyento</string>
+
 </resources>

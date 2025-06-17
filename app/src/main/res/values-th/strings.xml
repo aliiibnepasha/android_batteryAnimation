@@ -113,4 +113,32 @@
     <string name="percentage_size_16_dp">ขนาดเปอร์เซ็นต์: 16 dp</string>
     <string name="action_applied">ดำเนินการแล้ว - %1$s</string>
 
+    <string name="ad" translatable="false">Ad</string>
+    <string name="upgrade_to_pro">อัปเกรดเป็น Pro</string>
+    <string name="remove_adds">ลบโฆษณา</string>
+    <string name="faster_processing">ประมวลผลเร็วขึ้น</string>
+    <string name="subscribe_now">สมัครสมาชิกตอนนี้</string>
+    <string name="high_resolution">ความละเอียดสูง</string>
+    <string name="no_watermark">ไม่มีลายน้ำ</string>
+    <string name="yearly">รายปี</string>
+    <string name="monthly">รายเดือน</string>
+    <string name="weekly">รายสัปดาห์</string>
+    <string name="and">และ</string>
+    <string name="subscription_note">การสมัครสมาชิกจะถูกเรียกเก็บเงินและต่ออายุอัตโนมัติ คุณสามารถยกเลิกได้ตลอดเวลาเพื่อหลีกเลี่ยงค่าธรรมเนียม</string>
+    <string name="restore_purchase">กู้คืนการซื้อ</string>
+    <string name="restore_subscription">กู้คืนการสมัครสมาชิก</string>
+    <string name="subscription_not_available">ไม่สามารถสมัครสมาชิกได้</string>
+    <string name="please_select_a_plan">กรุณาเลือกแผน</string>
+    <string name="google_play">Google Play</string>
+    <string name="enable_notifications">เปิดการแจ้งเตือน</string>
+    <string name="notification_mesg">ติดตามการอัปเดตและแอนิเมชันแบตเตอรี่ใหม่ ๆ โดยเปิดการแจ้งเตือน</string>
+    <string name="why_we_need_notification_access">ทำไมเราต้องการสิทธิ์การเข้าถึงการแจ้งเตือน</string>
+    <string name="notification_mesg_2">เราใช้การแจ้งเตือนเพื่อแจ้งข่าวสารเกี่ยวกับแอนิเมชันแบตเตอรี่ใหม่ ๆ โปรดอนุญาตจากการตั้งค่าแอปเพื่อไม่ให้พลาดข้อมูล</string>
+    <string name="open_settings">เปิดการตั้งค่า</string>
+    <string name="later">ภายหลัง</string>
+    <string name="restore_successfully">กู้คืนสำเร็จ</string>
+    <string name="please_enable_gesture_mode">กรุณาเปิดโหมดท่าทาง</string>
+    <string name="please_enable_animation">กรุณาเปิดแอนิเมชันแบตเตอรี่</string>
+    <string name="percentage_color">สีเปอร์เซ็นต์</string>
+
 </resources>

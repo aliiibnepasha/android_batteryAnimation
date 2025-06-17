@@ -115,7 +115,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 // If currently in Home child fragment, handle double back to exit
                 R.id.navigation_home -> {
                     if (doubleBackPressedOnce) {
-                        requireActivity().finish()
+                        requireActivity().finishAffinity()
                         Log.d("navCustom", "Back Finish")
                     } else {
                         doubleBackPressedOnce = true
