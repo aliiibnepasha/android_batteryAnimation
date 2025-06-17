@@ -19,12 +19,6 @@ class BatteryWidgetProvider : AppWidgetProvider() {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         val preferences = AppPreferences.getInstance(context)
 
-//        for (appWidgetId in appWidgetIds) {
-//            val widgetIcon = preferences.getWidgetIcon(appWidgetId)
-//            Log.d(TAG,"onUpdate $widgetIcon  $appWidgetId")
-//            sendUpdateBroadcast(context, appWidgetId, widgetIcon)
-//        }
-
         appWidgetIds.forEach { widgetId ->
             Log.e("BatteryWidgetProvider", "onUpdate called for widgetId: $widgetId")
 
