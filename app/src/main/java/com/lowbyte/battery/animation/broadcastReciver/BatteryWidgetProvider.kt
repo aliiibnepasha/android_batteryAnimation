@@ -31,8 +31,10 @@ class BatteryWidgetProvider : AppWidgetProvider() {
             // Check if any icon was saved temporarily under INVALID_APPWIDGET_ID
             val tempIcon = preferences.getWidgetIcon(AppWidgetManager.INVALID_APPWIDGET_ID)
             if (tempIcon.isNotEmpty()) {
-                Log.e("BatteryWidgetProvider", "Assigning temp icon: $tempIcon to widgetId: $widgetId")
+                Log.e("BatteryWidgetProvider", "from Receiver --------------Assigning temp icon: $tempIcon to widgetId: $widgetId")
                 preferences.saveWidgetIcon(widgetId, tempIcon)
+                Log.e("BatteryWidgetProvider", "from Receiver ---/--$widgetId / -${preferences.getWidgetIcon(widgetId)}")
+
                 preferences.saveWidgetIcon(AppWidgetManager.INVALID_APPWIDGET_ID, "") // clear
             }
 
@@ -40,8 +42,11 @@ class BatteryWidgetProvider : AppWidgetProvider() {
             val intent = Intent(context, BatteryLevelReceiver::class.java).apply {
                 action = ACTION_UPDATE_WIDGET
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
-                putExtra("WIDGET_ICON", preferences.getWidgetIcon(widgetId))
+                putExtra("WIDGET_ICON", preferences.getString("tempImageForWidget"))
             }
+            //                    preferences.setString("tempImageForWidget",label)
+            Log.e("BatteryWidgetProvider", "from Receiver ---/--$widgetId / -${preferences.getWidgetIcon(widgetId)}")
+
             context.sendBroadcast(intent)
         }
 
