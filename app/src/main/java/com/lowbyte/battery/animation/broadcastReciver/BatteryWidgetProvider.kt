@@ -1,4 +1,3 @@
-// Updated: BatteryWidgetProvider.kt
 package com.lowbyte.battery.animation.broadcastReciver
 
 import android.appwidget.AppWidgetManager
@@ -21,6 +20,9 @@ class BatteryWidgetProvider : AppWidgetProvider() {
 
         for (appWidgetId in appWidgetIds) {
             val widgetIcon = preferences.getWidgetIcon(appWidgetId)
+
+            Log.d(TAG,"onUpdate $widgetIcon  $appWidgetId")
+
             sendUpdateBroadcast(context, appWidgetId, widgetIcon)
         }
     }
@@ -30,14 +32,21 @@ class BatteryWidgetProvider : AppWidgetProvider() {
         val widgetIcon = newOptions.getString("WIDGET_ICON")
         if (!widgetIcon.isNullOrEmpty()) {
             AppPreferences.getInstance(context).saveWidgetIcon(appWidgetId, widgetIcon)
+            Log.d(TAG,"onAppWidgetOptionsChanged 3 $widgetIcon")
             sendUpdateBroadcast(context, appWidgetId, widgetIcon)
+        }else{
+            Log.d(TAG,"onAppWidgetOptionsChanged $widgetIcon")
+
         }
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
         super.onDeleted(context, appWidgetIds)
         val preferences = AppPreferences.getInstance(context)
-        appWidgetIds.forEach { preferences.saveWidgetIcon(it, "") }
+        appWidgetIds.forEach {
+            Log.d(TAG,"onDeleted $it")
+            preferences.saveWidgetIcon(it, "")
+        }
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -46,6 +55,9 @@ class BatteryWidgetProvider : AppWidgetProvider() {
             val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
             val widgetIcon = intent.getStringExtra("WIDGET_ICON") ?: ""
             if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+
+                Log.d(TAG,"onReceive $appWidgetId  / $widgetIcon ")
+
                 AppPreferences.getInstance(context).saveWidgetIcon(appWidgetId, widgetIcon)
                 sendUpdateBroadcast(context, appWidgetId, widgetIcon)
             }
@@ -55,6 +67,9 @@ class BatteryWidgetProvider : AppWidgetProvider() {
     private fun sendUpdateBroadcast(context: Context, widgetId: Int, icon: String) {
         val updateIntent = Intent(context, BatteryLevelReceiver::class.java).apply {
             action = ACTION_UPDATE_WIDGET
+
+            Log.d(TAG,"sendUpdateBroadcast $widgetId / $icon ")
+
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
             putExtra("WIDGET_ICON", icon)
         }

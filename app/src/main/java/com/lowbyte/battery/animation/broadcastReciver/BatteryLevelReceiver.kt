@@ -16,6 +16,7 @@ import com.lowbyte.battery.animation.utils.AppPreferences
 
 class BatteryLevelReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        Log.d("BatteryLevelReceiver","onReceive")
         if (intent.action != BatteryWidgetProvider.ACTION_UPDATE_WIDGET) return
 
         val widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
@@ -23,11 +24,17 @@ class BatteryLevelReceiver : BroadcastReceiver() {
 
         val preferences = AppPreferences.getInstance(context)
         val iconName = intent.getStringExtra("WIDGET_ICON") ?: preferences.getWidgetIcon(widgetId)
+        Log.d("BatteryLevelReceiver","iconName $iconName")
 
         val batteryIntent = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
         val level = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
         val scale = batteryIntent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
         val batteryPct = level * 100 / scale.toFloat()
+
+        Log.d("BatteryLevelReceiver","level $level")
+        Log.d("BatteryLevelReceiver","scale $scale")
+        Log.d("BatteryLevelReceiver","batteryPct $batteryPct")
+
 
         val views = RemoteViews(context.packageName, R.layout.widget_battery).apply {
             setViewVisibility(R.id.batteryLevelBottom, View.VISIBLE)
@@ -37,8 +44,10 @@ class BatteryLevelReceiver : BroadcastReceiver() {
 
             val resId = context.resources.getIdentifier(iconName, "drawable", context.packageName)
             if (resId != 0) {
+                Log.d("BatteryLevelReceiver","onReceive $resId")
                 setImageViewResource(R.id.battery_icon, resId)
             } else {
+                Log.d("BatteryLevelReceiver","onReceive Default Image ")
                 setImageViewResource(R.id.battery_icon, R.drawable.emoji_1)
             }
 
