@@ -75,5 +75,6 @@ dependencies {
     implementation (libs.androidx.lifecycle.process)
     implementation (libs.androidx.multidex)
     implementation(libs.shimmer)
+    implementation (libs.androidx.work.runtime.ktx)
 
 }

@@ -61,4 +61,15 @@ class BatteryLevelReceiver : BroadcastReceiver() {
 
             appWidgetManager.updateAppWidget(widgetId, views)
         }
+
+
+        widgetIds.forEach { widgetId ->
+            val icon = preferences.getWidgetIcon(widgetId)
+            val intent = Intent(context, BatteryWidgetProvider::class.java).apply {
+                action = BatteryWidgetProvider.ACTION_UPDATE_WIDGET
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+                putExtra("WIDGET_ICON", icon)
+            }
+            context.sendBroadcast(intent)
+        }
     }}

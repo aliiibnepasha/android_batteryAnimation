@@ -21,11 +21,13 @@ navigationUiKtx = "2.9.0"
 activity = "1.8.0"
 playServicesAds = "24.3.0"
 shimmer = "0.5.0"
+workRuntimeKtx = "2.10.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycleProcess" }
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 billing = { module = "com.android.billingclient:billing", version.ref = "billing" }
 colorpickerview = { module = "com.github.skydoves:colorpickerview", version.ref = "colorpickerview" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
