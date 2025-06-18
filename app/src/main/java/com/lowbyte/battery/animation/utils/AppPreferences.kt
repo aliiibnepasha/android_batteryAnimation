@@ -72,14 +72,18 @@ class AppPreferences private constructor(context: Context) {
 
     var widgetCount: Int
         get() = sharedPreferences.getInt("WIDGET_COUNT", 0)
-        set(value) = sharedPreferences.edit().putInt("WIDGET_COUNT", value).apply()
+        set(value) = sharedPreferences.edit { putInt("WIDGET_COUNT", value) }
 
     fun incrementWidgetCount() {
-        widgetCount = widgetCount + 1
+        if (widgetCount < 10) {
+            widgetCount += 1
+        }
     }
 
     fun decrementWidgetCount() {
-        widgetCount = (widgetCount - 1).coerceAtLeast(0)
+        if (widgetCount > 0) {
+            widgetCount -= 1
+        }
     }
 
 
