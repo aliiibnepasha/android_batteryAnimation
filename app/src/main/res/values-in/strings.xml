@@ -142,4 +142,6 @@
     <string name="please_enable_gesture_mode">Harap aktifkan mode gerakan</string>
     <string name="please_enable_animation">Harap aktifkan animasi baterai.</string>
     <string name="percentage_color">Warna Persentase</string>
+    <string name="enable_battery_widget">Aktifkan Layanan Widget</string>
+    <string name="widget_limit_reached">Batas widget tercapai (10). Silakan hapus widget lama dari layar utama.</string>
 </resources>

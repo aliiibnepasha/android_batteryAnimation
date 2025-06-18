@@ -140,5 +140,7 @@
     <string name="please_enable_gesture_mode">กรุณาเปิดโหมดท่าทาง</string>
     <string name="please_enable_animation">กรุณาเปิดแอนิเมชันแบตเตอรี่</string>
     <string name="percentage_color">สีเปอร์เซ็นต์</string>
+    <string name="enable_battery_widget">เปิดใช้งานบริการวิดเจ็ต</string>
+    <string name="widget_limit_reached">ถึงขีดจำกัดวิดเจ็ตสูงสุด 10 รายการแล้ว กรุณาลบวิดเจ็ตเก่าออกจากหน้าจอหลัก</string>
 
 </resources>

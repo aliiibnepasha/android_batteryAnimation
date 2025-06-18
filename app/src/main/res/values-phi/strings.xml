@@ -142,5 +142,7 @@
     <string name="please_enable_gesture_mode">Paki-enable ang gesture mode</string>
     <string name="please_enable_animation">Paki-enable ang animation ng baterya.</string>
     <string name="percentage_color">Kulay ng Porsyento</string>
+    <string name="enable_battery_widget">I-enable ang Serbisyo ng Widget</string>
+    <string name="widget_limit_reached">Naabot na ang limitasyon ng widget (10). Pakitanggal ang mga lumang widget sa home screen.</string>
 
 </resources>

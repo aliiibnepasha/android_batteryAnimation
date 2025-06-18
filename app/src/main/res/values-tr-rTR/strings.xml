@@ -145,4 +145,6 @@
     <string name="please_enable_gesture_mode">Lütfen jest modunu etkinleştirin</string>
     <string name="please_enable_animation">Lütfen pil animasyonunu etkinleştirin.</string>
     <string name="percentage_color">Yüzde Rengi</string>
+    <string name="enable_battery_widget">Widget Servisini Etkinleştir</string>
+    <string name="widget_limit_reached">Widget sınırı (10) aşıldı. Lütfen ana ekrandan eski widget ları silin.</string>
 </resources>

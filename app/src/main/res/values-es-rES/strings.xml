@@ -138,5 +138,7 @@
     <string name="please_enable_gesture_mode">Por favor, activa el modo de gestos</string>
     <string name="please_enable_animation">Por favor, activa la animación de batería.</string>
     <string name="percentage_color">Color del porcentaje</string>
+    <string name="enable_battery_widget">Activar el servicio del widget</string>
+    <string name="widget_limit_reached">Se alcanzó el límite de 10 widgets. Elimina los widgets antiguos de la pantalla de inicio.</string>
 
 </resources>

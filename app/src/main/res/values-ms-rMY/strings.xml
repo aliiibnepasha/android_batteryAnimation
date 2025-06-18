@@ -145,4 +145,6 @@
     <string name="please_enable_gesture_mode">Sila aktifkan mod isyarat</string>
     <string name="please_enable_animation">Sila aktifkan animasi bateri.</string>
     <string name="percentage_color">Warna Peratus</string>
+    <string name="enable_battery_widget">Aktifkan Perkhidmatan Widget</string>
+    <string name="widget_limit_reached">Had widget telah mencapai maksimum 10. Sila padam widget lama dari skrin utama.</string>
 </resources>

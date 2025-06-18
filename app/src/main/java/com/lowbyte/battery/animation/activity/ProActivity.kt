@@ -56,6 +56,7 @@ class ProActivity : BaseActivity() {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     loadAllPrices()
+                    checkExistingSubscriptions() // ✅ add this call
                 }
             }
 
@@ -65,6 +66,27 @@ class ProActivity : BaseActivity() {
         })
     }
 
+    private fun checkExistingSubscriptions() {
+        billingClient.queryPurchasesAsync(
+            QueryPurchasesParams.newBuilder()
+                .setProductType(BillingClient.ProductType.SUBS)
+                .build()
+        ) { billingResult, purchasesList ->
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                for (purchase in purchasesList) {
+                    // Ensure purchase is acknowledged and not expired
+                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged) {
+                        handlePurchase(purchase)
+                    } else if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                        // Already acknowledged, but still active
+                        handlePurchase(purchase)
+                    }
+                }
+            } else {
+                FirebaseAnalyticsUtils.logClickEvent(this, "purchase_check_error", mapOf("message" to billingResult.debugMessage))
+            }
+        }
+    }
     private fun loadAllPrices() {
         val productList = listOf(SKU_WEEKLY, SKU_MONTHLY, SKU_YEARLY).map { sku ->
             QueryProductDetailsParams.Product.newBuilder()

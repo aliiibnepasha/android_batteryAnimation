@@ -138,5 +138,7 @@
     <string name="please_enable_gesture_mode">कृपया जेस्चर मोड सक्षम करें</string>
     <string name="please_enable_animation">कृपया बैटरी एनीमेशन सक्षम करें।</string>
     <string name="percentage_color">प्रतिशत रंग</string>
+    <string name="enable_battery_widget">विजेट सेवा सक्षम करें</string>
+    <string name="widget_limit_reached">विजेट की सीमा 10 तक पहुंच गई है। कृपया होम स्क्रीन से पुराने विजेट हटाएं।</string>
 
 </resources>

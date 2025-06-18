@@ -149,7 +149,7 @@
     <string name="please_enable_animation">Please enable battery animation.</string>
     <string name="percentage_color">Percentage Color</string>
     <string name="enable_battery_widget">Enable Widget Service</string>
-    <string name="widget_limit_reached">Wedget limit reached upto 10 please delete older widget from home screen.</string>
+    <string name="widget_limit_reached">Widget limit reached up to 10 please delete older widget from home screen.</string>
 
 
 </resources>

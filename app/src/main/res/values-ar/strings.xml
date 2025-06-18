@@ -140,5 +140,7 @@
         <string name="please_enable_gesture_mode">يرجى تمكين وضع الإيماءات</string>
         <string name="please_enable_animation">يرجى تمكين رسوم البطارية المتحركة.</string>
         <string name="percentage_color">لون النسبة المئوية</string>
+    <string name="enable_battery_widget">تفعيل خدمة الويدجت</string>
+    <string name="widget_limit_reached">تم الوصول إلى الحد الأقصى للويدجت (10). يرجى حذف الويدجت الأقدم من الشاشة الرئيسية.</string>
 </resources>
 

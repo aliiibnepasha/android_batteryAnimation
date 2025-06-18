@@ -142,5 +142,7 @@
     <string name="please_enable_gesture_mode">Abilita la modalità gesto</string>
     <string name="please_enable_animation">Abilita l animazione della batteria.</string>
     <string name="percentage_color">Colore della percentuale</string>
+    <string name="enable_battery_widget">Abilita il servizio widget</string>
+    <string name="widget_limit_reached">Limite massimo di 10 widget raggiunto. Elimina i widget più vecchi dalla schermata principale.</string>
 
 </resources>

@@ -248,6 +248,12 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 
     private fun loadBannerAd() {
+        if (preferences.isProUser) {
+            binding.bannerAdHome.visibility = View.GONE
+            binding.ifvPro.visibility = View.GONE
+            return
+        }
+
         BannerAdHelper.loadBannerAd(
             context = requireContext(),
             container = binding.bannerAdHome,

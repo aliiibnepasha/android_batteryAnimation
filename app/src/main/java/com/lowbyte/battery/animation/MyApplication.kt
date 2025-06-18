@@ -3,8 +3,6 @@ package com.lowbyte.battery.animation
 import android.app.Activity
 import android.app.Application
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -30,6 +28,7 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
 
     private lateinit var appOpenAdManager: AppOpenAdManager
     private var currentActivity: Activity? = null
+    private lateinit var preferences: AppPreferences
 
     companion object {
         var isOpenAdEnabled: Boolean = true
@@ -42,7 +41,7 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
 
     override fun onCreate() {
         super<MultiDexApplication>.onCreate()
-        AppPreferences.getInstance(this)
+        preferences =  AppPreferences.getInstance(this)
 
         val lang = LocaleHelper.getLanguage(this)
         LocaleHelper.setLocale(this, if (lang.isBlank()) "en" else lang)
@@ -75,13 +74,6 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
     override fun onActivityDestroyed(activity: Activity) {}
 
-    fun showAdIfAvailable(activity: Activity, onShowAdCompleteListener: OnShowAdCompleteListener) {
-        appOpenAdManager.showAdIfAvailable(activity, onShowAdCompleteListener)
-    }
-
-    fun loadAd(activity: Activity) {
-        appOpenAdManager.loadAd(activity)
-    }
 
     interface OnShowAdCompleteListener {
         fun onShowAdComplete()
@@ -97,7 +89,8 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
         private var loadTime: Long = 0
 
         fun loadAd(context: Context) {
-            if (isLoadingAd || isAdAvailable()) return
+            if (preferences.isProUser) return
+            if (isLoadingAd || isAdAvailable() || preferences.isProUser) return
 
             isLoadingAd = true
             val request = AdRequest.Builder().build()
@@ -133,6 +126,7 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
         }
 
         fun showAdIfAvailable(activity: Activity) {
+            if (preferences.isProUser) return
             showAdIfAvailable(activity, object : OnShowAdCompleteListener {
                 override fun onShowAdComplete() {}
             })
@@ -189,6 +183,7 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
 
             isShowingAd = true
             AdStateController.isOpenAdShowing = true
+            if (preferences.isProUser) return
             appOpenAd?.show(activity)
         }    }
 }

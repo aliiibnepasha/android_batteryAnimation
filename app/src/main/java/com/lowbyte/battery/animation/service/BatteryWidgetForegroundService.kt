@@ -86,7 +86,7 @@ class BatteryWidgetForegroundService : Service() {
 
         val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle("Battery Widget Service")
-            .setContentText("Running in background")
+            .setContentText("Please keep service Running for widgets update")
             .setSmallIcon(R.drawable.ic_notifications_black_24dp)
             .addAction(R.drawable.ic_close, "Stop Service", stopPendingIntent)
             .setOngoing(true)

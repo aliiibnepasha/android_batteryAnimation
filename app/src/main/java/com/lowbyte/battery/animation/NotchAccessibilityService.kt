@@ -85,6 +85,7 @@ class NotchAccessibilityService : AccessibilityService() {
                 addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
                 addAction(ConnectivityManager.CONNECTIVITY_ACTION)
                 addAction(Intent.ACTION_BATTERY_CHANGED)
+               // addAction(WifiManager.RSSI_CHANGED_ACTION)
                 // Add other actions you need to listen for
             }
             try {
@@ -101,7 +102,6 @@ class NotchAccessibilityService : AccessibilityService() {
             }
         }
     }
-
 
 
     private fun createCustomStatusBar() {
@@ -230,8 +230,10 @@ class NotchAccessibilityService : AccessibilityService() {
             }
 
             windowManager?.updateViewLayout(binding.root, layoutParams)
+           // updateWifiSignalIcon(wifiIcon)
         }
         updateBatteryInfo()
+
     }
 
 
@@ -376,7 +378,6 @@ class NotchAccessibilityService : AccessibilityService() {
         }
     }
 
-
     // ========== Extension Utils ==========
 
     private fun Boolean.toVisibility(): Int = if (this) View.VISIBLE else View.GONE
@@ -481,4 +482,20 @@ class NotchAccessibilityService : AccessibilityService() {
             }
         }
     }
+
+//    private fun updateWifiSignalIcon(wifiIcon: ImageView) {
+//        val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+//        val rssi = wifiManager.connectionInfo.rssi
+//        val level = WifiManager.calculateSignalLevel(rssi, 5) // 0–4
+//
+//        val iconRes = when (level) {
+//            4 -> R.drawable.ic_signal_wifi
+//            3 -> R.drawable.ic_signal_wifi
+//            2 -> R.drawable.ic_signal_wifi
+//            1 -> R.drawable.ic_signal_wifi
+//            else -> R.drawable.ic_signal_wifi
+//        }
+//
+//        wifiIcon.setImageResource(iconRes) // Or your ImageView ID
+//    }
 }

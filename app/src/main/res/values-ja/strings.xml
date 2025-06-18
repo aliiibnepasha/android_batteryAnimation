@@ -140,5 +140,7 @@
     <string name="please_enable_gesture_mode">ジェスチャーモードを有効にしてください</string>
     <string name="please_enable_animation">バッテリーアニメーションを有効にしてください。</string>
     <string name="percentage_color">パーセンテージの色</string>
+    <string name="enable_battery_widget">ウィジェットサービスを有効にする</string>
+    <string name="widget_limit_reached">ウィジェットの上限（10個）に達しました。ホーム画面から古いウィジェットを削除してください。</string>
 
 </resources>

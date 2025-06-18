@@ -146,4 +146,6 @@
     <string name="please_enable_gesture_mode">Vui lòng bật chế độ cử chỉ</string>
     <string name="please_enable_animation">Vui lòng bật hoạt ảnh pin.</string>
     <string name="percentage_color">Màu phần trăm</string>
+    <string name="enable_battery_widget">Bật dịch vụ tiện ích con</string>
+    <string name="widget_limit_reached">Đã đạt giới hạn 10 tiện ích. Vui lòng xóa tiện ích cũ khỏi màn hình chính.</string>
    </resources>
