@@ -29,18 +29,26 @@ class BatteryWidgetProvider : AppWidgetProvider() {
         val preferences = AppPreferences.getInstance(context)
 
         appWidgetIds.forEach { widgetId ->
+            if (preferences.widgetCount >= 10) {
+                Log.e(TAG, "Widget limit reached (10). Widget $widgetId not updated.")
+                return@forEach
+            }
+
             Log.e(TAG, "onUpdate called for widgetId: $widgetId")
 
             val tempIcon = preferences.getWidgetIcon(AppWidgetManager.INVALID_APPWIDGET_ID)
             if (tempIcon.isNotEmpty()) {
-                Log.e(TAG, "Assigning temp icon: $tempIcon to widgetId: $widgetId")
                 preferences.saveWidgetIcon(widgetId, tempIcon)
                 preferences.saveWidgetIcon(AppWidgetManager.INVALID_APPWIDGET_ID, "")
             }
 
             val icon = preferences.getString("tempImageForWidget").toString()
             preferences.saveWidgetIcon(widgetId, icon)
-            Log.e(TAG, "Final icon assigned to $widgetId = $icon")
+
+            // ✅ Increment count if new widget
+            if (preferences.getWidgetIcon(widgetId).isEmpty().not()) {
+                preferences.incrementWidgetCount()
+            }
 
             sendUpdateBroadcast(context, widgetId, icon)
         }
@@ -75,6 +83,7 @@ class BatteryWidgetProvider : AppWidgetProvider() {
         appWidgetIds.forEach {
             Log.d(TAG, "onDeleted widgetId: $it")
             preferences.saveWidgetIcon(it, "")
+            preferences.decrementWidgetCount()
         }
     }
 
@@ -129,15 +138,6 @@ class BatteryWidgetProvider : AppWidgetProvider() {
             appWidgetManager.updateAppWidget(widgetId, views)
         }
 
-
-
-
-//        val updateIntent = Intent(context, BatteryLevelReceiver::class.java).apply {
-//            action = ACTION_UPDATE_WIDGET
-//            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
-//            putExtra("WIDGET_ICON", icon)
-//        }
-//        context.sendBroadcast(updateIntent)
 
     }
 

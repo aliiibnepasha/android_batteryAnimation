@@ -76,5 +76,7 @@ dependencies {
     implementation (libs.androidx.multidex)
     implementation(libs.shimmer)
     implementation (libs.androidx.work.runtime.ktx)
+    implementation (libs.glide)
+    implementation (libs.picasso)
 
 }

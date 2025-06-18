@@ -113,6 +113,10 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
         }
 
         binding.buttonForApply.setOnClickListener {
+            if (preferences.widgetCount>=10){
+                Toast.makeText(this, getString(R.string.widget_limit_reached), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             preferences.setString("tempImageForWidget",label)
             FirebaseAnalyticsUtils.logClickEvent(
                 this,

@@ -70,6 +70,17 @@ class AppPreferences private constructor(context: Context) {
         set(value) = sharedPreferences.edit { putBoolean(KEY_SERVICE_RUNNING, value) }
 
 
+    var widgetCount: Int
+        get() = sharedPreferences.getInt("WIDGET_COUNT", 0)
+        set(value) = sharedPreferences.edit().putInt("WIDGET_COUNT", value).apply()
+
+    fun incrementWidgetCount() {
+        widgetCount = widgetCount + 1
+    }
+
+    fun decrementWidgetCount() {
+        widgetCount = (widgetCount - 1).coerceAtLeast(0)
+    }
 
 
     // For ints
