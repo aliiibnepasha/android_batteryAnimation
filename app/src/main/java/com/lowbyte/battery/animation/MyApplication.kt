@@ -3,6 +3,8 @@ package com.lowbyte.battery.animation
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -44,7 +46,6 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
 
         val lang = LocaleHelper.getLanguage(this)
         LocaleHelper.setLocale(this, if (lang.isBlank()) "en" else lang)
-
         MobileAds.initialize(this)
         registerActivityLifecycleCallbacks(this)
 

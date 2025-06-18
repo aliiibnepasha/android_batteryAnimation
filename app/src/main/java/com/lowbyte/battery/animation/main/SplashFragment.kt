@@ -24,7 +24,7 @@ class SplashFragment : Fragment() {
 
     private var _binding: FragmentSplashBinding? = null
     private val binding get() = _binding!!
-
+    private var shouldNavigateAfterResume = false
     private lateinit var preferences: AppPreferences
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
 
@@ -35,13 +35,16 @@ class SplashFragment : Fragment() {
     private val splashTimeout = 15000L
     private val progressDuration = 3000L
 
+    private val handler = Handler(Looper.getMainLooper())
+    private var resumeTimeoutRunnable: Runnable? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSplashBinding.inflate(inflater, container, false)
         preferences = AppPreferences.getInstance(requireContext())
-        MyApplication.enableOpenAd(false) // To disable
+        MyApplication.enableOpenAd(false)
         FirebaseAnalyticsUtils.logScreenView(this, "splash_screen")
 
         if (!preferences.isProUser) {
@@ -73,8 +76,10 @@ class SplashFragment : Fragment() {
             }
         )
 
-        AdManager.loadInterstitialAd(requireContext(),getFullscreenSplashId())
-        Handler(Looper.getMainLooper()).postDelayed({
+        AdManager.loadInterstitialAd(requireContext(), getFullscreenSplashId())
+
+        // Simulate loading time for interstitial
+        handler.postDelayed({
             interstitialLoaded = true
             handleAdEvents()
         }, 3000)
@@ -85,14 +90,31 @@ class SplashFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         hasResumed = true
+
+        if (shouldNavigateAfterResume && !adsHandled) {
+            adsHandled = true
+            showProgressAndNavigate()
+            return
+        }
+
         handleAdEvents()
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (!adsHandled && hasResumed) {
-                adsHandled = true
-                showProgressAndNavigate()
+        resumeTimeoutRunnable = Runnable {
+            if (!adsHandled) {
+                if (hasResumed) {
+                    adsHandled = true
+                    showProgressAndNavigate()
+                } else {
+                    shouldNavigateAfterResume = true // wait for resume
+                }
             }
-        }, splashTimeout)
+        }
+        handler.postDelayed(resumeTimeoutRunnable!!, splashTimeout)
+    }
+    override fun onPause() {
+        super.onPause()
+        hasResumed = false
+        resumeTimeoutRunnable?.let { handler.removeCallbacks(it) }
     }
 
     private fun handleAdEvents() {
@@ -109,23 +131,26 @@ class SplashFragment : Fragment() {
         animator.duration = progressDuration
         animator.start()
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (preferences.isFirstRun) {
+        handler.postDelayed({
+            val destination = if (preferences.isFirstRun) {
+                preferences.serviceRunningFlag = false
                 preferences.isFirstRun = false
-                AdManager.showInterstitialAd(requireActivity(), false) {
-                    findNavController().navigate(R.id.action_splash_to_language)
-                }
+                R.id.action_splash_to_language
             } else {
-                AdManager.showInterstitialAd(requireActivity(), false) {
-                    findNavController().navigate(R.id.action_splash_to_main)
-                }
+                R.id.action_splash_to_main
             }
+
+            AdManager.showInterstitialAd(requireActivity(), false) {
+                if (isAdded) findNavController().navigate(destination)
+            }
+
         }, progressDuration)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        MyApplication.enableOpenAd(true) // To disable
+        handler.removeCallbacksAndMessages(null)
+        MyApplication.enableOpenAd(true)
         _binding = null
     }
 }

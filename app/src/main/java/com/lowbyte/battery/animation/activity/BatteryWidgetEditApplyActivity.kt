@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
+import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
@@ -18,6 +19,7 @@ import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.NativeWidgetHelper
 import com.lowbyte.battery.animation.broadcastReciver.BatteryWidgetProvider
 import com.lowbyte.battery.animation.databinding.ActivityBatteryWidgetEditApplyBinding
+import com.lowbyte.battery.animation.service.BatteryWidgetForegroundService
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
@@ -141,9 +143,17 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
                 } else {
                     Toast.makeText(this, "Device not supported", Toast.LENGTH_SHORT).show()
                 }
-
+            val serviceIntent = Intent(this, BatteryWidgetForegroundService::class.java)
+            if (SDK_INT >= VERSION_CODES.O) {
+                startForegroundService(serviceIntent)
+            } else {
+                startService(serviceIntent)
+            }
             Toast.makeText(this, getString(R.string.widget_applied_successfully), Toast.LENGTH_SHORT).show()
         }
+
+
+
         binding.buttonSetAsEmoji.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_set_as_emoji", mapOf("label" to label))
             finish()

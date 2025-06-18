@@ -12,6 +12,7 @@ import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.ActivityLanguagesBinding
 import com.lowbyte.battery.animation.model.Language
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeLanguageId
+import com.lowbyte.battery.animation.utils.AnimationUtils.initialLanguageCode
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.lowbyte.battery.animation.utils.LocaleHelper
@@ -70,13 +71,21 @@ class LanguagesActivity : BaseActivity() {
 
         binding.ibBackButton.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_back_button", mapOf("screen" to "LanguagesScreen"))
+            LocaleHelper.setLocale(this, initialLanguageCode)
             finish()
         }
 
         binding.ibNextButton.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_next_button", mapOf("screen" to "LanguagesScreen"))
-            startActivity(Intent(this, SplashActivity::class.java))
-            finishAffinity()
+            val currentLanguageCode = LocaleHelper.getLanguage(this)
+            if (currentLanguageCode != initialLanguageCode) {
+                val intent = packageManager.getLaunchIntentForPackage(packageName)
+                intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finishAffinity()
+            } else {
+                finish()
+            }
         }
 
         NativeLanguageHelper(

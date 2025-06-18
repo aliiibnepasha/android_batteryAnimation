@@ -49,6 +49,7 @@ class StatusBarGestureActivity : BaseActivity() {
             }
         }
         onBackPressedDispatcher.addCallback(this, callback)
+
         FirebaseAnalyticsUtils.logScreenView(this, "StatusBarGestureScreen")
         FirebaseAnalyticsUtils.startScreenTimer("StatusBarGestureScreen")
 

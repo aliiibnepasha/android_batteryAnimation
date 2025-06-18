@@ -22,6 +22,8 @@ class AppPreferences private constructor(context: Context) {
         private const val KEY_IS_VIBRATE_MODE = "is_vibrate_mode"
         private const val KEY_IS_GESTURE_MODE = "is_gesture_mode"
         private const val KEY_IS_PRO_USER = "isProUser"
+        private const val KEY_SERVICE_RUNNING = "service_running"
+        private const val KEY_IS_SERVICE_RUNNING = "is_service_running"
 
 
         // String keys
@@ -63,6 +65,12 @@ class AppPreferences private constructor(context: Context) {
             }
         }
     }
+    var serviceRunningFlag: Boolean
+        get() = sharedPreferences.getBoolean(KEY_SERVICE_RUNNING, false)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_SERVICE_RUNNING, value) }
+
+
+
 
     // For ints
     var statusBarHeight: Int

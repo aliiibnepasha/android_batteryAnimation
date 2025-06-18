@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
     <uses-permission
         android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"
         tools:ignore="ProtectedPermissions" />
@@ -75,7 +77,8 @@
 
         <service
             android:name=".NotchAccessibilityService"
-            android:exported="false"
+            android:exported="true"
+            android:enabled="true"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
@@ -86,23 +89,23 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_service_config" />
         </service>
-
-        <receiver
-            android:name=".broadcastReciver.BatteryLevelReceiver"
+        <service android:name="com.lowbyte.battery.animation.service.BatteryWidgetForegroundService"
             android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BATTERY_CHANGED" />
-                <action android:name="android.intent.action.BATTERY_LOW" />
-                <action android:name="android.intent.action.BATTERY_OKAY" />
-                <action android:name="com.lowbyte.battery.animation.ACTION_UPDATE_WIDGET" />
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
-                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
-            </intent-filter>
-        </receiver>
+            android:foregroundServiceType="specialUse"/>
+
+<!--        <receiver-->
+<!--            android:name=".broadcastReciver.BatteryLevelReceiver"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.BATTERY_CHANGED" />-->
+<!--                <action android:name="com.lowbyte.battery.animation.ACTION_UPDATE_WIDGET" />-->
+<!--                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
         <receiver
             android:name=".broadcastReciver.BatteryWidgetProvider"
+            android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -111,7 +114,9 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/battery_widget_info" />
-        </receiver> <!-- This declares your config activity -->
+        </receiver>
+
+
         <activity
             android:name=".activity.BatteryWidgetEditApplyActivity"
             android:screenOrientation="portrait"

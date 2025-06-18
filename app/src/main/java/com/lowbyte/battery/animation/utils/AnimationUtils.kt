@@ -20,6 +20,7 @@ object AnimationUtils {
     const val SKU_WEEKLY = "weekly"
     const val SKU_MONTHLY = "monthly"
     const val SKU_YEARLY = "yearly"
+     var initialLanguageCode = ""
 
 // TODO Update Native Id
     fun getNativeLanguageId(): String {

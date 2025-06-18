@@ -148,6 +148,7 @@
     <string name="please_enable_gesture_mode">Please enable gesture</string>
     <string name="please_enable_animation">Please enable battery animation.</string>
     <string name="percentage_color">Percentage Color</string>
+    <string name="enable_battery_widget">Enable Widget Service</string>
 
 
 </resources>

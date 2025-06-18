@@ -11,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ActivitySettingsBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.initialLanguageCode
 import com.lowbyte.battery.animation.utils.AnimationUtils.openUrl
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
@@ -75,6 +76,7 @@ class SettingsActivity : BaseActivity() {
 
         binding.viewLanguage.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_language", null)
+            initialLanguageCode = LocaleHelper.getLanguage(this)
             startActivity(Intent(this, LanguagesActivity::class.java))
             finish()
         }
