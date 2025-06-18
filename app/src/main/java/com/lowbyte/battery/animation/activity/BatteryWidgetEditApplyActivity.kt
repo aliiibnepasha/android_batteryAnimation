@@ -126,6 +126,40 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
 
             val appWidgetManager = AppWidgetManager.getInstance(this)
             val widgetProvider = ComponentName(this, BatteryWidgetProvider::class.java)
+
+            if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
+                AdManager.showInterstitialAd(this, true) {
+                    Log.e("Ads", "FullScreenTobeShoe")
+                    if (!(SDK_INT < VERSION_CODES.O || !appWidgetManager.isRequestPinAppWidgetSupported)) {
+
+                        val options = Bundle().apply {
+                            putString("WIDGET_ICON", label)
+                        }
+
+                        val successIntent = Intent(this, BatteryWidgetProvider::class.java).apply {
+                            action = BatteryWidgetProvider.ACTION_UPDATE_WIDGET
+                            putExtra("WIDGET_ICON", label)
+                        }
+
+                        val successCallback = PendingIntent.getBroadcast(this, 0, successIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+                        appWidgetManager.requestPinAppWidget(widgetProvider, options, successCallback)
+                        Log.e("BatteryWidgetProvider", "Activity ------------- Loading image for label 2: $label")
+                    }
+                    else {
+                        Toast.makeText(this, "Device not supported", Toast.LENGTH_SHORT).show()
+                    }
+                    val serviceIntent = Intent(this, BatteryWidgetForegroundService::class.java)
+                    if (SDK_INT >= VERSION_CODES.O) {
+                        startForegroundService(serviceIntent)
+                    } else {
+                        startService(serviceIntent)
+                    }
+
+                    Toast.makeText(this, getString(R.string.widget_applied_successfully), Toast.LENGTH_SHORT).show()
+
+                }
+            }else{
+                Log.e("Ads", "FullScreenTobeShoe")
                 if (!(SDK_INT < VERSION_CODES.O || !appWidgetManager.isRequestPinAppWidgetSupported)) {
 
                     val options = Bundle().apply {
@@ -140,19 +174,23 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
                     val successCallback = PendingIntent.getBroadcast(this, 0, successIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                     appWidgetManager.requestPinAppWidget(widgetProvider, options, successCallback)
                     Log.e("BatteryWidgetProvider", "Activity ------------- Loading image for label 2: $label")
-                } else {
+                }
+                else {
                     Toast.makeText(this, "Device not supported", Toast.LENGTH_SHORT).show()
                 }
-            val serviceIntent = Intent(this, BatteryWidgetForegroundService::class.java)
-            if (SDK_INT >= VERSION_CODES.O) {
-                startForegroundService(serviceIntent)
-            } else {
-                startService(serviceIntent)
+                val serviceIntent = Intent(this, BatteryWidgetForegroundService::class.java)
+                if (SDK_INT >= VERSION_CODES.O) {
+                    startForegroundService(serviceIntent)
+                } else {
+                    startService(serviceIntent)
+                }
+
+                Toast.makeText(this, getString(R.string.widget_applied_successfully), Toast.LENGTH_SHORT).show()
+
             }
-            Toast.makeText(this, getString(R.string.widget_applied_successfully), Toast.LENGTH_SHORT).show()
+
+
         }
-
-
 
         binding.buttonSetAsEmoji.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_set_as_emoji", mapOf("label" to label))
