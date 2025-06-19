@@ -6,32 +6,49 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.main.IntroSlideFragment
+import com.lowbyte.battery.animation.main.NativeAdFragment
 import com.lowbyte.battery.animation.model.IntroItem
+import com.lowbyte.battery.animation.model.SlideType
 
 class IntroAdapter(
-    private val context: Context,
+    fa: FragmentActivity,
     private val items: List<IntroItem>
-) : RecyclerView.Adapter<IntroAdapter.IntroViewHolder>() {
-
-    inner class IntroViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val image = itemView.findViewById<ImageView>(R.id.imageView)
-        val title = itemView.findViewById<TextView>(R.id.textTitle)
-        val description = itemView.findViewById<TextView>(R.id.textDescription)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IntroViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_intro, parent, false)
-        return IntroViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: IntroViewHolder, position: Int) {
-        val item = items[position]
-        holder.image.setImageResource(item.imageResId)
-        holder.title.text = item.title
-        holder.description.text = item.description
-    }
-
+) : FragmentStateAdapter(fa){
     override fun getItemCount() = items.size
-}
+
+    override fun createFragment(position: Int): Fragment {
+        val item = items[position]
+        return when (item.type) {
+            SlideType.NATIVE_AD -> NativeAdFragment()
+            SlideType.INTRO -> IntroSlideFragment.newInstance(
+                item.title.orEmpty(),
+                item.description.orEmpty(),
+                item.imageResId ?: 0
+            )
+        }
+//    inner class IntroViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+//        val image: ImageView? = itemView.findViewById<ImageView>(R.id.imageView)
+//        val title: TextView? = itemView.findViewById<TextView>(R.id.textTitle)
+//        val description: TextView? = itemView.findViewById<TextView>(R.id.textDescription)
+//    }
+//
+//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IntroViewHolder {
+//        val view = LayoutInflater.from(context).inflate(R.layout.item_intro, parent, false)
+//        return IntroViewHolder(view)
+//    }
+//
+//    override fun onBindViewHolder(holder: IntroViewHolder, position: Int) {
+//        val item = items[position]
+//        holder.image?.setImageResource(item.imageResId)
+//        holder.title?.text = item.title
+//        holder.description?.text = item.description
+//    }
+
+    }
+    }
