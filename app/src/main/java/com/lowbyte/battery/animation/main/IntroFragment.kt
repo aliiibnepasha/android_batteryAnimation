@@ -23,7 +23,7 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
 
         val items = listOf(
             IntroItem(getString(R.string.intro_title_1), getString(R.string.intro_description_1), R.drawable.intro_1, SlideType.INTRO),
-            IntroItem(type = SlideType.NATIVE_AD),
+          //  IntroItem(type = SlideType.NATIVE_AD),
             IntroItem(getString(R.string.intro_title_2), getString(R.string.intro_description_2), R.drawable.intro_2, SlideType.INTRO),
             IntroItem(getString(R.string.welcome), getString(R.string.intro_description_3), R.drawable.intro_3, SlideType.INTRO)
         )

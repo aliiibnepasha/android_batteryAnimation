@@ -19,7 +19,7 @@ object AnimationUtils {
 
     const val SKU_WEEKLY = "weekly"
     const val SKU_MONTHLY = "monthly"
-    const val SKU_YEARLY = "yearly"
+    const val SKU_YEARLY = "annual"
      var initialLanguageCode = ""
 
 // TODO Update Native Id

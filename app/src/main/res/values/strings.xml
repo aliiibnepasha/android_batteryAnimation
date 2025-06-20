@@ -3,9 +3,6 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="accessibility_service_description">
-        Enables custom notification notch overlay when new notifications arrive. Required for advanced notification access and user interface enhancements.
-    </string>
     <string name="battery_emoji_widget">Battery Emoji Widget</string>
     <string name="this_action_may_contain_ads">This action may contain Ads.</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -111,9 +108,9 @@
     <!--Manual localization -->
     <string name="loading_ad">Loading Ad…</string>
     <string name="height_12_dp"> Height : 12 dp</string>
-    <string name="left_margin_16_dp" >Left Margin : 16 dp</string>
-    <string name="right_margin_30_dp" >Right Margin : 30 dp</string>
-    <string name="size_dp" >%1$s Size : %2$d dp</string>
+    <string name="left_margin_16_dp">Left Margin : 16 dp</string>
+    <string name="right_margin_30_dp">Right Margin : 30 dp</string>
+    <string name="size_dp">%1$s Size : %2$d dp</string>
     <string name="right_margin_dp">Right Margin : %1$d dp</string>
     <string name="left_margin_dp">Left Margin : %1$d dp</string>
     <string name="height_dp">Height : %1$d dp</string>
@@ -150,6 +147,22 @@
     <string name="percentage_color">Percentage Color</string>
     <string name="enable_battery_widget">Enable Widget Service</string>
     <string name="widget_limit_reached">Widget limit reached up to 10 please delete older widget from home screen.</string>
+
+    <string name="accessibility_service_description">This application needs this service to inject the clicks you have created into the other applications once the conditions have been detected.\10\10No data will be collected from this application.</string>
+
+    <string name="accessibility_desc">This app needs to be activated in Accessibility Service to show Emoji Battery Widget view on bottom of mobile screen and start several \10 Accessibility actions: action to Home, Back, show Recent Screen. No personal data is collected or shared.</string>
+    <string name="accessibility_service">Accessibility Service</string>
+    <string name="accessibility_service_usage">Accessibility Service Usage</string>
+    <string name="previous">Previous</string>
+    <string name="how_to_use">How to use</string>
+    <string name="got_it">Got it!</string>
+    <string name="text_accessibility_1">1. Select “Installed Apps” or “Downloaded Apps” in Accessibility Setting</string>
+    <string name="text_accessibility_2">2. Select “Emoji Battery Widget”</string>
+    <string name="text_accessibility_3">3. Turn On</string>
+    <string name="txt_title_use_2">Question: Why does the Application need Accessibility Service?</string>
+    <string name="txt_title_use_3">Gestures that the application supports</string>
+    <string name="txt_des_use_2">This app need to be activated in Accessibility Service to show custom status bar view on top of phone screen &amp; start several Accessibility actions: Action to Home, Back, show Recent Screen. This application do not collect or share any user data.</string>
+    <string name="txt_des_use_3">Take screenshot, Quick scroll to top, Open Control center, Open Notification, Back home, Recent action, Power options, Lock screen.</string>
 
 
 </resources>

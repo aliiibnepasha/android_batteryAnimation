@@ -57,6 +57,11 @@ class SettingsActivity : BaseActivity() {
             startActivity(Intent(this, ProActivity::class.java))
         }
 
+         binding.viewHowToUse.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(this, "click_how_to_use", null)
+            startActivity(Intent(this, HowToUseActivity::class.java))
+        }
+
         binding.ivNextDark.setOnCheckedChangeListener { _, isChecked ->
             // You can log theme change if needed:
             // FirebaseAnalyticsUtils.logClickEvent(this, "toggle_dark_mode", mapOf("enabled" to isChecked.toString()))

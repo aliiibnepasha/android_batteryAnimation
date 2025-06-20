@@ -78,5 +78,7 @@ dependencies {
     implementation (libs.androidx.work.runtime.ktx)
     implementation (libs.glide)
     implementation (libs.picasso)
+    implementation (libs.dotsindicator)
+
 
 }

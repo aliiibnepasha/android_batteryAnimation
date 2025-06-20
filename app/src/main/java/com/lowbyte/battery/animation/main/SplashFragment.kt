@@ -134,7 +134,7 @@ class SplashFragment : Fragment() {
         handler.postDelayed({
             val destination = if (preferences.isFirstRun) {
                 preferences.serviceRunningFlag = false
-                preferences.isFirstRun = true
+                preferences.isFirstRun = false
                 R.id.action_splash_to_language
             } else {
                 R.id.action_splash_to_main

@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.activity.HowToUseActivity
 import com.lowbyte.battery.animation.activity.ProActivity
 import com.lowbyte.battery.animation.activity.SettingsActivity
 import com.lowbyte.battery.animation.ads.BannerAdHelper
@@ -92,6 +93,17 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_settings")
             startActivity(Intent(requireContext(), SettingsActivity::class.java))
         }
+        binding.ibHowToUseButton.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_how_to_use")
+            startActivity(Intent(requireContext(), HowToUseActivity::class.java))
+        }
+
+          binding.ifvInfoRight.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_how_to_use")
+            startActivity(Intent(requireContext(), HowToUseActivity::class.java))
+        }
+
+
 
         binding.ifvPro.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_pro")
@@ -141,31 +153,56 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 R.id.navigation_home -> {
                     binding.tvTitle.text = getString(R.string.title_home)
                     binding.ibBackButton.visibility = View.INVISIBLE
+                    binding.ibHowToUseButton.visibility = View.VISIBLE
+                    binding.ifvPro.visibility = View.VISIBLE
+                    binding.ifvInfoRight.visibility = View.INVISIBLE
                     "home_screen"
                 }
                 R.id.navigation_customize -> {
                     binding.tvTitle.text = getString(R.string.menu_customize)
                     binding.ibBackButton.visibility = View.INVISIBLE
+                    binding.ibHowToUseButton.visibility = View.INVISIBLE
+                    binding.ifvPro.visibility = View.INVISIBLE
+                    binding.ifvInfoRight.visibility = View.VISIBLE
+
                     "customize_screen"
                 }
                 R.id.navigation_island -> {
                     binding.tvTitle.text = getString(R.string.menu_dynamic_island)
                     binding.ibBackButton.visibility = View.INVISIBLE
+                    binding.ibHowToUseButton.visibility = View.INVISIBLE
+                    binding.ifvPro.visibility = View.INVISIBLE
+                    binding.ifvInfoRight.visibility = View.VISIBLE
+
                     "island_screen"
                 }
                 R.id.navigation_view_all_emoji -> {
                     binding.tvTitle.text = getString(R.string.view_all_battery_emoji)
                     binding.ibBackButton.visibility = View.VISIBLE
+                    binding.ibHowToUseButton.visibility = View.INVISIBLE
+                    binding.ifvPro.visibility = View.INVISIBLE
+                    binding.ifvInfoRight.visibility = View.VISIBLE
+
                     "view_all_emoji_screen"
                 }
                 R.id.navigation_view_all_widget -> {
                     binding.tvTitle.text = getString(R.string.view_all_battery_widget)
                     binding.ibBackButton.visibility = View.VISIBLE
+                    binding.ibHowToUseButton.visibility = View.INVISIBLE
+                    binding.ifvPro.visibility = View.INVISIBLE
+                    binding.ifvInfoRight.visibility = View.VISIBLE
+
+
                     "view_all_widget_screen"
                 }
                 R.id.navigation_view_all_animation -> {
                     binding.tvTitle.text = getString(R.string.view_all_battery_animation)
                     binding.ibBackButton.visibility = View.VISIBLE
+                    binding.ibHowToUseButton.visibility = View.INVISIBLE
+                    binding.ifvPro.visibility = View.INVISIBLE
+                    binding.ifvInfoRight.visibility = View.VISIBLE
+
+
                     "view_all_animation_screen"
                 }
                 else -> null
