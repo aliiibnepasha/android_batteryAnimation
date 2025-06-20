@@ -28,7 +28,7 @@ class SettingsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+      //  enableEdgeToEdge()
 
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)

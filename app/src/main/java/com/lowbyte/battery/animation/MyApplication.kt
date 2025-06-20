@@ -17,10 +17,12 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.lowbyte.battery.animation.ads.AdStateController
 import com.lowbyte.battery.animation.ads.GoogleMobileAdsConsentManager
 import com.lowbyte.battery.animation.utils.AnimationUtils.getOpenAppId
 import com.lowbyte.battery.animation.utils.AppPreferences
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
 import com.lowbyte.battery.animation.utils.LocaleHelper
 import java.util.Date
 
@@ -101,11 +103,17 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
                 object : AppOpenAdLoadCallback() {
                     override fun onAdLoaded(ad: AppOpenAd) {
                         appOpenAd = ad
+                        appOpenAd?.setImmersiveMode(true)
+
                         isLoadingAd = false
+
+                        appOpenAd?.setOnPaidEventListener { adValue ->
+                            logPaidEvent(context,adValue, "appOpenAd", ad.adUnitId)
+
+                        }
                         loadTime = Date().time
                         Log.d("LOG_TAG", "onAdLoaded.")
                     }
-
                     override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                         appOpenAd = null
                         isLoadingAd = false

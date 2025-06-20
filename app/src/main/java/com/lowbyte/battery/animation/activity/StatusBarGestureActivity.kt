@@ -35,7 +35,7 @@ class StatusBarGestureActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+      //  enableEdgeToEdge()
         _binding = ActivityStatusBarGestureBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)

@@ -11,6 +11,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.nativead.*
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
 
 abstract class BaseNativeAdHelper(
     protected val context: Context,

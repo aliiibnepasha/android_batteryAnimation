@@ -33,7 +33,7 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+      //  enableEdgeToEdge()
         binding = ActivityBatteryAnimationEditApplyBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)

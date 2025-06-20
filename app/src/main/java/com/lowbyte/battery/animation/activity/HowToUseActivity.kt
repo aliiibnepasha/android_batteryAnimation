@@ -17,7 +17,7 @@ class HowToUseActivity : AppCompatActivity() {
     private val slides = listOf("Page One", "Page Two", "Page Three")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+      //  enableEdgeToEdge()
 
         binding = ActivityHowToUseBinding.inflate(layoutInflater)
         setContentView(binding.root)

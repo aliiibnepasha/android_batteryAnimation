@@ -1,14 +1,31 @@
 package com.lowbyte.battery.animation.utils
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.os.SystemClock
 import androidx.fragment.app.Fragment
+import com.google.android.gms.ads.AdValue
 import com.google.firebase.analytics.FirebaseAnalytics
 
 object FirebaseAnalyticsUtils {
 
     private val screenStartTimes = mutableMapOf<String, Long>()
+
+
+    fun logPaidEvent(context:Context ,adValue: AdValue, format: String, adUnitId: String) {
+        val revenue = adValue.valueMicros / 1_000_000.0
+        val bundle = Bundle().apply {
+            putString(FirebaseAnalytics.Param.AD_PLATFORM, "AdMob")
+            putString(FirebaseAnalytics.Param.AD_FORMAT, format)         // NEW
+            putString(FirebaseAnalytics.Param.AD_UNIT_NAME, adUnitId)    // NEW
+            putString(FirebaseAnalytics.Param.CURRENCY, adValue.currencyCode)
+            putDouble(FirebaseAnalytics.Param.VALUE, revenue)
+        }
+        FirebaseAnalytics.getInstance(context)
+            .logEvent(FirebaseAnalytics.Event.AD_IMPRESSION, bundle)
+    }
+
 
     /** Log simple click event from Activity or Fragment */
     fun logClickEvent(source: Any, eventName: String, params: Map<String, String>? = null) {

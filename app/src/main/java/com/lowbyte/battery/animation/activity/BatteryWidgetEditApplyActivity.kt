@@ -48,7 +48,7 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
         isNewWidget = appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID
 
-        enableEdgeToEdge()
+      //  enableEdgeToEdge()
         binding = ActivityBatteryWidgetEditApplyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

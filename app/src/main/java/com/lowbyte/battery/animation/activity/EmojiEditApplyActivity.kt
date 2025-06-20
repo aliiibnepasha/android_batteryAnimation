@@ -31,7 +31,7 @@ class EmojiEditApplyActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+     //   enableEdgeToEdge()
 
         binding = ActivityEmojiEditApplayBinding.inflate(layoutInflater)
         setContentView(binding.root)

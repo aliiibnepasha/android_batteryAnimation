@@ -22,7 +22,7 @@ class ApplySuccessfullyActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+      //  enableEdgeToEdge()
 
         binding = ActivityApplySuccessfullyBinding.inflate(layoutInflater)
         setContentView(binding.root)

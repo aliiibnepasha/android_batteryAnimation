@@ -2,12 +2,15 @@ package com.lowbyte.battery.animation.ads
 
 import android.app.Activity
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AppPreferences
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -74,8 +77,14 @@ object AdManager {
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
                     interstitialAd = ad
+                    interstitialAd?.setImmersiveMode(true)
                     adIsLoading = false
                     Log.d(TAG, "Interstitial Ad successfully loaded")
+                    interstitialAd?.setOnPaidEventListener { adValue ->
+                        logPaidEvent(context,adValue, "interstitialAd", ad.adUnitId)
+
+
+                    }
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
@@ -111,7 +120,6 @@ object AdManager {
 
         AdStateController.isInterstitialShowing = true
         Log.d(TAG, "Showing interstitial ad now")
-
         interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
                 Log.d(TAG, "Interstitial ad dismissed")

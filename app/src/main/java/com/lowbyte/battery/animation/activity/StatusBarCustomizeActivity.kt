@@ -41,7 +41,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+    //    enableEdgeToEdge()
         _binding = ActivityStatusBarCustommizeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
