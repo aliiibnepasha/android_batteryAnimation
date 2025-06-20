@@ -68,14 +68,44 @@
         android:id="@+id/tvWhyDesc"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/service_note_2"
+        android:text="@string/text_dialog_accessibility_3"
         android:textColor="@color/white"
         android:textSize="14sp"
-        android:gravity="center"
+        android:layout_marginHorizontal="20dp"
+        android:gravity="start"
         app:layout_constraintTop_toBottomOf="@id/tvWhyTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp" />
+    <!-- Description -->
+    <TextView
+        android:id="@+id/tvWhyDesc2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:gravity="start"
+        android:text="@string/text_dialog_accessibility_4"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvWhyDesc" />
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/tvWhyDesc3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:gravity="start"
+        android:text="@string/text_dialog_accessibility_5"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvWhyDesc2" />
 
 
     <LinearLayout
@@ -86,7 +116,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:background="?attr/selectableItemBackground"
-        app:layout_constraintTop_toBottomOf="@id/tvWhyDesc"
+        app:layout_constraintTop_toBottomOf="@id/tvWhyDesc3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="12dp">

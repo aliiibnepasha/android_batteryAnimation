@@ -141,4 +141,24 @@
     <string name="percentage_color">Couleur du pourcentage</string>
     <string name="enable_battery_widget">Activer le service du widget</string>
     <string name="widget_limit_reached">Limite de 10 widgets atteinte. Supprimez les anciens widgets de lécran d accueil.</string>
+
+    <string name="accessibility_desc">Cette app doit être activée dans le service d’accessibilité pour afficher le Emoji Battery Widget en bas de l’écran et exécuter plusieurs actions d’accessibilité : Accueil, Retour, Applications récentes. Aucune donnée personnelle n’est collectée ni partagée.</string>
+    <string name="accessibility_service">Service d’accessibilité</string>
+    <string name="accessibility_service_usage">Utilisation du service d’accessibilité</string>
+    <string name="previous">Précédent</string>
+    <string name="how_to_use">Comment utiliser</string>
+    <string name="got_it">Compris !</string>
+    <string name="text_accessibility_1">1. Allez dans « Applications installées » ou « Applications téléchargées » via les paramètres d’accessibilité</string>
+    <string name="text_accessibility_2">2. Sélectionnez « Emoji Battery Widget »</string>
+    <string name="text_accessibility_3">3. Activez-le</string>
+    <string name="txt_title_use_2">Pourquoi l’app nécessite le service d’accessibilité ?</string>
+    <string name="txt_title_use_3">Gestes pris en charge</string>
+    <string name="txt_des_use_2">Pour afficher un widget personnalisé dans la barre d’état et déclencher des actions : Accueil, Retour, Applications récentes. Aucune donnée utilisateur n’est collectée ni partagée.</string>
+    <string name="txt_des_use_3">Gestes pris en charge : capture d’écran, défilement rapide en haut, ouvrir centre de contrôle, ouvrir notifications, Accueil, Récentes, options d’alimentation, verrouillage d’écran.</string>
+    <string name="text_dialog_accessibility_1">Veuillez accepter les conditions d’utilisation</string>
+    <string name="text_dialog_accessibility_2">L’app nécessite la permission des services d’accessibilité pour :</string>
+    <string name="text_dialog_accessibility_3">Afficher le « Emoji Battery Widget » et détecter les gestes de la barre d’état.</string>
+    <string name="text_dialog_accessibility_4">Effectuer les actions : Accueil, Retour, écran Récent.</string>
+    <string name="text_dialog_accessibility_5">L’application s’engage à ne collecter ni partager aucune donnée personnelle liée à cette autorisation.</string>
+
 </resources>

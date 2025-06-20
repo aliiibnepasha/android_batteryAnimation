@@ -144,4 +144,22 @@
     <string name="enable_battery_widget">위젯 서비스 활성화</string>
     <string name="widget_limit_reached">위젯 제한(최대 10개)에 도달했습니다. 홈 화면에서 이전 위젯을 삭제하세요.</string>
 
+    <string name="accessibility_desc">이 앱은 화면 하단에 Emoji Battery Widget을 표시하고 홈, 뒤로가기, 최근 화면 등 접근성 기능을 수행하기 위해 접근성 서비스에서 활성화되어야 합니다. 개인 정보는 수집 또는 공유되지 않습니다.</string>
+    <string name="accessibility_service">접근성 서비스</string>
+    <string name="accessibility_service_usage">접근성 서비스 사용</string>
+    <string name="previous">이전</string>
+    <string name="how_to_use">사용 방법</string>
+    <string name="got_it">확인!</string>
+    <string name="text_accessibility_1">1. 접근성 설정에서 “설치된 앱” 또는 “다운로드한 앱”을 선택하세요</string>
+    <string name="text_accessibility_2">2. “Emoji Battery Widget”을 선택하세요</string>
+    <string name="text_accessibility_3">3. 켜기</string>
+    <string name="txt_title_use_2">왜 접근성 서비스가 필요한가요?</string>
+    <string name="txt_title_use_3">지원되는 제스처</string>
+    <string name="txt_des_use_2">맞춤 상태 표시줄 위젯을 표시하고 홈, 뒤로가기, 최근 화면 등의 작업을 실행하기 위함입니다. 사용자 데이터는 수집 또는 공유되지 않습니다.</string>
+    <string name="txt_des_use_3">지원 제스처: 스크린샷, 빠른 상단 스크롤, 제어 센터 열기, 알림 열기, 홈, 최근, 전원 옵션, 화면 잠금.</string>
+    <string name="text_dialog_accessibility_1">서비스 약관에 동의해주세요</string>
+    <string name="text_dialog_accessibility_2">이 앱은 접근성 서비스 권한이 필요합니다:</string>
+    <string name="text_dialog_accessibility_3">“Emoji Battery Widget”을 표시하고 상태 표시줄 제스처를 감지하기 위해</string>
+    <string name="text_dialog_accessibility_4">실행할 작업: 홈, 뒤로가기, 최근 화면</string>
+    <string name="text_dialog_accessibility_5">이 앱은 해당 권한과 관련된 개인 정보를 수집 또는 공유하지 않을 것을 약속합니다.</string>
 </resources>

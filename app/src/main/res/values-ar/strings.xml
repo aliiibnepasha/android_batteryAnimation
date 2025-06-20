@@ -142,5 +142,25 @@
         <string name="percentage_color">لون النسبة المئوية</string>
     <string name="enable_battery_widget">تفعيل خدمة الويدجت</string>
     <string name="widget_limit_reached">تم الوصول إلى الحد الأقصى للويدجت (10). يرجى حذف الويدجت الأقدم من الشاشة الرئيسية.</string>
+    <string name="accessibility_desc">تحتاج هذه التطبيق إلى تفعيل خدمة إمكانية الوصول لعرض ويدجت شريط البطارية التعبيري في أسفل الشاشة ولتنفيذ عدة إجراءات وصول: الرئيسية، رجوع، التطبيقات الحديثة. لا يجمع أو يشارك أي بيانات شخصية.</string>
+    <string name="accessibility_service">خدمة إمكانية الوصول</string>
+    <string name="accessibility_service_usage">استخدام خدمة إمكانية الوصول</string>
+    <string name="previous">السابق</string>
+    <string name="how_to_use">كيفية الاستخدام</string>
+    <string name="got_it">تم!</string>
+    <string name="text_accessibility_1">1. افتح "التطبيقات المثبة" أو "التطبيقات المحملة" في إعدادات إمكانية الوصول</string>
+    <string name="text_accessibility_2">2. اختر "Emoji Battery Widget"</string>
+    <string name="text_accessibility_3">3. قم بتشغيلها</string>
+    <string name="txt_title_use_2">لماذا يحتاج التطبيق خدمة إمكانية الوصول؟</string>
+    <string name="txt_title_use_3">الإيماءات المدعومة</string>
+    <string name="txt_des_use_2">لعرض ويدجت مخصص لشريط الحالة ولتنفيذ إجراءات: الرئيسية، رجوع، الحديثة. لا يجمع أو يشارك أي بيانات المستخدم.</string>
+    <string name="txt_des_use_3">الإيماءات المدعومة: لقطة شاشة، التمرير السريع للأعلى، فتح مركز التحكم، الإشعارات، الرئيسية، الحديثة، خيارات الطاقة، قفل الشاشة.</string>
+    <string name="text_dialog_accessibility_1">يرجى الموافقة على شروط الخدمة</string>
+    <string name="text_dialog_accessibility_2">يتطلب التطبيق إذن خدمات إمكانية الوصول لـ:</string>
+    <string name="text_dialog_accessibility_3">عرض ويدجت "Emoji Battery Widget" واكتشاف إيماءات شريط الحالة.</string>
+    <string name="text_dialog_accessibility_4">تنفيذ الإجراءات: الرئيسية، رجوع، الشاشة الحديثة.</string>
+    <string name="text_dialog_accessibility_5">يتعهد التطبيق بعدم جمع أو مشاركة أي بيانات شخصية بخصوص هذا الإذن.</string>
+
+
 </resources>
 

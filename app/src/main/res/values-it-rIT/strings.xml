@@ -144,5 +144,22 @@
     <string name="percentage_color">Colore della percentuale</string>
     <string name="enable_battery_widget">Abilita il servizio widget</string>
     <string name="widget_limit_reached">Limite massimo di 10 widget raggiunto. Elimina i widget più vecchi dalla schermata principale.</string>
-
+    <string name="accessibility_desc">Questa app deve essere attivata nei Servizi di Accessibilità per mostrare il widget Emoji Battery nella parte inferiore dello schermo ed eseguire azioni di accessibilità: Home, Indietro, Recenti. Nessun dato personale viene raccolto o condiviso.</string>
+    <string name="accessibility_service">Servizio di Accessibilità</string>
+    <string name="accessibility_service_usage">Uso del Servizio di Accessibilità</string>
+    <string name="previous">Precedente</string>
+    <string name="how_to_use">Come usare</string>
+    <string name="got_it">Fatto!</string>
+    <string name="text_accessibility_1">1. Apri “App installate” o “App scaricate” nelle impostazioni di Accessibilità</string>
+    <string name="text_accessibility_2">2. Seleziona “Emoji Battery Widget”</string>
+    <string name="text_accessibility_3">3. Attivalo</string>
+    <string name="txt_title_use_2">Perché l’app richiede il Servizio di Accessibilità?</string>
+    <string name="txt_title_use_3">Gestures supportati</string>
+    <string name="txt_des_use_2">Per mostrare un widget personalizzato nella barra di stato e avviare azioni: Home, Indietro, Recenti. Nessun dato utente viene raccolto o condiviso.</string>
+    <string name="txt_des_use_3">Gestures supportati: Screenshot, Scorrimento rapido verso l’alto, Apri Centro di Controllo, Apri notifiche, Home, Recenti, Opzioni di alimentazione, Blocca schermo.</string>
+    <string name="text_dialog_accessibility_1">Per favore, accetta i Termini di Servizio</string>
+    <string name="text_dialog_accessibility_2">Questa app richiede il permesso dei Servizi di Accessibilità per:</string>
+    <string name="text_dialog_accessibility_3">Mostrare il “Emoji Battery Widget” e rilevare gestures sulla barra di stato.</string>
+    <string name="text_dialog_accessibility_4">Eseguire azioni: Home, Indietro, Schermo Recenti.</string>
+    <string name="text_dialog_accessibility_5">L’app si impegna a non raccogliere o condividere alcun dato personale relativo a questo permesso.</string>
 </resources>

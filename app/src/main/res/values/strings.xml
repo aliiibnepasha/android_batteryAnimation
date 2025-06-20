@@ -163,6 +163,11 @@
     <string name="txt_title_use_3">Gestures that the application supports</string>
     <string name="txt_des_use_2">This app need to be activated in Accessibility Service to show custom status bar view on top of phone screen &amp; start several Accessibility actions: Action to Home, Back, show Recent Screen. This application do not collect or share any user data.</string>
     <string name="txt_des_use_3">Take screenshot, Quick scroll to top, Open Control center, Open Notification, Back home, Recent action, Power options, Lock screen.</string>
+    <string name="text_dialog_accessibility_1">Please agree the Terms of Service</string>
+    <string name="text_dialog_accessibility_2">This app required the Accessibility Services permission for:</string>
+    <string name="text_dialog_accessibility_3">Display “Emoji Battery Widget” view on mobile screen and to detect gestures on the status bar.</string>
+    <string name="text_dialog_accessibility_4">Start accessibility actions: action to Home, Back, show Recent screen.</string>
+    <string name="text_dialog_accessibility_5">The application commits not to collect or share any user information about this accessibility right.</string>
 
 
 </resources>

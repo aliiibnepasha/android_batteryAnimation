@@ -148,4 +148,22 @@
     <string name="percentage_color">Màu phần trăm</string>
     <string name="enable_battery_widget">Bật dịch vụ tiện ích con</string>
     <string name="widget_limit_reached">Đã đạt giới hạn 10 tiện ích. Vui lòng xóa tiện ích cũ khỏi màn hình chính.</string>
+    <string name="accessibility_desc">Ứng dụng này cần được kích hoạt trong Accessibility Service để hiển thị Emoji Battery Widget ở dưới cùng màn hình và thực hiện các thao tác trợ năng: Home, Back, Recent. Không thu thập hoặc chia sẻ dữ liệu cá nhân.</string>
+    <string name="accessibility_service">Dịch vụ Trợ năng</string>
+    <string name="accessibility_service_usage">Sử dụng Dịch vụ Trợ năng</string>
+    <string name="previous">Trước</string>
+    <string name="how_to_use">Cách sử dụng</string>
+    <string name="got_it">Xong!</string>
+    <string name="text_accessibility_1">1. Mở “Ứng dụng đã cài” hoặc “Ứng dụng đã tải” trong cài đặt Accessibility</string>
+    <string name="text_accessibility_2">2. Chọn “Emoji Battery Widget”</string>
+    <string name="text_accessibility_3">3. Bật nó lên</string>
+    <string name="txt_title_use_2">Tại sao ứng dụng cần Accessibility Service?</string>
+    <string name="txt_title_use_3">Các cử chỉ được hỗ trợ</string>
+    <string name="txt_des_use_2">Để hiển thị tiện ích thanh trạng thái tùy chỉnh và thực hiện các hành động: Home, Back, Recent. Không thu thập hoặc chia sẻ dữ liệu người dùng.</string>
+    <string name="txt_des_use_3">Các cử chỉ hỗ trợ: Chụp màn hình, Cuộn nhanh lên trên, Mở Control Center, Mở Notifications, Home, Recent, Tùy chọn nguồn, Khóa màn hình.</string>
+    <string name="text_dialog_accessibility_1">Vui lòng đồng ý với Điều khoản Dịch vụ</string>
+    <string name="text_dialog_accessibility_2">Ứng dụng yêu cầu quyền Accessibility Services để:</string>
+    <string name="text_dialog_accessibility_3">Hiển thị “Emoji Battery Widget” và phát hiện cử chỉ trên thanh trạng thái.</string>
+    <string name="text_dialog_accessibility_4">Thực hiện các hành động: Home, Back, màn hình Recent.</string>
+    <string name="text_dialog_accessibility_5">Ứng dụng cam kết không thu thập hoặc chia sẻ bất kỳ dữ liệu cá nhân nào liên quan đến quyền này.</string>
    </resources>

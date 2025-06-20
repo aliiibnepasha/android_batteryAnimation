@@ -29,9 +29,6 @@ class SlideOneFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.tvSlideText.text =
-            arguments?.getString(ARG_TEXT)
-                ?: "Default text"
     }
 
     override fun onDestroyView() {

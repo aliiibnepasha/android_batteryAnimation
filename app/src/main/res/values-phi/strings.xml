@@ -145,4 +145,22 @@
     <string name="enable_battery_widget">I-enable ang Serbisyo ng Widget</string>
     <string name="widget_limit_reached">Naabot na ang limitasyon ng widget (10). Pakitanggal ang mga lumang widget sa home screen.</string>
 
+    <string name="accessibility_desc">Kailangang i‑activate ang app na ito sa Accessibility Service upang ipakita ang Emoji Battery Widget sa ilalim ng screen at magsagawa ng ilang accessibility actions: Home, Back, Recent. Hindi nangongolekta o nagbabahagi ng personal na data.</string>
+    <string name="accessibility_service">Accessibility Service</string>
+    <string name="accessibility_service_usage">Paggamit ng Accessibility Service</string>
+    <string name="previous">Previous</string>
+    <string name="how_to_use">How to Use</string>
+    <string name="got_it">Got it!</string>
+    <string name="text_accessibility_1">1. Buksan ang “Installed Apps” o “Downloaded Apps” sa Accessibility settings</string>
+    <string name="text_accessibility_2">2. Piliin ang “Emoji Battery Widget”</string>
+    <string name="text_accessibility_3">3. I‑turn on ito</string>
+    <string name="txt_title_use_2">Bakit kailangan ng app ng Accessibility Service?</string>
+    <string name="txt_title_use_3">Suportadong gestures</string>
+    <string name="txt_des_use_2">Para ipakita ang custom na status bar widget at magsagawa ng aksyon: Home, Back, Recent. Hindi nangongolekta o nagbabahagi ng user data.</string>
+    <string name="txt_des_use_3">Mga suportadong gesture: Screenshot, Quick scroll to top, Buksan ang Control Center, Buksan ang Notifications, Home, Recent, Power options, Lock screen.</string>
+    <string name="text_dialog_accessibility_1">Mangyaring tanggapin ang Terms of Service</string>
+    <string name="text_dialog_accessibility_2">Kailangan ng app ang permiso ng Accessibility Services para sa:</string>
+    <string name="text_dialog_accessibility_3">Ipakita ang “Emoji Battery Widget” at matukoy ang gestures sa status bar.</string>
+    <string name="text_dialog_accessibility_4">Magsagawa ng aksyon: Home, Back, Recent screen.</string>
+    <string name="text_dialog_accessibility_5">Ipinapangako ng app na hindi mangongolekta o magbabahagi ng personal na data kaugnay ng permiso na ito.</string>
 </resources>

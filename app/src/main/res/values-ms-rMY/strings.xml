@@ -147,4 +147,23 @@
     <string name="percentage_color">Warna Peratus</string>
     <string name="enable_battery_widget">Aktifkan Perkhidmatan Widget</string>
     <string name="widget_limit_reached">Had widget telah mencapai maksimum 10. Sila padam widget lama dari skrin utama.</string>
+    <string name="accessibility_desc">Apl ini mesti diaktifkan dalam Perkhidmatan Aksesibiliti untuk memaparkan Emoji Battery Widget di bahagian bawah skrin dan menjalankan beberapa tindakan aksesibiliti: Laman Utama, Kembali, Terkini. Tiada data peribadi dikumpul atau dikongsi.</string>
+    <string name="accessibility_service">Perkhidmatan Aksesibiliti</string>
+    <string name="accessibility_service_usage">Penggunaan Perkhidmatan Aksesibiliti</string>
+    <string name="previous">Sebelumnya</string>
+    <string name="how_to_use">Cara guna</string>
+    <string name="got_it">Faham!</string>
+    <string name="text_accessibility_1">1. Buka “Apl Terpasang” atau “Apl Dimuat Turun” dalam tetapan Aksesibiliti</string>
+    <string name="text_accessibility_2">2. Pilih “Emoji Battery Widget”</string>
+    <string name="text_accessibility_3">3. Hidupkan</string>
+    <string name="txt_title_use_2">Kenapa apl ini memerlukan Perkhidmatan Aksesibiliti?</string>
+    <string name="txt_title_use_3">Gerakan yang disokong</string>
+    <string name="txt_des_use_2">Untuk memaparkan widget bar status tersuai &amp; jalankan tindakan: Utama, Kembali, Terkini. Tiada data pengguna dikumpul atau dikongsi.</string>
+    <string name="txt_des_use_3">Gerakan disokong: Tangkapan skrin, tatal cepat ke atas, buka Pusat Kawalan, buka Pemberitahuan, Utama, Terkini, pilihan kuasa, kunci skrin.</string>
+    <string name="text_dialog_accessibility_1">Sila setuju kepada Terma Perkhidmatan</string>
+    <string name="text_dialog_accessibility_2">Apl ini memerlukan kebenaran Perkhidmatan Aksesibiliti untuk:</string>
+    <string name="text_dialog_accessibility_3">Memaparkan “Emoji Battery Widget” dan mengesan gerakan bar status.</string>
+    <string name="text_dialog_accessibility_4">Menjalankan tindakan: Utama, Kembali, skrin Terkini.</string>
+    <string name="text_dialog_accessibility_5">Apl ini tidak mengumpul atau berkongsi sebarang data peribadi berkaitan kebenaran ini.</string>
+
 </resources>

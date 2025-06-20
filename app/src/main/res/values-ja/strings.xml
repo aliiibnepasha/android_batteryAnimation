@@ -143,4 +143,22 @@
     <string name="enable_battery_widget">ウィジェットサービスを有効にする</string>
     <string name="widget_limit_reached">ウィジェットの上限（10個）に達しました。ホーム画面から古いウィジェットを削除してください。</string>
 
+    <string name="accessibility_desc">このアプリは、画面下部にEmoji Battery Widgetを表示し、ホームや戻る、最近の画面などのアクセシビリティ操作を実行するために、アクセシビリティサービスで有効にする必要があります。個人データは収集または共有されません。</string>
+    <string name="accessibility_service">アクセシビリティサービス</string>
+    <string name="accessibility_service_usage">アクセシビリティサービスの使用</string>
+    <string name="previous">前へ</string>
+    <string name="how_to_use">使い方</string>
+    <string name="got_it">完了!</string>
+    <string name="text_accessibility_1">1. 設定のアクセシビリティで「インストール済みアプリ」または「ダウンロード済みアプリ」を開く</string>
+    <string name="text_accessibility_2">2. 「Emoji Battery Widget」を選択</string>
+    <string name="text_accessibility_3">3. オンにする</string>
+    <string name="txt_title_use_2">なぜアクセシビリティサービスが必要なのですか？</string>
+    <string name="txt_title_use_3">サポートされているジェスチャー</string>
+    <string name="txt_des_use_2">カスタムステータスバーウィジェットを表示し、ホーム、戻る、最近の画面などの操作を実行するためです。ユーザーデータは収集または共有されません。</string>
+    <string name="txt_des_use_3">対応ジェスチャー：スクリーンショット、トップへのクイックスクロール、コントロールセンターを開く、通知を開く、ホーム、最近、電源メニュー、画面ロック。</string>
+    <string name="text_dialog_accessibility_1">利用規約に同意してください</string>
+    <string name="text_dialog_accessibility_2">このアプリは以下のためにアクセシビリティサービスの許可が必要です：</string>
+    <string name="text_dialog_accessibility_3">「Emoji Battery Widget」を表示し、ステータスバーのジェスチャーを検出するため。</string>
+    <string name="text_dialog_accessibility_4">実行する操作：ホーム、戻る、最近の画面。</string>
+    <string name="text_dialog_accessibility_5">このアプリは、当該権限に関する個人情報を収集または共有しないことを約束します。</string>
 </resources>

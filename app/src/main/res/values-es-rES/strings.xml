@@ -141,4 +141,22 @@
     <string name="enable_battery_widget">Activar el servicio del widget</string>
     <string name="widget_limit_reached">Se alcanzó el límite de 10 widgets. Elimina los widgets antiguos de la pantalla de inicio.</string>
 
+    <string name="accessibility_desc">Esta app debe activarse en el Servicio de Accesibilidad para mostrar el Emoji Battery Widget en la parte inferior de la pantalla y realizar varias acciones de accesibilidad: Inicio, Atrás, Recientes. No se recopilan ni comparten datos personales.</string>
+    <string name="accessibility_service">Servicio de Accesibilidad</string>
+    <string name="accessibility_service_usage">Uso del Servicio de Accesibilidad</string>
+    <string name="previous">Anterior</string>
+    <string name="how_to_use">Cómo usar</string>
+    <string name="got_it">¡Entendido!</string>
+    <string name="text_accessibility_1">1. Ve a “Apps instaladas” o “Apps descargadas” en ajustes de accesibilidad</string>
+    <string name="text_accessibility_2">2. Selecciona “Emoji Battery Widget”</string>
+    <string name="text_accessibility_3">3. Actívalo</string>
+    <string name="txt_title_use_2">¿Por qué necesita la app el Servicio de Accesibilidad?</string>
+    <string name="txt_title_use_3">Gestos compatibles</string>
+    <string name="txt_des_use_2">Para mostrar un widget personalizado de barra de estado y ejecutar acciones: Inicio, Atrás, Recientes. No se recopilan ni comparten datos del usuario.</string>
+    <string name="txt_des_use_3">Gestos soportados: Captura de pantalla, desplazamiento rápido al inicio, abrir centro de control, abrir notificaciones, Inicio, Recientes, opciones de energía, bloqueo de pantalla.</string>
+    <string name="text_dialog_accessibility_1">Por favor, acepta los Términos de servicio</string>
+    <string name="text_dialog_accessibility_2">La app necesita permiso de Servicios de Accesibilidad para:</string>
+    <string name="text_dialog_accessibility_3">Mostrar el “Emoji Battery Widget” y detectar gestos en la barra de estado.</string>
+    <string name="text_dialog_accessibility_4">Realizar acciones: Inicio, Atrás, pantalla Recientes.</string>
+    <string name="text_dialog_accessibility_5">La app se compromete a no recopilar ni compartir datos personales relacionados con este permiso.</string>
 </resources>

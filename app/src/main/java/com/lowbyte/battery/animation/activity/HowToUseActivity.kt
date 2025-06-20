@@ -6,7 +6,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ActivityHowToUseBinding
@@ -35,6 +34,10 @@ class HowToUseActivity : AppCompatActivity() {
 
         binding.btnPrev.setOnClickListener {
             binding.viewPager.currentItem = binding.viewPager.currentItem - 1
+        }
+
+        binding.ibBackButton.setOnClickListener {
+            finish()
         }
 
 

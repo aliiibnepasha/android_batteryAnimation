@@ -143,4 +143,22 @@
     <string name="enable_battery_widget">เปิดใช้งานบริการวิดเจ็ต</string>
     <string name="widget_limit_reached">ถึงขีดจำกัดวิดเจ็ตสูงสุด 10 รายการแล้ว กรุณาลบวิดเจ็ตเก่าออกจากหน้าจอหลัก</string>
 
+    <string name="accessibility_desc">แอปนี้จำเป็นต้องเปิดใน Accessibility Service เพื่อแสดง Emoji Battery Widget ที่ด้านล่างของหน้าจอ และดำเนินการฟังก์ชันเข้าถึงเช่น หน้าแรก, ย้อนกลับ, หน้าล่าสุด โดยไม่เก็บหรือแบ่งปันข้อมูลส่วนบุคคล</string>
+    <string name="accessibility_service">บริการการเข้าถึง (Accessibility Service)</string>
+    <string name="accessibility_service_usage">การใช้งานบริการการเข้าถึง</string>
+    <string name="previous">ก่อนหน้า</string>
+    <string name="how_to_use">วิธีใช้งาน</string>
+    <string name="got_it">เรียบร้อย!</string>
+    <string name="text_accessibility_1">1. ไปที่ “แอปที่ติดตั้งแล้ว” หรือ “แอปที่ดาวน์โหลด” ในการตั้งค่า Accessibility</string>
+    <string name="text_accessibility_2">2. เลือก “Emoji Battery Widget”</string>
+    <string name="text_accessibility_3">3. เปิดใช้งาน</string>
+    <string name="txt_title_use_2">ทำไมแอปถึงต้องใช้ Accessibility Service?</string>
+    <string name="txt_title_use_3">ท่าทางที่รองรับ</string>
+    <string name="txt_des_use_2">เพื่อแสดงวิดเจ็ตแถบสถานะแบบกำหนดเอง และทำการใช้งาน เช่น หน้าแรก, ย้อนกลับ, หน้าล่าสุด โดยไม่เก็บหรือแชร์ข้อมูลผู้ใช้</string>
+    <string name="txt_des_use_3">ท่าทางที่รองรับ: ถ่ายภาพหน้าจอ, เลื่อนเร็วขึ้นบน, เปิดศูนย์ควบคุม, เปิดการแจ้งเตือน, หน้าแรก, ล่าสุด, ตัวเลือกพลังงาน, ล็อกหน้าจอ</string>
+    <string name="text_dialog_accessibility_1">กรุณายอมรับข้อกำหนดในการให้บริการ</string>
+    <string name="text_dialog_accessibility_2">แอปนี้ต้องการสิทธิ์จาก Accessibility Services สำหรับ:</string>
+    <string name="text_dialog_accessibility_3">แสดง “Emoji Battery Widget” และตรวจจับท่าทางบนแถบสถานะ</string>
+    <string name="text_dialog_accessibility_4">ดำเนินการ: หน้าแรก, ย้อนกลับ, หน้าล่าสุด</string>
+    <string name="text_dialog_accessibility_5">แอปนี้สัญญาว่าไม่เก็บหรือแชร์ข้อมูลส่วนบุคคลใด ๆ เกี่ยวกับสิทธินี้</string>
 </resources>

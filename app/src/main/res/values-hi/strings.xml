@@ -141,4 +141,23 @@
     <string name="enable_battery_widget">विजेट सेवा सक्षम करें</string>
     <string name="widget_limit_reached">विजेट की सीमा 10 तक पहुंच गई है। कृपया होम स्क्रीन से पुराने विजेट हटाएं।</string>
 
+    <string name="accessibility_desc">यह ऐप “Emoji Battery Widget” को स्क्रीन के नीचे दिखाने और कई एक्सेसिबिलिटी क्रियाएँ (होम, बैक, हालिया) करने के लिए Accessibility Service में सक्रिय किया जाना चाहिए। कोई व्यक्तिगत डेटा नहीं एकत्रित या साझा किया जाता है।</string>
+    <string name="accessibility_service">एक्सेसिबिलिटी सेवा</string>
+    <string name="accessibility_service_usage">एक्सेसिबिलिटी सेवा उपयोग</string>
+    <string name="previous">पिछला</string>
+    <string name="how_to_use">उपयोग कैसे करें</string>
+    <string name="got_it">समझ गया!</string>
+    <string name="text_accessibility_1">1. Accessibility सेटिंग में “इंस्टॉल्ड ऐप्स” या “डाउनलोडेड ऐप्स” खोलें</string>
+    <string name="text_accessibility_2">2. “Emoji Battery Widget” चुनें</string>
+    <string name="text_accessibility_3">3. इसे ऑन करें</string>
+    <string name="txt_title_use_2">यह ऐप Accessibility Service की आवश्यकता क्यों है?</string>
+    <string name="txt_title_use_3">समर्थित जेश्चर</string>
+    <string name="txt_des_use_2">यह ऐप कस्टम स्टेटस बार विजेट दिखाने और इन क्रियाओं के लिए: होम, बैक, हालिया। कोई डेटा एकत्र या साझा नहीं किया जाता।</string>
+    <string name="txt_des_use_3">समर्थित जेश्चर: स्क्रीनशॉट, जल्दी टॉप स्क्रॉल, कंट्रोल सेंटर खोलें, नोटिफिकेशन खोलें, होम, हालिया, पावर विकल्प, स्क्रीन लॉक।</string>
+    <string name="text_dialog_accessibility_1">कृपया सेवा की शर्तों से सहमत हों</string>
+    <string name="text_dialog_accessibility_2">इस ऐप को Accessibility सेवा की अनुमति चाहिए:</string>
+    <string name="text_dialog_accessibility_3">“Emoji Battery Widget” दिखाने और स्टेटस बार जेश्चर का पता लगाने के लिए।</string>
+    <string name="text_dialog_accessibility_4">क्रियाएँ शुरू करने के लिए: होम, बैक, हालिया स्क्रीन।</string>
+    <string name="text_dialog_accessibility_5">यह ऐप इस अनुमति से जुड़े कोई व्यक्तिगत डेटा एकत्रित या साझा नहीं करता।</string>
+
 </resources>

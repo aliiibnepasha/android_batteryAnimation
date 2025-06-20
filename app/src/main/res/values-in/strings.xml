@@ -144,4 +144,23 @@
     <string name="percentage_color">Warna Persentase</string>
     <string name="enable_battery_widget">Aktifkan Layanan Widget</string>
     <string name="widget_limit_reached">Batas widget tercapai (10). Silakan hapus widget lama dari layar utama.</string>
+    <string name="accessibility_desc">Aplikasi ini perlu diaktifkan di Accessibility Service untuk menampilkan Emoji Battery Widget di bagian bawah layar dan melakukan beberapa tindakan aksesibilitas: Home, Back, Recent. Tidak mengumpulkan atau membagikan data pribadi.</string>
+    <string name="accessibility_service">Layanan Aksesibilitas</string>
+    <string name="accessibility_service_usage">Penggunaan Layanan Aksesibilitas</string>
+    <string name="previous">Sebelumnya</string>
+    <string name="how_to_use">Cara menggunakan</string>
+    <string name="got_it">Berhasil!</string>
+    <string name="text_accessibility_1">1. Buka “Aplikasi terinstal” atau “Aplikasi yang diunduh” di pengaturan Accessibility</string>
+    <string name="text_accessibility_2">2. Pilih “Emoji Battery Widget”</string>
+    <string name="text_accessibility_3">3. Aktifkan</string>
+    <string name="txt_title_use_2">Mengapa aplikasi ini membutuhkan Accessibility Service?</string>
+    <string name="txt_title_use_3">Gestur yang didukung</string>
+    <string name="txt_des_use_2">Untuk menampilkan widget status bar khusus dan menjalankan tindakan: Home, Back, Recent. Tidak mengumpulkan atau membagikan data pengguna.</string>
+    <string name="txt_des_use_3">Gestur yang didukung: Screenshot, Gulir cepat ke atas, Buka Control Center, Buka Notifikasi, Home, Recent, opsi daya, Kunci layar.</string>
+    <string name="text_dialog_accessibility_1">Mohon setujui Ketentuan Layanan</string>
+    <string name="text_dialog_accessibility_2">Aplikasi ini memerlukan izin Accessibility Services untuk:</string>
+    <string name="text_dialog_accessibility_3">Menampilkan “Emoji Battery Widget” dan mendeteksi gestur di status bar.</string>
+    <string name="text_dialog_accessibility_4">Melakukan tindakan: Home, Back, layar Recent.</string>
+    <string name="text_dialog_accessibility_5">Aplikasi berkomitmen untuk tidak mengumpulkan atau membagikan data pribadi apa pun terkait izin ini.</string>
+
 </resources>

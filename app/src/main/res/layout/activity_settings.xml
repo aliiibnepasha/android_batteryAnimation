@@ -206,7 +206,7 @@
             app:layout_constraintEnd_toStartOf="@+id/descriptionHowToUse"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_setting_language" />
+            app:srcCompat="@drawable/ic_info" />
 
         <TextView
             android:id="@+id/descriptionHowToUse"

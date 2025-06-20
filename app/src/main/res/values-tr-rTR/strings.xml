@@ -147,4 +147,22 @@
     <string name="percentage_color">Yüzde Rengi</string>
     <string name="enable_battery_widget">Widget Servisini Etkinleştir</string>
     <string name="widget_limit_reached">Widget sınırı (10) aşıldı. Lütfen ana ekrandan eski widget ları silin.</string>
+    <string name="accessibility_desc">Bu uygulama, ekranın altında Emoji Battery Widget’ı göstermek ve birkaç erişilebilirlik eylemi yapmak için Accessibility Servis’te etkinleştirilmelidir: Ana Sayfa, Geri, Son Uygulamalar. Hiçbir kişisel veri toplanmaz veya paylaşılmaz.</string>
+    <string name="accessibility_service">Erişilebilirlik Servisi</string>
+    <string name="accessibility_service_usage">Erişilebilirlik Servisi Kullanımı</string>
+    <string name="previous">Önceki</string>
+    <string name="how_to_use">Nasıl kullanılır</string>
+    <string name="got_it">Tamam!</string>
+    <string name="text_accessibility_1">1. Erişilebilirlik ayarlarında “Yüklü Uygulamalar” veya “İndirilen Uygulamalar”ı açın</string>
+    <string name="text_accessibility_2">2. “Emoji Battery Widget”ı seçin</string>
+    <string name="text_accessibility_3">3. Açın</string>
+    <string name="txt_title_use_2">Uygulamanın Accessibility Servis’e neden ihtiyacı var?</string>
+    <string name="txt_title_use_3">Desteklenen jestler</string>
+    <string name="txt_des_use_2">Özelleştirilmiş durum çubuğu widget ı göstermek ve Ana Sayfa, Geri, Son Uygulamalar eylemlerini gerçekleştirmek için. Hiçbir kullanıcı verisi toplanmaz veya paylaşılmaz.</string>
+    <string name="txt_des_use_3">Desteklenen jestler: Ekran görüntüsü, Hızlı yukarı kaydırma, Kontrol Merkezini aç, Bildirimleri aç, Ana Sayfa, Son Uygulamalar, Güç seçenekleri, Ekran kilidi.</string>
+    <string name="text_dialog_accessibility_1">Lütfen Hizmet Şartları’nı kabul edin</string>
+    <string name="text_dialog_accessibility_2">Bu uygulama, şu izin için Accessibility Servis’e ihtiyaç duyar:</string>
+    <string name="text_dialog_accessibility_3">“Emoji Battery Widget”ı göstermek ve durum çubuğu jestlerini algılamak için.</string>
+    <string name="text_dialog_accessibility_4">Şu eylemleri gerçekleştirmek için: Ana Sayfa, Geri, Son Uygulamalar ekranı.</string>
+    <string name="text_dialog_accessibility_5">Uygulama, bu izinle ilgili kişisel veri toplamayacağını veya paylaşmayacağını taahhüt eder.</string>
 </resources>

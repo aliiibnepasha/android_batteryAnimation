@@ -145,4 +145,22 @@
     <string name="enable_battery_widget">Ativar o serviço de widget</string>
     <string name="widget_limit_reached">Limite de widgets atingido (10). Elimine os widgets antigos do ecrã principal.</string>
 
+    <string name="accessibility_desc">Esta app precisa ser ativada na Accessibility Service para mostrar o Emoji Battery Widget na parte inferior do ecrã e executar várias ações de acessibilidade: Home, Back, Recent. Nenhum dado pessoal é recolhido ou partilhado.</string>
+    <string name="accessibility_service">Serviço de Acessibilidade</string>
+    <string name="accessibility_service_usage">Uso do Serviço de Acessibilidade</string>
+    <string name="previous">Anterior</string>
+    <string name="how_to_use">Como usar</string>
+    <string name="got_it">Percebi!</string>
+    <string name="text_accessibility_1">1. Abra “Aplicações instaladas” ou “Aplicações descarregadas” nas definições de acessibilidade</string>
+    <string name="text_accessibility_2">2. Selecione “Emoji Battery Widget”</string>
+    <string name="text_accessibility_3">3. Ative-o</string>
+    <string name="txt_title_use_2">Por que esta app necessita do Serviço de Acessibilidade?</string>
+    <string name="txt_title_use_3">Gestos suportados</string>
+    <string name="txt_des_use_2">Para mostrar um widget personalizado na barra de estado e iniciar ações: Home, Back, Recent. Nenhum dado de utilizador é recolhido ou partilhado.</string>
+    <string name="txt_des_use_3">Gestos suportados: Captura de ecrã, Rolar rapidamente para o topo, Abrir Centro de Controlo, Abrir Notificações, Home, Recent, opções de energia, Bloquear ecrã.</string>
+    <string name="text_dialog_accessibility_1">Por favor, aceite os Termos de Serviço</string>
+    <string name="text_dialog_accessibility_2">Esta app requer permissão para Accessibility Services para:</string>
+    <string name="text_dialog_accessibility_3">Exibir o “Emoji Battery Widget” e detetar gestos na barra de estado.</string>
+    <string name="text_dialog_accessibility_4">Executar ações: Home, Back, ecrã Recent.</string>
+    <string name="text_dialog_accessibility_5">A app compromete-se a não recolher nem partilhar quaisquer dados pessoais relacionados com esta permissão.</string>
 </resources>
