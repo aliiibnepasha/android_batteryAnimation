@@ -15,6 +15,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
 import com.lowbyte.battery.animation.databinding.FragmentViewAllEmojiBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
@@ -90,12 +91,8 @@ class ViewAllEmojiFragment : Fragment() {
                         requireActivity(),
                         "allow_accessibility_click"
                     )
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.please_enable_accessibility_service),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                    startActivity(Intent(requireActivity(), AllowAccessibilityActivity::class.java))
+                    // startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                 },
                 onCancelClicked = {
                     FirebaseAnalyticsUtils.logClickEvent(

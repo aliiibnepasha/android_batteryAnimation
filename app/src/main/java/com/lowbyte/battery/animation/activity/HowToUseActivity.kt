@@ -14,10 +14,9 @@ import com.lowbyte.battery.animation.main.intro.SlidePagerAdapter
 class HowToUseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHowToUseBinding
     private lateinit var adapter: SlidePagerAdapter
-    private val slides = listOf("Page One", "Page Two", "Page Three")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-      //  enableEdgeToEdge()
 
         binding = ActivityHowToUseBinding.inflate(layoutInflater)
         setContentView(binding.root)

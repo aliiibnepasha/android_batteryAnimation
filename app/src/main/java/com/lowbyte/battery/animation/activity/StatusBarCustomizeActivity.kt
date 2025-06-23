@@ -211,7 +211,8 @@ class StatusBarCustomizeActivity : BaseActivity() {
             val sheet = AccessibilityPermissionBottomSheet(
                 onAllowClicked = {
                     FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
-                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                    startActivity(Intent(this, AllowAccessibilityActivity::class.java))
+                  //  startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                 },
                 onCancelClicked = {
                     FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_denied", null)

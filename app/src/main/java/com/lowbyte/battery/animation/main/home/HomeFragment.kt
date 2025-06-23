@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
 import com.lowbyte.battery.animation.activity.BatteryAnimationEditApplyActivity
 import com.lowbyte.battery.animation.activity.BatteryWidgetEditApplyActivity
 import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
@@ -146,7 +147,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         Toast.LENGTH_LONG
                     ).show()
                     FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "accessibility_allow_clicked")
-                    startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                    startActivity(Intent(requireActivity(), AllowAccessibilityActivity::class.java))
                 },
                 onCancelClicked = {
                     FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "accessibility_cancel_clicked")
@@ -172,5 +173,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         return enabledServices.split(':').any {
             it.equals(expectedComponentName, ignoreCase = true)
         }
+    }
+
+    override fun onResume() {
+        if (!isAccessibilityServiceEnabled()){
+            binding.switchEnableBatteryEmoji.isChecked = false
+            preferences.isStatusBarEnabled = false
+        }
+        super.onResume()
     }
 }
