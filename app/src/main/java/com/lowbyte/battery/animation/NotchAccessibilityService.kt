@@ -43,6 +43,7 @@ import java.util.Date
 
 class NotchAccessibilityService : AccessibilityService() {
 
+
     private var windowManager: WindowManager? = null
     private var layoutParams: WindowManager.LayoutParams? = null
     private val handler = Handler(Looper.getMainLooper())
@@ -55,23 +56,32 @@ class NotchAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         preferences = AppPreferences.getInstance(this)
-
+        windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         createCustomStatusBar()
+        createNotificationBar()
+        createNotificationNotch()
         registerUpdateReceiver()
         startTimeUpdates()
 
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
-    override fun onInterrupt() {}
+    override fun onInterrupt() {
+
+    }
 
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
         statusBarBinding?.root?.let { windowManager?.removeView(it) }
+        notificationViewBinding?.root?.let { windowManager?.removeView(it) }
+        notificationNotchBinding?.root?.let { windowManager?.removeView(it) }
         statusBarBinding = null
+        notificationViewBinding = null
+        notificationNotchBinding = null
         updateReceiver?.let { unregisterReceiver(it) }
         updateReceiver = null
+
     }
 
     private fun registerUpdateReceiver() {
@@ -138,6 +148,50 @@ class NotchAccessibilityService : AccessibilityService() {
             }
         }
     }
+
+    private fun createNotificationBar() {
+        notificationViewBinding = CustomNotificationBarBinding.inflate(LayoutInflater.from(this))
+        val view = notificationViewBinding?.root ?: return
+        val params = WindowManager.LayoutParams(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            PixelFormat.TRANSLUCENT
+        ).apply {
+            gravity = Gravity.TOP
+          //  y = dpToPx(30)
+        }
+        windowManager?.addView(view, params)
+    }
+
+    private fun createNotificationNotch() {
+        notificationNotchBinding = CustomNotchBarBinding.inflate(LayoutInflater.from(this))
+        val view = notificationNotchBinding?.root ?: return
+        val notchParams = WindowManager.LayoutParams(
+            dpToPx(preferences.getInt("notch_width", 120)),
+            dpToPx(preferences.getInt("notch_height", 30)),
+            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            PixelFormat.TRANSLUCENT
+        ).apply {
+            gravity = Gravity.TOP or Gravity.START
+            x = dpToPx(preferences.getInt("notch_x", 0))
+          //  y = dpToPx(preferences.getInt("notch_y", 50))
+        }
+        windowManager?.addView(view, notchParams)
+    }
+
+    private fun dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density).toInt()
+    }
+
 
     private fun updateStatusBarAppearance() {
         val binding = statusBarBinding ?: return
