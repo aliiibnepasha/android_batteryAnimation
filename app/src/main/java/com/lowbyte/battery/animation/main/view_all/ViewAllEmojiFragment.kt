@@ -5,16 +5,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.lowbyte.battery.animation.NotchAccessibilityService
-import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
 import com.lowbyte.battery.animation.databinding.FragmentViewAllEmojiBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
@@ -27,6 +24,7 @@ class ViewAllEmojiFragment : Fragment() {
 
     private lateinit var binding: FragmentViewAllEmojiBinding
     private lateinit var preferences: AppPreferences
+    private lateinit var sheet: AccessibilityPermissionBottomSheet // Declare the sheet
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +32,30 @@ class ViewAllEmojiFragment : Fragment() {
     ): View {
         binding = FragmentViewAllEmojiBinding.inflate(inflater, container, false)
         preferences = AppPreferences.getInstance(requireContext())
+        sheet = AccessibilityPermissionBottomSheet(
+            onAllowClicked = {
+                FirebaseAnalyticsUtils.logClickEvent(
+                    requireActivity(),
+                    "allow_accessibility_click"
+                )
+                startActivity(Intent(requireActivity(), AllowAccessibilityActivity::class.java))
+                // startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            },
+            onCancelClicked = {
+                FirebaseAnalyticsUtils.logClickEvent(
+                    requireActivity(),
+                    "cancel_accessibility_permission"
+                )
+                preferences.isStatusBarEnabled = false
+                binding.switchEnableBatteryEmojiViewAll.isChecked = false
+            }, onDismissListener = {
+                if (!isAccessibilityServiceEnabled()) {
+                    preferences.isStatusBarEnabled = false
+                    binding.switchEnableBatteryEmojiViewAll.isChecked = false
+                }
 
+            }
+        )
         // Log screen view
         FirebaseAnalyticsUtils.logScreenView(this, "ViewAllEmojiFragment")
 
@@ -85,24 +106,7 @@ class ViewAllEmojiFragment : Fragment() {
 
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
-            AccessibilityPermissionBottomSheet(
-                onAllowClicked = {
-                    FirebaseAnalyticsUtils.logClickEvent(
-                        requireActivity(),
-                        "allow_accessibility_click"
-                    )
-                    startActivity(Intent(requireActivity(), AllowAccessibilityActivity::class.java))
-                    // startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-                },
-                onCancelClicked = {
-                    FirebaseAnalyticsUtils.logClickEvent(
-                        requireActivity(),
-                        "cancel_accessibility_permission"
-                    )
-                    preferences.isStatusBarEnabled = false
-                    binding.switchEnableBatteryEmojiViewAll.isChecked = false
-                }
-            ).show(childFragmentManager, "AccessibilityPermission")
+            sheet.show(childFragmentManager, "AccessibilityPermission")
         } else {
             binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled
             requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))

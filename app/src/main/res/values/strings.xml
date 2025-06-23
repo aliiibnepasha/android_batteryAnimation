@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Battery Emoji</string>
+    <string name="app_name">Emoji Battery Status Bar</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -74,11 +74,7 @@
     <string name="dark_mode">Dark mode</string>
     <string name="terms_of_service">Terms of service</string>
     <string name="privacy_policy">Privacy policy</string>
-    <string name="accessibility_permission">Accessibility Permission</string>
-    <string name="service_note_1">This Service Ensures The Application Control\nPanel Maintains Layout Functionality.</string>
-    <string name="why_we_need_accessibility_permission">Why we need accessibility permission?</string>
-    <string name="service_note_2">We Need Permission To Enhance Your App\nExperience And Functionality.</string>
-    <string name="service_note_3">I Have Read And Accepted Terms Of Service</string>
+
     <string name="lock_screen_not_supported_on_your_device">Lock screen not supported on your device.</string>
     <string name="take_screenshot_not_supported_on_your_device">Take screenshot not supported on your device.</string>
     <string name="widget_design_preview">Take screenshot not supported on your device.</string>
@@ -157,20 +153,40 @@
     <string name="how_to_use">How to use</string>
     <string name="got_it">Got it!</string>
     <string name="text_accessibility_1">1. Select “Installed Apps” or “Downloaded Apps” in Accessibility Setting</string>
-    <string name="text_accessibility_2">2. Select “Emoji Battery Widget”</string>
+    <string name="text_accessibility_2">2. Select <b>“Emoji Battery Status Bar”</b></string>
     <string name="text_accessibility_3">3. Turn On</string>
     <string name="txt_title_use_2">Question: Why does the Application need Accessibility Service?</string>
     <string name="txt_title_use_3">Gestures that the application supports</string>
     <string name="txt_des_use_2">This app need to be activated in Accessibility Service to show custom status bar view on top of phone screen &amp; start several Accessibility actions: Action to Home, Back, show Recent Screen. This application do not collect or share any user data.</string>
     <string name="txt_des_use_3">Take screenshot, Quick scroll to top, Open Control center, Open Notification, Back home, Recent action, Power options, Lock screen.</string>
-    <string name="text_dialog_accessibility_1">Please agree the Terms of Service</string>
-    <string name="text_dialog_accessibility_2">This app required the Accessibility Services permission for:</string>
-    <string name="text_dialog_accessibility_3">Display “Emoji Battery Widget” view on mobile screen and to detect gestures on the status bar.</string>
-    <string name="text_dialog_accessibility_4">Start accessibility actions: action to Home, Back, show Recent screen.</string>
-    <string name="text_dialog_accessibility_5">The application commits not to collect or share any user information about this accessibility right.</string>
+    <string name="dot_point" translatable="false">●</string>
+
+    <!--TODO -->
+
+    <string name="accessibility_permission">Accessibility Service Usage</string>
+    <string name="service_note_1"><b>Please agree the term of service :</b>\nThis app required the Accessibility Services permission for,</string>
+    <string name="service_note_3">I have read and agree terms of services</string>
     <string name="agree">Agree</string>
     <string name="not_now">Not Now</string>
     <string name="go_to_setting">Go to Settings</string>
+    <string name="service_title_1">Why this feature is needed:</string>
+    <string name="service_title_1_1">To show the <b>“Emoji Battery Status Bar”</b> \n  view on top of the screen.</string>
+    <string name="service_title_1_2">To allow gesture detection on the status bar (e.g., swipe, tap).</string>
+    <string name="service_title_1_3">To enable system actions like Home, Back, and Recent Apps through gestures.</string>
+    <string name="service_title_1_4">These features are essential to the app’s core functionality.</string>
+    <string name="service_title_2">What data is collected:</string>
+    <string name="service_title_2_1">No personal or sensitive data is collected.</string>
+    <string name="service_title_2_2">The app only listens for gesture interactions on the screen.</string>
+    <string name="service_title_2_3">No content, text, or user activity is recorded or stored.</string>
+    <string name="service_title_3">How the data is used:</string>
+    <string name="service_title_3_1">Gesture input is used only to trigger system actions like navigating Home or Back.</string>
+    <string name="service_title_3_2">The service runs locally on the device and does not share data with any third parties.</string>
+    <string name="service_title_3_3">The accessibility permission is only used for enabling the widget overlay and gesture response.</string>
+    <string name="service_title_4">Clarity for users:</string>
+    <string name="service_title_4_1">This service helps users access system actions with custom gestures.</string>
+    <string name="service_title_4_2">It improves usability and customization of the phone s interface.</string>
+    <string name="service_title_4_3">To enable system actions like Home, Back, and Recent Apps through gestures.</string>
+    <string name="service_title_4_4">The app is committed to user privacy and does not misuse Accessibility permissions.</string>
 
 
 </resources>

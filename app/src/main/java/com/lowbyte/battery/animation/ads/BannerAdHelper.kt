@@ -2,6 +2,8 @@ package com.lowbyte.battery.animation.ads
 
 import android.content.Context
 import android.content.res.Resources
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +30,7 @@ object BannerAdHelper {
         val shimmer = container.findViewById<ViewGroup>(R.id.shimmerBanner)
         val adPlaceholder = container.findViewById<ViewGroup>(R.id.bannerAdContainer)
 
-        if (isProUser) {
+        if (isProUser || !isInternetAvailable(context)) {
             Log.d(TAG, "User is Pro — Banner ad will not be shown")
             container.visibility = View.GONE
             shimmer?.visibility = View.GONE
@@ -80,5 +82,12 @@ object BannerAdHelper {
         val adRequest = AdRequest.Builder().build()
         Log.d(TAG, "Requesting banner ad with ad unit: ${adView.adUnitId}")
         adView.loadAd(adRequest)
+    }
+
+    private fun isInternetAvailable(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 }

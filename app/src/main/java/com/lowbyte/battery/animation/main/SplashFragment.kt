@@ -1,6 +1,9 @@
 package com.lowbyte.battery.animation.main
 
 import android.animation.ObjectAnimator
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -109,13 +112,27 @@ class SplashFragment : Fragment() {
                 }
             }
         }
-        handler.postDelayed(resumeTimeoutRunnable!!, splashTimeout)
+        if (!isInternetAvailable(requireContext()) || preferences.isProUser){
+            handler.postDelayed(resumeTimeoutRunnable!!, 3000)
+            showProgressAndNavigate()
+        }else{
+            handler.postDelayed(resumeTimeoutRunnable!!, splashTimeout)
+        }
+
     }
     override fun onPause() {
         super.onPause()
         hasResumed = false
         resumeTimeoutRunnable?.let { handler.removeCallbacks(it) }
     }
+
+    private fun isInternetAvailable(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
 
     private fun handleAdEvents() {
         if ((bannerLoaded || preferences.isProUser) && (interstitialLoaded || preferences.isProUser)) {

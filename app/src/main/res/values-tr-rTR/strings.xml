@@ -76,11 +76,6 @@
     <string name="dark_mode">Karanlık Mod</string>
     <string name="terms_of_service">Hizmet Şartları</string>
     <string name="privacy_policy">Gizlilik Politikası</string>
-    <string name="accessibility_permission">Erişilebilirlik İzni</string>
-    <string name="service_note_1">Bu hizmet, uygulama kontrol\npanelinin düzenini korur.</string>
-    <string name="why_we_need_accessibility_permission">Erişilebilirlik iznine neden ihtiyacımız var?</string>
-    <string name="service_note_2">Uygulama deneyiminizi ve\nişlevselliğini geliştirmek için izne ihtiyacımız var.</string>
-    <string name="service_note_3">Hizmet Şartlarını okudum ve kabul ettim</string>
     <string name="lock_screen_not_supported_on_your_device">Ekran kilidi cihazınızda desteklenmiyor.</string>
     <string name="take_screenshot_not_supported_on_your_device">Ekran görüntüsü almak cihazınızda desteklenmiyor.</string>
     <string name="widget_design_preview">Araç takımı tasarım önizlemesi</string>
@@ -160,9 +155,29 @@
     <string name="txt_title_use_3">Desteklenen jestler</string>
     <string name="txt_des_use_2">Özelleştirilmiş durum çubuğu widget ı göstermek ve Ana Sayfa, Geri, Son Uygulamalar eylemlerini gerçekleştirmek için. Hiçbir kullanıcı verisi toplanmaz veya paylaşılmaz.</string>
     <string name="txt_des_use_3">Desteklenen jestler: Ekran görüntüsü, Hızlı yukarı kaydırma, Kontrol Merkezini aç, Bildirimleri aç, Ana Sayfa, Son Uygulamalar, Güç seçenekleri, Ekran kilidi.</string>
-    <string name="text_dialog_accessibility_1">Lütfen Hizmet Şartları’nı kabul edin</string>
-    <string name="text_dialog_accessibility_2">Bu uygulama, şu izin için Accessibility Servis’e ihtiyaç duyar:</string>
-    <string name="text_dialog_accessibility_3">“Emoji Battery Widget”ı göstermek ve durum çubuğu jestlerini algılamak için.</string>
-    <string name="text_dialog_accessibility_4">Şu eylemleri gerçekleştirmek için: Ana Sayfa, Geri, Son Uygulamalar ekranı.</string>
-    <string name="text_dialog_accessibility_5">Uygulama, bu izinle ilgili kişisel veri toplamayacağını veya paylaşmayacağını taahhüt eder.</string>
+
+    <string name="accessibility_permission">Erişilebilirlik Hizmeti Kullanımı</string>
+    <string name="service_note_1"><b>Lütfen hizmet şartlarını kabul edin:</b>\nBu uygulamanın Erişilebilirlik Hizmetleri iznine ihtiyacı vardır.</string>
+    <string name="service_note_3">Hizmet şartlarını okudum ve kabul ediyorum</string>
+    <string name="agree">Kabul Et</string>
+    <string name="not_now">Şimdi değil</string>
+    <string name="go_to_setting">Ayarlar a Git</string>
+    <string name="service_title_1">Bu özellik neden gerekli:</string>
+    <string name="service_title_1_1"><b>“Emoji Battery Status Bar”</b>’ı ekranın üst kısmında göstermek için.</string>
+    <string name="service_title_1_2">Durum çubuğunda (ör. kaydırma, dokunma) hareket algılama izni vermek için.</string>
+    <string name="service_title_1_3">Ev, Geri ve Son Uygulamalar gibi sistem işlemlerini hareketle sağlamak için.</string>
+    <string name="service_title_1_4">Bu özellikler uygulamanın temel işlevi için gereklidir.</string>
+    <string name="service_title_2">Toplanan veriler:</string>
+    <string name="service_title_2_1">Kişisel veya hassas hiçbir veri toplanmaz.</string>
+    <string name="service_title_2_2">Uygulama yalnızca ekran üzerindeki hareketleri dinler.</string>
+    <string name="service_title_2_3">İçerik, metin veya kullanıcı etkinliği kaydedilmez veya saklanmaz.</string>
+    <string name="service_title_3">Verilerin kullanımı:</string>
+    <string name="service_title_3_1">Hareketler yalnızca Ev veya Geri gibi sistem işlemlerini tetiklemek için kullanılır.</string>
+    <string name="service_title_3_2">Hizmet cihazda yerel olarak çalışır ve veriler üçüncü taraflarla paylaşılmaz.</string>
+    <string name="service_title_3_3">Erişilebilirlik izni yalnızca widget yerleşimi ve hareket yanıtı için kullanılır.</string>
+    <string name="service_title_4">Kullanıcılar için netlik:</string>
+    <string name="service_title_4_1">Bu hizmet, özel hareketlerle sistem işlemlerine erişimi kolaylaştırır.</string>
+    <string name="service_title_4_2">Telefon arayüzünün kullanılabilirliğini ve özelleştirilebilirliğini artırır.</string>
+    <string name="service_title_4_3">Ev, Geri, Son Uygulamalar gibi işlemleri hareketle sağlar.</string>
+    <string name="service_title_4_4">Uygulama gizliliğe önem verir ve erişilebilirlik izinlerini kötüye kullanmaz.</string>
 </resources>

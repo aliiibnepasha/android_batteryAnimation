@@ -74,11 +74,6 @@
     <string name="dark_mode">ダークモード</string>
     <string name="terms_of_service">利用規約</string>
     <string name="privacy_policy">プライバシーポリシー</string>
-    <string name="accessibility_permission">アクセシビリティの許可</string>
-    <string name="service_note_1">このサービスは、アプリケーションのコントロールパネルの\nレイアウト機能を維持することを保証します。</string>
-    <string name="why_we_need_accessibility_permission">なぜアクセシビリティの許可が必要ですか？</string>
-    <string name="service_note_2">アプリ体験と機能を向上させるために、許可が必要です。</string>
-    <string name="service_note_3">利用規約を読み、同意しました</string>
     <string name="lock_screen_not_supported_on_your_device">このデバイスでは画面ロックはサポートされていません。</string>
     <string name="take_screenshot_not_supported_on_your_device">このデバイスではスクリーンショットはサポートされていません。</string>
     <string name="widget_design_preview">このデバイスではスクリーンショットはサポートされていません。</string>
@@ -156,9 +151,28 @@
     <string name="txt_title_use_3">サポートされているジェスチャー</string>
     <string name="txt_des_use_2">カスタムステータスバーウィジェットを表示し、ホーム、戻る、最近の画面などの操作を実行するためです。ユーザーデータは収集または共有されません。</string>
     <string name="txt_des_use_3">対応ジェスチャー：スクリーンショット、トップへのクイックスクロール、コントロールセンターを開く、通知を開く、ホーム、最近、電源メニュー、画面ロック。</string>
-    <string name="text_dialog_accessibility_1">利用規約に同意してください</string>
-    <string name="text_dialog_accessibility_2">このアプリは以下のためにアクセシビリティサービスの許可が必要です：</string>
-    <string name="text_dialog_accessibility_3">「Emoji Battery Widget」を表示し、ステータスバーのジェスチャーを検出するため。</string>
-    <string name="text_dialog_accessibility_4">実行する操作：ホーム、戻る、最近の画面。</string>
-    <string name="text_dialog_accessibility_5">このアプリは、当該権限に関する個人情報を収集または共有しないことを約束します。</string>
-</resources>
+    <string name="accessibility_permission">アクセシビリティサービスの使用</string>
+    <string name="service_note_1"><b>利用規約に同意してください：</b>\nこのアプリはアクセシビリティサービスへのアクセス権が必要です。</string>
+    <string name="service_note_3">利用規約を読み、同意しました</string>
+    <string name="agree">同意する</string>
+    <string name="not_now">あとで</string>
+    <string name="go_to_setting">設定に移動</string>
+    <string name="service_title_1">この機能が必要な理由：</string>
+    <string name="service_title_1_1">画面上部に<b>“Emoji Battery Status Bar”</b>を表示するため。</string>
+    <string name="service_title_1_2">ステータスバーでのジェスチャー検出を可能にするため（例：スワイプ、タップ）。</string>
+    <string name="service_title_1_3">ジェスチャーでホーム、戻る、最近のアプリなどのシステム操作を有効にするため。</string>
+    <string name="service_title_1_4">これらの機能はアプリの主な機能に不可欠です。</string>
+    <string name="service_title_2">収集されるデータ：</string>
+    <string name="service_title_2_1">個人情報や機微情報は収集されません。</string>
+    <string name="service_title_2_2">アプリは画面上のジェスチャー入力のみを監視します。</string>
+    <string name="service_title_2_3">ユーザーのコンテンツ、テキスト、アクティビティは記録または保存されません。</string>
+    <string name="service_title_3">データの使用方法：</string>
+    <string name="service_title_3_1">ジェスチャー入力はホームや戻るなどの操作をトリガーするためだけに使用されます。</string>
+    <string name="service_title_3_2">サービスは端末上で動作し、第三者とデータを共有しません。</string>
+    <string name="service_title_3_3">アクセシビリティ権限はオーバーレイとジェスチャー応答にのみ使用されます。</string>
+    <string name="service_title_4">ユーザーへの明示性：</string>
+    <string name="service_title_4_1">このサービスはカスタムジェスチャーでシステム操作へのアクセスを支援します。</string>
+    <string name="service_title_4_2">端末インターフェースの使いやすさとカスタマイズ性を向上させます。</string>
+    <string name="service_title_4_3">ホーム、戻る、最近のアプリなどのシステム操作をジェスチャーでできるようにします。</string>
+    <string name="service_title_4_4">アプリはユーザーのプライバシーを重視し、アクセシビリティ権限を悪用しません。</string>
+  </resources>

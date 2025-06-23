@@ -2,6 +2,8 @@ package com.lowbyte.battery.animation.ads
 
 import android.content.Context
 import android.content.res.Resources
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +32,7 @@ object SplashBannerHelper {
         val shimmer = container.findViewById<ShimmerFrameLayout?>(R.id.shimmerSplashBanner)
         val adPlaceholder = container.findViewById<ViewGroup?>(R.id.inlineAdSplashContainer)
 
-        if (isProUser) {
+        if (isProUser || !isInternetAvailable(context)) {
             Log.d(TAG, "Pro user — hiding splash banner")
             shimmer?.visibility = View.GONE
             adPlaceholder?.removeAllViews()
@@ -82,5 +84,12 @@ object SplashBannerHelper {
         val adRequest = AdRequest.Builder().build()
         Log.d(TAG, "Requesting splash ad...")
         adView.loadAd(adRequest)
+    }
+
+    private fun isInternetAvailable(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 }

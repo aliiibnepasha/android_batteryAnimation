@@ -74,11 +74,6 @@
     <string name="dark_mode">Modalità scura</string>
     <string name="terms_of_service">Termini di servizio</string>
     <string name="privacy_policy">Informativa sulla privacy</string>
-    <string name="accessibility_permission">Autorizzazione accessibilità</string>
-    <string name="service_note_1">Questo servizio garantisce che il pannello di controllo dell applicazione\nmantenga la funzionalità del layout.</string>
-    <string name="why_we_need_accessibility_permission">Perché abbiamo bisogno dell autorizzazione all accessibilità?</string>
-    <string name="service_note_2">Abbiamo bisogno dell autorizzazione per migliorare la tua esperienza\ncon l app e la funzionalità.</string>
-    <string name="service_note_3">Ho letto e accettato i termini di servizio</string>
     <string name="lock_screen_not_supported_on_your_device">Blocco schermo non supportato sul tuo dispositivo.</string>
     <string name="take_screenshot_not_supported_on_your_device">Cattura schermata non supportata sul tuo dispositivo.</string>
     <string name="widget_design_preview">Anteprima design widget</string>
@@ -157,9 +152,29 @@
     <string name="txt_title_use_3">Gestures supportati</string>
     <string name="txt_des_use_2">Per mostrare un widget personalizzato nella barra di stato e avviare azioni: Home, Indietro, Recenti. Nessun dato utente viene raccolto o condiviso.</string>
     <string name="txt_des_use_3">Gestures supportati: Screenshot, Scorrimento rapido verso l’alto, Apri Centro di Controllo, Apri notifiche, Home, Recenti, Opzioni di alimentazione, Blocca schermo.</string>
-    <string name="text_dialog_accessibility_1">Per favore, accetta i Termini di Servizio</string>
-    <string name="text_dialog_accessibility_2">Questa app richiede il permesso dei Servizi di Accessibilità per:</string>
-    <string name="text_dialog_accessibility_3">Mostrare il “Emoji Battery Widget” e rilevare gestures sulla barra di stato.</string>
-    <string name="text_dialog_accessibility_4">Eseguire azioni: Home, Indietro, Schermo Recenti.</string>
-    <string name="text_dialog_accessibility_5">L’app si impegna a non raccogliere o condividere alcun dato personale relativo a questo permesso.</string>
+
+    <string name="accessibility_permission">Utilizzo del servizio di accessibilità</string>
+    <string name="service_note_1"><b>Si prega di accettare i termini di servizio :</b>\nQuesta app richiede il permesso dei Servizi di Accessibilità per:</string>
+    <string name="service_note_3">Ho letto e accetto i termini di servizio</string>
+    <string name="agree">Accetto</string>
+    <string name="not_now">Non ora</string>
+    <string name="go_to_setting">Vai alle impostazioni</string>
+    <string name="service_title_1">Perché è necessaria questa funzione:</string>
+    <string name="service_title_1_1">Per visualizzare la <b>“Emoji Battery Status Bar”</b>\nsopra lo schermo.</string>
+    <string name="service_title_1_2">Per consentire il rilevamento dei gesti sulla barra di stato (es. swipe, tap).</string>
+    <string name="service_title_1_3">Per abilitare azioni di sistema come Home, Indietro e App recenti tramite gesti.</string>
+    <string name="service_title_1_4">Queste funzionalità sono essenziali per il funzionamento principale dell app.</string>
+    <string name="service_title_2">Dati raccolti:</string>
+    <string name="service_title_2_1">Non vengono raccolti dati personali o sensibili.</string>
+    <string name="service_title_2_2">L’app ascolta solo le interazioni gestuali sullo schermo.</string>
+    <string name="service_title_2_3">Nessun contenuto, testo o attività dell’utente viene registrato o memorizzato.</string>
+    <string name="service_title_3">Come vengono usati i dati:</string>
+    <string name="service_title_3_1">I gesti servono solo per attivare azioni di sistema come Home o Indietro.</string>
+    <string name="service_title_3_2">Il servizio funziona localmente sul dispositivo e non condivide dati con terzi.</string>
+    <string name="service_title_3_3">Il permesso di accessibilità serve solo per abilitare l’overlay e la risposta ai gesti.</string>
+    <string name="service_title_4">Chiarezza per gli utenti:</string>
+    <string name="service_title_4_1">Questo servizio aiuta l’accesso alle azioni di sistema tramite gesti personalizzati.</string>
+    <string name="service_title_4_2">Migliora l’usabilità e la personalizzazione dell’interfaccia del telefono.</string>
+    <string name="service_title_4_3">Abilita azioni di sistema tramite gesti come Home, Indietro e App recenti.</string>
+    <string name="service_title_4_4">L’app garantisce la privacy dell’utente e non abusa dei permessi di accessibilità.</string>
 </resources>

@@ -2,124 +2,81 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottomSheetRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="24dp"
     android:background="@drawable/bg_dialog_rounded"
-    android:elevation="4dp">
+    android:padding="16dp">
 
-    <!-- Indicator -->
+    <!-- Drag Indicator -->
     <View
         android:id="@+id/indicator"
         android:layout_width="60dp"
         android:layout_height="4dp"
         android:background="@drawable/bg_indicator_line"
+        android:layout_marginTop="8dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Title -->
-    <TextView
-        android:id="@+id/tvTitle"
+    <!-- Scrollable Content -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollContent"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/accessibility_permission"
-        android:textColor="@color/blue_app_color"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:gravity="center_horizontal"
-        app:layout_constraintTop_toBottomOf="@id/indicator"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
-
-    <!-- Sub-description -->
-    <TextView
-        android:id="@+id/tvDesc"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/service_note_1"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp" />
-
-    <!-- Section Title -->
-    <TextView
-        android:id="@+id/tvWhyTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/why_we_need_accessibility_permission"
-        android:textColor="@color/blue_app_color"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/tvDesc"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp" />
-
-    <!-- Description -->
-    <TextView
-        android:id="@+id/tvWhyDesc"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/text_dialog_accessibility_3"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:layout_marginHorizontal="20dp"
-        android:gravity="start"
-        app:layout_constraintTop_toBottomOf="@id/tvWhyTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp" />
-    <!-- Description -->
-    <TextView
-        android:id="@+id/tvWhyDesc2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="20dp"
-        android:gravity="start"
-        android:text="@string/text_dialog_accessibility_4"
-        android:textColor="@color/white"
-        android:textSize="14sp"
+        android:layout_height="400dp"
+        android:fillViewport="true"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toTopOf="@id/checkTerms"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvWhyDesc" />
+        app:layout_constraintTop_toBottomOf="@id/indicator">
 
-    <!-- Description -->
-    <TextView
-        android:id="@+id/tvWhyDesc3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="20dp"
-        android:gravity="start"
-        android:text="@string/text_dialog_accessibility_5"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvWhyDesc2" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="@string/accessibility_permission"
+                android:textColor="@color/blue_app_color"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/tvDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/service_note_1"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerForDisclaimer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:nestedScrollingEnabled="false" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Terms Agreement -->
     <LinearLayout
         android:id="@+id/checkTerms"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:background="?attr/selectableItemBackground"
-        app:layout_constraintTop_toBottomOf="@id/tvWhyDesc3"
-        app:layout_constraintStart_toStartOf="parent"
+        android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:padding="12dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scrollContent">
 
         <ImageView
             android:id="@+id/ivCheckIcon"
@@ -138,33 +95,41 @@
             android:textColor="@color/white"
             android:textSize="14sp" />
     </LinearLayout>
-    <!-- Buttons -->
-    <TextView
-        android:id="@+id/btnAllow"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:text="@string/agree"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:background="@drawable/home_button"
-        app:cornerRadius="30dp"
-        app:layout_constraintTop_toBottomOf="@id/checkTerms"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnCancel"
-        app:layout_constraintWidth_percent="0.45"
-        android:layout_marginTop="24dp" />
 
-    <TextView
-        android:id="@+id/btnCancel"
+    <!-- Buttons -->
+    <LinearLayout
+        android:id="@+id/bottomButtons"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:text="@string/not_now"
-        android:background="@drawable/bg_border_fill_transparent"
-        android:textColor="@color/white"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:gravity="center"
-        app:layout_constraintTop_toTopOf="@id/btnAllow"
-        app:layout_constraintStart_toEndOf="@id/btnAllow"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.45" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkTerms">
+
+        <TextView
+            android:id="@+id/btnAllow"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/home_button"
+            android:gravity="center"
+            android:text="@string/agree"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_border_fill_transparent"
+            android:gravity="center"
+            android:text="@string/not_now"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

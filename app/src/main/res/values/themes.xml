@@ -22,4 +22,10 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <style name="BottomSheetDialogTheme" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="behavior_peekHeight">0dp</item>
+    </style>
+
 </resources>

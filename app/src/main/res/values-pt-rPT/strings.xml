@@ -76,11 +76,6 @@
     <string name="dark_mode">Modo Escuro</string>
     <string name="terms_of_service">Termos de Serviço</string>
     <string name="privacy_policy">Política de Privacidade</string>
-    <string name="accessibility_permission">Permissão de Acessibilidade</string>
-    <string name="service_note_1">Este serviço garante que o painel de controlo da aplicação mantém a funcionalidade do layout.</string>
-    <string name="why_we_need_accessibility_permission">Porque precisamos da permissão de acessibilidade?</string>
-    <string name="service_note_2">Precisamos da permissão para melhorar a sua experiência e funcionalidade da aplicação.</string>
-    <string name="service_note_3">Li e aceitei os Termos de Serviço</string>
     <string name="lock_screen_not_supported_on_your_device">Bloqueio de ecrã não suportado no seu dispositivo.</string>
     <string name="take_screenshot_not_supported_on_your_device">Captura de ecrã não suportada no seu dispositivo.</string>
     <string name="widget_design_preview">Captura de ecrã não suportada no seu dispositivo.</string>
@@ -158,9 +153,29 @@
     <string name="txt_title_use_3">Gestos suportados</string>
     <string name="txt_des_use_2">Para mostrar um widget personalizado na barra de estado e iniciar ações: Home, Back, Recent. Nenhum dado de utilizador é recolhido ou partilhado.</string>
     <string name="txt_des_use_3">Gestos suportados: Captura de ecrã, Rolar rapidamente para o topo, Abrir Centro de Controlo, Abrir Notificações, Home, Recent, opções de energia, Bloquear ecrã.</string>
-    <string name="text_dialog_accessibility_1">Por favor, aceite os Termos de Serviço</string>
-    <string name="text_dialog_accessibility_2">Esta app requer permissão para Accessibility Services para:</string>
-    <string name="text_dialog_accessibility_3">Exibir o “Emoji Battery Widget” e detetar gestos na barra de estado.</string>
-    <string name="text_dialog_accessibility_4">Executar ações: Home, Back, ecrã Recent.</string>
-    <string name="text_dialog_accessibility_5">A app compromete-se a não recolher nem partilhar quaisquer dados pessoais relacionados com esta permissão.</string>
+
+    <string name="accessibility_permission">Uso do Serviço de Acessibilidade</string>
+    <string name="service_note_1"><b>Por favor, aceite os termos de serviço:</b>\nEsta aplicação requer permissão dos Serviços de Acessibilidade para:</string>
+    <string name="service_note_3">Li e concordo com os termos de serviço</string>
+    <string name="agree">Concordar</string>
+    <string name="not_now">Agora não</string>
+    <string name="go_to_setting">Ir para Definições</string>
+    <string name="service_title_1">Porque é que esta funcionalidade é necessária:</string>
+    <string name="service_title_1_1">Para mostrar a <b>“Barra de Estado da Bateria com Emoji”</b> no topo do ecrã.</string>
+    <string name="service_title_1_2">Para permitir a deteção de gestos na barra de estado (por exemplo, deslizar, tocar).</string>
+    <string name="service_title_1_3">Para ativar ações do sistema como Início, Voltar e Aplicações Recentes através de gestos.</string>
+    <string name="service_title_1_4">Estas funcionalidades são essenciais para o funcionamento principal da aplicação.</string>
+    <string name="service_title_2">Que dados são recolhidos:</string>
+    <string name="service_title_2_1">Nenhum dado pessoal ou sensível é recolhido.</string>
+    <string name="service_title_2_2">A aplicação apenas ouve interações de gestos no ecrã.</string>
+    <string name="service_title_2_3">Nenhum conteúdo, texto ou atividade do utilizador é registado ou armazenado.</string>
+    <string name="service_title_3">Como os dados são utilizados:</string>
+    <string name="service_title_3_1">Os gestos são usados apenas para acionar ações do sistema como ir para o Início ou Voltar.</string>
+    <string name="service_title_3_2">O serviço funciona localmente no dispositivo e não partilha dados com terceiros.</string>
+    <string name="service_title_3_3">A permissão de acessibilidade é usada apenas para sobrepor o widget e responder a gestos.</string>
+    <string name="service_title_4">Clareza para os utilizadores:</string>
+    <string name="service_title_4_1">Este serviço ajuda os utilizadores a aceder a ações do sistema com gestos personalizados.</string>
+    <string name="service_title_4_2">Melhora a usabilidade e a personalização da interface do telemóvel.</string>
+    <string name="service_title_4_3">Permite ações como Início, Voltar e Aplicações Recentes através de gestos.</string>
+    <string name="service_title_4_4">A aplicação compromete-se com a privacidade e não abusa das permissões de Acessibilidade.</string>
 </resources>

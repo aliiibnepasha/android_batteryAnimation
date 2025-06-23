@@ -72,11 +72,6 @@
     <string name="dark_mode">डार्क मोड</string>
     <string name="terms_of_service">सेवा की शर्तें</string>
     <string name="privacy_policy">गोपनीयता नीति</string>
-    <string name="accessibility_permission">एक्सेसिबिलिटी अनुमति</string>
-    <string name="service_note_1">यह सेवा एप्लिकेशन कंट्रोल पैनल की\nलेआउट कार्यक्षमता बनाए रखती है।</string>
-    <string name="why_we_need_accessibility_permission">हमें एक्सेसिबिलिटी अनुमति की आवश्यकता क्यों है?</string>
-    <string name="service_note_2">आपके ऐप अनुभव और कार्यक्षमता को बढ़ाने के लिए हमें अनुमति की आवश्यकता है।</string>
-    <string name="service_note_3">मैंने सेवा की शर्तों को पढ़ा और स्वीकार किया है</string>
     <string name="lock_screen_not_supported_on_your_device">आपके डिवाइस पर लॉक स्क्रीन समर्थित नहीं है।</string>
     <string name="take_screenshot_not_supported_on_your_device">आपके डिवाइस पर स्क्रीनशॉट लेना समर्थित नहीं है।</string>
     <string name="widget_design_preview">विजेट डिज़ाइन पूर्वावलोकन</string>
@@ -154,10 +149,29 @@
     <string name="txt_title_use_3">समर्थित जेश्चर</string>
     <string name="txt_des_use_2">यह ऐप कस्टम स्टेटस बार विजेट दिखाने और इन क्रियाओं के लिए: होम, बैक, हालिया। कोई डेटा एकत्र या साझा नहीं किया जाता।</string>
     <string name="txt_des_use_3">समर्थित जेश्चर: स्क्रीनशॉट, जल्दी टॉप स्क्रॉल, कंट्रोल सेंटर खोलें, नोटिफिकेशन खोलें, होम, हालिया, पावर विकल्प, स्क्रीन लॉक।</string>
-    <string name="text_dialog_accessibility_1">कृपया सेवा की शर्तों से सहमत हों</string>
-    <string name="text_dialog_accessibility_2">इस ऐप को Accessibility सेवा की अनुमति चाहिए:</string>
-    <string name="text_dialog_accessibility_3">“Emoji Battery Widget” दिखाने और स्टेटस बार जेश्चर का पता लगाने के लिए।</string>
-    <string name="text_dialog_accessibility_4">क्रियाएँ शुरू करने के लिए: होम, बैक, हालिया स्क्रीन।</string>
-    <string name="text_dialog_accessibility_5">यह ऐप इस अनुमति से जुड़े कोई व्यक्तिगत डेटा एकत्रित या साझा नहीं करता।</string>
 
+    <string name="accessibility_permission">एक्सेसिबिलिटी सेवा उपयोग</string>
+    <string name="service_note_1"><b>कृपया सेवा की शर्तों से सहमत हों :</b>\nइस ऐप को निम्नलिखित के लिए Accessibility सेवाओं की अनुमति चाहिए,</string>
+    <string name="service_note_3">मैंने पढ़ लिया है और सेवा की शर्तों से सहमत हूँ</string>
+    <string name="agree">स्वीकार करें</string>
+    <string name="not_now">अभी नहीं</string>
+    <string name="go_to_setting">सेटिंग्स पर जाएं</string>
+    <string name="service_title_1">यह सुविधा क्यों आवश्यक है:</string>
+    <string name="service_title_1_1"><b>“Emoji Battery Status Bar”</b> को स्क्रीन के ऊपर दिखाने के लिए।</string>
+    <string name="service_title_1_2">स्टेटस बार पर जेस्चर डिटेक्शन की अनुमति देने के लिए (जैसे स्वाइप, टैप)।</string>
+    <string name="service_title_1_3">होम, बैक और हाल की ऐप्स जैसी सिस्टम क्रियाएं जेस्चर द्वारा सक्षम करने के लिए।</string>
+    <string name="service_title_1_4">ये सुविधाएं ऐप की मुख्य कार्यक्षमता के लिए जरूरी हैं।</string>
+    <string name="service_title_2">एकत्र की जाने वाली डेटा:</string>
+    <string name="service_title_2_1">कोई व्यक्तिगत या संवेदनशील डेटा एकत्रित नहीं किया जाता।</string>
+    <string name="service_title_2_2">ऐप केवल स्क्रीन पर हुए जेस्चर इंटरेक्शन सुनता है।</string>
+    <string name="service_title_2_3">किसी भी सामग्री, पाठ या उपयोगकर्ता गतिविधि को रिकॉर्ड या संग्रहीत नहीं किया जाता।</string>
+    <string name="service_title_3">डेटा का उपयोग कैसे होता है:</string>
+    <string name="service_title_3_1">सिस्टम क्रियाएं जैसे होम या बैक केवल जेस्चर से की जाती हैं।</string>
+    <string name="service_title_3_2">सेवा उपकरण पर स्थानीय रूप से चलता है और डेटा किसी पक्ष को साझा नहीं किया जाता।</string>
+    <string name="service_title_3_3">Accessibility अनुमति केवल विजेट ओवरले और जेस्चर प्रतिक्रिया के लिए इस्तेमाल होती है।</string>
+    <string name="service_title_4">उपयोगकर्ताओं के लिए स्पष्टता:</string>
+    <string name="service_title_4_1">यह सेवा कस्टम जेस्चर के माध्यम से सिस्टम कार्यों तक पहुंचने में मदद करती है।</string>
+    <string name="service_title_4_2">यह फोन की इंटरफेस की उपयोगिता और अनुकूलन को बेहतर बनाता है।</string>
+    <string name="service_title_4_3">होम, बैक, हाल की ऐप्स जैसे सिस्टम क्रियाएं जेस्चर द्वारा सक्षम करता है।</string>
+    <string name="service_title_4_4">ऐप उपयोगकर्ता की गोपनीयता के प्रति प्रतिबद्ध है और Accessibility अनुमति का दुरुपयोग नहीं करता।</string>
 </resources>

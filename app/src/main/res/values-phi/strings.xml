@@ -76,11 +76,6 @@
     <string name="dark_mode">Madilim na Mode</string>
     <string name="terms_of_service">Mga Tuntunin ng Serbisyo</string>
     <string name="privacy_policy">Patakaran sa Privacy</string>
-    <string name="accessibility_permission">Pahintulot sa Accessibility</string>
-    <string name="service_note_1">Tinitiyak ng Serbisyong ito na\nang Layout ng Control Panel ay gumagana nang maayos.</string>
-    <string name="why_we_need_accessibility_permission">Bakit kailangan namin ng pahintulot sa accessibility?</string>
-    <string name="service_note_2">Kailangan namin ng pahintulot upang pagandahin ang iyong karanasan sa app.</string>
-    <string name="service_note_3">Nabasa at tinanggap ko ang mga Tuntunin ng Serbisyo</string>
     <string name="lock_screen_not_supported_on_your_device">Hindi sinusuportahan ang pag-lock ng screen sa iyong device.</string>
     <string name="take_screenshot_not_supported_on_your_device">Hindi sinusuportahan ang pagkuha ng screenshot sa iyong device.</string>
     <string name="widget_design_preview">Hindi sinusuportahan ang pagkuha ng screenshot sa iyong device.</string>
@@ -158,9 +153,29 @@
     <string name="txt_title_use_3">Suportadong gestures</string>
     <string name="txt_des_use_2">Para ipakita ang custom na status bar widget at magsagawa ng aksyon: Home, Back, Recent. Hindi nangongolekta o nagbabahagi ng user data.</string>
     <string name="txt_des_use_3">Mga suportadong gesture: Screenshot, Quick scroll to top, Buksan ang Control Center, Buksan ang Notifications, Home, Recent, Power options, Lock screen.</string>
-    <string name="text_dialog_accessibility_1">Mangyaring tanggapin ang Terms of Service</string>
-    <string name="text_dialog_accessibility_2">Kailangan ng app ang permiso ng Accessibility Services para sa:</string>
-    <string name="text_dialog_accessibility_3">Ipakita ang “Emoji Battery Widget” at matukoy ang gestures sa status bar.</string>
-    <string name="text_dialog_accessibility_4">Magsagawa ng aksyon: Home, Back, Recent screen.</string>
-    <string name="text_dialog_accessibility_5">Ipinapangako ng app na hindi mangongolekta o magbabahagi ng personal na data kaugnay ng permiso na ito.</string>
-</resources>
+
+    <string name="accessibility_permission">Paggamit ng Accessibility Service</string>
+    <string name="service_note_1"><b>Pakiusap sumang-ayon sa mga tuntunin ng serbisyo:</b>\nKailangan ng app na ito ng pahintulot sa Accessibility Service para sa:</string>
+    <string name="service_note_3">Nabasa at sumang-ayon ako sa mga tuntunin ng serbisyo</string>
+    <string name="agree">Sumang-ayon</string>
+    <string name="not_now">Mamaya na lang</string>
+    <string name="go_to_setting">Pumunta sa Settings</string>
+    <string name="service_title_1">Bakit kailangan ang feature na ito:</string>
+    <string name="service_title_1_1">Para ipakita ang <b>“Emoji Battery Status Bar”</b> sa itaas ng screen.</string>
+    <string name="service_title_1_2">Para paganahin ang gesture detection sa status bar (hal. swipe, tap).</string>
+    <string name="service_title_1_3">Para magamit ang mga system actions tulad ng Home, Back, at Recent Apps gamit ang gestures.</string>
+    <string name="service_title_1_4">Mahalaga ang mga feature na ito para gumana nang maayos ang app.</string>
+    <string name="service_title_2">Anong datos ang kinokolekta:</string>
+    <string name="service_title_2_1">Walang personal o sensitibong data na kinokolekta.</string>
+    <string name="service_title_2_2">Nakikinig lang ang app sa mga gesture sa screen.</string>
+    <string name="service_title_2_3">Walang content, text, o activity ng user na nire-record o ini-store.</string>
+    <string name="service_title_3">Paano ginagamit ang datos:</string>
+    <string name="service_title_3_1">Ginagamit lang ang gestures para sa system actions gaya ng Home o Back.</string>
+    <string name="service_title_3_2">Ang serbisyo ay lokal lang sa device at hindi nagbabahagi ng data sa iba.</string>
+    <string name="service_title_3_3">Ginagamit lang ang Accessibility permission para sa widget overlay at gesture response.</string>
+    <string name="service_title_4">Kalinawan para sa mga user:</string>
+    <string name="service_title_4_1">Tinutulungan ng serbisyong ito ang users na makagamit ng system actions gamit ang gestures.</string>
+    <string name="service_title_4_2">Pinapahusay nito ang usability at customization ng interface.</string>
+    <string name="service_title_4_3">Pinapagana ang Home, Back, at Recent Apps sa pamamagitan ng gestures.</string>
+    <string name="service_title_4_4">Ang app ay dedikado sa privacy at hindi inaabuso ang Accessibility permissions.</string>
+ </resources>

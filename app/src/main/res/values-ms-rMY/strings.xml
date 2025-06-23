@@ -75,11 +75,6 @@
     <string name="dark_mode">Mod Gelap</string>
     <string name="terms_of_service">Terma Perkhidmatan</string>
     <string name="privacy_policy">Dasar Privasi</string>
-    <string name="accessibility_permission">Kebenaran Kebolehcapaian</string>
-    <string name="service_note_1">Perkhidmatan ini memastikan panel kawalan aplikasi mengekalkan fungsi susun atur.</string>
-    <string name="why_we_need_accessibility_permission">Mengapa kami memerlukan kebenaran kebolehcapaian?</string>
-    <string name="service_note_2">Kami memerlukan kebenaran untuk meningkatkan pengalaman dan fungsi aplikasi anda.</string>
-    <string name="service_note_3">Saya telah membaca dan menerima Terma Perkhidmatan</string>
     <string name="lock_screen_not_supported_on_your_device">Kunci skrin tidak disokong pada peranti anda.</string>
     <string name="take_screenshot_not_supported_on_your_device">Pengambilan tangkapan skrin tidak disokong pada peranti anda.</string>
     <string name="widget_design_preview">Pratonton Reka Bentuk Widget</string>
@@ -160,10 +155,29 @@
     <string name="txt_title_use_3">Gerakan yang disokong</string>
     <string name="txt_des_use_2">Untuk memaparkan widget bar status tersuai &amp; jalankan tindakan: Utama, Kembali, Terkini. Tiada data pengguna dikumpul atau dikongsi.</string>
     <string name="txt_des_use_3">Gerakan disokong: Tangkapan skrin, tatal cepat ke atas, buka Pusat Kawalan, buka Pemberitahuan, Utama, Terkini, pilihan kuasa, kunci skrin.</string>
-    <string name="text_dialog_accessibility_1">Sila setuju kepada Terma Perkhidmatan</string>
-    <string name="text_dialog_accessibility_2">Apl ini memerlukan kebenaran Perkhidmatan Aksesibiliti untuk:</string>
-    <string name="text_dialog_accessibility_3">Memaparkan “Emoji Battery Widget” dan mengesan gerakan bar status.</string>
-    <string name="text_dialog_accessibility_4">Menjalankan tindakan: Utama, Kembali, skrin Terkini.</string>
-    <string name="text_dialog_accessibility_5">Apl ini tidak mengumpul atau berkongsi sebarang data peribadi berkaitan kebenaran ini.</string>
 
+    <string name="accessibility_permission">Penggunaan Perkhidmatan Aksesibiliti</string>
+    <string name="service_note_1"><b>Sila setujui terma perkhidmatan :</b>\nApp ini memerlukan kebenaran Perkhidmatan Aksesibiliti untuk:</string>
+    <string name="service_note_3">Saya telah membaca dan bersetuju dengan terma perkhidmatan</string>
+    <string name="agree">Setuju</string>
+    <string name="not_now">Bukan sekarang</string>
+    <string name="go_to_setting">Pergi ke Tetapan</string>
+    <string name="service_title_1">Mengapa fungsi ini diperlukan:</string>
+    <string name="service_title_1_1">Untuk memaparkan <b>“Emoji Battery Status Bar”</b>\ndi bahagian atas skrin.</string>
+    <string name="service_title_1_2">Untuk membolehkan pengecaman isyarat pada bar status (cth: sapu, ketik).</string>
+    <string name="service_title_1_3">Untuk mengaktifkan tindakan sistem seperti Home, Back &amp; App terkini melalui isyarat.</string>
+    <string name="service_title_1_4">Fungsi ini penting untuk fungsi utama app.</string>
+    <string name="service_title_2">Data yang dikumpul:</string>
+    <string name="service_title_2_1">Tiada data peribadi atau sensitif dikumpul.</string>
+    <string name="service_title_2_2">App hanya mendengar interaksi isyarat pada skrin.</string>
+    <string name="service_title_2_3">Tiada kandungan, teks atau aktiviti pengguna dirakam atau disimpan.</string>
+    <string name="service_title_3">Bagaimana data digunakan:</string>
+    <string name="service_title_3_1">Input isyarat hanya digunakan untuk mencetus tindakan sistem seperti Home atau Back.</string>
+    <string name="service_title_3_2">Perkhidmatan berjalan secara tempatan dan tidak berkongsi data dengan pihak ketiga.</string>
+    <string name="service_title_3_3">Kebenaran aksesibiliti hanya digunakan untuk mengaktifkan overlay widget dan respons isyarat.</string>
+    <string name="service_title_4">Keterangkasan untuk pengguna:</string>
+    <string name="service_title_4_1">Perkhidmatan ini membantu akses tindakan sistem melalui isyarat khusus.</string>
+    <string name="service_title_4_2">Ia meningkatkan kegunaan dan penyesuaian antara muka telefon.</string>
+    <string name="service_title_4_3">Memungkinkan tindakan sistem melalui isyarat seperti Home, Back dan App terkini.</string>
+    <string name="service_title_4_4">App komited terhadap privasi pengguna dan tidak menyalahgunakan kebenaran aksesibiliti.</string>
 </resources>

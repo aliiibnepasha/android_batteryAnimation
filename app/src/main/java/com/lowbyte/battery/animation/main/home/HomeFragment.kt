@@ -38,6 +38,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var preferences: AppPreferences
+    private lateinit var sheet: AccessibilityPermissionBottomSheet // Declare the sheet
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,6 +57,36 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentHomeBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
+        sheet = AccessibilityPermissionBottomSheet(
+            onAllowClicked = {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.please_enable_accessibility_service),
+                    Toast.LENGTH_LONG
+                ).show()
+                FirebaseAnalyticsUtils.logClickEvent(
+                    requireActivity(),
+                    "accessibility_allow_clicked"
+                )
+                startActivity(Intent(requireActivity(), AllowAccessibilityActivity::class.java))
+            },
+            onCancelClicked = {
+                FirebaseAnalyticsUtils.logClickEvent(
+                    requireActivity(),
+                    "accessibility_cancel_clicked"
+                )
+                preferences.isStatusBarEnabled = false
+                binding.switchEnableBatteryEmoji.isChecked = false
+            },
+            onDismissListener = {
+                if (!isAccessibilityServiceEnabled()) {
+                    preferences.isStatusBarEnabled = false
+                    binding.switchEnableBatteryEmoji.isChecked = false
+                }
+
+            }
+
+        )
 
         // Log screen view
         FirebaseAnalyticsUtils.logScreenView(this, "HomeFragment")
@@ -138,23 +169,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "accessibility_prompt_shown")
-
-            val sheet = AccessibilityPermissionBottomSheet(
-                onAllowClicked = {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.please_enable_accessibility_service),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "accessibility_allow_clicked")
-                    startActivity(Intent(requireActivity(), AllowAccessibilityActivity::class.java))
-                },
-                onCancelClicked = {
-                    FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "accessibility_cancel_clicked")
-                    preferences.isStatusBarEnabled = false
-                    binding.switchEnableBatteryEmoji.isChecked = false
-                }
-            )
             sheet.show(childFragmentManager, "AccessibilityPermission")
         } else {
             binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled

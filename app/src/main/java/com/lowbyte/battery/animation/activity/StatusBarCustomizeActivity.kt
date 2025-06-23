@@ -8,7 +8,6 @@ import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
@@ -38,6 +37,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
     private var nativeHelper: NativeBannerSizeHelper? = null
 
     private lateinit var preferences: AppPreferences
+    private lateinit var sheet: AccessibilityPermissionBottomSheet // Declare the sheet
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,24 @@ class StatusBarCustomizeActivity : BaseActivity() {
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
         AdManager.loadInterstitialAd(this, getFullscreenId())
+        sheet = AccessibilityPermissionBottomSheet(
+            onAllowClicked = {
+                FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
+                startActivity(Intent(this, AllowAccessibilityActivity::class.java))
+                //  startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            },
+            onCancelClicked = {
+                FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_denied", null)
+                preferences.isStatusBarEnabled = false
+                binding.switchEnableBatteryEmojiCustom.isChecked = false
+            }, onDismissListener = {
+                if (!isAccessibilityServiceEnabled()) {
+                    preferences.isStatusBarEnabled = false
+                    binding.switchEnableBatteryEmojiCustom.isChecked = false
+                }
 
+            }
+        )
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 AdManager.showInterstitialAd(this@StatusBarCustomizeActivity, true) {
@@ -208,18 +225,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
             FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_prompt_shown", null)
-            val sheet = AccessibilityPermissionBottomSheet(
-                onAllowClicked = {
-                    FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
-                    startActivity(Intent(this, AllowAccessibilityActivity::class.java))
-                  //  startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-                },
-                onCancelClicked = {
-                    FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_denied", null)
-                    preferences.isStatusBarEnabled = false
-                    binding.switchEnableBatteryEmojiCustom.isChecked = false
-                }
-            )
+
             sheet.show(supportFragmentManager, "AccessibilityPermission")
         } else {
             FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)

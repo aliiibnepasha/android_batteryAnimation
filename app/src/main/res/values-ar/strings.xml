@@ -72,11 +72,6 @@
     <string name="dark_mode">الوضع الداكن</string>
     <string name="terms_of_service">شروط الخدمة</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
-    <string name="accessibility_permission">إذن الوصول</string>
-    <string name="service_note_1">تضمن هذه الخدمة أن تظل لوحة تحكم التطبيق تحتفظ بوظائف التخطيط.</string>
-    <string name="why_we_need_accessibility_permission">لماذا نحتاج إلى إذن الوصول؟</string>
-    <string name="service_note_2">نحتاج إلى إذن لتحسين تجربة التطبيق والوظائف الخاصة بك.</string>
-    <string name="service_note_3">لقد قرأت ووافقت على شروط الخدمة</string>
     <string name="lock_screen_not_supported_on_your_device">قفل الشاشة غير مدعوم على جهازك.</string>
     <string name="take_screenshot_not_supported_on_your_device">التقاط لقطة شاشة غير مدعوم على جهازك.</string>
     <string name="widget_design_preview">معاينة تصميم الأداة</string>
@@ -155,12 +150,31 @@
     <string name="txt_title_use_3">الإيماءات المدعومة</string>
     <string name="txt_des_use_2">لعرض ويدجت مخصص لشريط الحالة ولتنفيذ إجراءات: الرئيسية، رجوع، الحديثة. لا يجمع أو يشارك أي بيانات المستخدم.</string>
     <string name="txt_des_use_3">الإيماءات المدعومة: لقطة شاشة، التمرير السريع للأعلى، فتح مركز التحكم، الإشعارات، الرئيسية، الحديثة، خيارات الطاقة، قفل الشاشة.</string>
-    <string name="text_dialog_accessibility_1">يرجى الموافقة على شروط الخدمة</string>
-    <string name="text_dialog_accessibility_2">يتطلب التطبيق إذن خدمات إمكانية الوصول لـ:</string>
-    <string name="text_dialog_accessibility_3">عرض ويدجت "Emoji Battery Widget" واكتشاف إيماءات شريط الحالة.</string>
-    <string name="text_dialog_accessibility_4">تنفيذ الإجراءات: الرئيسية، رجوع، الشاشة الحديثة.</string>
-    <string name="text_dialog_accessibility_5">يتعهد التطبيق بعدم جمع أو مشاركة أي بيانات شخصية بخصوص هذا الإذن.</string>
 
+    <string name="accessibility_permission">استخدام خدمة إمكانية الوصول</string>
+    <string name="service_note_1"><b>يرجى الموافقة على شروط الخدمة :</b>\nهذا التطبيق يحتاج إذن خدمات إمكانية الوصول من أجل،</string>
+    <string name="service_note_3">لقد قرأت وأوافق على شروط الخدمة</string>
+    <string name="agree">موافق</string>
+    <string name="not_now">ليس الآن</string>
+    <string name="go_to_setting">اذهب إلى الإعدادات</string>
+    <string name="service_title_1">لماذا نحتاج هذه الميزة:</string>
+    <string name="service_title_1_1">لعرض <b>“شريط بطارية الإيموجي”</b>\nعلى الجزء العلوي من الشاشة.</string>
+    <string name="service_title_1_2">للسماح باكتشاف الإيماءات على شريط الحالة (مثل السحب أو النقر).</string>
+    <string name="service_title_1_3">لتمكين إجراءات النظام مثل الرئيسية أو العودة أو التطبيقات الحديثة عبر الإيماءات.</string>
+    <string name="service_title_1_4">هذه الميزات أساسية لوظائف التطبيق.</string>
+    <string name="service_title_2">ما البيانات التي يتم جمعها:</string>
+    <string name="service_title_2_1">لا يتم جمع أي بيانات شخصية أو حساسة.</string>
+    <string name="service_title_2_2">يستمع التطبيق فقط إلى تفاعلات الإيماءات على الشاشة.</string>
+    <string name="service_title_2_3">لا يتم تسجيل أو تخزين أي محتوى أو نص أو نشاط للمستخدم.</string>
+    <string name="service_title_3">كيف يتم استخدام البيانات:</string>
+    <string name="service_title_3_1">يتم استخدام إدخال الإيماءات فقط لتنفيذ إجراءات النظام مثل الرئيسية أو العودة.</string>
+    <string name="service_title_3_2">يعمل المساعد محلياً على الجهاز ولا يشارك البيانات مع أي طرف ثالث.</string>
+    <string name="service_title_3_3">يُستخدم إذن إمكانية الوصول فقط لتمكين تراكب الواجهة والاستجابة للإيماءات.</string>
+    <string name="service_title_4">وضوح للمستخدمين:</string>
+    <string name="service_title_4_1">تساعد هذه الخدمة المستخدمين في الوصول إلى إجراءات النظام بإيماءات مخصصة.</string>
+    <string name="service_title_4_2">تحسّن تجربة الاستخدام وتخصيص واجهة الهاتف.</string>
+    <string name="service_title_4_3">لتمكين إجراءات النظام عبر الإيماءات (الرئيسية، العودة، التطبيقات الحديثة).</string>
+    <string name="service_title_4_4">التطبيق يلتزم بخصوصية المستخدم ولا يسيء استخدام أذونات إمكانية الوصول.</string>
 
 </resources>
 

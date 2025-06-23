@@ -6,9 +6,10 @@ import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.databinding.ActivityAllowAccecibilityBinding
 
-class AllowAccessibilityActivity : AppCompatActivity() {
+class AllowAccessibilityActivity :  BaseActivity() {
 
     private lateinit var binding: ActivityAllowAccecibilityBinding
 

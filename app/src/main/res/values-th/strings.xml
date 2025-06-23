@@ -74,11 +74,6 @@
     <string name="dark_mode">โหมดมืด</string>
     <string name="terms_of_service">เงื่อนไขการให้บริการ</string>
     <string name="privacy_policy">นโยบายความเป็นส่วนตัว</string>
-    <string name="accessibility_permission">สิทธิ์การเข้าถึง</string>
-    <string name="service_note_1">บริการนี้ช่วยให้แผงควบคุมแอป\nทำงานได้อย่างถูกต้อง</string>
-    <string name="why_we_need_accessibility_permission">ทำไมต้องใช้สิทธิ์การเข้าถึง?</string>
-    <string name="service_note_2">เราต้องใช้สิทธิ์นี้เพื่อยกระดับประสบการณ์และความสามารถของแอป</string>
-    <string name="service_note_3">ฉันได้อ่านและยอมรับข้อกำหนดในการให้บริการแล้ว</string>
     <string name="lock_screen_not_supported_on_your_device">อุปกรณ์ของคุณไม่รองรับการล็อกหน้าจอ</string>
     <string name="take_screenshot_not_supported_on_your_device">อุปกรณ์ของคุณไม่รองรับการจับภาพหน้าจอ</string>
     <string name="widget_design_preview">ตัวอย่างการออกแบบวิดเจ็ต</string>
@@ -156,9 +151,29 @@
     <string name="txt_title_use_3">ท่าทางที่รองรับ</string>
     <string name="txt_des_use_2">เพื่อแสดงวิดเจ็ตแถบสถานะแบบกำหนดเอง และทำการใช้งาน เช่น หน้าแรก, ย้อนกลับ, หน้าล่าสุด โดยไม่เก็บหรือแชร์ข้อมูลผู้ใช้</string>
     <string name="txt_des_use_3">ท่าทางที่รองรับ: ถ่ายภาพหน้าจอ, เลื่อนเร็วขึ้นบน, เปิดศูนย์ควบคุม, เปิดการแจ้งเตือน, หน้าแรก, ล่าสุด, ตัวเลือกพลังงาน, ล็อกหน้าจอ</string>
-    <string name="text_dialog_accessibility_1">กรุณายอมรับข้อกำหนดในการให้บริการ</string>
-    <string name="text_dialog_accessibility_2">แอปนี้ต้องการสิทธิ์จาก Accessibility Services สำหรับ:</string>
-    <string name="text_dialog_accessibility_3">แสดง “Emoji Battery Widget” และตรวจจับท่าทางบนแถบสถานะ</string>
-    <string name="text_dialog_accessibility_4">ดำเนินการ: หน้าแรก, ย้อนกลับ, หน้าล่าสุด</string>
-    <string name="text_dialog_accessibility_5">แอปนี้สัญญาว่าไม่เก็บหรือแชร์ข้อมูลส่วนบุคคลใด ๆ เกี่ยวกับสิทธินี้</string>
-</resources>
+
+    <string name="accessibility_permission">การใช้งานบริการการเข้าถึง</string>
+    <string name="service_note_1"><b>โปรดยอมรับเงื่อนไขการให้บริการ:</b>\nแอปนี้ต้องการสิทธิ์การเข้าถึงเพื่อ:</string>
+    <string name="service_note_3">ฉันได้อ่านและยอมรับเงื่อนไขการให้บริการแล้ว</string>
+    <string name="agree">ยอมรับ</string>
+    <string name="not_now">ภายหลัง</string>
+    <string name="go_to_setting">ไปที่การตั้งค่า</string>
+    <string name="service_title_1">เหตุผลที่ต้องใช้คุณสมบัตินี้:</string>
+    <string name="service_title_1_1">เพื่อแสดง <b>“Emoji Battery Status Bar”</b> ด้านบนหน้าจอ</string>
+    <string name="service_title_1_2">เพื่อตรวจจับท่าทางบนแถบสถานะ (เช่น ปัด แตะ)</string>
+    <string name="service_title_1_3">เพื่อเปิดใช้งานการดำเนินการของระบบ เช่น กลับบ้าน ย้อนกลับ แอปล่าสุด ผ่านท่าทาง</string>
+    <string name="service_title_1_4">คุณสมบัติเหล่านี้จำเป็นต่อการทำงานหลักของแอป</string>
+    <string name="service_title_2">ข้อมูลที่รวบรวม:</string>
+    <string name="service_title_2_1">ไม่มีการเก็บข้อมูลส่วนตัวหรือข้อมูลที่ละเอียดอ่อน</string>
+    <string name="service_title_2_2">แอปจะตรวจจับเฉพาะการโต้ตอบด้วยท่าทางบนหน้าจอเท่านั้น</string>
+    <string name="service_title_2_3">ไม่มีการบันทึกหรือจัดเก็บข้อความ เนื้อหา หรือกิจกรรมของผู้ใช้</string>
+    <string name="service_title_3">การใช้งานข้อมูล:</string>
+    <string name="service_title_3_1">ใช้ท่าทางเพื่อเรียกใช้ฟังก์ชันของระบบ เช่น กลับบ้าน หรือ ย้อนกลับ เท่านั้น</string>
+    <string name="service_title_3_2">บริการทำงานภายในอุปกรณ์ ไม่แบ่งปันข้อมูลกับบุคคลที่สาม</string>
+    <string name="service_title_3_3">การอนุญาตการเข้าถึงใช้เฉพาะกับการวางวิดเจ็ตและการตอบสนองต่อท่าทาง</string>
+    <string name="service_title_4">ความชัดเจนสำหรับผู้ใช้:</string>
+    <string name="service_title_4_1">บริการนี้ช่วยให้ผู้ใช้เข้าถึงการดำเนินการของระบบด้วยท่าทางเฉพาะ</string>
+    <string name="service_title_4_2">ช่วยเพิ่มการใช้งานและความสามารถในการปรับแต่ง</string>
+    <string name="service_title_4_3">สามารถใช้ท่าทางเพื่อเรียกใช้คำสั่งระบบได้</string>
+    <string name="service_title_4_4">แอปให้ความสำคัญกับความเป็นส่วนตัวและไม่ใช้สิทธิ์เข้าถึงในทางที่ผิด</string>
+ </resources>
