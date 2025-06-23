@@ -24,6 +24,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
+import com.lowbyte.battery.animation.databinding.CustomNotchBarBinding
+import com.lowbyte.battery.animation.databinding.CustomNotificationBarBinding
 import com.lowbyte.battery.animation.databinding.CustomStatusBarBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AppPreferences
@@ -45,6 +47,8 @@ class NotchAccessibilityService : AccessibilityService() {
     private var layoutParams: WindowManager.LayoutParams? = null
     private val handler = Handler(Looper.getMainLooper())
     private var statusBarBinding: CustomStatusBarBinding? = null
+    private var notificationViewBinding: CustomNotificationBarBinding? = null
+    private var notificationNotchBinding: CustomNotchBarBinding? = null
     private var updateReceiver: BroadcastReceiver? = null
     private lateinit var preferences: AppPreferences
 
@@ -74,7 +78,7 @@ class NotchAccessibilityService : AccessibilityService() {
         if (updateReceiver == null) {
             updateReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
-                    Log.d("servicesdd", "Received broadcast: ${intent?.action}")
+                    Log.d("services", "Received broadcast: ${intent?.action}")
                     updateStatusBarAppearance()
                 }
             }
@@ -91,7 +95,7 @@ class NotchAccessibilityService : AccessibilityService() {
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     registerReceiver(updateReceiver, filter, RECEIVER_EXPORTED)
-                    Log.d("servicesdd", "Registered receiver for API 33+")
+                    Log.d("services", "Registered receiver for API 33+")
                 } else {
                     registerReceiver(updateReceiver, filter)
 
@@ -118,6 +122,8 @@ class NotchAccessibilityService : AccessibilityService() {
 
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         statusBarBinding = CustomStatusBarBinding.inflate(LayoutInflater.from(this))
+        notificationViewBinding = CustomNotificationBarBinding.inflate(LayoutInflater.from(this))
+        notificationNotchBinding = CustomNotchBarBinding.inflate(LayoutInflater.from(this))
 
         updateStatusBarAppearance()
         setupGestures()

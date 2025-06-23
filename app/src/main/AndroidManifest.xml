@@ -22,20 +22,16 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:usesCleartextTraffic="true"
+        android:allowClearUserData="true"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BatteryAnimation"
-        tools:targetApi="31">
+        android:theme="@style/Theme.BatteryAnimation">
         <activity
             android:name=".activity.AllowAccessibilityActivity"
             android:exported="false" />
         <activity
             android:name=".activity.HowToUseActivity"
             android:exported="false" />
-
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-9844943887550892~3838660273" />
-
         <activity
             android:name=".activity.LanguagesActivity"
             android:exported="false"
@@ -82,6 +78,26 @@
             android:name=".activity.ProActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.BatteryWidgetEditApplyActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9844943887550892~3838660273" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_signal_mobile" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/blue_app_color" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="default_channel_id" />
 
         <service
             android:name=".NotchAccessibilityService"
@@ -101,15 +117,6 @@
             android:name=".service.BatteryWidgetForegroundService"
             android:enabled="true"
             android:foregroundServiceType="specialUse" /> <!-- <receiver -->
-        <!-- android:name=".broadcastReciver.BatteryLevelReceiver" -->
-        <!-- android:enabled="true" -->
-        <!-- android:exported="true"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.BATTERY_CHANGED" /> -->
-        <!-- <action android:name="com.lowbyte.battery.animation.ACTION_UPDATE_WIDGET" /> -->
-        <!-- <action android:name="android.appwidget.action.APPWIDGET_UPDATE" /> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
         <receiver
             android:name=".broadcastReciver.BatteryWidgetProvider"
             android:enabled="true"
@@ -122,25 +129,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/battery_widget_info" />
         </receiver>
-
-        <activity
-            android:name=".activity.BatteryWidgetEditApplyActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_signal_mobile" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/blue_app_color" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="default_channel_id" />
     </application>
 
 </manifest>
