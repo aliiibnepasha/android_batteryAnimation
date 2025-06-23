@@ -15,9 +15,6 @@ import android.os.BatteryManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.provider.Settings
 import android.util.Log
 import android.view.GestureDetector
 import android.view.Gravity
@@ -27,23 +24,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
 import com.lowbyte.battery.animation.databinding.CustomStatusBarBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AppPreferences
-import java.text.SimpleDateFormat
+import com.lowbyte.battery.animation.utils.ServiceUtils.applyIconSize
+import com.lowbyte.battery.animation.utils.ServiceUtils.isAirplaneModeOn
+import com.lowbyte.battery.animation.utils.ServiceUtils.isHotspotEnabled
+import com.lowbyte.battery.animation.utils.ServiceUtils.isMobileDataEnabled
+import com.lowbyte.battery.animation.utils.ServiceUtils.isWifiEnabled
+import com.lowbyte.battery.animation.utils.ServiceUtils.performGlobalActionByName
+import com.lowbyte.battery.animation.utils.ServiceUtils.setTextSizeInSp
+import com.lowbyte.battery.animation.utils.ServiceUtils.setTint
+import com.lowbyte.battery.animation.utils.ServiceUtils.toVisibility
+import com.lowbyte.battery.animation.utils.ServiceUtils.updateTime
 import java.util.Date
-import java.util.Locale
 
 class NotchAccessibilityService : AccessibilityService() {
 
     private var windowManager: WindowManager? = null
     private var layoutParams: WindowManager.LayoutParams? = null
     private val handler = Handler(Looper.getMainLooper())
-
     private var statusBarBinding: CustomStatusBarBinding? = null
     private var updateReceiver: BroadcastReceiver? = null
     private lateinit var preferences: AppPreferences
@@ -123,11 +123,6 @@ class NotchAccessibilityService : AccessibilityService() {
         setupGestures()
 
 
-        // Add view only if enabled and not already attached
-//        if (::preferences.isInitialized && preferences.isStatusBarEnabled && statusBarBinding?.root?.windowToken == null) {
-//            windowManager?.addView(statusBarBinding?.root, layoutParams)
-//        }
-
         val view = statusBarBinding?.root
         if (::preferences.isInitialized && preferences.isStatusBarEnabled) {
             if (view?.parent == null) {
@@ -160,10 +155,10 @@ class NotchAccessibilityService : AccessibilityService() {
         binding.root.setBackgroundColor(preferences.statusBarBgColor)
 
         // ⛔ Real System State Checks — Replace with actual checks
-        val isWifiEnabled = isWifiEnabled()
-        val isAirplaneModeOn = isAirplaneModeOn()
-        val isHotspotOn = isHotspotEnabled()
-        val isMobileDataEnabled = isMobileDataEnabled()
+        val isWifiEnabled = isWifiEnabled(this)
+        val isAirplaneModeOn = isAirplaneModeOn(this)
+        val isHotspotOn = isHotspotEnabled(this)
+        val isMobileDataEnabled = isMobileDataEnabled(this)
 
         with(binding) {
             wifiIcon.visibility = if (preferences.showWifi && isWifiEnabled) View.VISIBLE else View.GONE
@@ -184,13 +179,13 @@ class NotchAccessibilityService : AccessibilityService() {
             dateText.visibility = preferences.showDate.toVisibility()
             batteryPercent.visibility = preferences.showBatteryPercent.toVisibility()
 
-            applyIconSize(wifiIcon, preferences.getIconSize("size_0", 24))
-            applyIconSize(dataIcon, preferences.getIconSize("size_1", 24))
-            applyIconSize(signalIcon, preferences.getIconSize("size_2", 24))
-            applyIconSize(airplaneIcon, preferences.getIconSize("size_3", 24))
-            applyIconSize(hotspotIcon, preferences.getIconSize("size_4", 24))
-            applyIconSize(batteryIcon, preferences.getIconSize("batteryIconSize", 24))
-            applyIconSize(lottieIcon, preferences.getIconSize("lottieView", 24))
+            applyIconSize(this@NotchAccessibilityService,wifiIcon, preferences.getIconSize("size_0", 24))
+            applyIconSize(this@NotchAccessibilityService,dataIcon, preferences.getIconSize("size_1", 24))
+            applyIconSize(this@NotchAccessibilityService,signalIcon, preferences.getIconSize("size_2", 24))
+            applyIconSize(this@NotchAccessibilityService,airplaneIcon, preferences.getIconSize("size_3", 24))
+            applyIconSize(this@NotchAccessibilityService,hotspotIcon, preferences.getIconSize("size_4", 24))
+            applyIconSize(this@NotchAccessibilityService,batteryIcon, preferences.getIconSize("batteryIconSize", 24))
+            applyIconSize(this@NotchAccessibilityService,lottieIcon, preferences.getIconSize("lottieView", 24))
 
             timeText.setTextSizeInSp(preferences.getIconSize("size_5", 12))
             batteryPercent.setTextSizeInSp(preferences.getIconSize("percentageSize", 12))
@@ -230,7 +225,6 @@ class NotchAccessibilityService : AccessibilityService() {
             }
 
             windowManager?.updateViewLayout(binding.root, layoutParams)
-           // updateWifiSignalIcon(wifiIcon)
         }
         updateBatteryInfo()
 
@@ -246,13 +240,6 @@ class NotchAccessibilityService : AccessibilityService() {
                     handleTap()
                 }
 
-                return true
-            }
-
-            override fun onDoubleTap(e: MotionEvent): Boolean {
-                if (preferences.isGestureMode){
-                    //  Toast.makeText(this@NotchAccessibilityService, "Double Tap Detected", Toast.LENGTH_SHORT).show()
-                }
                 return true
             }
 
@@ -272,6 +259,8 @@ class NotchAccessibilityService : AccessibilityService() {
                     if (deltaX > 100) {
                         if (preferences.isGestureMode){
                             performGlobalActionByName(
+                                this@NotchAccessibilityService,
+                                preferences,
                                 preferences.getString(
                                     "swipeLeftToRightAction",
                                     getString(R.string.action_do_nothing)
@@ -282,6 +271,8 @@ class NotchAccessibilityService : AccessibilityService() {
                     } else if (deltaX < -100) {
                         if (preferences.isGestureMode){
                             performGlobalActionByName(
+                                this@NotchAccessibilityService,
+                                preferences,
                                 preferences.getString(
                                     "swipeRightToLeftAction",
                                     getString(R.string.action_do_nothing)
@@ -322,6 +313,8 @@ class NotchAccessibilityService : AccessibilityService() {
 
     private fun handleTap() {
         performGlobalActionByName(
+            this,
+            preferences,
             preferences.getString(
                 "gestureAction",
                 getString(R.string.action_do_nothing)
@@ -331,6 +324,8 @@ class NotchAccessibilityService : AccessibilityService() {
 
     private fun handleLongPress() {
         performGlobalActionByName(
+            this,
+            preferences,
             preferences.getString(
                 "longPressAction",
                 getString(R.string.action_do_nothing)
@@ -342,160 +337,9 @@ class NotchAccessibilityService : AccessibilityService() {
     private fun startTimeUpdates() {
         handler.post(object : Runnable {
             override fun run() {
-                updateTime()
+                statusBarBinding?.timeText?.text =  updateTime().format(Date())
                 handler.postDelayed(this, 1000)
             }
         })
     }
-
-    private fun updateTime() {
-        val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-        statusBarBinding?.timeText?.text = timeFormat.format(Date())
-    }
-
-    private fun isAirplaneModeOn(): Boolean {
-        return Settings.Global.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) != 0
-    }
-
-    private fun isWifiEnabled(): Boolean {
-        val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
-        return wifiManager.isWifiEnabled
-    }
-
-    private fun isMobileDataEnabled(): Boolean {
-        val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-        return cm.activeNetworkInfo?.type == ConnectivityManager.TYPE_MOBILE && cm.activeNetworkInfo?.isConnected == true
-    }
-
-    // Hotspot detection is tricky. Here's an API-30+ example using ConnectivityManager
-    private fun isHotspotEnabled(): Boolean {
-        val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
-        return try {
-            val method = wifiManager.javaClass.getDeclaredMethod("isWifiApEnabled")
-            method.invoke(wifiManager) as Boolean
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    // ========== Extension Utils ==========
-
-    private fun Boolean.toVisibility(): Int = if (this) View.VISIBLE else View.GONE
-
-    private fun View.setTint(color: Int) {
-        (this as? ImageView)?.setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN)
-    }
-
-    private fun View.setTextSizeInSp(sp: Int) {
-        if (this is TextView) {
-            val px = sp * resources.displayMetrics.scaledDensity
-            setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, px)
-        }
-    }
-
-    private fun applyIconSize(view: View?, sizeDp: Int) {
-        val px = (sizeDp * resources.displayMetrics.density).toInt()
-        view?.layoutParams = LinearLayout.LayoutParams(px, px)
-    }
-
-    fun performGlobalActionByName(actionName: String) {
-        if (preferences.isVibrateMode && preferences.isGestureMode) {
-            val vibrator = getSystemService(VIBRATOR_SERVICE) as? Vibrator
-            Log.d("isVIbation", "isVIbation ${vibrator?.hasVibrator()}")
-
-            vibrator?.let {
-                if (it.hasVibrator()) {
-                    Log.d("isVIbation", "isVIbation r ${vibrator?.hasVibrator()}")
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                        val timings = longArrayOf(0, 300, 50, 200) // delay, vibrate, pause, vibrate
-                        vibrator.vibrate(VibrationEffect.createWaveform(timings, -1))
-                    } else {
-                        @Suppress("DEPRECATION")
-                        it.vibrate(1000)
-                    }
-                }
-
-            }
-        }
-
-
-        when (actionName) {
-            "action_do_nothing" -> {
-
-            }
-
-            "action_back_action" -> {
-                performGlobalAction(GLOBAL_ACTION_BACK)
-            }
-
-            "action_home_action" -> {
-                performGlobalAction(GLOBAL_ACTION_HOME)
-            }
-
-            "action_recent_action" -> {
-                performGlobalAction(GLOBAL_ACTION_RECENTS)
-            }
-
-            "action_lock_screen" -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
-                } else {
-                    Toast.makeText(
-                        this,
-                        getString(R.string.lock_screen_not_supported_on_your_device),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
-            "action_open_notifications" -> {
-                performGlobalAction(GLOBAL_ACTION_NOTIFICATIONS)
-            }
-
-            "action_power_options" -> {
-                performGlobalAction(GLOBAL_ACTION_POWER_DIALOG)
-            }
-
-            "action_quick_scroll_to_up" -> {
-                performGlobalAction(GESTURE_SWIPE_UP)
-            }
-
-            "action_open_control_centre" -> {
-                performGlobalAction(GLOBAL_ACTION_QUICK_SETTINGS)
-            }
-
-           "action_take_screenshot" -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    performGlobalAction(GLOBAL_ACTION_TAKE_SCREENSHOT)
-                } else {
-                    Toast.makeText(
-                        this,
-                        getString(R.string.take_screenshot_not_supported_on_your_device),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
-
-            else -> {
-                // Unsupported
-            }
-        }
-    }
-
-//    private fun updateWifiSignalIcon(wifiIcon: ImageView) {
-//        val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-//        val rssi = wifiManager.connectionInfo.rssi
-//        val level = WifiManager.calculateSignalLevel(rssi, 5) // 0–4
-//
-//        val iconRes = when (level) {
-//            4 -> R.drawable.ic_signal_wifi
-//            3 -> R.drawable.ic_signal_wifi
-//            2 -> R.drawable.ic_signal_wifi
-//            1 -> R.drawable.ic_signal_wifi
-//            else -> R.drawable.ic_signal_wifi
-//        }
-//
-//        wifiIcon.setImageResource(iconRes) // Or your ImageView ID
-//    }
 }

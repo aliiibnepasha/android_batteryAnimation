@@ -82,6 +82,26 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
                     }
                 }
+                 R.id.navigation_island -> {
+                     Log.d("navCustom", "Customize Reselected")
+                     val current = navController.currentDestination?.id
+                     if (current in listOf(R.id.navigation_view_all_emoji, R.id.navigation_view_all_widget, R.id.navigation_view_all_animation)) {
+                         navController.navigateUp()
+                         Log.d("navCustom", "Customize Reselected")
+                         navHostFragment.navController.navigate(R.id.navigation_island)
+
+                     } else {
+                         Log.d("navCustom", "Customize Reselected r")
+                         navHostFragment.navController.navigate(R.id.navigation_island)
+
+                     }
+                }
+
+
+
+
+
+
 
             }
             false // let navController handle navigation
