@@ -33,7 +33,6 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-      //  enableEdgeToEdge()
         binding = ActivityBatteryAnimationEditApplyBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
@@ -52,7 +51,7 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
         // Get intent extras
         position = intent.getIntExtra(EXTRA_POSITION, -1)
         label = intent.getStringExtra(EXTRA_LABEL) ?: getString(R.string.wifi)
-        Log.i("ITEMCLICK", "$position $label")
+        Log.i("ITEM_CLICK", "$position $label")
 
         // Log selected animation
         FirebaseAnalyticsUtils.logClickEvent(

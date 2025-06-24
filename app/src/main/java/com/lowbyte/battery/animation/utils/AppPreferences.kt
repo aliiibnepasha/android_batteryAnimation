@@ -17,6 +17,7 @@ class AppPreferences private constructor(context: Context) {
         
         // Boolean keys
         private const val KEY_FIRST_RUN = "first_run"
+        private const val KEY_DYNAMIC_ENABLED = "isDynamicEnabled"
         private const val KEY_STATUS_ENABLED = "isStatusEnabled"
         private const val KEY_IS_DARK_MODE = "is_dark_mode"
         private const val KEY_IS_VIBRATE_MODE = "is_vibrate_mode"
@@ -31,6 +32,13 @@ class AppPreferences private constructor(context: Context) {
 
 
         // In AppPreferences.kt (add to companion object)
+        private const val KEY_NOTCH_HEIGHT = "notch_height"
+        private const val KEY_NOTCH_WIDTH = "notch_width"
+        private const val KEY_X_AXIS = "x_axis"
+        private const val KEY_Y_AXIS = "y_axis"
+
+
+
         private const val KEY_STATUS_HEIGHT = "status_height"
         private const val KEY_STATUS_MARGIN_LEFT = "status_margin_left"
         private const val KEY_STATUS_MARGIN_RIGHT = "status_margin_right"
@@ -91,6 +99,27 @@ class AppPreferences private constructor(context: Context) {
     var statusBarHeight: Int
         get() = sharedPreferences.getInt(KEY_STATUS_HEIGHT, 40)
         set(value) = sharedPreferences.edit { putInt(KEY_STATUS_HEIGHT, value) }
+
+     var notchHeight: Int
+        get() = sharedPreferences.getInt(KEY_NOTCH_HEIGHT, 40)
+        set(value) = sharedPreferences.edit { putInt(KEY_NOTCH_HEIGHT, value) }
+
+      var notchWidth: Int
+        get() = sharedPreferences.getInt(KEY_NOTCH_WIDTH, 40)
+        set(value) = sharedPreferences.edit { putInt(KEY_NOTCH_WIDTH, value) }
+
+     var notchXAxis: Int
+        get() = sharedPreferences.getInt(KEY_X_AXIS, 40)
+        set(value) = sharedPreferences.edit { putInt(KEY_X_AXIS, value) }
+
+     var notchYAxis: Int
+        get() = sharedPreferences.getInt(KEY_Y_AXIS, 40)
+        set(value) = sharedPreferences.edit { putInt(KEY_Y_AXIS, value) }
+
+
+
+
+
 
     var statusBarMarginLeft: Int
         get() = sharedPreferences.getInt(KEY_STATUS_MARGIN_LEFT, 10)
@@ -182,6 +211,10 @@ class AppPreferences private constructor(context: Context) {
         get() = sharedPreferences.getBoolean(KEY_STATUS_ENABLED, false)
         set(value) = sharedPreferences.edit { putBoolean(KEY_STATUS_ENABLED, value) }
 
+ var isDynamicEnabled: Boolean
+        get() = sharedPreferences.getBoolean(KEY_DYNAMIC_ENABLED, false)
+        set(value) = sharedPreferences.edit { putBoolean(KEY_DYNAMIC_ENABLED, value) }
+
 
     fun saveWidgetIcon(widgetId: Int, iconName: String) {
         Log.e("AppPreferences", "Saving widget icon: $iconName for widget ID: $widgetId")
@@ -214,6 +247,15 @@ class AppPreferences private constructor(context: Context) {
     fun getString(key: String, default: String = ""): String? = sharedPreferences.getString(key, default)
 
     fun setString(key: String, value: String) = sharedPreferences.edit { putString(key, value) }
+
+
+     fun getBoolean(key: String, default: Boolean = false): Boolean? = sharedPreferences.getBoolean(key, default)
+
+    fun setBoolean(key: String, value: Boolean) = sharedPreferences.edit { putBoolean(key, value) }
+
+
+
+
 
     // For widget style
     var widgetStyleIndex: Int

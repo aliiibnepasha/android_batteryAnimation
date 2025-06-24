@@ -166,4 +166,9 @@ object ServiceUtils {
         val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
         return timeFormat
     }
+
+     fun Context.dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density).toInt()
+    }
+
 }

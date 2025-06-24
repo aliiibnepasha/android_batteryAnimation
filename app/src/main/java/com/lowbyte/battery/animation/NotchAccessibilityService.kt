@@ -30,6 +30,7 @@ import com.lowbyte.battery.animation.databinding.CustomStatusBarBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.ServiceUtils.applyIconSize
+import com.lowbyte.battery.animation.utils.ServiceUtils.dpToPx
 import com.lowbyte.battery.animation.utils.ServiceUtils.isAirplaneModeOn
 import com.lowbyte.battery.animation.utils.ServiceUtils.isHotspotEnabled
 import com.lowbyte.battery.animation.utils.ServiceUtils.isMobileDataEnabled
@@ -183,14 +184,11 @@ class NotchAccessibilityService : AccessibilityService() {
         ).apply {
             gravity = Gravity.TOP or Gravity.START
             x = dpToPx(preferences.getInt("notch_x", 0))
-          //  y = dpToPx(preferences.getInt("notch_y", 50))
+            y = dpToPx(preferences.getInt("notch_y", 0))
         }
         windowManager?.addView(view, notchParams)
     }
 
-    private fun dpToPx(dp: Int): Int {
-        return (dp * resources.displayMetrics.density).toInt()
-    }
 
 
     private fun updateStatusBarAppearance() {

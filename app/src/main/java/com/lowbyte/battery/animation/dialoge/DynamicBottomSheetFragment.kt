@@ -8,28 +8,24 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.ActionDynamicAdapter
 import com.lowbyte.battery.animation.adapter.ActionDynamicItem
-import com.lowbyte.battery.animation.databinding.FragmentGestureBottomSheetBinding
+import com.lowbyte.battery.animation.databinding.FragmentDynamicBottomSheetBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
 
-class GestureBottomSheetFragment(
-    private val gestureTitle: String,
-    private val gestureAction: String,
+class DynamicBottomSheetFragment(
     private val actions: List<ActionDynamicItem>,
     private val onActionSelected: (ActionDynamicItem) -> Unit
 
 ) : BottomSheetDialogFragment() {
 
-    private var _binding: FragmentGestureBottomSheetBinding? = null
+    private var _binding: FragmentDynamicBottomSheetBinding? = null
     private val binding get() = _binding!!
     private lateinit var preferences: AppPreferences
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentGestureBottomSheetBinding.inflate(inflater, container, false)
+        _binding = FragmentDynamicBottomSheetBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -37,23 +33,17 @@ class GestureBottomSheetFragment(
         super.onViewCreated(view, savedInstanceState)
         preferences = AppPreferences.getInstance(requireContext())
 
-
-        binding.tvGestureTitle.text = gestureTitle
-        binding.tvGestureAction.text = gestureAction
-
         // RecyclerView setup
         binding.recyclerViewActions.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewActions.adapter = ActionDynamicAdapter(actions){ position, label ->
-            if (!preferences.isStatusBarEnabled ){
+            if (!preferences.isDynamicEnabled ){
                 Toast.makeText(requireContext(),
                     getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
-
                 return@ActionDynamicAdapter
             }
-          //  preferences.setString(gestureAction, label)
             Toast.makeText(context, getString(R.string.action_applied, label), Toast.LENGTH_SHORT).show()
             onActionSelected(actions[position])
-            dismiss() // Close the bottom sheet
+          //  dismiss() // Close the bottom sheet
         }
 
         binding.btnClose.setOnClickListener { dismiss() }
