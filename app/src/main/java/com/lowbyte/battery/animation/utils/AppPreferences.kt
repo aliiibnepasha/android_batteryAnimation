@@ -102,7 +102,7 @@ class AppPreferences private constructor(context: Context) {
         set(value) = sharedPreferences.edit { putInt(KEY_STATUS_HEIGHT, value) }
 
      var notchHeight: Int
-         get() = sharedPreferences.getInt(KEY_NOTCH_HEIGHT, 25)
+         get() = sharedPreferences.getInt(KEY_NOTCH_HEIGHT, 30)
         set(value) = sharedPreferences.edit { putInt(KEY_NOTCH_HEIGHT, value) }
 
     val screenWidth = Resources.getSystem().displayMetrics.widthPixels

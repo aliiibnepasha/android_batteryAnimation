@@ -1,7 +1,12 @@
 package com.lowbyte.battery.animation.adapter
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lowbyte.battery.animation.databinding.ItemActionDynamicBinding
 import com.lowbyte.battery.animation.databinding.ItemActionScrollBinding
@@ -24,6 +29,7 @@ class ActionDynamicAdapter(
 
             }
             binding.enableDynamicFeature.setOnCheckedChangeListener { _, isChecked ->
+
                 preferences.setBoolean(item.actionName,isChecked)
                 onItemClick(position, item.label)
             }

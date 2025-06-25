@@ -1,8 +1,11 @@
 package com.lowbyte.battery.animation.main.island
 
 import DynamicBottomSheetFragment
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.NotchAccessibilityService
@@ -43,7 +47,7 @@ class IslandFragment : Fragment() {
         FirebaseAnalyticsUtils.logScreenView(this, "IslandFragment")
 
        /*............................................*/
-        binding.yAxisSeekbar.max = 150
+        binding.yAxisSeekbar.max = 100
         binding.yAxisSeekbar.progress = preferences.notchYAxis + 50
         binding.yAxisSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {

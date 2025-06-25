@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -106,14 +107,11 @@ class NotchAccessibilityService : AccessibilityService() {
 
                         Intent.ACTION_BATTERY_CHANGED -> {
                             val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
-                            val isCharging =
-                                status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
-                            Log.d(
-                                "services",
-                                if (isCharging) "Device is charging" else "Device not charging"
-                            )
-                            if (isCharging) {
+                            if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
+                                Log.d("services", "Device is charging (connected)")
                                 updateNotchIcons("showCharging")
+                            } else {
+                                Log.d("services", "Device not charging")
                             }
                         }
 
@@ -122,11 +120,15 @@ class NotchAccessibilityService : AccessibilityService() {
                                 intent.getIntExtra(BluetoothAdapter.EXTRA_CONNECTION_STATE, -1)
                             when (state) {
                                 BluetoothAdapter.STATE_CONNECTED -> updateNotchIcons("showBluetooth")
-
                                 BluetoothAdapter.STATE_DISCONNECTED -> Log.d(
                                     "services", "Bluetooth disconnected"
                                 )
                             }
+                        }
+
+                        BluetoothDevice.ACTION_ACL_CONNECTED -> {
+                            Log.d("services", "Bluetooth ACL connected")
+                            updateNotchIcons("showBluetooth")
                         }
 
                         AudioManager.RINGER_MODE_CHANGED_ACTION -> {
@@ -135,13 +137,6 @@ class NotchAccessibilityService : AccessibilityService() {
                             val ringerMode = audioManager.ringerMode
                             when (ringerMode) {
                                 AudioManager.RINGER_MODE_SILENT -> updateNotchIcons("showMuted")
-                                AudioManager.RINGER_MODE_NORMAL -> Log.d(
-                                    "services", "Device is un muted"
-                                )
-
-                                AudioManager.RINGER_MODE_VIBRATE -> Log.d(
-                                    "services", "Device in vibrate mode"
-                                )
                             }
                         }
 
@@ -162,6 +157,8 @@ class NotchAccessibilityService : AccessibilityService() {
                 addAction(Intent.ACTION_BATTERY_CHANGED)
                 addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)
                 addAction(AudioManager.RINGER_MODE_CHANGED_ACTION)
+                addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
+                addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
                 addAction("com.example.CUSTOM_NOTCH_UPDATE")
             }
 
@@ -259,13 +256,10 @@ class NotchAccessibilityService : AccessibilityService() {
             windowManager?.addView(view, notchParams)
         }
     }
-    private val notchUpdateRunnable = object : Runnable {
-        override fun run() {
-            // Your code to execute every 1 second
-         //   updateNotchIcons("close")
-          //  handlerNotification.postDelayed(this, 4000)
-        }
+    private val resetNotchRunnable = Runnable {
+        resetNotchView()
     }
+
     fun updateNotificationNotch() {
         val binding = notificationNotchBinding ?: return
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels
@@ -401,58 +395,84 @@ class NotchAccessibilityService : AccessibilityService() {
     }
 
     fun updateNotchIcons(showNotification: String) {
+        val binding = notificationNotchBinding ?: return
+
+        // Enlarge notch
+        val enlargedWidth = dpToPx(270)
+        val enlargedHeight = dpToPx(35)
+
+        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+        val notchX = (screenWidth - enlargedWidth) / 2 + dpToPx(preferences.notchXAxis)
+        val notchY = dpToPx(preferences.notchYAxis)
+
+        val enlargedParams = WindowManager.LayoutParams(
+            enlargedWidth,
+            enlargedHeight,
+            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            PixelFormat.TRANSLUCENT
+        ).apply {
+            gravity = Gravity.TOP or Gravity.START
+            x = notchX
+            y = notchY
+        }
 
         when (showNotification) {
             "showCharging" -> {
-                notificationNotchBinding?.iconContainerLeft?.visibility = View.GONE
-                notificationNotchBinding?.iconContainerRight?.visibility = View.VISIBLE
-                notificationNotchBinding?.notchLabel?.visibility = View.VISIBLE
-                notificationNotchBinding?.notchLabel?.text = getString(R.string.charging)
-                notificationNotchBinding?.rightIcon?.setImageResource(R.drawable.ic_dynamic_battery)
-
-                handlerNotification.post(notchUpdateRunnable)
+                binding.iconContainerLeft.visibility = View.GONE
+                binding.iconContainerRight.visibility = View.VISIBLE
+                binding.notchLabel.visibility = View.VISIBLE
+                binding.notchLabel.text = getString(R.string.charging)
+                binding.rightIcon.setImageResource(R.drawable.ic_dynamic_battery)
             }
 
             "showNotification" -> {
-                notificationNotchBinding?.iconContainerLeft?.visibility = View.VISIBLE
-                notificationNotchBinding?.iconContainerRight?.visibility = View.VISIBLE
-                notificationNotchBinding?.notchLabel?.visibility = View.VISIBLE
-                notificationNotchBinding?.rightIcon?.setImageResource(R.drawable.ic_dynamic_notification)
-                handlerNotification.post(notchUpdateRunnable)
+                binding.iconContainerLeft.visibility = View.VISIBLE
+                binding.iconContainerRight.visibility = View.VISIBLE
+                binding.notchLabel.visibility = View.VISIBLE
+                binding.rightIcon.setImageResource(R.drawable.ic_dynamic_notification)
             }
 
             "showMuted" -> {
-                notificationNotchBinding?.iconContainerLeft?.visibility = View.VISIBLE
-                notificationNotchBinding?.iconContainerRight?.visibility = View.GONE
-                notificationNotchBinding?.notchLabel?.visibility = View.VISIBLE
-                notificationNotchBinding?.notchLabel?.text = getString(R.string.mute)
-                notificationNotchBinding?.leftIcon?.setImageResource(R.drawable.ic_dynamic_mute)
-
-                handlerNotification.post(notchUpdateRunnable)
-
+                binding.iconContainerLeft.visibility = View.GONE
+                binding.iconContainerRight.visibility = View.VISIBLE
+                binding.notchLabel.visibility = View.VISIBLE
+                binding.notchLabel.text = getString(R.string.mute)
+                binding.rightIcon.setImageResource(R.drawable.ic_dynamic_mute)
             }
 
             "showBluetooth" -> {
-                notificationNotchBinding?.iconContainerLeft?.visibility = View.VISIBLE
-                notificationNotchBinding?.iconContainerRight?.visibility = View.GONE
-                notificationNotchBinding?.notchLabel?.visibility = View.VISIBLE
-                notificationNotchBinding?.notchLabel?.text = getString(R.string.connected)
-                notificationNotchBinding?.leftIcon?.setImageResource(R.drawable.ic_dynamic_bluetooth)
-                handlerNotification.post(notchUpdateRunnable)
-
+                binding.iconContainerLeft.visibility = View.GONE
+                binding.iconContainerRight.visibility = View.VISIBLE
+                binding.notchLabel.visibility = View.VISIBLE
+                binding.notchLabel.text = getString(R.string.connected)
+                binding.rightIcon.setImageResource(R.drawable.ic_dynamic_bluetooth)
             }
 
-            else -> {
-                notificationNotchBinding?.iconContainerLeft?.visibility = View.INVISIBLE
-                notificationNotchBinding?.iconContainerRight?.visibility = View.INVISIBLE
-                notificationNotchBinding?.notchLabel?.visibility = View.INVISIBLE
-                notificationNotchBinding?.notchLabel?.text = ""
-
-            }
+            else -> resetNotchView()
         }
 
+        // Apply enlarged layout
+        windowManager?.updateViewLayout(binding.root, enlargedParams)
 
+        // Schedule reset after 5 seconds
+        handlerNotification.removeCallbacks(resetNotchRunnable)
+        handlerNotification.postDelayed(resetNotchRunnable, 3800)
     }
+
+
+    private fun resetNotchView() {
+        val binding = notificationNotchBinding ?: return
+
+        // Hide all UI elements
+        binding.iconContainerLeft.visibility = View.INVISIBLE
+        binding.iconContainerRight.visibility = View.INVISIBLE
+        binding.notchLabel.visibility = View.INVISIBLE
+        binding.notchLabel.text = ""
+        // Reset to default size and position
+        updateNotificationNotch()
+    }
+
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupGestures() {
@@ -577,7 +597,7 @@ class NotchAccessibilityService : AccessibilityService() {
         notificationNotchBinding = null
         updateReceiver?.let { unregisterReceiver(it) }
         updateReceiver = null
-        handler.removeCallbacks(notchUpdateRunnable)
+        handler.removeCallbacks(resetNotchRunnable)
 
     }
 }
