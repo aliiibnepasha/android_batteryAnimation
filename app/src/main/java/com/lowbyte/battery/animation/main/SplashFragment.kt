@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.MyApplication
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.AdManager
@@ -151,8 +152,13 @@ class SplashFragment : Fragment() {
         handler.postDelayed({
             val destination = if (preferences.isFirstRun) {
                 preferences.serviceRunningFlag = false
-                preferences.isFirstRun = false
-                R.id.action_splash_to_language
+                if (BuildConfig.DEBUG){
+                    R.id.action_splash_to_main
+                }else{
+                    preferences.isFirstRun = false
+                    R.id.action_splash_to_language
+                }
+
             } else {
                 R.id.action_splash_to_main
             }

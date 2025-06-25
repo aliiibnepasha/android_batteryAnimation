@@ -116,10 +116,8 @@ class AppPreferences private constructor(context: Context) {
         set(value) = sharedPreferences.edit { putInt(KEY_X_AXIS, value) }
 
      var notchYAxis: Int
-         get() = sharedPreferences.getInt(KEY_Y_AXIS, 0)
+         get() = sharedPreferences.getInt(KEY_Y_AXIS, 4)
         set(value) = sharedPreferences.edit { putInt(KEY_Y_AXIS, value) }
-
-
 
 
 

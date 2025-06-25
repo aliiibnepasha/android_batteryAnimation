@@ -207,6 +207,10 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="mute">Mute</string>
     <string name="please_enable_dynamic_mode">Please enable Dynamic Island</string>
+    <string name="size_reset">Size reset</string>
+    <string name="position_reset">Position reset</string>
+    <string name="connected">Connected</string>
+    <string name="charging">Charging</string>
 
 
 </resources>

@@ -5,61 +5,71 @@
     android:id="@+id/statusBarRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="30dp"
+    android:minHeight="25dp"
     android:maxHeight="100dp"
     android:background="@drawable/black_rounded_notch"
-    android:paddingHorizontal="8dp">
+    android:paddingHorizontal="5dp">
 
     <!-- Icons on the left -->
     <LinearLayout
-        android:id="@+id/iconContainer"
+        android:id="@+id/iconContainerLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginStart="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
-            android:id="@+id/iconBattery"
+            android:id="@+id/leftIcon"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/bg_ad_tag"
-            android:visibility="gone"
-            app:tint="@android:color/white" />
+            android:padding="3dp"
+            android:contentDescription="@string/battery_emoji_widget"
+            android:src="@drawable/ic_dynamic_mute"
+            android:visibility="visible" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/notchLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="5dp"
+        android:gravity="start"
+        android:maxLines="1"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iconContainerRight"
+        app:layout_constraintStart_toEndOf="@+id/iconContainerLeft"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/iconContainerRight"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
 
         <ImageView
-            android:id="@+id/iconMute"
+            android:id="@+id/rightIcon"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/ic_signal_wifi"
-            android:visibility="gone"
             android:layout_marginStart="4dp"
-            app:tint="@android:color/white" />
+            android:padding="2dp"
+            android:contentDescription="@string/battery_emoji_widget"
+            android:src="@drawable/ic_dynamic_notification"
+            android:visibility="visible" />
 
-        <ImageView
-            android:id="@+id/iconBluetooth"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_signal_wifi"
-            android:visibility="gone"
-            android:layout_marginStart="4dp"
-            app:tint="@android:color/white" />
+
     </LinearLayout>
 
     <!-- Center label -->
-    <TextView
-        android:id="@+id/notchLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Notch Info"
-        android:textColor="@android:color/white"
-        app:layout_constraintStart_toEndOf="@id/iconContainer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:gravity="center"
-        android:maxLines="1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

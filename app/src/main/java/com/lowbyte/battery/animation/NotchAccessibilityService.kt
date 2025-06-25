@@ -3,6 +3,7 @@ package com.lowbyte.battery.animation
 import android.accessibilityservice.AccessibilityService
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothAdapter
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,6 +11,7 @@ import android.content.IntentFilter
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.PixelFormat
+import android.media.AudioManager
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.BatteryManager
@@ -49,6 +51,8 @@ class NotchAccessibilityService : AccessibilityService() {
     private var windowManager: WindowManager? = null
     private var layoutParams: WindowManager.LayoutParams? = null
     private val handler = Handler(Looper.getMainLooper())
+    private val handlerNotification = Handler(Looper.getMainLooper())
+
     private var statusBarBinding: CustomStatusBarBinding? = null
     private var notificationViewBinding: CustomNotificationBarBinding? = null
     private var notificationNotchBinding: CustomNotchBarBinding? = null
@@ -72,28 +76,81 @@ class NotchAccessibilityService : AccessibilityService() {
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        handler.removeCallbacksAndMessages(null)
-        statusBarBinding?.root?.let { windowManager?.removeView(it) }
-        notificationViewBinding?.root?.let { windowManager?.removeView(it) }
-        notificationNotchBinding?.root?.let { windowManager?.removeView(it) }
-        statusBarBinding = null
-        notificationViewBinding = null
-        notificationNotchBinding = null
-        updateReceiver?.let { unregisterReceiver(it) }
-        updateReceiver = null
 
-    }
 
     private fun registerUpdateReceiver() {
         if (updateReceiver == null) {
             updateReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
-                    Log.d("services", "Received broadcast: ${intent?.action}")
-                    updateStatusBarAppearance()
-                    updateNotificationNotch()
+                    val action = intent?.action
+                    Log.d("services", "Received broadcast: $action")
 
+                    when (action) {
+                        BROADCAST_ACTION -> {
+                            Log.d("services", "Custom UI update action")
+                            updateStatusBarAppearance()
+                            updateNotificationNotch()
+                        }
+
+                        Intent.ACTION_AIRPLANE_MODE_CHANGED -> {
+                            Log.d("services", "Airplane mode changed")
+                        }
+
+                        WifiManager.WIFI_STATE_CHANGED_ACTION -> {
+                            Log.d("services", "WiFi state changed")
+                        }
+
+                        ConnectivityManager.CONNECTIVITY_ACTION -> {
+                            Log.d("services", "Connectivity changed")
+                        }
+
+                        Intent.ACTION_BATTERY_CHANGED -> {
+                            val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
+                            val isCharging =
+                                status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
+                            Log.d(
+                                "services",
+                                if (isCharging) "Device is charging" else "Device not charging"
+                            )
+                            if (isCharging) {
+                                updateNotchIcons("showCharging")
+                            }
+                        }
+
+                        BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED -> {
+                            val state =
+                                intent.getIntExtra(BluetoothAdapter.EXTRA_CONNECTION_STATE, -1)
+                            when (state) {
+                                BluetoothAdapter.STATE_CONNECTED -> updateNotchIcons("showBluetooth")
+
+                                BluetoothAdapter.STATE_DISCONNECTED -> Log.d(
+                                    "services", "Bluetooth disconnected"
+                                )
+                            }
+                        }
+
+                        AudioManager.RINGER_MODE_CHANGED_ACTION -> {
+                            val audioManager =
+                                getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                            val ringerMode = audioManager.ringerMode
+                            when (ringerMode) {
+                                AudioManager.RINGER_MODE_SILENT -> updateNotchIcons("showMuted")
+                                AudioManager.RINGER_MODE_NORMAL -> Log.d(
+                                    "services", "Device is un muted"
+                                )
+
+                                AudioManager.RINGER_MODE_VIBRATE -> Log.d(
+                                    "services", "Device in vibrate mode"
+                                )
+                            }
+                        }
+
+                        "com.example.CUSTOM_NOTCH_UPDATE" -> {
+                            Log.d("services", "Custom notch update triggered")
+                            updateNotificationNotch()
+                            updateNotchIcons("showNotification")
+                        }
+                    }
                 }
             }
 
@@ -103,16 +160,17 @@ class NotchAccessibilityService : AccessibilityService() {
                 addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
                 addAction(ConnectivityManager.CONNECTIVITY_ACTION)
                 addAction(Intent.ACTION_BATTERY_CHANGED)
-               // addAction(WifiManager.RSSI_CHANGED_ACTION)
-                // Add other actions you need to listen for
+                addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)
+                addAction(AudioManager.RINGER_MODE_CHANGED_ACTION)
+                addAction("com.example.CUSTOM_NOTCH_UPDATE")
             }
+
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     registerReceiver(updateReceiver, filter, RECEIVER_EXPORTED)
                     Log.d("services", "Registered receiver for API 33+")
                 } else {
                     registerReceiver(updateReceiver, filter)
-
                     Log.d("servicesdd", "Registered receiver for pre-API 33")
                 }
             } catch (e: Exception) {
@@ -120,7 +178,6 @@ class NotchAccessibilityService : AccessibilityService() {
             }
         }
     }
-
 
     private fun createCustomStatusBar() {
         layoutParams = WindowManager.LayoutParams(
@@ -202,7 +259,13 @@ class NotchAccessibilityService : AccessibilityService() {
             windowManager?.addView(view, notchParams)
         }
     }
-
+    private val notchUpdateRunnable = object : Runnable {
+        override fun run() {
+            // Your code to execute every 1 second
+         //   updateNotchIcons("close")
+          //  handlerNotification.postDelayed(this, 4000)
+        }
+    }
     fun updateNotificationNotch() {
         val binding = notificationNotchBinding ?: return
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels
@@ -225,16 +288,20 @@ class NotchAccessibilityService : AccessibilityService() {
             y = notchY
         }
 
-        if (binding.root.parent == null) {
-            windowManager?.addView(binding.root, notchParams)
-            Log.d("services", "Notch addView via broadcast")
-
+        if (!preferences.isDynamicEnabled && ::preferences.isInitialized) {
+            if (binding.root.parent != null) {
+                windowManager?.removeView(binding.root)
+            }
+            return
         } else {
-            windowManager?.updateViewLayout(binding.root, notchParams)
-            Log.d("services", "Notch updateViewLayout via broadcast")
+            if (binding.root.parent == null) {
+                windowManager?.addView(binding.root, notchParams)
+                Log.d("services", "Notch addView via broadcast")
+            }
         }
+        windowManager?.updateViewLayout(binding.root, notchParams)
+        Log.d("services", "Notch updateViewLayout via broadcast")
     }
-
 
     private fun updateStatusBarAppearance() {
         val binding = statusBarBinding ?: return
@@ -330,6 +397,60 @@ class NotchAccessibilityService : AccessibilityService() {
             windowManager?.updateViewLayout(binding.root, layoutParams)
         }
         updateBatteryInfo()
+
+    }
+
+    fun updateNotchIcons(showNotification: String) {
+
+        when (showNotification) {
+            "showCharging" -> {
+                notificationNotchBinding?.iconContainerLeft?.visibility = View.GONE
+                notificationNotchBinding?.iconContainerRight?.visibility = View.VISIBLE
+                notificationNotchBinding?.notchLabel?.visibility = View.VISIBLE
+                notificationNotchBinding?.notchLabel?.text = getString(R.string.charging)
+                notificationNotchBinding?.rightIcon?.setImageResource(R.drawable.ic_dynamic_battery)
+
+                handlerNotification.post(notchUpdateRunnable)
+            }
+
+            "showNotification" -> {
+                notificationNotchBinding?.iconContainerLeft?.visibility = View.VISIBLE
+                notificationNotchBinding?.iconContainerRight?.visibility = View.VISIBLE
+                notificationNotchBinding?.notchLabel?.visibility = View.VISIBLE
+                notificationNotchBinding?.rightIcon?.setImageResource(R.drawable.ic_dynamic_notification)
+                handlerNotification.post(notchUpdateRunnable)
+            }
+
+            "showMuted" -> {
+                notificationNotchBinding?.iconContainerLeft?.visibility = View.VISIBLE
+                notificationNotchBinding?.iconContainerRight?.visibility = View.GONE
+                notificationNotchBinding?.notchLabel?.visibility = View.VISIBLE
+                notificationNotchBinding?.notchLabel?.text = getString(R.string.mute)
+                notificationNotchBinding?.leftIcon?.setImageResource(R.drawable.ic_dynamic_mute)
+
+                handlerNotification.post(notchUpdateRunnable)
+
+            }
+
+            "showBluetooth" -> {
+                notificationNotchBinding?.iconContainerLeft?.visibility = View.VISIBLE
+                notificationNotchBinding?.iconContainerRight?.visibility = View.GONE
+                notificationNotchBinding?.notchLabel?.visibility = View.VISIBLE
+                notificationNotchBinding?.notchLabel?.text = getString(R.string.connected)
+                notificationNotchBinding?.leftIcon?.setImageResource(R.drawable.ic_dynamic_bluetooth)
+                handlerNotification.post(notchUpdateRunnable)
+
+            }
+
+            else -> {
+                notificationNotchBinding?.iconContainerLeft?.visibility = View.INVISIBLE
+                notificationNotchBinding?.iconContainerRight?.visibility = View.INVISIBLE
+                notificationNotchBinding?.notchLabel?.visibility = View.INVISIBLE
+                notificationNotchBinding?.notchLabel?.text = ""
+
+            }
+        }
+
 
     }
 
@@ -443,5 +564,20 @@ class NotchAccessibilityService : AccessibilityService() {
                 handler.postDelayed(this, 1000)
             }
         })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
+        statusBarBinding?.root?.let { windowManager?.removeView(it) }
+        notificationViewBinding?.root?.let { windowManager?.removeView(it) }
+        notificationNotchBinding?.root?.let { windowManager?.removeView(it) }
+        statusBarBinding = null
+        notificationViewBinding = null
+        notificationNotchBinding = null
+        updateReceiver?.let { unregisterReceiver(it) }
+        updateReceiver = null
+        handler.removeCallbacks(notchUpdateRunnable)
+
     }
 }
