@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
 import com.lowbyte.battery.animation.databinding.FragmentViewAllEmojiBinding
@@ -106,7 +107,11 @@ class ViewAllEmojiFragment : Fragment() {
 
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
-            sheet.show(childFragmentManager, "AccessibilityPermission")
+            if (BuildConfig.DEBUG){
+                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            }else{
+                sheet.show(childFragmentManager, "AccessibilityPermission")
+            }
         } else {
             binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled
             requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))

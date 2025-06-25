@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.PixelFormat
 import android.net.ConnectivityManager
@@ -59,7 +60,7 @@ class NotchAccessibilityService : AccessibilityService() {
         preferences = AppPreferences.getInstance(this)
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         createCustomStatusBar()
-        createNotificationBar()
+        //  createNotificationBar()
         createNotificationNotch()
         registerUpdateReceiver()
         startTimeUpdates()
@@ -91,6 +92,8 @@ class NotchAccessibilityService : AccessibilityService() {
                 override fun onReceive(context: Context?, intent: Intent?) {
                     Log.d("services", "Received broadcast: ${intent?.action}")
                     updateStatusBarAppearance()
+                    updateNotificationNotch()
+
                 }
             }
 
@@ -170,11 +173,19 @@ class NotchAccessibilityService : AccessibilityService() {
     }
 
     private fun createNotificationNotch() {
+        if (notificationNotchBinding != null && notificationNotchBinding?.root?.parent != null) return
+
         notificationNotchBinding = CustomNotchBarBinding.inflate(LayoutInflater.from(this))
         val view = notificationNotchBinding?.root ?: return
+
+        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+        val notchWidth = dpToPx(preferences.notchWidth)
+        val notchHeight = dpToPx(preferences.notchHeight)
+        val notchX = (screenWidth - notchWidth) / 2 + dpToPx(preferences.notchXAxis)
+        val notchY = dpToPx(preferences.notchYAxis)
+
         val notchParams = WindowManager.LayoutParams(
-            dpToPx(preferences.getInt("notch_width", 120)),
-            dpToPx(preferences.getInt("notch_height", 30)),
+            notchWidth, notchHeight,
             WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
@@ -183,12 +194,46 @@ class NotchAccessibilityService : AccessibilityService() {
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
-            x = dpToPx(preferences.getInt("notch_x", 0))
-            y = dpToPx(preferences.getInt("notch_y", 0))
+            x = notchX
+            y = notchY
         }
-        windowManager?.addView(view, notchParams)
+
+        if (preferences.isDynamicEnabled) {
+            windowManager?.addView(view, notchParams)
+        }
     }
 
+    fun updateNotificationNotch() {
+        val binding = notificationNotchBinding ?: return
+        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+        val notchWidth = dpToPx(preferences.notchWidth)
+        val notchHeight = dpToPx(preferences.notchHeight)
+        val notchX = (screenWidth - notchWidth) / 2 + dpToPx(preferences.notchXAxis)
+        val notchY = dpToPx(preferences.notchYAxis)
+
+        val notchParams = WindowManager.LayoutParams(
+            notchWidth, notchHeight,
+            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            PixelFormat.TRANSLUCENT
+        ).apply {
+            gravity = Gravity.TOP or Gravity.START
+            x = notchX
+            y = notchY
+        }
+
+        if (binding.root.parent == null) {
+            windowManager?.addView(binding.root, notchParams)
+            Log.d("services", "Notch addView via broadcast")
+
+        } else {
+            windowManager?.updateViewLayout(binding.root, notchParams)
+            Log.d("services", "Notch updateViewLayout via broadcast")
+        }
+    }
 
 
     private fun updateStatusBarAppearance() {
@@ -287,7 +332,6 @@ class NotchAccessibilityService : AccessibilityService() {
         updateBatteryInfo()
 
     }
-
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupGestures() {

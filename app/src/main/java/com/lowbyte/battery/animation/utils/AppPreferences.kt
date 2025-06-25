@@ -2,6 +2,7 @@ package com.lowbyte.battery.animation.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.graphics.Color
 import android.util.Log
 import androidx.core.content.edit
@@ -101,19 +102,21 @@ class AppPreferences private constructor(context: Context) {
         set(value) = sharedPreferences.edit { putInt(KEY_STATUS_HEIGHT, value) }
 
      var notchHeight: Int
-        get() = sharedPreferences.getInt(KEY_NOTCH_HEIGHT, 40)
+         get() = sharedPreferences.getInt(KEY_NOTCH_HEIGHT, 25)
         set(value) = sharedPreferences.edit { putInt(KEY_NOTCH_HEIGHT, value) }
 
-      var notchWidth: Int
-        get() = sharedPreferences.getInt(KEY_NOTCH_WIDTH, 40)
+    val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+
+    var notchWidth: Int
+        get() = sharedPreferences.getInt(KEY_NOTCH_WIDTH, screenWidth / 8)
         set(value) = sharedPreferences.edit { putInt(KEY_NOTCH_WIDTH, value) }
 
      var notchXAxis: Int
-        get() = sharedPreferences.getInt(KEY_X_AXIS, 40)
+         get() = sharedPreferences.getInt(KEY_X_AXIS, 0)
         set(value) = sharedPreferences.edit { putInt(KEY_X_AXIS, value) }
 
      var notchYAxis: Int
-        get() = sharedPreferences.getInt(KEY_Y_AXIS, 40)
+         get() = sharedPreferences.getInt(KEY_Y_AXIS, 0)
         set(value) = sharedPreferences.edit { putInt(KEY_Y_AXIS, value) }
 
 

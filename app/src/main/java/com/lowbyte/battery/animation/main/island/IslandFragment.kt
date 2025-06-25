@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
@@ -42,6 +43,82 @@ class IslandFragment : Fragment() {
 
         // Log screen view event
         FirebaseAnalyticsUtils.logScreenView(this, "IslandFragment")
+
+       /*............................................*/
+        binding.yAxisSeekbar.max = 100
+        binding.yAxisSeekbar.progress = preferences.notchYAxis
+        binding.yAxisSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val safeProgress = progress.coerceIn(0, 100)
+                preferences.notchYAxis = safeProgress
+                FirebaseAnalyticsUtils.logClickEvent(this@IslandFragment, "notchYAxis", mapOf("value" to safeProgress.toString()))
+                requireContext().sendBroadcast(Intent(BROADCAST_ACTION))
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                if (!binding.switchEnableDynamic.isChecked) {
+                    Toast.makeText(requireContext(), getString(R.string.please_enable_dynamic_mode), Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+
+       /*............................................*/
+        binding.xAxisSeekbar.max = 200
+        binding.xAxisSeekbar.progress = preferences.notchXAxis
+        binding.xAxisSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val safeProgress = progress.coerceIn(-200, 200)
+                preferences.notchXAxis = safeProgress
+                requireContext().sendBroadcast(Intent(BROADCAST_ACTION))
+
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                if (!binding.switchEnableDynamic.isChecked) {
+                    Toast.makeText(requireContext(), getString(R.string.please_enable_dynamic_mode), Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+
+
+       /*......... ...................................*/
+        binding.heightSeekbar.max = 100
+        binding.heightSeekbar.progress = preferences.notchHeight
+        binding.heightSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val safeProgress = progress.coerceIn(20, 100)
+                preferences.notchHeight = safeProgress
+                requireContext().sendBroadcast(Intent(BROADCAST_ACTION))
+
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                if (!binding.switchEnableDynamic.isChecked) {
+                    Toast.makeText(requireContext(), getString(R.string.please_enable_dynamic_mode), Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+
+       /*......... ...................................*/
+        binding.widthSeekbar.max = 200
+        binding.widthSeekbar.progress = preferences.notchWidth
+        binding.widthSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val safeProgress = progress.coerceIn(50, 200)
+                preferences.notchWidth = safeProgress
+                requireContext().sendBroadcast(Intent(BROADCAST_ACTION))
+
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                if (!binding.switchEnableDynamic.isChecked) {
+                    Toast.makeText(requireContext(), getString(R.string.please_enable_dynamic_mode), Toast.LENGTH_LONG).show()
+                }
+            }
+        })
 
         binding.btnPositionReset.setOnClickListener {
             if (!preferences.isDynamicEnabled) {
@@ -96,77 +173,6 @@ class IslandFragment : Fragment() {
         }
 
 
-       /*............................................*/
-        binding.yAxisSeekbar.max = 50
-        binding.yAxisSeekbar.progress = preferences.notchYAxis
-        binding.yAxisSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val safeProgress = progress.coerceIn(0, 50)
-                preferences.notchYAxis = safeProgress
-                FirebaseAnalyticsUtils.logClickEvent(this@IslandFragment, "notchYAxis", mapOf("value" to safeProgress.toString()))
-
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                if (!binding.switchEnableDynamic.isChecked) {
-                    Toast.makeText(requireContext(), getString(R.string.please_enable_dynamic_mode), Toast.LENGTH_LONG).show()
-                }
-            }
-        })
-
-       /*............................................*/
-        binding.xAxisSeekbar.max = 50
-        binding.xAxisSeekbar.progress = preferences.notchXAxis
-        binding.xAxisSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val safeProgress = progress.coerceIn(0, 50)
-                preferences.notchXAxis = safeProgress
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                if (!binding.switchEnableDynamic.isChecked) {
-                    Toast.makeText(requireContext(), getString(R.string.please_enable_dynamic_mode), Toast.LENGTH_LONG).show()
-                }
-            }
-        })
-
-
-       /*......... ...................................*/
-        binding.heightSeekbar.max = 50
-        binding.heightSeekbar.progress = preferences.notchHeight
-        binding.heightSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val safeProgress = progress.coerceIn(0, 50)
-                preferences.notchHeight = safeProgress
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                if (!binding.switchEnableDynamic.isChecked) {
-                    Toast.makeText(requireContext(), getString(R.string.please_enable_dynamic_mode), Toast.LENGTH_LONG).show()
-                }
-            }
-        })
-
-       /*......... ...................................*/
-        binding.widthSeekbar.max = 50
-        binding.widthSeekbar.progress = preferences.notchWidth
-        binding.widthSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val safeProgress = progress.coerceIn(0, 50)
-                preferences.notchWidth = safeProgress
-            }
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                if (!binding.switchEnableDynamic.isChecked) {
-                    Toast.makeText(requireContext(), getString(R.string.please_enable_dynamic_mode), Toast.LENGTH_LONG).show()
-                }
-            }
-        })
-
-
         binding.viewHowToUse.setOnClickListener {
             if (!preferences.isDynamicEnabled) {
                 Toast.makeText(
@@ -192,7 +198,7 @@ class IslandFragment : Fragment() {
                 if (::preferences.isInitialized && preferences.isDynamicEnabled && isChecked) {
                     checkAccessibilityPermission()
                 } else {
-                   // requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+                  //  requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
                 }
             }
         }, 500)
@@ -265,9 +271,13 @@ class IslandFragment : Fragment() {
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "accessibility_prompt_shown")
-            sheet.show(childFragmentManager, "AccessibilityPermission")
+            if (BuildConfig.DEBUG){
+                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            }else{
+                sheet.show(childFragmentManager, "AccessibilityPermission")
+            }
         } else {
-         //   binding.switchEnableDynamic.isChecked = preferences.isDynamicEnabled
+            binding.switchEnableDynamic.isChecked = preferences.isDynamicEnabled
           //  requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
         }
     }

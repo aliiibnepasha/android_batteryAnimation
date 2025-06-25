@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.BaseActivity
+import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.CustomIconGridAdapter
@@ -225,8 +226,11 @@ class StatusBarCustomizeActivity : BaseActivity() {
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
             FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_prompt_shown", null)
-
-            sheet.show(supportFragmentManager, "AccessibilityPermission")
+            if (BuildConfig.DEBUG){
+                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            }else{
+                sheet.show(supportFragmentManager, "AccessibilityPermission")
+            }
         } else {
             FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
             sendBroadcast(Intent(BROADCAST_ACTION))
