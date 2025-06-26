@@ -7,11 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
+import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ActivityHowToUseBinding
 import com.lowbyte.battery.animation.main.intro.SlidePagerAdapter
 
-class HowToUseActivity : AppCompatActivity() {
+class HowToUseActivity : BaseActivity() {
     private lateinit var binding: ActivityHowToUseBinding
     private lateinit var adapter: SlidePagerAdapter
 

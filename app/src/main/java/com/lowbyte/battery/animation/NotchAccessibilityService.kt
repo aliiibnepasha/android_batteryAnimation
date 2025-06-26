@@ -450,6 +450,7 @@ class NotchAccessibilityService : AccessibilityService() {
                 Log.w("StatusBar", "View already added. Skipping re-add.")
             }
         }
+        createNotificationNotch()
     }
 
     private fun createNotificationNotch() {
