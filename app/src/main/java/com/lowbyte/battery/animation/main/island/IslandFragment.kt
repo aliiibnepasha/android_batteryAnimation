@@ -53,12 +53,12 @@ class IslandFragment : Fragment() {
         }
 
        /*............................................*/
-        binding.yAxisSeekbar.max = 100
-        binding.yAxisSeekbar.progress = preferences.notchYAxis + 50
+        binding.yAxisSeekbar.max = 30
+        binding.yAxisSeekbar.progress = preferences.notchYAxis + 10
 
         binding.yAxisSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val realValue = progress - 50 // converts SeekBar progress back to real value
+                val realValue = progress - 10 // converts SeekBar progress back to real value
                 preferences.notchYAxis = realValue
                 Log.d("TAG_Access", "notchYAxis $realValue")
 
@@ -157,7 +157,7 @@ class IslandFragment : Fragment() {
 
             } else {
                 binding.xAxisSeekbar.progress = 200  // for notchXAxis = 0
-                binding.yAxisSeekbar.progress = 54   // for notchYAxis = 0
+                binding.yAxisSeekbar.progress = 19   // for notchYAxis = 0
                 Toast.makeText(
                     requireContext(), getString(R.string.position_reset), Toast.LENGTH_SHORT
                 ).show()
