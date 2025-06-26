@@ -21,6 +21,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.util.TypedValue
 import android.view.GestureDetector
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -47,20 +48,22 @@ import com.lowbyte.battery.animation.utils.ServiceUtils.setTint
 import com.lowbyte.battery.animation.utils.ServiceUtils.toVisibility
 import com.lowbyte.battery.animation.utils.ServiceUtils.updateTime
 import java.util.Date
+import kotlin.math.abs
 
 class NotchAccessibilityService : AccessibilityService() {
-
 
     private var windowManager: WindowManager? = null
     private var layoutParams: WindowManager.LayoutParams? = null
     private val handler = Handler(Looper.getMainLooper())
     private val handlerNotification = Handler(Looper.getMainLooper())
-
     private var statusBarBinding: CustomStatusBarBinding? = null
     private var notificationViewBinding: CustomNotificationBarBinding? = null
     private var notificationNotchBinding: CustomNotchBarBinding? = null
     private var updateReceiver: BroadcastReceiver? = null
     private lateinit var preferences: AppPreferences
+    private var handeRunnable: Boolean = false
+    private var notificationView: View? = null
+    private var notificationHandler = Handler(Looper.getMainLooper())
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -75,11 +78,10 @@ class NotchAccessibilityService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
+
     override fun onInterrupt() {
 
     }
-
-
 
     private fun registerUpdateReceiver() {
         if (updateReceiver == null) {
@@ -87,24 +89,11 @@ class NotchAccessibilityService : AccessibilityService() {
                 override fun onReceive(context: Context?, intent: Intent?) {
                     val action = intent?.action
                     Log.d("NotificationReceiver", "Received broadcast: $action")
-
                     when (action) {
                         BROADCAST_ACTION -> {
                             Log.d("NotificationReceiver", "Custom UI update action")
                             updateStatusBarAppearance()
                             updateNotificationNotch()
-                        }
-
-                        Intent.ACTION_AIRPLANE_MODE_CHANGED -> {
-                            Log.d("services", "Airplane mode changed")
-                        }
-
-                        WifiManager.WIFI_STATE_CHANGED_ACTION -> {
-                            Log.d("services", "WiFi state changed")
-                        }
-
-                        ConnectivityManager.CONNECTIVITY_ACTION -> {
-                            Log.d("services", "Connectivity changed")
                         }
 
                         Intent.ACTION_BATTERY_CHANGED -> {
@@ -113,8 +102,21 @@ class NotchAccessibilityService : AccessibilityService() {
                                 if (preferences.getBoolean("switch_battery", false) == false) {
                                     return
                                 }
+                                updateNotchIcons(
+                                    showNotification = "showCharging",
+                                    label = getString(R.string.charging),
+                                    icon = R.drawable.ic_dynamic_battery,
+                                    drawable = null,
 
-                                updateNotchIcons("showCharging")
+                                    ) { isClickAllowed ->
+                                    if (isClickAllowed) {
+                                        Log.d("Callback", "Click is allowed, perform action")
+                                        // Perform your action here
+                                    } else {
+                                        Log.d("Callback", "Click not allowed")
+                                    }
+
+                                }
                             } else {
                                 Log.d("services", "Device not charging")
                             }
@@ -126,7 +128,21 @@ class NotchAccessibilityService : AccessibilityService() {
                             when (state) {
                                 BluetoothAdapter.STATE_CONNECTED -> {
                                     if (preferences.getBoolean("switch_bluetooth", false) == true) {
-                                        updateNotchIcons("showBluetooth")
+                                        updateNotchIcons(
+                                            showNotification = "showBluetooth",
+                                            label = getString(R.string.connected),
+                                            icon = null,
+                                            drawable = null
+                                        ) { isClickAllowed ->
+                                            if (isClickAllowed) {
+                                                Log.d(
+                                                    "Callback", "Click is allowed, perform action"
+                                                )
+                                                // Perform your action here
+                                            } else {
+                                                Log.d("Callback", "Click not allowed")
+                                            }
+                                        }
                                     }
 
                                 }
@@ -139,18 +155,43 @@ class NotchAccessibilityService : AccessibilityService() {
                         BluetoothDevice.ACTION_ACL_CONNECTED -> {
                             Log.d("services", "Bluetooth ACL connected")
                             if (preferences.getBoolean("switch_bluetooth", false) == true) {
-                                updateNotchIcons("showBluetooth")
+                                updateNotchIcons(
+                                    showNotification = "showBluetooth",
+                                    label = getString(R.string.connected),
+                                    icon = R.drawable.ic_dynamic_bluetooth,
+                                    drawable = null
+                                ) { isClickAllowed ->
+                                    if (isClickAllowed) {
+                                        Log.d("Callback", "Click is allowed, perform action")
+                                        // Perform your action here
+                                    } else {
+                                        Log.d("Callback", "Click not allowed")
+                                    }
+                                }
                             }
                         }
 
                         AudioManager.RINGER_MODE_CHANGED_ACTION -> {
-                            val audioManager =
-                                getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                            val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
                             val ringerMode = audioManager.ringerMode
                             when (ringerMode) {
                                 AudioManager.RINGER_MODE_SILENT -> {
                                     if (preferences.getBoolean("switch_mute", false) == true) {
-                                        updateNotchIcons("showMuted")
+                                        updateNotchIcons(
+                                            showNotification = "showMuted",
+                                            label = getString(R.string.mute),
+                                            icon = R.drawable.ic_dynamic_mute,
+                                            drawable = null
+                                        ) { isClickAllowed ->
+                                            if (isClickAllowed) {
+                                                Log.d(
+                                                    "Callback", "Click is allowed, perform action"
+                                                )
+                                                // Perform your action here
+                                            } else {
+                                                Log.d("Callback", "Click not allowed")
+                                            }
+                                        }
                                     }
 
                                 }
@@ -160,21 +201,34 @@ class NotchAccessibilityService : AccessibilityService() {
                         BROADCAST_ACTION_NOTIFICATION -> {
                             Log.d("NotificationReceiver", "Custom notch update triggered")
                             if (preferences.getBoolean("switch_notification", false) == true) {
+                                Log.d("NotificationReceiver", "Feature enabled keep tracking")
+                                val rmPkg = intent.getStringExtra("rm_package_name")
                                 val pkg = intent.getStringExtra("package_name")
-                                val title = intent.getStringExtra("title")
-                                val text = intent.getStringExtra("text")
-                                val subText = intent.getStringExtra("sub_text")
-                                val bigText = intent.getStringExtra("big_text")
-                                val url = intent.getStringExtra("url")
-                                val launchIntentUri = intent.getStringExtra("launch_intent_uri")
-                                // Get app icon
-//                                val appIcon: Drawable? = try {
-//                                    packageManager.getApplicationIcon(pkg?:packageName)
-//                                } catch (e: Exception) {
-//                                    null
-//                                }
 
-                                Log.d("NotificationReceiver", """
+                                if (rmPkg != "" && rmPkg == pkg) {
+                                    resetNotchView(false)
+                                    Log.d("NotificationReceiver", "packege matched remove icon")
+                                } else {
+                                    Log.d(
+                                        "NotificationReceiver",
+                                        "New Notification to be show with Icon"
+                                    )
+                                    resetNotchView(true)
+                                    val title = intent.getStringExtra("title")
+                                    val text = intent.getStringExtra("text")
+                                    val subText = intent.getStringExtra("sub_text")
+                                    val bigText = intent.getStringExtra("big_text")
+                                    val url = intent.getStringExtra("url")
+                                    val launchIntentUri = intent.getStringExtra("launch_intent_uri")
+                                    // Get app icon
+                                    val appIcon: Drawable? = try {
+                                        packageManager.getApplicationIcon(pkg ?: return)
+                                    } catch (e: Exception) {
+                                        null
+                                    }
+
+                                    Log.d(
+                                        "NotificationReceiver", """
                                     receiving
                                         📦 $pkg 
                                         🔤 $title 
@@ -184,16 +238,46 @@ class NotchAccessibilityService : AccessibilityService() {
                                         🌐 $url 
                                         🎯 $launchIntentUri
                                          """.trimIndent()
-                                )
-                                updateNotificationNotch()
-                                updateNotchIcons("showNotification")
+                                    )
+                                    updateNotificationNotch()
+                                    updateNotchIcons(
+                                        showNotification = "showNotification",
+                                        label = "",
+                                        icon = R.drawable.ic_dynamic_notification,
+                                        drawable = appIcon
+                                    ) { isClickAllowed ->
+                                        if (isClickAllowed) {
+                                            Log.d(
+                                                "NotificationReceiver", "Click is allowed, open App"
+                                            )
+                                            showNotificationBanner(title, text, url, pkg)
+//                                            val intent = packageManager.getLaunchIntentForPackage(
+//                                                pkg ?: return@updateNotchIcons
+//                                            )
+//                                            intent?.let {
+//                                                it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                                                startActivity(it)
+//                                            }
+                                            // Perform your action here
+                                        } else {
+                                            Log.d(
+                                                "NotificationReceiver",
+                                                "Click not allowed dont open app"
+                                            )
+                                        }
+                                    }
+
+                                }
+
+                            } else {
+                                Log.d("NotificationReceiver", "else Custom notch update triggered")
+
                             }
 
                         }
                     }
                 }
             }
-
             val filter = IntentFilter().apply {
                 addAction(BROADCAST_ACTION)
                 addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
@@ -221,15 +305,124 @@ class NotchAccessibilityService : AccessibilityService() {
         }
     }
 
+    private fun updateNotchIcons(
+        showNotification: String?,
+        label: String?,
+        icon: Int?,
+        drawable: Drawable?,
+        onActionClick: (isClickAllow: Boolean) -> Unit
+    ) {
+
+        Log.d(
+            "NotificationReceiver",
+            "action to be calling label: $label , showNotification: $showNotification"
+        )
+
+        val binding = notificationNotchBinding ?: return
+        // Enlarge notch
+        val enlargedWidth = dpToPx(270)
+        val enlargedHeight = dpToPx(35)
+
+        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+        val notchX = (screenWidth - enlargedWidth) / 2 + dpToPx(preferences.notchXAxis)
+        val notchY = dpToPx(preferences.notchYAxis)
+
+        val enlargedParams = WindowManager.LayoutParams(
+            enlargedWidth,
+            enlargedHeight,
+            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            PixelFormat.TRANSLUCENT
+        ).apply {
+            gravity = Gravity.TOP or Gravity.START
+            x = notchX
+            y = notchY
+        }
+
+        when (showNotification) {
+            "showCharging" -> {
+                handeRunnable = false
+                binding.iconContainerLeft.visibility = View.GONE
+                binding.iconContainerRight.visibility = View.VISIBLE
+                binding.notchLabel.visibility = View.VISIBLE
+                binding.rightPercentage.visibility = View.VISIBLE
+                binding.notchLabel.text = label
+                binding.rightPercentage.text = updateBatteryInfo()
+                binding.rightIcon.setImageResource(icon ?: R.drawable.ic_dynamic_battery)
+                binding.statusBarRoot.setOnClickListener {
+                    onActionClick(false)
+                }
+            }
+
+            "showNotification" -> {
+                handeRunnable = true
+                binding.iconContainerLeft.visibility = View.VISIBLE
+                binding.iconContainerRight.visibility = View.VISIBLE
+                binding.notchLabel.visibility = View.VISIBLE
+                binding.rightPercentage.visibility = View.GONE
+                binding.leftIcon.setImageDrawable(drawable)
+                binding.rightIcon.setImageResource(R.drawable.ic_dynamic_notification)
+                binding.statusBarRoot.setOnClickListener {
+                    onActionClick(true)
+                }
+            }
+
+            "showMuted" -> {
+                handeRunnable = false
+                binding.iconContainerLeft.visibility = View.GONE
+                binding.iconContainerRight.visibility = View.VISIBLE
+                binding.notchLabel.visibility = View.VISIBLE
+                binding.rightPercentage.visibility = View.GONE
+                binding.notchLabel.text = label
+                binding.rightIcon.setImageResource(icon ?: R.drawable.ic_dynamic_mute)
+                binding.statusBarRoot.setOnClickListener {
+                    onActionClick(false)
+                }
+            }
+
+            "showBluetooth" -> {
+                handeRunnable = false
+                binding.iconContainerLeft.visibility = View.GONE
+                binding.iconContainerRight.visibility = View.VISIBLE
+                binding.notchLabel.visibility = View.VISIBLE
+                binding.rightPercentage.visibility = View.GONE
+                binding.notchLabel.text = label
+                binding.rightIcon.setImageResource(icon ?: R.drawable.ic_dynamic_bluetooth)
+                binding.statusBarRoot.setOnClickListener {
+                    onActionClick(false)
+                }
+            }
+
+            else -> resetNotchView(false)
+        }
+
+        // Apply enlarged layout
+        windowManager?.updateViewLayout(binding.root, enlargedParams)
+
+        // Schedule reset after 5 seconds
+        handlerNotification.removeCallbacks(resetNotchRunnable)
+        handlerNotification.postDelayed(resetNotchRunnable, 3800)
+    }
+
+    private fun resetNotchView(isFromNotification: Boolean) {
+        val binding = notificationNotchBinding ?: return
+        // Hide all UI elements
+        binding.iconContainerLeft.visibility = if (isFromNotification) View.VISIBLE else View.GONE
+        binding.iconContainerRight.visibility = View.GONE
+        binding.rightPercentage.visibility = View.GONE
+        binding.notchLabel.visibility = View.INVISIBLE
+        binding.notchLabel.text = ""
+
+        // Reset to default size and position
+        updateNotificationNotch()
+    }
+
     private fun createCustomStatusBar() {
         layoutParams = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
             PixelFormat.TRANSLUCENT
         ).apply { gravity = Gravity.TOP }
 
@@ -252,25 +445,6 @@ class NotchAccessibilityService : AccessibilityService() {
         }
     }
 
-    private fun createNotificationBar() {
-        notificationViewBinding = CustomNotificationBarBinding.inflate(LayoutInflater.from(this))
-        val view = notificationViewBinding?.root ?: return
-        val params = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
-            PixelFormat.TRANSLUCENT
-        ).apply {
-            gravity = Gravity.TOP
-          //  y = dpToPx(30)
-        }
-        windowManager?.addView(view, params)
-    }
-
     private fun createNotificationNotch() {
         if (notificationNotchBinding != null && notificationNotchBinding?.root?.parent != null) return
 
@@ -284,12 +458,10 @@ class NotchAccessibilityService : AccessibilityService() {
         val notchY = dpToPx(preferences.notchYAxis)
 
         val notchParams = WindowManager.LayoutParams(
-            notchWidth, notchHeight,
+            notchWidth,
+            notchHeight,
             WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
@@ -301,11 +473,12 @@ class NotchAccessibilityService : AccessibilityService() {
             windowManager?.addView(view, notchParams)
         }
     }
+
     private val resetNotchRunnable = Runnable {
-        resetNotchView()
+        resetNotchView(handeRunnable)
     }
 
-    fun updateNotificationNotch() {
+    private fun updateNotificationNotch() {
         val binding = notificationNotchBinding ?: return
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels
         val notchWidth = dpToPx(preferences.notchWidth)
@@ -314,12 +487,10 @@ class NotchAccessibilityService : AccessibilityService() {
         val notchY = dpToPx(preferences.notchYAxis)
 
         val notchParams = WindowManager.LayoutParams(
-            notchWidth, notchHeight,
+            notchWidth,
+            notchHeight,
             WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
@@ -358,20 +529,24 @@ class NotchAccessibilityService : AccessibilityService() {
 
         animateStatusBarHeight((preferences.statusBarHeight * resources.displayMetrics.density).toInt())
         binding.root.setPadding(
-            (preferences.statusBarMarginLeft * resources.displayMetrics.density).toInt(), 0,
-            (preferences.statusBarMarginRight * resources.displayMetrics.density).toInt(), 0
+            (preferences.statusBarMarginLeft * resources.displayMetrics.density).toInt(),
+            0,
+            (preferences.statusBarMarginRight * resources.displayMetrics.density).toInt(),
+            0
         )
         binding.root.setBackgroundColor(preferences.statusBarBgColor)
 
-        // ⛔ Real System State Checks — Replace with actual checks
+        // Real System State Checks — Replace with actual checks
         val isWifiEnabled = isWifiEnabled(this)
         val isAirplaneModeOn = isAirplaneModeOn(this)
         val isHotspotOn = isHotspotEnabled(this)
         val isMobileDataEnabled = isMobileDataEnabled(this)
 
         with(binding) {
-            wifiIcon.visibility = if (preferences.showWifi && isWifiEnabled) View.VISIBLE else View.GONE
-            hotspotIcon.visibility = if (preferences.showHotspot && isHotspotOn) View.VISIBLE else View.GONE
+            wifiIcon.visibility =
+                if (preferences.showWifi && isWifiEnabled) View.VISIBLE else View.GONE
+            hotspotIcon.visibility =
+                if (preferences.showHotspot && isHotspotOn) View.VISIBLE else View.GONE
 
             if (isAirplaneModeOn) {
                 airplaneIcon.visibility = if (preferences.showAirplane) View.VISIBLE else View.GONE
@@ -379,7 +554,8 @@ class NotchAccessibilityService : AccessibilityService() {
                 signalIcon.visibility = View.GONE
             } else {
                 airplaneIcon.visibility = View.GONE
-                dataIcon.visibility = if (preferences.showData && isMobileDataEnabled) View.VISIBLE else View.GONE
+                dataIcon.visibility =
+                    if (preferences.showData && isMobileDataEnabled) View.VISIBLE else View.GONE
                 signalIcon.visibility = if (preferences.showSignal) View.VISIBLE else View.GONE
             }
 
@@ -388,13 +564,31 @@ class NotchAccessibilityService : AccessibilityService() {
             dateText.visibility = preferences.showDate.toVisibility()
             batteryPercent.visibility = preferences.showBatteryPercent.toVisibility()
 
-            applyIconSize(this@NotchAccessibilityService,wifiIcon, preferences.getIconSize("size_0", 24))
-            applyIconSize(this@NotchAccessibilityService,dataIcon, preferences.getIconSize("size_1", 24))
-            applyIconSize(this@NotchAccessibilityService,signalIcon, preferences.getIconSize("size_2", 24))
-            applyIconSize(this@NotchAccessibilityService,airplaneIcon, preferences.getIconSize("size_3", 24))
-            applyIconSize(this@NotchAccessibilityService,hotspotIcon, preferences.getIconSize("size_4", 24))
-            applyIconSize(this@NotchAccessibilityService,batteryIcon, preferences.getIconSize("batteryIconSize", 24))
-            applyIconSize(this@NotchAccessibilityService,lottieIcon, preferences.getIconSize("lottieView", 24))
+            applyIconSize(
+                this@NotchAccessibilityService, wifiIcon, preferences.getIconSize("size_0", 24)
+            )
+            applyIconSize(
+                this@NotchAccessibilityService, dataIcon, preferences.getIconSize("size_1", 24)
+            )
+            applyIconSize(
+                this@NotchAccessibilityService, signalIcon, preferences.getIconSize("size_2", 24)
+            )
+            applyIconSize(
+                this@NotchAccessibilityService, airplaneIcon, preferences.getIconSize("size_3", 24)
+            )
+            applyIconSize(
+                this@NotchAccessibilityService, hotspotIcon, preferences.getIconSize("size_4", 24)
+            )
+            applyIconSize(
+                this@NotchAccessibilityService,
+                batteryIcon,
+                preferences.getIconSize("batteryIconSize", 24)
+            )
+            applyIconSize(
+                this@NotchAccessibilityService,
+                lottieIcon,
+                preferences.getIconSize("lottieView", 24)
+            )
 
             timeText.setTextSizeInSp(preferences.getIconSize("size_5", 12))
             batteryPercent.setTextSizeInSp(preferences.getIconSize("percentageSize", 12))
@@ -409,13 +603,15 @@ class NotchAccessibilityService : AccessibilityService() {
             batteryPercent.setTextColor(preferences.getInt("percentageColor", Color.BLACK))
 
             // Battery icon
-            val batteryIconRes = resources.getIdentifier(preferences.batteryIconName, "drawable", packageName)
+            val batteryIconRes =
+                resources.getIdentifier(preferences.batteryIconName, "drawable", packageName)
             if (preferences.batteryIconName.isNotBlank() && batteryIconRes != 0) {
                 batteryIcon.setImageResource(batteryIconRes)
             }
 
             // Custom icon
-            val customIconRes = resources.getIdentifier(preferences.customIconName, "drawable", packageName)
+            val customIconRes =
+                resources.getIdentifier(preferences.customIconName, "drawable", packageName)
             if (preferences.customIconName.isNotBlank() && customIconRes != 0) {
                 customIcon.setImageResource(customIconRes)
                 customIcon.visibility = View.GONE
@@ -424,7 +620,8 @@ class NotchAccessibilityService : AccessibilityService() {
             }
 
             // Lottie icon
-            val lottieRes = resources.getIdentifier(preferences.statusLottieName, "raw", packageName)
+            val lottieRes =
+                resources.getIdentifier(preferences.statusLottieName, "raw", packageName)
             if (preferences.statusLottieName.isNotBlank() && lottieRes != 0) {
                 lottieIcon.setAnimation(lottieRes)
                 lottieIcon.visibility = View.VISIBLE
@@ -437,88 +634,6 @@ class NotchAccessibilityService : AccessibilityService() {
         }
         updateBatteryInfo()
 
-    }
-
-    fun updateNotchIcons(showNotification: String) {
-
-
-        val binding = notificationNotchBinding ?: return
-
-        // Enlarge notch
-        val enlargedWidth = dpToPx(270)
-        val enlargedHeight = dpToPx(35)
-
-        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
-        val notchX = (screenWidth - enlargedWidth) / 2 + dpToPx(preferences.notchXAxis)
-        val notchY = dpToPx(preferences.notchYAxis)
-
-        val enlargedParams = WindowManager.LayoutParams(
-            enlargedWidth,
-            enlargedHeight,
-            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
-            PixelFormat.TRANSLUCENT
-        ).apply {
-            gravity = Gravity.TOP or Gravity.START
-            x = notchX
-            y = notchY
-        }
-
-        when (showNotification) {
-            "showCharging" -> {
-                binding.iconContainerLeft.visibility = View.GONE
-                binding.iconContainerRight.visibility = View.VISIBLE
-                binding.notchLabel.visibility = View.VISIBLE
-                binding.notchLabel.text = getString(R.string.charging)
-                binding.rightIcon.setImageResource(R.drawable.ic_dynamic_battery)
-                //TODO Battery Percentage Handling
-            }
-
-            "showNotification" -> {
-                binding.iconContainerLeft.visibility = View.VISIBLE
-                binding.iconContainerRight.visibility = View.VISIBLE
-                binding.notchLabel.visibility = View.VISIBLE
-                binding.rightIcon.setImageResource(R.drawable.ic_dynamic_notification)
-            }
-
-            "showMuted" -> {
-                binding.iconContainerLeft.visibility = View.GONE
-                binding.iconContainerRight.visibility = View.VISIBLE
-                binding.notchLabel.visibility = View.VISIBLE
-                binding.notchLabel.text = getString(R.string.mute)
-                binding.rightIcon.setImageResource(R.drawable.ic_dynamic_mute)
-            }
-
-            "showBluetooth" -> {
-                binding.iconContainerLeft.visibility = View.GONE
-                binding.iconContainerRight.visibility = View.VISIBLE
-                binding.notchLabel.visibility = View.VISIBLE
-                binding.notchLabel.text = getString(R.string.connected)
-                binding.rightIcon.setImageResource(R.drawable.ic_dynamic_bluetooth)
-            }
-
-            else -> resetNotchView()
-        }
-
-        // Apply enlarged layout
-        windowManager?.updateViewLayout(binding.root, enlargedParams)
-
-        // Schedule reset after 5 seconds
-        handlerNotification.removeCallbacks(resetNotchRunnable)
-        handlerNotification.postDelayed(resetNotchRunnable, 3800)
-    }
-
-
-    private fun resetNotchView() {
-        val binding = notificationNotchBinding ?: return
-
-        // Hide all UI elements
-        binding.iconContainerLeft.visibility = View.GONE
-        binding.iconContainerRight.visibility = View.GONE
-        binding.notchLabel.visibility = View.INVISIBLE
-        binding.notchLabel.text = ""
-        // Reset to default size and position
-        updateNotificationNotch()
     }
 
 
@@ -544,9 +659,9 @@ class NotchAccessibilityService : AccessibilityService() {
             override fun onFling(
                 e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float
             ): Boolean {
-                val deltaX = (e2?.x ?: 0f) - (e1?.x ?: 0f)
-                val deltaY = (e2?.y ?: 0f) - (e1?.y ?: 0f)
-                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                val deltaX = (e2.x) - (e1?.x ?: 0f)
+                val deltaY = (e2.y) - (e1?.y ?: 0f)
+                if (abs(deltaX) > abs(deltaY)) {
                     if (deltaX > 100) {
                         if (preferences.isGestureMode){
                             performGlobalActionByName(
@@ -583,10 +698,11 @@ class NotchAccessibilityService : AccessibilityService() {
         }
     }
 
-    private fun updateBatteryInfo() {
+    private fun updateBatteryInfo(): String {
         val batteryIntent = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
         val batteryLevel = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
         statusBarBinding?.batteryPercent?.text = "$batteryLevel%"
+        return "$batteryLevel %"
     }
 
     private fun animateStatusBarHeight(targetHeight: Int) {
@@ -648,4 +764,82 @@ class NotchAccessibilityService : AccessibilityService() {
         handler.removeCallbacks(resetNotchRunnable)
 
     }
+    fun showNotificationBanner(
+        title: String?, text: String?, url: String?, pkg: String?
+    ) {
+        // Remove old view if exists
+        if (notificationView != null) {
+            windowManager?.removeView(notificationView)
+            notificationHandler.removeCallbacksAndMessages(null)
+        }
+
+        // Inflate new layout
+        val binding = CustomNotificationBarBinding.inflate(LayoutInflater.from(this))
+        val view = binding.root
+
+        // Set content
+        if (title != null) binding.notificationTitle.text =
+            title else binding.notificationTitle.visibility = View.GONE
+        if (text != null) binding.notificationText.text =
+            text else binding.notificationText.visibility = View.GONE
+        //   binding.notificationText.text = text ?: ""
+        if (!url.isNullOrEmpty()) {
+            binding.notificationUrl.text = url
+            binding.openUrlIcon.visibility = View.VISIBLE
+            binding.notificationUrl.visibility = View.VISIBLE
+        } else {
+            binding.notificationUrl.visibility = View.GONE
+            binding.openUrlIcon.visibility = View.GONE
+        }
+
+        // Set app icon
+        try {
+            val icon = packageManager.getApplicationIcon(pkg ?: "")
+            binding.notificationIcon.setImageDrawable(icon)
+        } catch (e: Exception) {
+            binding.notificationIcon.setImageResource(android.R.drawable.sym_def_app_icon)
+        }
+
+        // Click to launch app
+        view.setOnClickListener {
+            val launchIntent =
+                packageManager.getLaunchIntentForPackage(pkg ?: return@setOnClickListener)
+            launchIntent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(launchIntent)
+        }
+
+        // Prepare layout params
+        val displayMetrics = Resources.getSystem().displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val desiredWidth = (screenWidth * 0.9).toInt() // 90% of screen width
+        val desiredHeight = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, 85f, displayMetrics
+        ).toInt() // 85dp to px
+
+        val params = WindowManager.LayoutParams(
+            desiredWidth,
+            desiredHeight,
+            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            PixelFormat.TRANSLUCENT
+        ).apply {
+            gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+        }
+
+        // Add to WindowManager
+        windowManager?.addView(view, params)
+        notificationView = view
+
+        // Auto-remove after 3 seconds
+        notificationHandler.postDelayed({
+            try {
+                windowManager?.removeView(view)
+            } catch (_: Exception) {
+            }
+            notificationView = null
+        }, 3000)
+    }
+
 }

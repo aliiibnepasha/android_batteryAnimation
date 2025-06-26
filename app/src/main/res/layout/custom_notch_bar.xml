@@ -24,12 +24,11 @@
 
         <ImageView
             android:id="@+id/leftIcon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
             android:padding="3dp"
             android:layout_marginStart="4dp"
-            android:contentDescription="@string/battery_emoji_widget"
-            android:src="@drawable/ic_dynamic_mute" />
+            android:contentDescription="@string/battery_emoji_widget" />
 
 
     </LinearLayout>
@@ -54,11 +53,19 @@
         android:layout_marginEnd="4dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/rightPercentage"
+            android:layout_width="wrap_content"
+            android:layout_height="23dp"
+            android:layout_marginEnd="6dp"
+            android:text="100 %"
+            android:visibility="gone"
+            android:textColor="@color/white" />
 
         <ImageView
             android:id="@+id/rightIcon"
@@ -66,7 +73,7 @@
             android:layout_height="23dp"
             android:layout_marginEnd="4dp"
             android:contentDescription="@string/battery_emoji_widget"
-            android:src="@drawable/ic_dynamic_notification" />
+            />
 
 
     </LinearLayout>

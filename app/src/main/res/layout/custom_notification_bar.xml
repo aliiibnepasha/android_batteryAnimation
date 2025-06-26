@@ -1,17 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/notificationBanner"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <TextView
-        android:id="@+id/notificationText"
-        android:layout_width="0dp"
+    android:layout_height="95dp"
+    android:layout_marginHorizontal="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sample Notification"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/black_rounded_notch"
+        android:elevation="4dp"
+        android:padding="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <!-- App Icon -->
+        <ImageView
+            android:id="@+id/notificationIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/app_name"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@+id/notificationText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/notificationTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="3dp"
+            android:gravity="start"
+            android:maxLines="1"
+            android:minLines="1"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/notificationText"
+            app:layout_constraintEnd_toStartOf="@+id/openUrlIcon"
+            app:layout_constraintStart_toEndOf="@id/notificationIcon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Text -->
+        <TextView
+            android:id="@+id/notificationText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="3dp"
+            android:gravity="start"
+            android:minLines="2"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/notificationUrl"
+            app:layout_constraintEnd_toStartOf="@+id/openUrlIcon"
+            app:layout_constraintStart_toEndOf="@id/notificationIcon"
+            app:layout_constraintTop_toBottomOf="@id/notificationTitle" />
+
+        <!-- URL Text -->
+        <TextView
+            android:id="@+id/notificationUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="3dp"
+            android:textColor="@android:color/holo_blue_light"
+            android:textSize="11sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/notificationText"
+            app:layout_constraintTop_toBottomOf="@id/notificationText" />
+
+        <!-- Open URL Icon (top-right) -->
+        <ImageView
+            android:id="@+id/openUrlIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="@string/app_name"
+            android:src="@android:drawable/ic_menu_view"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
