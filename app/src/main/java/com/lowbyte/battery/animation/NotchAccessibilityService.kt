@@ -70,7 +70,6 @@ class NotchAccessibilityService : AccessibilityService() {
         preferences = AppPreferences.getInstance(this)
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         createCustomStatusBar()
-        //  createNotificationBar()
         createNotificationNotch()
         registerUpdateReceiver()
         startTimeUpdates()
@@ -88,12 +87,13 @@ class NotchAccessibilityService : AccessibilityService() {
             updateReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
                     val action = intent?.action
-                    Log.d("NotificationReceiver", "Received broadcast: $action")
+                    Log.d("servicesListener", "Received broadcast: $action")
                     when (action) {
                         BROADCAST_ACTION -> {
-                            Log.d("NotificationReceiver", "Custom UI update action")
+                            Log.d("servicesListener", "Custom UI update action")
                             updateStatusBarAppearance()
                             updateNotificationNotch()
+
                         }
 
                         Intent.ACTION_BATTERY_CHANGED -> {
@@ -110,15 +110,15 @@ class NotchAccessibilityService : AccessibilityService() {
 
                                     ) { isClickAllowed ->
                                     if (isClickAllowed) {
-                                        Log.d("Callback", "Click is allowed, perform action")
+                                        Log.d("servicesListener", "Click is allowed, perform action")
                                         // Perform your action here
                                     } else {
-                                        Log.d("Callback", "Click not allowed")
+                                        Log.d("servicesListener", "Click not allowed")
                                     }
 
                                 }
                             } else {
-                                Log.d("services", "Device not charging")
+                                Log.d("servicesListener", "Device not charging")
                             }
                         }
 
@@ -136,24 +136,24 @@ class NotchAccessibilityService : AccessibilityService() {
                                         ) { isClickAllowed ->
                                             if (isClickAllowed) {
                                                 Log.d(
-                                                    "Callback", "Click is allowed, perform action"
+                                                    "servicesListener", "Click is allowed, perform action"
                                                 )
                                                 // Perform your action here
                                             } else {
-                                                Log.d("Callback", "Click not allowed")
+                                                Log.d("servicesListener", "Click not allowed")
                                             }
                                         }
                                     }
 
                                 }
                                 BluetoothAdapter.STATE_DISCONNECTED -> Log.d(
-                                    "services", "Bluetooth disconnected"
+                                    "servicesListener", "Bluetooth disconnected"
                                 )
                             }
                         }
 
                         BluetoothDevice.ACTION_ACL_CONNECTED -> {
-                            Log.d("services", "Bluetooth ACL connected")
+                            Log.d("servicesListener", "Bluetooth ACL connected")
                             if (preferences.getBoolean("switch_bluetooth", false) == true) {
                                 updateNotchIcons(
                                     showNotification = "showBluetooth",
@@ -162,10 +162,10 @@ class NotchAccessibilityService : AccessibilityService() {
                                     drawable = null
                                 ) { isClickAllowed ->
                                     if (isClickAllowed) {
-                                        Log.d("Callback", "Click is allowed, perform action")
+                                        Log.d("servicesListener", "Click is allowed, perform action")
                                         // Perform your action here
                                     } else {
-                                        Log.d("Callback", "Click not allowed")
+                                        Log.d("servicesListener", "Click not allowed")
                                     }
                                 }
                             }
@@ -185,11 +185,11 @@ class NotchAccessibilityService : AccessibilityService() {
                                         ) { isClickAllowed ->
                                             if (isClickAllowed) {
                                                 Log.d(
-                                                    "Callback", "Click is allowed, perform action"
+                                                    "servicesListener", "Click is allowed, perform action"
                                                 )
                                                 // Perform your action here
                                             } else {
-                                                Log.d("Callback", "Click not allowed")
+                                                Log.d("servicesListener", "Click not allowed")
                                             }
                                         }
                                     }
@@ -199,18 +199,18 @@ class NotchAccessibilityService : AccessibilityService() {
                         }
 
                         BROADCAST_ACTION_NOTIFICATION -> {
-                            Log.d("NotificationReceiver", "Custom notch update triggered")
+                            Log.d("servicesListener", "Custom notch update triggered")
                             if (preferences.getBoolean("switch_notification", false) == true) {
-                                Log.d("NotificationReceiver", "Feature enabled keep tracking")
+                                Log.d("servicesListener", "Feature enabled keep tracking")
                                 val rmPkg = intent.getStringExtra("rm_package_name")
                                 val pkg = intent.getStringExtra("package_name")
 
                                 if (rmPkg != "" && rmPkg == pkg) {
                                     resetNotchView(false)
-                                    Log.d("NotificationReceiver", "packege matched remove icon")
+                                    Log.d("servicesListener", "packege matched remove icon")
                                 } else {
                                     Log.d(
-                                        "NotificationReceiver",
+                                        "servicesListener",
                                         "New Notification to be show with Icon"
                                     )
                                     resetNotchView(true)
@@ -228,7 +228,7 @@ class NotchAccessibilityService : AccessibilityService() {
                                     }
 
                                     Log.d(
-                                        "NotificationReceiver", """
+                                        "servicesListener", """
                                     receiving
                                         📦 $pkg 
                                         🔤 $title 
@@ -248,7 +248,7 @@ class NotchAccessibilityService : AccessibilityService() {
                                     ) { isClickAllowed ->
                                         if (isClickAllowed) {
                                             Log.d(
-                                                "NotificationReceiver", "Click is allowed, open App"
+                                                "servicesListener", "Click is allowed, open App"
                                             )
                                             showNotificationBanner(title, text, url, pkg)
 //                                            val intent = packageManager.getLaunchIntentForPackage(
@@ -261,7 +261,7 @@ class NotchAccessibilityService : AccessibilityService() {
                                             // Perform your action here
                                         } else {
                                             Log.d(
-                                                "NotificationReceiver",
+                                                "servicesListener",
                                                 "Click not allowed dont open app"
                                             )
                                         }
@@ -270,7 +270,7 @@ class NotchAccessibilityService : AccessibilityService() {
                                 }
 
                             } else {
-                                Log.d("NotificationReceiver", "else Custom notch update triggered")
+                                Log.d("servicesListener", "else Custom notch update triggered")
 
                             }
 
@@ -294,10 +294,10 @@ class NotchAccessibilityService : AccessibilityService() {
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     registerReceiver(updateReceiver, filter, RECEIVER_EXPORTED)
-                    Log.d("services", "Registered receiver for API 33+")
+                    Log.d("servicesListener", "Registered receiver for API 33+")
                 } else {
                     registerReceiver(updateReceiver, filter)
-                    Log.d("servicesdd", "Registered receiver for pre-API 33")
+                    Log.d("servicesListener", "Registered receiver for pre-API 33")
                 }
             } catch (e: Exception) {
                 Log.e("servicesdd", "Failed to register receiver: ${e.message}")
@@ -314,7 +314,7 @@ class NotchAccessibilityService : AccessibilityService() {
     ) {
 
         Log.d(
-            "NotificationReceiver",
+            "servicesListener",
             "action to be calling label: $label , showNotification: $showNotification"
         )
 
@@ -439,6 +439,7 @@ class NotchAccessibilityService : AccessibilityService() {
         notificationNotchBinding = CustomNotchBarBinding.inflate(LayoutInflater.from(this))
 
         updateStatusBarAppearance()
+        updateNotificationNotch()
         setupGestures()
 
 
@@ -450,7 +451,7 @@ class NotchAccessibilityService : AccessibilityService() {
                 Log.w("StatusBar", "View already added. Skipping re-add.")
             }
         }
-        createNotificationNotch()
+
     }
 
     private fun createNotificationNotch() {
@@ -503,7 +504,10 @@ class NotchAccessibilityService : AccessibilityService() {
             notchWidth,
             notchHeight,
             WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                    or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                    or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
@@ -519,11 +523,11 @@ class NotchAccessibilityService : AccessibilityService() {
         } else {
             if (binding.root.parent == null) {
                 windowManager?.addView(binding.root, notchParams)
-                Log.d("services", "Notch addView via broadcast")
+                Log.d("servicesListener", "Notch addView via broadcast")
             }
         }
         windowManager?.updateViewLayout(binding.root, notchParams)
-        Log.d("services", "Notch updateViewLayout via broadcast")
+        Log.d("servicesListener", "Notch updateViewLayout via broadcast")
     }
 
     private fun updateStatusBarAppearance() {
@@ -646,9 +650,48 @@ class NotchAccessibilityService : AccessibilityService() {
             windowManager?.updateViewLayout(binding.root, layoutParams)
         }
         updateBatteryInfo()
+        if (preferences.isDynamicEnabled && preferences.isStatusBarEnabled) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                bringNotchViewToFront()
+            }, 300) // Delay ensures layout is complete
+        }
+
 
     }
+    private fun bringNotchViewToFront() {
+        val notchBinding = notificationNotchBinding ?: return
+        if (notchBinding.root.parent != null) {
+            try {
+                windowManager?.removeView(notchBinding.root)
+            } catch (e: Exception) {
+                Log.w("NotchView", "Already removed or not attached")
+            }
+        }
 
+        val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+        val notchWidth = dpToPx(preferences.notchWidth)
+        val notchHeight = dpToPx(preferences.notchHeight)
+        val notchX = (screenWidth - notchWidth) / 2 + dpToPx(preferences.notchXAxis)
+        val notchY = dpToPx(preferences.notchYAxis)
+
+        val notchParams = WindowManager.LayoutParams(
+            notchWidth,
+            notchHeight,
+            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            PixelFormat.TRANSLUCENT
+        ).apply {
+            gravity = Gravity.TOP or Gravity.START
+            x = notchX
+            y = notchY
+        }
+
+        windowManager?.addView(notchBinding.root, notchParams)
+        Log.d("NotchView", "NotchView brought to front")
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupGestures() {
