@@ -1,4 +1,6 @@
 import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -40,17 +42,40 @@ class DynamicBottomSheetFragment(
 
         // RecyclerView setup
         binding.recyclerViewActions.layoutManager = LinearLayoutManager(context)
-        binding.recyclerViewActions.adapter = ActionDynamicAdapter(actions){ position, label ->
+        binding.recyclerViewActions.adapter =
+            ActionDynamicAdapter(actions) { position, label, actionName, isChecked ->
             if (!preferences.isDynamicEnabled ){
-                Toast.makeText(requireContext(),
-                    getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.please_enable_battery_emoji_service),
+                    Toast.LENGTH_LONG
+                ).show()
                 return@ActionDynamicAdapter
             }
-            if (checkAndRequestBluetoothPermission()){
-                Log.d("Bluetooth", "BLUETOOTH_CONNECT permission granted")
-            }else{
-                return@ActionDynamicAdapter
+                when (actionName) {
+                    "switch_notification" -> {
+                        if (isNotificationServiceEnabled(requireContext())) {
+                            Log.d(
+                                "Notification Service",
+                                "Notification service enabled switch_notification permission granted"
+                            )
+                        } else {
+                            requestNotificationAccess(requireContext())
+                            dismiss()
+                            return@ActionDynamicAdapter
+                        }
+                    }
+
+                    "switch_bluetooth" -> {
+                        if (checkAndRequestBluetoothPermission()) {
+                            Log.d("Bluetooth", "BLUETOOTH_CONNECT permission granted")
+                        } else {
+                            dismiss()
+                            return@ActionDynamicAdapter
+                        }
+                    }
             }
+                preferences.setBoolean(actionName, isChecked)
             Toast.makeText(context, getString(R.string.action_applied, label), Toast.LENGTH_SHORT).show()
             onActionSelected(actions[position])
           //  dismiss() // Close the bottom sheet
@@ -88,7 +113,19 @@ class DynamicBottomSheetFragment(
     }
 
 
+    fun isNotificationServiceEnabled(context: Context): Boolean {
+        val enabledListeners = android.provider.Settings.Secure.getString(
+            context.contentResolver,
+            "enabled_notification_listeners"
+        )
+        return enabledListeners?.contains(context.packageName) == true
+    }
 
+    fun requestNotificationAccess(context: Context) {
+        val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        context.startActivity(intent)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

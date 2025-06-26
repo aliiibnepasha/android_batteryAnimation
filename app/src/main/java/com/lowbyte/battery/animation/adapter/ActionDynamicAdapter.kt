@@ -17,7 +17,7 @@ data class ActionDynamicItem(val label: String, val actionName: String)
 
 class ActionDynamicAdapter(
     private val items: List<ActionDynamicItem>,
-    private val onItemClick: (position: Int, label: String) -> Unit
+    private val onItemClick: (position: Int, label: String, actionName: String,isChecked: Boolean) -> Unit
 ) : RecyclerView.Adapter<ActionDynamicAdapter.ActionScrollViewHolder>() {
     private lateinit var preferences: AppPreferences
 
@@ -30,8 +30,7 @@ class ActionDynamicAdapter(
             }
             binding.enableDynamicFeature.setOnCheckedChangeListener { _, isChecked ->
 
-                preferences.setBoolean(item.actionName,isChecked)
-                onItemClick(position, item.label)
+                onItemClick(position, item.label,item.actionName,isChecked)
             }
 
         }

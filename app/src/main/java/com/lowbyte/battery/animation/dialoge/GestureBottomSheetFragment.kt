@@ -8,14 +8,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.ActionDynamicAdapter
 import com.lowbyte.battery.animation.adapter.ActionDynamicItem
+import com.lowbyte.battery.animation.adapter.ActionScrollAdapter
+import com.lowbyte.battery.animation.adapter.ActionScrollItem
 import com.lowbyte.battery.animation.databinding.FragmentGestureBottomSheetBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
 
 class GestureBottomSheetFragment(
     private val gestureTitle: String,
     private val gestureAction: String,
-    private val actions: List<ActionDynamicItem>,
-    private val onActionSelected: (ActionDynamicItem) -> Unit
+    private val actions: List<ActionScrollItem>,
+    private val onActionSelected: (ActionScrollItem) -> Unit
 
 ) : BottomSheetDialogFragment() {
 
@@ -43,12 +45,12 @@ class GestureBottomSheetFragment(
 
         // RecyclerView setup
         binding.recyclerViewActions.layoutManager = LinearLayoutManager(context)
-        binding.recyclerViewActions.adapter = ActionDynamicAdapter(actions){ position, label ->
+        binding.recyclerViewActions.adapter = ActionScrollAdapter(actions){ position, label ->
             if (!preferences.isStatusBarEnabled ){
                 Toast.makeText(requireContext(),
                     getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
 
-                return@ActionDynamicAdapter
+                return@ActionScrollAdapter
             }
           //  preferences.setString(gestureAction, label)
             Toast.makeText(context, getString(R.string.action_applied, label), Toast.LENGTH_SHORT).show()

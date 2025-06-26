@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.ActionDynamicItem
+import com.lowbyte.battery.animation.adapter.ActionScrollItem
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarGestureBinding
@@ -140,15 +141,15 @@ class StatusBarGestureActivity : BaseActivity() {
         FirebaseAnalyticsUtils.logClickEvent(this, "gesture_bottomsheet_opened", mapOf("gesture" to gestureKey))
 
         val items = listOf(
-            ActionDynamicItem(getString(R.string.action_open_control_centre), "action_open_control_centre"),
-            ActionDynamicItem(getString(R.string.action_open_notifications), "action_open_notifications"),
-            ActionDynamicItem(getString(R.string.action_power_options), "action_power_options"),
-            ActionDynamicItem(getString(R.string.action_do_nothing), "action_do_nothing"),
-            ActionDynamicItem(getString(R.string.action_back_action), "action_back_action"),
-            ActionDynamicItem(getString(R.string.action_home_action), "action_home_action"),
-            ActionDynamicItem(getString(R.string.action_recent_action), "action_recent_action"),
-            ActionDynamicItem(getString(R.string.action_take_screenshot), "action_take_screenshot"),
-            ActionDynamicItem(getString(R.string.action_lock_screen), "action_lock_screen"),
+            ActionScrollItem(getString(R.string.action_open_control_centre), "action_open_control_centre"),
+            ActionScrollItem(getString(R.string.action_open_notifications), "action_open_notifications"),
+            ActionScrollItem(getString(R.string.action_power_options), "action_power_options"),
+            ActionScrollItem(getString(R.string.action_do_nothing), "action_do_nothing"),
+            ActionScrollItem(getString(R.string.action_back_action), "action_back_action"),
+            ActionScrollItem(getString(R.string.action_home_action), "action_home_action"),
+            ActionScrollItem(getString(R.string.action_recent_action), "action_recent_action"),
+            ActionScrollItem(getString(R.string.action_take_screenshot), "action_take_screenshot"),
+            ActionScrollItem(getString(R.string.action_lock_screen), "action_lock_screen"),
         )
 
         GestureBottomSheetFragment(getStringResourceTitle(gestureKey), targetTextView.text.toString(), items) { selected ->

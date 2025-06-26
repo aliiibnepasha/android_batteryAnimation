@@ -14,6 +14,7 @@ import com.lowbyte.battery.animation.model.Language
 
 object AnimationUtils {
     const val BROADCAST_ACTION = "com.lowbyte.UPDATE_STATUSBAR"
+    const val BROADCAST_ACTION_NOTIFICATION = "com.lowbyte.CUSTOM_NOTIFICATION_UPDATE"
     const val EXTRA_POSITION = "EXTRA_POSITION"
     const val EXTRA_LABEL = "EXTRA_LABEL"
 

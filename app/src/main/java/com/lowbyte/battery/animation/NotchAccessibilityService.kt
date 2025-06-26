@@ -12,6 +12,7 @@ import android.content.IntentFilter
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.PixelFormat
+import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
@@ -32,6 +33,7 @@ import com.lowbyte.battery.animation.databinding.CustomNotchBarBinding
 import com.lowbyte.battery.animation.databinding.CustomNotificationBarBinding
 import com.lowbyte.battery.animation.databinding.CustomStatusBarBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_NOTIFICATION
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.ServiceUtils.applyIconSize
 import com.lowbyte.battery.animation.utils.ServiceUtils.dpToPx
@@ -84,11 +86,11 @@ class NotchAccessibilityService : AccessibilityService() {
             updateReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
                     val action = intent?.action
-                    Log.d("services", "Received broadcast: $action")
+                    Log.d("NotificationReceiver", "Received broadcast: $action")
 
                     when (action) {
                         BROADCAST_ACTION -> {
-                            Log.d("services", "Custom UI update action")
+                            Log.d("NotificationReceiver", "Custom UI update action")
                             updateStatusBarAppearance()
                             updateNotificationNotch()
                         }
@@ -108,7 +110,10 @@ class NotchAccessibilityService : AccessibilityService() {
                         Intent.ACTION_BATTERY_CHANGED -> {
                             val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
                             if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
-                                Log.d("services", "Device is charging (connected)")
+                                if (preferences.getBoolean("switch_battery", false) == false) {
+                                    return
+                                }
+
                                 updateNotchIcons("showCharging")
                             } else {
                                 Log.d("services", "Device not charging")
@@ -119,7 +124,12 @@ class NotchAccessibilityService : AccessibilityService() {
                             val state =
                                 intent.getIntExtra(BluetoothAdapter.EXTRA_CONNECTION_STATE, -1)
                             when (state) {
-                                BluetoothAdapter.STATE_CONNECTED -> updateNotchIcons("showBluetooth")
+                                BluetoothAdapter.STATE_CONNECTED -> {
+                                    if (preferences.getBoolean("switch_bluetooth", false) == true) {
+                                        updateNotchIcons("showBluetooth")
+                                    }
+
+                                }
                                 BluetoothAdapter.STATE_DISCONNECTED -> Log.d(
                                     "services", "Bluetooth disconnected"
                                 )
@@ -128,7 +138,9 @@ class NotchAccessibilityService : AccessibilityService() {
 
                         BluetoothDevice.ACTION_ACL_CONNECTED -> {
                             Log.d("services", "Bluetooth ACL connected")
-                            updateNotchIcons("showBluetooth")
+                            if (preferences.getBoolean("switch_bluetooth", false) == true) {
+                                updateNotchIcons("showBluetooth")
+                            }
                         }
 
                         AudioManager.RINGER_MODE_CHANGED_ACTION -> {
@@ -136,14 +148,47 @@ class NotchAccessibilityService : AccessibilityService() {
                                 getSystemService(Context.AUDIO_SERVICE) as AudioManager
                             val ringerMode = audioManager.ringerMode
                             when (ringerMode) {
-                                AudioManager.RINGER_MODE_SILENT -> updateNotchIcons("showMuted")
+                                AudioManager.RINGER_MODE_SILENT -> {
+                                    if (preferences.getBoolean("switch_mute", false) == true) {
+                                        updateNotchIcons("showMuted")
+                                    }
+
+                                }
                             }
                         }
 
-                        "com.example.CUSTOM_NOTCH_UPDATE" -> {
-                            Log.d("services", "Custom notch update triggered")
-                            updateNotificationNotch()
-                            updateNotchIcons("showNotification")
+                        BROADCAST_ACTION_NOTIFICATION -> {
+                            Log.d("NotificationReceiver", "Custom notch update triggered")
+                            if (preferences.getBoolean("switch_notification", false) == true) {
+                                val pkg = intent.getStringExtra("package_name")
+                                val title = intent.getStringExtra("title")
+                                val text = intent.getStringExtra("text")
+                                val subText = intent.getStringExtra("sub_text")
+                                val bigText = intent.getStringExtra("big_text")
+                                val url = intent.getStringExtra("url")
+                                val launchIntentUri = intent.getStringExtra("launch_intent_uri")
+                                // Get app icon
+//                                val appIcon: Drawable? = try {
+//                                    packageManager.getApplicationIcon(pkg?:packageName)
+//                                } catch (e: Exception) {
+//                                    null
+//                                }
+
+                                Log.d("NotificationReceiver", """
+                                    receiving
+                                        📦 $pkg 
+                                        🔤 $title 
+                                        📝 $text 
+                                        🔍 $subText 
+                                        📘 $bigText 
+                                        🌐 $url 
+                                        🎯 $launchIntentUri
+                                         """.trimIndent()
+                                )
+                                updateNotificationNotch()
+                                updateNotchIcons("showNotification")
+                            }
+
                         }
                     }
                 }
@@ -159,7 +204,7 @@ class NotchAccessibilityService : AccessibilityService() {
                 addAction(AudioManager.RINGER_MODE_CHANGED_ACTION)
                 addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
                 addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
-                addAction("com.example.CUSTOM_NOTCH_UPDATE")
+                addAction(BROADCAST_ACTION_NOTIFICATION)
             }
 
             try {
@@ -395,6 +440,8 @@ class NotchAccessibilityService : AccessibilityService() {
     }
 
     fun updateNotchIcons(showNotification: String) {
+
+
         val binding = notificationNotchBinding ?: return
 
         // Enlarge notch
@@ -424,6 +471,7 @@ class NotchAccessibilityService : AccessibilityService() {
                 binding.notchLabel.visibility = View.VISIBLE
                 binding.notchLabel.text = getString(R.string.charging)
                 binding.rightIcon.setImageResource(R.drawable.ic_dynamic_battery)
+                //TODO Battery Percentage Handling
             }
 
             "showNotification" -> {
@@ -465,8 +513,8 @@ class NotchAccessibilityService : AccessibilityService() {
         val binding = notificationNotchBinding ?: return
 
         // Hide all UI elements
-        binding.iconContainerLeft.visibility = View.INVISIBLE
-        binding.iconContainerRight.visibility = View.INVISIBLE
+        binding.iconContainerLeft.visibility = View.GONE
+        binding.iconContainerRight.visibility = View.GONE
         binding.notchLabel.visibility = View.INVISIBLE
         binding.notchLabel.text = ""
         // Reset to default size and position

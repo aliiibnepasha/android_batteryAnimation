@@ -6,13 +6,27 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+<!--    <queries>-->
+<!--        &lt;!&ndash; Allow querying specific apps &ndash;&gt;-->
+<!--        <package android:name="com.whatsapp" />-->
+<!--        <package android:name="com.google.android.gm" />-->
+<!--        <package android:name="com.instagram.android" />-->
+<!--        &lt;!&ndash; For all apps with launcher intent &ndash;&gt;-->
+<!--        <intent>-->
+<!--            <action android:name="android.intent.action.MAIN" />-->
+<!--            <category android:name="android.intent.category.LAUNCHER" />-->
+<!--        </intent>-->
+<!--    </queries>-->
+<!--    -->
     <uses-permission
         android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"
         tools:ignore="ProtectedPermissions" />
@@ -29,6 +43,7 @@
         android:allowClearUserData="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.BatteryAnimation">
+
         <activity
             android:name=".activity.AllowAccessibilityActivity"
             android:exported="false" />
@@ -102,6 +117,16 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="default_channel_id" />
 
+        <service
+            android:name=".service.MyNotificationListenerService"
+            android:label="Dynamic Ireland Notification"
+            android:exported="true"
+            android:enabled="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
         <service
             android:name=".NotchAccessibilityService"
             android:enabled="true"

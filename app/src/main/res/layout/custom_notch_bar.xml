@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginStart="4dp"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -28,8 +29,7 @@
             android:padding="3dp"
             android:layout_marginStart="4dp"
             android:contentDescription="@string/battery_emoji_widget"
-            android:src="@drawable/ic_dynamic_mute"
-            android:visibility="visible" />
+            android:src="@drawable/ic_dynamic_mute" />
 
 
     </LinearLayout>
@@ -54,6 +54,7 @@
         android:layout_marginEnd="4dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -65,8 +66,7 @@
             android:layout_height="23dp"
             android:layout_marginEnd="4dp"
             android:contentDescription="@string/battery_emoji_widget"
-            android:src="@drawable/ic_dynamic_notification"
-            android:visibility="visible" />
+            android:src="@drawable/ic_dynamic_notification" />
 
 
     </LinearLayout>
