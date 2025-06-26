@@ -211,6 +211,9 @@
     <string name="position_reset">Position reset</string>
     <string name="connected">Connected</string>
     <string name="charging">Charging</string>
+    <string name="please_keep_service_running_for_widgets_update">Please keep service Running for widgets update</string>
+    <string name="battery_widget_service">Battery Widget Service</string>
+    <string name="stop_service">Stop Service</string>
 
 
 </resources>

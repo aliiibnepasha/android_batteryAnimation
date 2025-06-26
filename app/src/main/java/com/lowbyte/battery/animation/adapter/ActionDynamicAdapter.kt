@@ -29,7 +29,6 @@ class ActionDynamicAdapter(
 
             }
             binding.enableDynamicFeature.setOnCheckedChangeListener { _, isChecked ->
-
                 onItemClick(position, item.label,item.actionName,isChecked)
             }
 

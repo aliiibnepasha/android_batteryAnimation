@@ -181,4 +181,31 @@
     <string name="service_title_4_2">Cải thiện khả năng sử dụng và tuỳ chỉnh giao diện điện thoại.</string>
     <string name="service_title_4_3">Cho phép sử dụng Home, Back, Ứng dụng gần đây qua cử chỉ.</string>
     <string name="service_title_4_4">Ứng dụng cam kết bảo vệ quyền riêng tư, không lạm dụng quyền Trợ năng.</string>
-   </resources>
+    <string name="notch_size">Kích thước notch</string>
+    <string name="notch_position">Vị trí notch</string>
+    <string name="customize_dynamic_island">Tùy chỉnh Dynamic Island</string>
+    <string name="vertical_y">Dọc (Y)</string>
+    <string name="horizontal_x">Ngang (X)</string>
+    <string name="reset_position">Đặt lại vị trí</string>
+    <string name="height">Chiều cao</string>
+    <string name="width">Chiều rộng</string>
+    <string name="reset_size">Đặt lại kích thước</string>
+    <string name="notch_style">Kiểu notch</string>
+    <string name="notification">Thông báo</string>
+    <string name="music">Âm nhạc</string>
+    <string name="navigation">Điều hướng</string>
+    <string name="battery">Pin</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="mute">Tắt tiếng</string>
+    <string name="please_enable_dynamic_mode">Vui lòng bật Dynamic Island</string>
+    <string name="size_reset">Đã đặt lại kích thước</string>
+    <string name="position_reset">Đã đặt lại vị trí</string>
+    <string name="connected">Đã kết nối</string>
+    <string name="charging">Đang sạc</string>
+    <string name="please_keep_service_running_for_widgets_update">
+        Vui lòng giữ dịch vụ chạy để cập nhật tiện ích
+    </string>
+    <string name="battery_widget_service">Dịch vụ widget pin</string>
+    <string name="stop_service">Dừng dịch vụ</string>
+
+</resources>

@@ -180,4 +180,31 @@
     <string name="service_title_4_2">Telefon arayüzünün kullanılabilirliğini ve özelleştirilebilirliğini artırır.</string>
     <string name="service_title_4_3">Ev, Geri, Son Uygulamalar gibi işlemleri hareketle sağlar.</string>
     <string name="service_title_4_4">Uygulama gizliliğe önem verir ve erişilebilirlik izinlerini kötüye kullanmaz.</string>
+    <string name="notch_size">Çentik Boyutu</string>
+    <string name="notch_position">Çentik Konumu</string>
+    <string name="customize_dynamic_island">Dynamic Island ı Özelleştir</string>
+    <string name="vertical_y">Dikey (Y)</string>
+    <string name="horizontal_x">Yatay (X)</string>
+    <string name="reset_position">Konumu Sıfırla</string>
+    <string name="height">Yükseklik</string>
+    <string name="width">Genişlik</string>
+    <string name="reset_size">Boyutu Sıfırla</string>
+    <string name="notch_style">Çentik Stili</string>
+    <string name="notification">Bildirim</string>
+    <string name="music">Müzik</string>
+    <string name="navigation">Navigasyon</string>
+    <string name="battery">Pil</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="mute">Sessize Al</string>
+    <string name="please_enable_dynamic_mode">Lütfen Dynamic Island ı etkinleştirin</string>
+    <string name="size_reset">Boyut sıfırlandı</string>
+    <string name="position_reset">Konum sıfırlandı</string>
+    <string name="connected">Bağlandı</string>
+    <string name="charging">Şarj oluyor</string>
+    <string name="please_keep_service_running_for_widgets_update">
+        Widget güncellemeleri için hizmeti çalışır durumda tutun
+    </string>
+    <string name="battery_widget_service">Pil Widget Hizmeti</string>
+    <string name="stop_service">Hizmeti Durdur</string>
+
 </resources>

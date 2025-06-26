@@ -177,4 +177,32 @@
     <string name="service_title_4_2">Meningkatkan kemudahan penggunaan dan personalisasi antarmuka ponsel.</string>
     <string name="service_title_4_3">Mengaktifkan aksi seperti Beranda, Kembali, dan Aplikasi Terkini melalui gerakan.</string>
     <string name="service_title_4_4">Aplikasi ini berkomitmen terhadap privasi pengguna dan tidak menyalahgunakan izin Aksesibilitas.</string>
+    <string name="notch_size">Ukuran notch</string>
+    <string name="notch_position">Posisi notch</string>
+    <string name="customize_dynamic_island">Sesuaikan Dynamic Island</string>
+    <string name="vertical_y">Vertikal (Y)</string>
+    <string name="horizontal_x">Horizontal (X)</string>
+    <string name="reset_position">Atur Ulang Posisi</string>
+    <string name="height">Tinggi</string>
+    <string name="width">Lebar</string>
+    <string name="reset_size">Atur Ulang Ukuran</string>
+    <string name="notch_style">Gaya notch</string>
+    <string name="notification">Notifikasi</string>
+    <string name="music">Musik</string>
+    <string name="navigation">Navigasi</string>
+    <string name="battery">Baterai</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="mute">Diam</string>
+    <string name="please_enable_dynamic_mode">Silakan aktifkan Dynamic Island</string>
+    <string name="size_reset">Ukuran telah direset</string>
+    <string name="position_reset">Posisi telah direset</string>
+    <string name="connected">Terhubung</string>
+    <string name="charging">Sedang mengisi daya</string>
+    <string name="please_keep_service_running_for_widgets_update">
+        Harap biarkan layanan tetap berjalan untuk pembaruan widget
+    </string>
+    <string name="battery_widget_service">Layanan Widget Baterai</string>
+    <string name="stop_service">Hentikan Layanan</string>
+
+
 </resources>

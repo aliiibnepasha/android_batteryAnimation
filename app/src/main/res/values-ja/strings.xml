@@ -175,4 +175,31 @@
     <string name="service_title_4_2">端末インターフェースの使いやすさとカスタマイズ性を向上させます。</string>
     <string name="service_title_4_3">ホーム、戻る、最近のアプリなどのシステム操作をジェスチャーでできるようにします。</string>
     <string name="service_title_4_4">アプリはユーザーのプライバシーを重視し、アクセシビリティ権限を悪用しません。</string>
+    <string name="notch_size">ノッチのサイズ</string>
+    <string name="notch_position">ノッチの位置</string>
+    <string name="customize_dynamic_island">ダイナミックアイランドをカスタマイズ</string>
+    <string name="vertical_y">垂直（Y）</string>
+    <string name="horizontal_x">水平（X）</string>
+    <string name="reset_position">位置をリセット</string>
+    <string name="height">高さ</string>
+    <string name="width">幅</string>
+    <string name="reset_size">サイズをリセット</string>
+    <string name="notch_style">ノッチスタイル</string>
+    <string name="notification">通知</string>
+    <string name="music">音楽</string>
+    <string name="navigation">ナビゲーション</string>
+    <string name="battery">バッテリー</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="mute">ミュート</string>
+    <string name="please_enable_dynamic_mode">ダイナミックアイランドを有効にしてください</string>
+    <string name="size_reset">サイズがリセットされました</string>
+    <string name="position_reset">位置がリセットされました</string>
+    <string name="connected">接続済み</string>
+    <string name="charging">充電中</string>
+    <string name="please_keep_service_running_for_widgets_update">
+        ウィジェットの更新のためにサービスを継続してください
+    </string>
+    <string name="battery_widget_service">バッテリーウィジェットサービス</string>
+    <string name="stop_service">サービスを停止</string>
+
   </resources>

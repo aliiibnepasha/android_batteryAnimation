@@ -175,6 +175,31 @@
     <string name="service_title_4_2">تحسّن تجربة الاستخدام وتخصيص واجهة الهاتف.</string>
     <string name="service_title_4_3">لتمكين إجراءات النظام عبر الإيماءات (الرئيسية، العودة، التطبيقات الحديثة).</string>
     <string name="service_title_4_4">التطبيق يلتزم بخصوصية المستخدم ولا يسيء استخدام أذونات إمكانية الوصول.</string>
-
+    <string name="notch_size">حجم الشق</string>
+    <string name="notch_position">موضع الشق</string>
+    <string name="customize_dynamic_island">تخصيص الجزيرة الديناميكية</string>
+    <string name="vertical_y">عمودي (Y)</string>
+    <string name="horizontal_x">أفقي (X)</string>
+    <string name="reset_position">إعادة تعيين الموضع</string>
+    <string name="height">الارتفاع</string>
+    <string name="width">العرض</string>
+    <string name="reset_size">إعادة تعيين الحجم</string>
+    <string name="notch_style">نمط الشق</string>
+    <string name="notification">إشعار</string>
+    <string name="music">موسيقى</string>
+    <string name="navigation">ملاحة</string>
+    <string name="battery">البطارية</string>
+    <string name="bluetooth">بلوتوث</string>
+    <string name="mute">كتم</string>
+    <string name="please_enable_dynamic_mode">يرجى تفعيل الجزيرة الديناميكية</string>
+    <string name="size_reset">تم إعادة تعيين الحجم</string>
+    <string name="position_reset">تم إعادة تعيين الموضع</string>
+    <string name="connected">متصل</string>
+    <string name="charging">يشحن</string>
+    <string name="please_keep_service_running_for_widgets_update">
+        يرجى إبقاء الخدمة قيد التشغيل لتحديث الأدوات
+    </string>
+    <string name="battery_widget_service">خدمة أداة البطارية</string>
+    <string name="stop_service">إيقاف الخدمة</string>
 </resources>
 

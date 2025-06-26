@@ -178,4 +178,31 @@
     <string name="service_title_4_2">Pinapahusay nito ang usability at customization ng interface.</string>
     <string name="service_title_4_3">Pinapagana ang Home, Back, at Recent Apps sa pamamagitan ng gestures.</string>
     <string name="service_title_4_4">Ang app ay dedikado sa privacy at hindi inaabuso ang Accessibility permissions.</string>
+    <string name="notch_size">Laki ng Notch</string>
+    <string name="notch_position">Posisyon ng Notch</string>
+    <string name="customize_dynamic_island">I-customize ang Dynamic Island</string>
+    <string name="vertical_y">Pahaba (Y)</string>
+    <string name="horizontal_x">Pahalang (X)</string>
+    <string name="reset_position">I-reset ang Posisyon</string>
+    <string name="height">Taas</string>
+    <string name="width">Lapad</string>
+    <string name="reset_size">I-reset ang Sukat</string>
+    <string name="notch_style">Estilo ng Notch</string>
+    <string name="notification">Abiso</string>
+    <string name="music">Musika</string>
+    <string name="navigation">Nabigasyon</string>
+    <string name="battery">Baterya</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="mute">I-mute</string>
+    <string name="please_enable_dynamic_mode">Paki-enable ang Dynamic Island</string>
+    <string name="size_reset">Na-reset ang Sukat</string>
+    <string name="position_reset">Na-reset ang Posisyon</string>
+    <string name="connected">Nakakonekta</string>
+    <string name="charging">Nagcha-charge</string>
+    <string name="please_keep_service_running_for_widgets_update">
+        Panatilihing nakabukas ang serbisyo para sa pag-update ng widgets
+    </string>
+    <string name="battery_widget_service">Serbisyo ng Baterya Widget</string>
+    <string name="stop_service">Itigil ang Serbisyo</string>
+
  </resources>

@@ -175,4 +175,31 @@
     <string name="service_title_4_2">Il améliore l’utilisabilité et la personnalisation de l’interface du téléphone.</string>
     <string name="service_title_4_3">Permet d’exécuter des actions système via des gestes comme Accueil, Retour, Applications récentes.</string>
     <string name="service_title_4_4">L’application s’engage à respecter la vie privée des utilisateurs et n’abuse pas des permissions d’accessibilité.</string>
+    <string name="notch_size">Taille de l’encoche</string>
+    <string name="notch_position">Position de l’encoche</string>
+    <string name="customize_dynamic_island">Personnaliser Dynamic Island</string>
+    <string name="vertical_y">Verticale (Y)</string>
+    <string name="horizontal_x">Horizontale (X)</string>
+    <string name="reset_position">Réinitialiser la position</string>
+    <string name="height">Hauteur</string>
+    <string name="width">Largeur</string>
+    <string name="reset_size">Réinitialiser la taille</string>
+    <string name="notch_style">Style d’encoche</string>
+    <string name="notification">Notification</string>
+    <string name="music">Musique</string>
+    <string name="navigation">Navigation</string>
+    <string name="battery">Batterie</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="mute">Muet</string>
+    <string name="please_enable_dynamic_mode">Veuillez activer Dynamic Island</string>
+    <string name="size_reset">Taille réinitialisée</string>
+    <string name="position_reset">Position réinitialisée</string>
+    <string name="connected">Connecté</string>
+    <string name="charging">En charge</string>
+    <string name="please_keep_service_running_for_widgets_update">
+        Veuillez laisser le service actif pour la mise à jour des widgets
+    </string>
+    <string name="battery_widget_service">Service du widget batterie</string>
+    <string name="stop_service">Arrêter le service</string>
+
 </resources>

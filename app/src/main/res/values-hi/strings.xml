@@ -174,4 +174,31 @@
     <string name="service_title_4_2">यह फोन की इंटरफेस की उपयोगिता और अनुकूलन को बेहतर बनाता है।</string>
     <string name="service_title_4_3">होम, बैक, हाल की ऐप्स जैसे सिस्टम क्रियाएं जेस्चर द्वारा सक्षम करता है।</string>
     <string name="service_title_4_4">ऐप उपयोगकर्ता की गोपनीयता के प्रति प्रतिबद्ध है और Accessibility अनुमति का दुरुपयोग नहीं करता।</string>
+    <string name="notch_size">नॉच आकार</string>
+    <string name="notch_position">नॉच स्थिति</string>
+    <string name="customize_dynamic_island">डायनामिक आईलैंड तैयार करें</string>
+    <string name="vertical_y">ऊर्ध्वाधर (Y)</string>
+    <string name="horizontal_x">क्षैतिज (X)</string>
+    <string name="reset_position">स्थिति रीसेट करें</string>
+    <string name="height">ऊँचाई</string>
+    <string name="width">चौड़ाई</string>
+    <string name="reset_size">आकार रीसेट करें</string>
+    <string name="notch_style">नॉच शैली</string>
+    <string name="notification">सूचना</string>
+    <string name="music">संगीत</string>
+    <string name="navigation">नेविगेशन</string>
+    <string name="battery">बैटरी</string>
+    <string name="bluetooth">ब्लूटूथ</string>
+    <string name="mute">म्यूट</string>
+    <string name="please_enable_dynamic_mode">कृपया डायनामिक आईलैंड सक्षम करें</string>
+    <string name="size_reset">आकार रीसेट किया गया</string>
+    <string name="position_reset">स्थिति रीसेट की गई</string>
+    <string name="connected">कनेक्टेड</string>
+    <string name="charging">चार्ज हो रहा है</string>
+    <string name="please_keep_service_running_for_widgets_update">
+        विजेट अपडेट के लिए कृपया सेवा को चालू रखें
+    </string>
+    <string name="battery_widget_service">बैटरी विजेट सेवा</string>
+    <string name="stop_service">सेवा बंद करें</string>
+
 </resources>

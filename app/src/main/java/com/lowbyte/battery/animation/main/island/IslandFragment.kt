@@ -291,8 +291,8 @@ class IslandFragment : Fragment() {
 
         val items = listOf(
             ActionDynamicItem(getString(R.string.notification), "switch_notification"),
-            ActionDynamicItem(getString(R.string.music), "switch_music"),
-            ActionDynamicItem(getString(R.string.navigation), "switch_navigation"),
+           // ActionDynamicItem(getString(R.string.music), "switch_music"),
+          //  ActionDynamicItem(getString(R.string.navigation), "switch_navigation"),
             ActionDynamicItem(getString(R.string.battery), "switch_battery"),//
             ActionDynamicItem(getString(R.string.bluetooth), "switch_bluetooth"),//
             ActionDynamicItem(getString(R.string.mute), "switch_mute"),//

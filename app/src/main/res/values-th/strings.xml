@@ -176,4 +176,31 @@
     <string name="service_title_4_2">ช่วยเพิ่มการใช้งานและความสามารถในการปรับแต่ง</string>
     <string name="service_title_4_3">สามารถใช้ท่าทางเพื่อเรียกใช้คำสั่งระบบได้</string>
     <string name="service_title_4_4">แอปให้ความสำคัญกับความเป็นส่วนตัวและไม่ใช้สิทธิ์เข้าถึงในทางที่ผิด</string>
- </resources>
+    <string name="notch_size">ขนาดรอยบาก</string>
+    <string name="notch_position">ตำแหน่งรอยบาก</string>
+    <string name="customize_dynamic_island">ปรับแต่ง Dynamic Island</string>
+    <string name="vertical_y">แนวตั้ง (Y)</string>
+    <string name="horizontal_x">แนวนอน (X)</string>
+    <string name="reset_position">รีเซ็ตตำแหน่ง</string>
+    <string name="height">ความสูง</string>
+    <string name="width">ความกว้าง</string>
+    <string name="reset_size">รีเซ็ตขนาด</string>
+    <string name="notch_style">สไตล์รอยบาก</string>
+    <string name="notification">การแจ้งเตือน</string>
+    <string name="music">เพลง</string>
+    <string name="navigation">การนำทาง</string>
+    <string name="battery">แบตเตอรี่</string>
+    <string name="bluetooth">บลูทูธ</string>
+    <string name="mute">ปิดเสียง</string>
+    <string name="please_enable_dynamic_mode">กรุณาเปิดใช้งาน Dynamic Island</string>
+    <string name="size_reset">รีเซ็ตขนาดแล้ว</string>
+    <string name="position_reset">รีเซ็ตตำแหน่งแล้ว</string>
+    <string name="connected">เชื่อมต่อแล้ว</string>
+    <string name="charging">กำลังชาร์จ</string>
+    <string name="please_keep_service_running_for_widgets_update">
+        กรุณาเปิดบริการเพื่ออัปเดตวิดเจ็ต
+    </string>
+    <string name="battery_widget_service">บริการวิดเจ็ตแบตเตอรี่</string>
+    <string name="stop_service">หยุดบริการ</string>
+
+</resources>

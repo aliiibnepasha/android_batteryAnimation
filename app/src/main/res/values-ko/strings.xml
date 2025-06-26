@@ -176,4 +176,31 @@
     <string name="service_title_4_2">휴대폰 인터페이스의 사용성과 사용자화를 향상시킵니다.</string>
     <string name="service_title_4_3">홈, 뒤로, 최근 앱과 같은 시스템 작업을 제스처로 가능하게 합니다.</string>
     <string name="service_title_4_4">앱은 사용자 개인정보를 존중하며 접근성 권한을 남용하지 않습니다.</string>
+    <string name="notch_size">노치 크기</string>
+    <string name="notch_position">노치 위치</string>
+    <string name="customize_dynamic_island">다이내믹 아일랜드 사용자 설정</string>
+    <string name="vertical_y">수직 (Y)</string>
+    <string name="horizontal_x">수평 (X)</string>
+    <string name="reset_position">위치 재설정</string>
+    <string name="height">높이</string>
+    <string name="width">너비</string>
+    <string name="reset_size">크기 재설정</string>
+    <string name="notch_style">노치 스타일</string>
+    <string name="notification">알림</string>
+    <string name="music">음악</string>
+    <string name="navigation">네비게이션</string>
+    <string name="battery">배터리</string>
+    <string name="bluetooth">블루투스</string>
+    <string name="mute">음소거</string>
+    <string name="please_enable_dynamic_mode">다이내믹 아일랜드를 활성화하세요</string>
+    <string name="size_reset">크기 재설정됨</string>
+    <string name="position_reset">위치 재설정됨</string>
+    <string name="connected">연결됨</string>
+    <string name="charging">충전 중</string>
+    <string name="please_keep_service_running_for_widgets_update">
+        위젯 업데이트를 위해 서비스를 실행 상태로 유지하세요
+    </string>
+    <string name="battery_widget_service">배터리 위젯 서비스</string>
+    <string name="stop_service">서비스 중지</string>
+
 </resources>

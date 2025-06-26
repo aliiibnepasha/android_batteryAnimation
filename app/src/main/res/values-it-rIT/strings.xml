@@ -177,4 +177,31 @@
     <string name="service_title_4_2">Migliora l’usabilità e la personalizzazione dell’interfaccia del telefono.</string>
     <string name="service_title_4_3">Abilita azioni di sistema tramite gesti come Home, Indietro e App recenti.</string>
     <string name="service_title_4_4">L’app garantisce la privacy dell’utente e non abusa dei permessi di accessibilità.</string>
+    <string name="notch_size">Dimensione tacca</string>
+    <string name="notch_position">Posizione tacca</string>
+    <string name="customize_dynamic_island">Personalizza Dynamic Island</string>
+    <string name="vertical_y">Verticale (Y)</string>
+    <string name="horizontal_x">Orizzontale (X)</string>
+    <string name="reset_position">Reimposta posizione</string>
+    <string name="height">Altezza</string>
+    <string name="width">Larghezza</string>
+    <string name="reset_size">Reimposta dimensione</string>
+    <string name="notch_style">Stile tacca</string>
+    <string name="notification">Notifica</string>
+    <string name="music">Musica</string>
+    <string name="navigation">Navigazione</string>
+    <string name="battery">Batteria</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="mute">Silenzioso</string>
+    <string name="please_enable_dynamic_mode">Attiva Dynamic Island</string>
+    <string name="size_reset">Dimensione reimpostata</string>
+    <string name="position_reset">Posizione reimpostata</string>
+    <string name="connected">Connesso</string>
+    <string name="charging">In carica</string>
+    <string name="please_keep_service_running_for_widgets_update">
+        Tieni il servizio attivo per aggiornare i widget
+    </string>
+    <string name="battery_widget_service">Servizio widget batteria</string>
+    <string name="stop_service">Interrompi servizio</string>
+
 </resources>

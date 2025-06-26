@@ -41,6 +41,9 @@ class DynamicBottomSheetFragment(
         preferences = AppPreferences.getInstance(requireContext())
 
         // RecyclerView setup
+        binding.indicatorClose.setOnClickListener {
+            dismiss()
+        }
         binding.recyclerViewActions.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewActions.adapter =
             ActionDynamicAdapter(actions) { position, label, actionName, isChecked ->
@@ -76,7 +79,13 @@ class DynamicBottomSheetFragment(
                     }
             }
                 preferences.setBoolean(actionName, isChecked)
-            Toast.makeText(context, getString(R.string.action_applied, label), Toast.LENGTH_SHORT).show()
+                if (isChecked) {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.action_applied, label),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             onActionSelected(actions[position])
           //  dismiss() // Close the bottom sheet
         }

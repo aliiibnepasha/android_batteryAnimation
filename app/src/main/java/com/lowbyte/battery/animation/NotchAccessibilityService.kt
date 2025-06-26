@@ -397,11 +397,18 @@ class NotchAccessibilityService : AccessibilityService() {
         }
 
         // Apply enlarged layout
-        windowManager?.updateViewLayout(binding.root, enlargedParams)
+        try {
+            if (binding.root.windowToken != null) {
+                windowManager?.updateViewLayout(binding.root, enlargedParams)
+                handlerNotification.removeCallbacks(resetNotchRunnable)
+                handlerNotification.postDelayed(resetNotchRunnable, 3800)
+            }
+        } catch (e: Exception) {
+            Log.e("NotchService", "View update failed: ${e.message}")
+        }
 
         // Schedule reset after 5 seconds
-        handlerNotification.removeCallbacks(resetNotchRunnable)
-        handlerNotification.postDelayed(resetNotchRunnable, 3800)
+
     }
 
     private fun resetNotchView(isFromNotification: Boolean) {
@@ -769,6 +776,7 @@ class NotchAccessibilityService : AccessibilityService() {
         handler.removeCallbacks(resetNotchRunnable)
 
     }
+
     fun showNotificationBanner(
         title: String?, text: String?, url: String?, pkg: String?
     ) {

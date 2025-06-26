@@ -180,4 +180,31 @@
     <string name="service_title_4_2">Ia meningkatkan kegunaan dan penyesuaian antara muka telefon.</string>
     <string name="service_title_4_3">Memungkinkan tindakan sistem melalui isyarat seperti Home, Back dan App terkini.</string>
     <string name="service_title_4_4">App komited terhadap privasi pengguna dan tidak menyalahgunakan kebenaran aksesibiliti.</string>
+    <string name="notch_size">Saiz Takuk</string>
+    <string name="notch_position">Kedudukan Takuk</string>
+    <string name="customize_dynamic_island">Sesuaikan Dynamic Island</string>
+    <string name="vertical_y">Menegak (Y)</string>
+    <string name="horizontal_x">Mendatar (X)</string>
+    <string name="reset_position">Tetapkan Semula Kedudukan</string>
+    <string name="height">Tinggi</string>
+    <string name="width">Lebar</string>
+    <string name="reset_size">Tetapkan Semula Saiz</string>
+    <string name="notch_style">Gaya Takuk</string>
+    <string name="notification">Pemberitahuan</string>
+    <string name="music">Muzik</string>
+    <string name="navigation">Navigasi</string>
+    <string name="battery">Bateri</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="mute">Senyap</string>
+    <string name="please_enable_dynamic_mode">Sila aktifkan Dynamic Island</string>
+    <string name="size_reset">Saiz telah ditetapkan semula</string>
+    <string name="position_reset">Kedudukan telah ditetapkan semula</string>
+    <string name="connected">Bersambung</string>
+    <string name="charging">Sedang mengecas</string>
+    <string name="please_keep_service_running_for_widgets_update">
+        Sila kekalkan servis berjalan untuk kemas kini widget
+    </string>
+    <string name="battery_widget_service">Perkhidmatan Widget Bateri</string>
+    <string name="stop_service">Hentikan Servis</string>
+
 </resources>
