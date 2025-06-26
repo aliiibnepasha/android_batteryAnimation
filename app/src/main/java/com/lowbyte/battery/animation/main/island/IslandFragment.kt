@@ -1,11 +1,8 @@
 package com.lowbyte.battery.animation.main.island
 
 import DynamicBottomSheetFragment
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.res.Resources
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.NotchAccessibilityService
@@ -46,9 +42,20 @@ class IslandFragment : Fragment() {
         preferences = AppPreferences.getInstance(requireContext())
         FirebaseAnalyticsUtils.logScreenView(this, "IslandFragment")
 
+
+
+        if (preferences.getInt("widget_style_index", 0) == 0) {
+            binding.selectNotchStyle1.visibility = View.VISIBLE
+            binding.selectNotchStyle2.visibility = View.GONE
+        } else {
+            binding.selectNotchStyle1.visibility = View.GONE
+            binding.selectNotchStyle2.visibility = View.VISIBLE
+        }
+
        /*............................................*/
         binding.yAxisSeekbar.max = 100
         binding.yAxisSeekbar.progress = preferences.notchYAxis + 50
+
         binding.yAxisSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val realValue = progress - 50 // converts SeekBar progress back to real value
@@ -186,6 +193,12 @@ class IslandFragment : Fragment() {
                 ).show()
                 return@setOnClickListener
             }
+            binding.selectNotchStyle2.visibility = View.VISIBLE
+            binding.selectNotchStyle1.visibility = View.GONE
+            preferences.setInt("widget_style_index", 1)
+            requireContext().sendBroadcast(Intent(BROADCAST_ACTION))
+
+
         }
         binding.notchStyle1.setOnClickListener {
             if (!preferences.isDynamicEnabled) {
@@ -196,6 +209,11 @@ class IslandFragment : Fragment() {
                 ).show()
                 return@setOnClickListener
             }
+            binding.selectNotchStyle1.visibility = View.VISIBLE
+            binding.selectNotchStyle2.visibility = View.GONE
+            preferences.setInt("widget_style_index", 0)
+            requireContext().sendBroadcast(Intent(BROADCAST_ACTION))
+
 
 
         }

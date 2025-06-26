@@ -485,6 +485,11 @@ class NotchAccessibilityService : AccessibilityService() {
         val notchHeight = dpToPx(preferences.notchHeight)
         val notchX = (screenWidth - notchWidth) / 2 + dpToPx(preferences.notchXAxis)
         val notchY = dpToPx(preferences.notchYAxis)
+        if (preferences.getInt("widget_style_index", 0) == 0) {
+            binding.statusBarRoot.background = resources.getDrawable(R.drawable.black_rounded_notch,null)
+        } else {
+            binding.statusBarRoot.background = resources.getDrawable(R.drawable.black_bottom_rounded_notch,null)
+        }
 
         val notchParams = WindowManager.LayoutParams(
             notchWidth,
