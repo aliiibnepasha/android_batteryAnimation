@@ -20,7 +20,7 @@ class MyNotificationListenerService : NotificationListenerService() {
         val packageName = sbn.packageName
 
         // 🚫 Exclude system notifications
-        if (packageName == "android" || packageName.startsWith("com.android") || packageName == "com.google.android.settings.intelligence") {
+        if (packageName == "android" || packageName == "com.transsion.screenrecorder" || packageName.startsWith("com.android") || packageName == "com.google.android.settings.intelligence") {
             Log.d("NotificationListener", "System notification skipped: $packageName")
             return
         }
@@ -73,7 +73,7 @@ class MyNotificationListenerService : NotificationListenerService() {
     override fun onNotificationRemoved(sbn: StatusBarNotification?) {
         Log.d("NotificationListener", "Notification removed from ${sbn?.packageName}")
         val broadcastIntent = Intent(BROADCAST_ACTION_NOTIFICATION).apply {
-            putExtra("rm_package_name", packageName)
+            putExtra("rm_package_name", sbn?.packageName)
         }
         sendBroadcast(broadcastIntent)
     }

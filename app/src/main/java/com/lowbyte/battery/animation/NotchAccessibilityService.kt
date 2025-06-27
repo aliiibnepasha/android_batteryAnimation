@@ -64,6 +64,7 @@ class NotchAccessibilityService : AccessibilityService() {
     private var handeRunnable: Boolean = false
     private var notificationView: View? = null
     private var notificationHandler = Handler(Looper.getMainLooper())
+    private var packegeToOpen = ""
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -89,6 +90,47 @@ class NotchAccessibilityService : AccessibilityService() {
                     val action = intent?.action
                     Log.d("servicesListener", "Received broadcast: $action")
                     when (action) {
+                        WifiManager.WIFI_STATE_CHANGED_ACTION -> {
+                            val state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1)
+                            when (state) {
+                                WifiManager.WIFI_STATE_ENABLED -> updateStatusBarAppearance()
+                                WifiManager.WIFI_STATE_DISABLED -> updateStatusBarAppearance()
+                            }
+                        }
+
+                        ConnectivityManager.CONNECTIVITY_ACTION -> {
+                            val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                            val isMobileDataOn = cm.activeNetworkInfo?.type == ConnectivityManager.TYPE_MOBILE
+                            val isConnected = cm.activeNetworkInfo?.isConnected == true
+                            if (isMobileDataOn && isConnected) {
+                                updateStatusBarAppearance()
+                            } else {
+                                updateStatusBarAppearance()
+                            }
+                        }
+
+
+                        "android.net.wifi.WIFI_AP_STATE_CHANGED" -> {
+                            val apState = intent.getIntExtra("android.net.wifi.extra.WIFI_AP_STATE", -1)
+                            when (apState) {
+                                13 -> updateStatusBarAppearance()
+                                11 -> updateStatusBarAppearance()
+                                else -> Log.d("Receiver", "Hotspot state: $apState")
+                            }
+                        }
+
+
+                        // ✅ Airplane Mode
+                        Intent.ACTION_AIRPLANE_MODE_CHANGED -> {
+                            val isAirplaneModeOn = intent.getBooleanExtra("state", false)
+                            updateStatusBarAppearance()
+                            Log.d("Receiver", "Airplane Mode: ${if (isAirplaneModeOn) "ON" else "OFF"}")
+                        }
+
+
+
+
+                        /*.........*/
                         BROADCAST_ACTION -> {
                             Log.d("servicesListener", "Custom UI update action")
                             updateStatusBarAppearance()
@@ -97,8 +139,10 @@ class NotchAccessibilityService : AccessibilityService() {
                         }
 
                         Intent.ACTION_BATTERY_CHANGED -> {
+
                             val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
                             if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
+                                updateStatusBarAppearance()
                                 if (preferences.getBoolean("switch_battery", false) == false) {
                                     return
                                 }
@@ -201,19 +245,21 @@ class NotchAccessibilityService : AccessibilityService() {
                         BROADCAST_ACTION_NOTIFICATION -> {
                             Log.d("servicesListener", "Custom notch update triggered")
                             if (preferences.getBoolean("switch_notification", false) == true) {
-                                Log.d("servicesListener", "Feature enabled keep tracking")
                                 val rmPkg = intent.getStringExtra("rm_package_name")
-                                val pkg = intent.getStringExtra("package_name")
-
-                                if (rmPkg != "" && rmPkg == pkg) {
-                                    resetNotchView(false)
+                                Log.d("NotificationListener", "Notification removed from access $rmPkg /  $packegeToOpen")
+                                handeRunnable = true
+                                if (rmPkg != "" && rmPkg == packegeToOpen) {
+                                    handeRunnable = false
+                                    resetNotchView(handeRunnable)
                                     Log.d("servicesListener", "packege matched remove icon")
                                 } else {
                                     Log.d(
                                         "servicesListener",
                                         "New Notification to be show with Icon"
                                     )
-                                    resetNotchView(true)
+                                    handeRunnable = true
+                                    resetNotchView(handeRunnable)
+                                    packegeToOpen = intent.getStringExtra("package_name")?:return
                                     val title = intent.getStringExtra("title")
                                     val text = intent.getStringExtra("text")
                                     val subText = intent.getStringExtra("sub_text")
@@ -222,7 +268,7 @@ class NotchAccessibilityService : AccessibilityService() {
                                     val launchIntentUri = intent.getStringExtra("launch_intent_uri")
                                     // Get app icon
                                     val appIcon: Drawable? = try {
-                                        packageManager.getApplicationIcon(pkg ?: return)
+                                        packageManager.getApplicationIcon(packegeToOpen)
                                     } catch (e: Exception) {
                                         null
                                     }
@@ -230,7 +276,7 @@ class NotchAccessibilityService : AccessibilityService() {
                                     Log.d(
                                         "servicesListener", """
                                     receiving
-                                        📦 $pkg 
+                                        📦 $packegeToOpen 
                                         🔤 $title 
                                         📝 $text 
                                         🔍 $subText 
@@ -250,15 +296,10 @@ class NotchAccessibilityService : AccessibilityService() {
                                             Log.d(
                                                 "servicesListener", "Click is allowed, open App"
                                             )
-                                            showNotificationBanner(title, text, url, pkg)
-//                                            val intent = packageManager.getLaunchIntentForPackage(
-//                                                pkg ?: return@updateNotchIcons
-//                                            )
-//                                            intent?.let {
-//                                                it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//                                                startActivity(it)
-//                                            }
-                                            // Perform your action here
+                                            if (handeRunnable){
+                                                showNotificationBanner(title, text, url, packegeToOpen)
+                                            }
+
                                         } else {
                                             Log.d(
                                                 "servicesListener",
@@ -289,6 +330,7 @@ class NotchAccessibilityService : AccessibilityService() {
                 addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
                 addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
                 addAction(BROADCAST_ACTION_NOTIFICATION)
+                addAction("android.net.wifi.WIFI_AP_STATE_CHANGED")
             }
 
             try {
@@ -859,10 +901,20 @@ class NotchAccessibilityService : AccessibilityService() {
 
         // Click to launch app
         view.setOnClickListener {
-            val launchIntent =
-                packageManager.getLaunchIntentForPackage(pkg ?: return@setOnClickListener)
-            launchIntent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(launchIntent)
+            try {
+                val packageName = pkg ?: return@setOnClickListener
+                val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
+
+                if (launchIntent != null) {
+                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(launchIntent)
+                } else {
+                    Log.e("NotchAccessibilityService", "App not found: $packageName")
+                }
+                Log.e("NotchAccessibilityService", "App not found: $packageName")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         // Prepare layout params
