@@ -17,6 +17,7 @@ import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
 import com.lowbyte.battery.animation.databinding.FragmentViewAllEmojiBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.getTabTitlesEmoji
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
@@ -86,6 +87,8 @@ class ViewAllEmojiFragment : Fragment() {
                 } else {
                     requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
                 }
+                requireActivity().sendBroadcast(Intent(BROADCAST_ACTION_DYNAMIC))
+
             }, 500)
         }
     }

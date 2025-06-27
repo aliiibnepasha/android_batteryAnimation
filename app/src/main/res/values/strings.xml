@@ -214,6 +214,8 @@
     <string name="please_keep_service_running_for_widgets_update">Please keep service Running for widgets update</string>
     <string name="battery_widget_service">Battery Widget Service</string>
     <string name="stop_service">Stop Service</string>
+    <string name="enable_notification_access">Enable Notification Access</string>
+    <string name="allow_notification_access_so_we_can_show_notifications_in_your_custom_notch">Allow notification access so we can show notifications in your custom notch.</string>
 
 
 </resources>

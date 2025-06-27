@@ -22,6 +22,7 @@ import com.lowbyte.battery.animation.databinding.ActivityStatusBarCustommizeBind
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.model.CustomIconGridItem
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
@@ -131,7 +132,10 @@ class StatusBarCustomizeActivity : BaseActivity() {
             } else {
                 sendBroadcast(Intent(BROADCAST_ACTION))
             }
+            sendBroadcast(Intent(BROADCAST_ACTION_DYNAMIC))
+
         }
+
 
         binding.statusBarHeightSeekbar.max = 50
         binding.statusBarHeightSeekbar.progress = preferences.statusBarHeight

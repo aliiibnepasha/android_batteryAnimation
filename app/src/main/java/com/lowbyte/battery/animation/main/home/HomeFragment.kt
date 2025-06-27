@@ -26,6 +26,7 @@ import com.lowbyte.battery.animation.databinding.FragmentHomeBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.model.MultiViewItem
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.combinedAnimationList
@@ -107,8 +108,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                 if (::preferences.isInitialized && preferences.isStatusBarEnabled && isChecked) {
                     checkAccessibilityPermission()
+                    requireActivity().sendBroadcast(Intent(BROADCAST_ACTION_DYNAMIC))
+
                 } else {
                     requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+                    requireActivity().sendBroadcast(Intent(BROADCAST_ACTION_DYNAMIC))
+
                 }
             }
         }, 500)

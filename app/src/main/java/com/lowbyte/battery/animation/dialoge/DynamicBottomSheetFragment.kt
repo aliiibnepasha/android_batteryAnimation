@@ -1,4 +1,5 @@
 import android.Manifest
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -8,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -16,6 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.ActionDynamicAdapter
 import com.lowbyte.battery.animation.adapter.ActionDynamicItem
+import com.lowbyte.battery.animation.databinding.DialogNotificationMsgPermissionBinding
 import com.lowbyte.battery.animation.databinding.FragmentDynamicBottomSheetBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
 
@@ -63,7 +66,7 @@ class DynamicBottomSheetFragment(
                                 "Notification service enabled switch_notification permission granted"
                             )
                         } else {
-                            requestNotificationAccess(requireContext())
+                            showNotificationPermissionDialog(requireContext())
                             dismiss()
                             return@ActionDynamicAdapter
                         }
@@ -136,6 +139,28 @@ class DynamicBottomSheetFragment(
         context.startActivity(intent)
     }
 
+
+    fun showNotificationPermissionDialog(context: Context) {
+        val binding = DialogNotificationMsgPermissionBinding.inflate(LayoutInflater.from(context))
+
+        val dialog = AlertDialog.Builder(context)
+            .setView(binding.root)
+            .setCancelable(false)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        binding.btnAllow.setOnClickListener {
+            dialog.dismiss()
+            requestNotificationAccess(context)
+        }
+
+        binding.btnLater.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

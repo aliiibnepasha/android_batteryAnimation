@@ -34,6 +34,7 @@ import com.lowbyte.battery.animation.databinding.CustomNotchBarBinding
 import com.lowbyte.battery.animation.databinding.CustomNotificationBarBinding
 import com.lowbyte.battery.animation.databinding.CustomStatusBarBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_NOTIFICATION
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.ServiceUtils.applyIconSize
@@ -90,11 +91,17 @@ class NotchAccessibilityService : AccessibilityService() {
                     val action = intent?.action
                     Log.d("servicesListener", "Received broadcast: $action")
                     when (action) {
+                        BROADCAST_ACTION_DYNAMIC -> {
+                            if (preferences.isDynamicEnabled && preferences.isStatusBarEnabled) {
+                                bringNotchViewToFront("BROADCAST_ACTION_DYNAMIC bringNotchViewToFront")
+                            }
+                        }
+
                         WifiManager.WIFI_STATE_CHANGED_ACTION -> {
                             val state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1)
                             when (state) {
-                                WifiManager.WIFI_STATE_ENABLED -> updateStatusBarAppearance()
-                                WifiManager.WIFI_STATE_DISABLED -> updateStatusBarAppearance()
+                                WifiManager.WIFI_STATE_ENABLED -> updateStatusBarAppearance("updateStatusBarAppearance Wifi Enabled")
+                                WifiManager.WIFI_STATE_DISABLED -> updateStatusBarAppearance("updateStatusBarAppearance Wifi Disabled")
                             }
                         }
 
@@ -103,46 +110,39 @@ class NotchAccessibilityService : AccessibilityService() {
                             val isMobileDataOn = cm.activeNetworkInfo?.type == ConnectivityManager.TYPE_MOBILE
                             val isConnected = cm.activeNetworkInfo?.isConnected == true
                             if (isMobileDataOn && isConnected) {
-                                updateStatusBarAppearance()
+                                updateStatusBarAppearance("updateStatusBarAppearance Data Enabled")
                             } else {
-                                updateStatusBarAppearance()
+                                updateStatusBarAppearance("updateStatusBarAppearance Data Disabled")
                             }
                         }
 
 
                         "android.net.wifi.WIFI_AP_STATE_CHANGED" -> {
-                            val apState = intent.getIntExtra("android.net.wifi.extra.WIFI_AP_STATE", -1)
-                            when (apState) {
-                                13 -> updateStatusBarAppearance()
-                                11 -> updateStatusBarAppearance()
-                                else -> Log.d("Receiver", "Hotspot state: $apState")
-                            }
+                            updateStatusBarAppearance("updateStatusBarAppearance Wifi AP Enabled")
                         }
 
 
                         // ✅ Airplane Mode
                         Intent.ACTION_AIRPLANE_MODE_CHANGED -> {
                             val isAirplaneModeOn = intent.getBooleanExtra("state", false)
-                            updateStatusBarAppearance()
+                            updateStatusBarAppearance("updateStatusBarAppearance Airplane Mode: $isAirplaneModeOn")
                             Log.d("Receiver", "Airplane Mode: ${if (isAirplaneModeOn) "ON" else "OFF"}")
                         }
-
-
 
 
                         /*.........*/
                         BROADCAST_ACTION -> {
                             Log.d("servicesListener", "Custom UI update action")
-                            updateStatusBarAppearance()
-                            updateNotificationNotch()
+                            updateStatusBarAppearance("updateStatusBarAppearance Custom UI update action")
+                            updateNotificationNotch("updateStatusBarAppearance Custom UI update action")
 
                         }
 
                         Intent.ACTION_BATTERY_CHANGED -> {
+                            updateStatusBarAppearance("updateStatusBarAppearance Charging")
 
                             val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
                             if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
-                                updateStatusBarAppearance()
                                 if (preferences.getBoolean("switch_battery", false) == false) {
                                     return
                                 }
@@ -285,7 +285,7 @@ class NotchAccessibilityService : AccessibilityService() {
                                         🎯 $launchIntentUri
                                          """.trimIndent()
                                     )
-                                    updateNotificationNotch()
+                                    updateNotificationNotch("updateStatusBarAppearance Custom UI update action 2")
                                     updateNotchIcons(
                                         showNotification = "showNotification",
                                         label = "",
@@ -320,6 +320,7 @@ class NotchAccessibilityService : AccessibilityService() {
                 }
             }
             val filter = IntentFilter().apply {
+                addAction(BROADCAST_ACTION_DYNAMIC)
                 addAction(BROADCAST_ACTION)
                 addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
                 addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
@@ -463,7 +464,7 @@ class NotchAccessibilityService : AccessibilityService() {
         binding.notchLabel.text = ""
 
         // Reset to default size and position
-        updateNotificationNotch()
+        updateNotificationNotch("updateStatusBarAppearance Custom UI update action gg")
     }
 
     private fun createCustomStatusBar() {
@@ -480,8 +481,8 @@ class NotchAccessibilityService : AccessibilityService() {
         notificationViewBinding = CustomNotificationBarBinding.inflate(LayoutInflater.from(this))
         notificationNotchBinding = CustomNotchBarBinding.inflate(LayoutInflater.from(this))
 
-        updateStatusBarAppearance()
-        updateNotificationNotch()
+        updateStatusBarAppearance("updateStatusBarAppearance Custom UI update action nn")
+        updateNotificationNotch("updateStatusBarAppearance Custom UI update action b")
         setupGestures()
 
 
@@ -529,7 +530,9 @@ class NotchAccessibilityService : AccessibilityService() {
         resetNotchView(handeRunnable)
     }
 
-    private fun updateNotificationNotch() {
+    private fun updateNotificationNotch(logi: String) {
+        Log.d("servicesListenerCalling", "updateNotificationNotch: $logi")
+
         val binding = notificationNotchBinding ?: return
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels
         val notchWidth = dpToPx(preferences.notchWidth)
@@ -572,7 +575,8 @@ class NotchAccessibilityService : AccessibilityService() {
         Log.d("servicesListener", "Notch updateViewLayout via broadcast")
     }
 
-    private fun updateStatusBarAppearance() {
+    private fun updateStatusBarAppearance(logi: String) {
+
         val binding = statusBarBinding ?: return
 
         if (!preferences.isStatusBarEnabled && ::preferences.isInitialized) {
@@ -585,6 +589,7 @@ class NotchAccessibilityService : AccessibilityService() {
                 windowManager?.addView(binding.root, layoutParams)
             }
         }
+        Log.d("servicesListenerCalling", "updateStatusBarAppearance: $logi")
 
         animateStatusBarHeight((preferences.statusBarHeight * resources.displayMetrics.density).toInt())
         binding.root.setPadding(
@@ -679,8 +684,7 @@ class NotchAccessibilityService : AccessibilityService() {
             }
 
             // Lottie icon
-            val lottieRes =
-                resources.getIdentifier(preferences.statusLottieName, "raw", packageName)
+            val lottieRes = resources.getIdentifier(preferences.statusLottieName, "raw", packageName)
             if (preferences.statusLottieName.isNotBlank() && lottieRes != 0) {
                 lottieIcon.setAnimation(lottieRes)
                 lottieIcon.visibility = View.VISIBLE
@@ -688,19 +692,16 @@ class NotchAccessibilityService : AccessibilityService() {
             } else {
                 lottieIcon.visibility = View.GONE
             }
-
+            updateBatteryInfo()
             windowManager?.updateViewLayout(binding.root, layoutParams)
         }
-        updateBatteryInfo()
-        if (preferences.isDynamicEnabled && preferences.isStatusBarEnabled) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                bringNotchViewToFront()
-            }, 300) // Delay ensures layout is complete
-        }
+
+
 
 
     }
-    private fun bringNotchViewToFront() {
+
+    private fun bringNotchViewToFront(logi: String) {
         val notchBinding = notificationNotchBinding ?: return
         if (notchBinding.root.parent != null) {
             try {
@@ -709,6 +710,7 @@ class NotchAccessibilityService : AccessibilityService() {
                 Log.w("NotchView", "Already removed or not attached")
             }
         }
+        Log.d("servicesListenerCalling", "bringNotchViewToFront: $logi")
 
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels
         val notchWidth = dpToPx(preferences.notchWidth)
