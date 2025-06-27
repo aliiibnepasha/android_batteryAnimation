@@ -229,24 +229,34 @@ class IslandFragment : Fragment() {
             }
             openDynamicSheet()
         }
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            binding.switchEnableDynamic.isChecked = preferences.isDynamicEnabled && isAccessibilityServiceEnabled()
-            Log.d("TAG_Access", "Create ${preferences.isDynamicEnabled}")
-            binding.switchEnableDynamic.setOnCheckedChangeListener { _, isChecked ->
-                preferences.isDynamicEnabled = isChecked
-                FirebaseAnalyticsUtils.logClickEvent(
-                    requireActivity(), "toggle_dynamic_service",
-                    mapOf("enabled" to isChecked.toString())
-                )
-                if (::preferences.isInitialized && preferences.isDynamicEnabled && isChecked) {
-                    checkAccessibilityPermission()
-                } else {
-                    requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+        try {
+            Handler(Looper.getMainLooper()).postDelayed({
+                try {
+                    binding.switchEnableDynamic.isChecked = preferences.isDynamicEnabled && isAccessibilityServiceEnabled()
+                    Log.d("TAG_Access", "Create ${preferences.isDynamicEnabled}")
+                    binding.switchEnableDynamic.setOnCheckedChangeListener { _, isChecked ->
+                        preferences.isDynamicEnabled = isChecked
+                        FirebaseAnalyticsUtils.logClickEvent(
+                            requireActivity(), "toggle_dynamic_service",
+                            mapOf("enabled" to isChecked.toString())
+                        )
+                        if (::preferences.isInitialized && preferences.isDynamicEnabled && isChecked) {
+                            checkAccessibilityPermission()
+                        } else {
+                            requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+                        }
+                    }
+                } catch (e: NullPointerException) {
+                    e.printStackTrace()
+                    return@postDelayed
                 }
-            }
-        }, 500)
-        binding.switchEnableDynamic.isChecked = preferences.isDynamicEnabled
+            }, 500)
+            binding.switchEnableDynamic.isChecked = preferences.isDynamicEnabled
+        } catch (e: NullPointerException) {
+            e.printStackTrace()
+
+        }
+
         return root
     }
 

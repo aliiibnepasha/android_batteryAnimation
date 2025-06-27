@@ -14,8 +14,8 @@ android {
         applicationId = "emojibattery.widget.statusbar"
         minSdk = 24
         targetSdk = 35
-        versionCode = 10
-        versionName = "2.0"
+        versionCode = 11
+        versionName = "2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -35,6 +35,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
+
         jvmTarget = "11"
     }
     buildFeatures {

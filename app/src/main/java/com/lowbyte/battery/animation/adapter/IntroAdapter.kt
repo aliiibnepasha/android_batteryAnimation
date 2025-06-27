@@ -32,23 +32,7 @@ class IntroAdapter(
                 item.imageResId ?: 0
             )
         }
-//    inner class IntroViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        val image: ImageView? = itemView.findViewById<ImageView>(R.id.imageView)
-//        val title: TextView? = itemView.findViewById<TextView>(R.id.textTitle)
-//        val description: TextView? = itemView.findViewById<TextView>(R.id.textDescription)
-//    }
-//
-//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IntroViewHolder {
-//        val view = LayoutInflater.from(context).inflate(R.layout.item_intro, parent, false)
-//        return IntroViewHolder(view)
-//    }
-//
-//    override fun onBindViewHolder(holder: IntroViewHolder, position: Int) {
-//        val item = items[position]
-//        holder.image?.setImageResource(item.imageResId)
-//        holder.title?.text = item.title
-//        holder.description?.text = item.description
-//    }
+
 
     }
     }

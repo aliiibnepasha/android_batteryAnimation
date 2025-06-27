@@ -120,7 +120,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
             binding.leftMarginSeekBar.progress = 10
             binding.rightMarginSeekBar.progress = 10
             Toast.makeText(this, getString(R.string.restore_successfully), Toast.LENGTH_SHORT).show()
-
+            sendBroadcast(Intent(BROADCAST_ACTION))
         }
 
         binding.switchEnableBatteryEmojiCustom.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
