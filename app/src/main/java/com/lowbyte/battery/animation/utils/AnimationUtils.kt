@@ -17,11 +17,14 @@ object AnimationUtils {
     var  isBannerSplashEnabled = true //
     var  isBannerHomeEnabled = true //
     var  isFullscreenSplashEnabled = true //
+    var  isFullscreenStatusEnabled = true //
+    var  isFullscreenGestureEnabled = true //
     var  isFullscreenApplyEmojiEnabled = true //
     var  isFullscreenApplyWidgetEnabled = true//
     var  isFullscreenApplyAnimEnabled = true//
     var  isNativeLangFirstEnabled = true  //
     var  isNativeLangSecondEnabled = true //
+    var  isNativeIntroEnabled = true //
     var  isNativeApplyEmojiEnabled = true //
     var  isNativeApplyWidgetEnabled = true//
     var  isNativeApplyAnimEnabled = true//

@@ -6,6 +6,8 @@
             {
             "BannerAdSplash_enabled": true,
             "BannerAdHome_enabled": true,
+            "FullscreenGestureBack_enabled": true,
+            "FullscreenStatusBack_enabled": true,
             "FullscreenSplash_enabled": true,
             "FullscreenApplyEmoji_enabled": true,
             "FullscreenApplyWidget_enabled": true,
@@ -13,6 +15,7 @@
             "NativeLanguageFirst_enabled": true,
             "NativeLanguageSecond_enabled": true,
             "NativeApplyEmoji_enabled": true,
+            "NativeIntro_enabled": true,
             "NativeApplyWidget_enabled": true,
             "NativeApplyAnimation_enabled": true,
             "NativeSmallStatusBar_enabled": true,

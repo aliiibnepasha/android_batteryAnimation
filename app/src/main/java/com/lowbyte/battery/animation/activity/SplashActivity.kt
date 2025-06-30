@@ -2,7 +2,6 @@ package com.lowbyte.battery.animation.activity
 
 import android.os.Bundle
 import android.util.Log
-import android.view.WindowManager
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingResult
@@ -18,11 +17,14 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerSplashEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyAnimEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyEmojiEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyWidgetEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenGestureEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenSplashEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenStatusEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyAnimEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyEmojiEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyWidgetEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeGestureEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeIntroEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeLangFirstEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeLangSecondEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeStatusEnabled
@@ -63,6 +65,8 @@ class SplashActivity : BaseActivity() {
             "BannerAdSplash_enabled": true,
             "BannerAdHome_enabled": true,
             "FullscreenSplash_enabled": true,
+            "FullscreenGestureBack_enabled": true,
+            "FullscreenStatusBack_enabled": true,
             "FullscreenApplyEmoji_enabled": true,
             "FullscreenApplyWidget_enabled": true,
             "FullscreenApplyAnim_enabled": true,
@@ -98,9 +102,12 @@ class SplashActivity : BaseActivity() {
              isBannerSplashEnabled = jsonObject.optBoolean("BannerAdSplash_enabled", true)
              isBannerHomeEnabled = jsonObject.optBoolean("BannerAdHome_enabled", true)
              isFullscreenSplashEnabled = jsonObject.optBoolean("FullscreenSplash_enabled", true)
+             isFullscreenStatusEnabled = jsonObject.optBoolean("FullscreenStatusBack_enabled", true)
+             isFullscreenGestureEnabled = jsonObject.optBoolean("FullscreenGestureBack_enabled", true)
              isFullscreenApplyEmojiEnabled = jsonObject.optBoolean("FullscreenApplyEmoji_enabled", true)
              isFullscreenApplyWidgetEnabled = jsonObject.optBoolean("FullscreenApplyWidget_enabled", true)
              isFullscreenApplyAnimEnabled = jsonObject.optBoolean("FullscreenApplyAnim_enabled", true)
+             isNativeIntroEnabled = jsonObject.optBoolean("NativeIntro_enabled", true)
              isNativeLangFirstEnabled = jsonObject.optBoolean("NativeLanguageFirst_enabled", true)
              isNativeLangSecondEnabled = jsonObject.optBoolean("NativeLanguageSecond_enabled", true)
              isNativeApplyEmojiEnabled = jsonObject.optBoolean("NativeApplyEmoji_enabled", true)

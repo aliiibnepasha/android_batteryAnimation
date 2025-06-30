@@ -18,6 +18,7 @@ import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarGestureBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeCustomizeId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenGestureEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeGestureEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
@@ -36,15 +37,14 @@ class StatusBarGestureActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-      //  enableEdgeToEdge()
         _binding = ActivityStatusBarGestureBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
-        AdManager.loadInterstitialAd(this, getFullscreenId())
+        AdManager.loadInterstitialAd(this, getFullscreenId(),isFullscreenGestureEnabled)
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AdManager.showInterstitialAd(this@StatusBarGestureActivity, true) {
+                AdManager.showInterstitialAd(this@StatusBarGestureActivity, isFullscreenGestureEnabled,true) {
                     finish()
                 }
             }

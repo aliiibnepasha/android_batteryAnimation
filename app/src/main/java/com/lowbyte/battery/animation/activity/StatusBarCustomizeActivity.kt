@@ -27,6 +27,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeCustomizeId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenStatusEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeStatusEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
@@ -48,7 +49,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
         _binding = ActivityStatusBarCustommizeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
-        AdManager.loadInterstitialAd(this, getFullscreenId())
+        AdManager.loadInterstitialAd(this,getFullscreenId(),isFullscreenStatusEnabled)
         sheet = AccessibilityPermissionBottomSheet(
             onAllowClicked = {
                 FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
@@ -69,7 +70,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
         )
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AdManager.showInterstitialAd(this@StatusBarCustomizeActivity, true) {
+                AdManager.showInterstitialAd(this@StatusBarCustomizeActivity, isFullscreenStatusEnabled,true) {
                     finish()
                 }
             }
