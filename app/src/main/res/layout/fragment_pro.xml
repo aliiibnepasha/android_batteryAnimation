@@ -32,16 +32,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-     <ImageView
-         android:id="@+id/closeScreen"
-         android:layout_width="50dp"
-         android:layout_height="50dp"
-         android:layout_margin="10dp"
-         android:contentDescription="@string/app_name"
-         android:padding="16dp"
-         android:src="@drawable/ic_close"
-         app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/closeScreen"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:padding="16dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
 
 
 

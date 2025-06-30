@@ -1,7 +1,11 @@
 package com.lowbyte.battery.animation.main
 
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
@@ -17,6 +21,17 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
 
     private lateinit var binding: FragmentIntroBinding
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            Log.d("backPress", "closeBackOnIntro")
+        }
+
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentIntroBinding.bind(view)
         FirebaseAnalyticsUtils.logScreenView(this, "intro_screen")
@@ -37,7 +52,9 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
             if (currentItem < items.size - 1) {
                 binding.viewPager.currentItem = currentItem + 1
             } else {
-                findNavController().navigate(R.id.action_intro_to_main)
+                if (isAdded && findNavController().currentDestination?.id == R.id.introFragment) {
+                    findNavController().navigate(R.id.action_intro_to_main)
+                }
             }
         }
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -50,8 +67,6 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
 //                } else {
 //                    binding.btnNext.text = getString(R.string.next)
 //                }
-
-
                 val isLast = position == items.lastIndex
                 val isAd = items[position].type == SlideType.NATIVE_AD
 

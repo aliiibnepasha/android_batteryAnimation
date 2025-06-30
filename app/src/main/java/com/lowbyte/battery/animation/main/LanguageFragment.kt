@@ -2,7 +2,10 @@ package com.lowbyte.battery.animation.main
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +28,17 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
     private var selectedLanguage: String = "English"
     private lateinit var preferences: AppPreferences
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            Log.d("backPress","closeBackOnLanguage")
+        }
+
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentLanguageBinding.bind(view)
@@ -77,7 +91,9 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
 
         binding.ibNextButton.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "click_language_next")
-            findNavController().navigate(R.id.action_language_to_intro)
+            if (isAdded && findNavController().currentDestination?.id == R.id.languageFragment) {
+                findNavController().navigate(R.id.action_language_to_intro)
+            }
         }
 
         NativeLanguageHelper(

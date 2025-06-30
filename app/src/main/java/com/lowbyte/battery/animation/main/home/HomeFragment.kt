@@ -153,16 +153,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 val eventMap = mapOf("section_index" to "$titlePosition")
                 when (titlePosition) {
                     0 -> {
-                        FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_emojis", eventMap)
-                        findNavController().navigate(R.id.action_home_to_viewAllEmoji)
+                        if (isAdded && findNavController().currentDestination?.id == R.id.navigation_home) {
+
+                            FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_emojis", eventMap)
+                            findNavController().navigate(R.id.action_home_to_viewAllEmoji)
+                        }
+
                     }
                     2 -> {
-                        FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_widgets", eventMap)
-                        findNavController().navigate(R.id.action_home_to_viewAllWidget)
+                        if (isAdded && findNavController().currentDestination?.id == R.id.navigation_home) {
+                            FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_widgets", eventMap)
+                            findNavController().navigate(R.id.action_home_to_viewAllWidget)
+                        }
+
+
                     }
                     4 -> {
-                        FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_animations", eventMap)
-                        findNavController().navigate(R.id.action_home_to_viewAllAnim)
+                        if (isAdded && findNavController().currentDestination?.id == R.id.navigation_home) {
+                            FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_animations", eventMap)
+                            findNavController().navigate(R.id.action_home_to_viewAllAnim)
+                        }
+
+
                     }
                 }
             }

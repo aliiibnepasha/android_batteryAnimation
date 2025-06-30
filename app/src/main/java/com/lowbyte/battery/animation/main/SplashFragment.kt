@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.lowbyte.battery.animation.BuildConfig
@@ -62,6 +63,11 @@ class SplashFragment : Fragment() {
                 }
             }
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            Log.d("backPress","closedonSplash")
+        }
+
 
         hasResumed = false
 
@@ -150,22 +156,15 @@ class SplashFragment : Fragment() {
         animator.start()
 
         handler.postDelayed({
-            val destination = if (preferences.isFirstRun) {
-                preferences.serviceRunningFlag = false
-                if (BuildConfig.DEBUG){
-                    R.id.action_splash_to_main
-                }else{
-                    preferences.isFirstRun = false
-                    R.id.action_splash_to_language
-                }
 
-            } else {
-                R.id.action_splash_to_main
+            if (isAdded && findNavController().currentDestination?.id == R.id.splashFragment) {
+                findNavController().navigate(R.id.action_splash_to_pro)
             }
 
-            AdManager.showInterstitialAd(requireActivity(), false) {
-                if (isAdded) findNavController().navigate(destination)
-            }
+
+
+
+
 
         }, progressDuration)
     }
