@@ -11,6 +11,7 @@ import com.lowbyte.battery.animation.ads.NativeAnimationHelper
 import com.lowbyte.battery.animation.ads.NativeEmojiHelper
 import com.lowbyte.battery.animation.databinding.ActivityApplySuccessfullyBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeInsideId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyEmojiEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils // Make sure this exists
 
@@ -56,7 +57,7 @@ class ApplySuccessfullyActivity : BaseActivity() {
         nativeAdHelper = NativeEmojiHelper(
             context = this,
             adId = getNativeInsideId(), // Replace with your ad unit ID
-            showAdRemoteFlag = true,  // From remote config or your logic
+            showAdRemoteFlag = isNativeApplyEmojiEnabled,  // From remote config or your logic
             isProUser = preferences.isProUser,        // Check from your user settings
             onAdLoaded = {
                 Log.d("Ad", "Native ad loaded successfully")

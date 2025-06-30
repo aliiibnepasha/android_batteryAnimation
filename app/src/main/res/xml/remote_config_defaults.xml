@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry>
+        <key>ads_config</key>
+        <value>
+            {
+            "BannerAdSplash_enabled": true,
+            "BannerAdHome_enabled": true,
+            "FullscreenSplash_enabled": true,
+            "FullscreenApplyEmoji_enabled": true,
+            "FullscreenApplyWidget_enabled": true,
+            "FullscreenApplyAnim_enabled": true,
+            "NativeLanguageFirst_enabled": true,
+            "NativeLanguageSecond_enabled": true,
+            "NativeApplyEmoji_enabled": true,
+            "NativeApplyWidget_enabled": true,
+            "NativeApplyAnimation_enabled": true,
+            "NativeSmallStatusBar_enabled": true,
+            "NativeSmallGesture_enabled": true
+            }
+        </value>
+    </entry>
+</defaultsMap>

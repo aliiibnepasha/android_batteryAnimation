@@ -13,6 +13,7 @@ import com.lowbyte.battery.animation.databinding.ActivityLanguagesBinding
 import com.lowbyte.battery.animation.model.Language
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeLanguageId
 import com.lowbyte.battery.animation.utils.AnimationUtils.initialLanguageCode
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeLangSecondEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.lowbyte.battery.animation.utils.LocaleHelper
@@ -91,7 +92,7 @@ class LanguagesActivity : BaseActivity() {
         NativeLanguageHelper(
             context = this,
             adId = getNativeLanguageId(),
-            showAdRemoteFlag = true,
+            showAdRemoteFlag = isNativeLangSecondEnabled,
             isProUser = preferences.isProUser,
             adContainer = binding.nativeAdContainer,
             onAdLoaded = { Log.d("AD", "Native ad shown") },

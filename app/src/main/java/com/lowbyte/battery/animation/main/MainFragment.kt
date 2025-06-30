@@ -25,6 +25,7 @@ import com.lowbyte.battery.animation.activity.ProActivity
 import com.lowbyte.battery.animation.activity.SettingsActivity
 import com.lowbyte.battery.animation.ads.BannerAdHelper
 import com.lowbyte.battery.animation.databinding.FragmentMainBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -314,7 +315,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         BannerAdHelper.loadBannerAd(
             context = requireContext(),
             container = binding.bannerAdHome,
-            isProUser = preferences.isProUser
+            isProUser = preferences.isProUser,
+            isBannerHomeEnabled
         )
     }
 

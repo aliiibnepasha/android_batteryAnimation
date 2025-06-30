@@ -27,6 +27,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeCustomizeId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeStatusEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.skydoves.colorpickerview.ColorPickerDialog
@@ -79,7 +80,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
         nativeHelper = NativeBannerSizeHelper(
             context = this,
             adId = getNativeCustomizeId(), // Replace with your real AdMob ID
-            showAdRemoteFlag = true, // Or get from remote config
+            showAdRemoteFlag = isNativeStatusEnabled, // Or get from remote config
             isProUser = preferences.isProUser,       // Or from preferences
             adContainer = binding.nativeAdContainer,
             onAdLoaded = { Log.d("AD", "Banner Ad loaded!") },

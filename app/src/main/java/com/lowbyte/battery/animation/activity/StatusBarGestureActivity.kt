@@ -18,6 +18,7 @@ import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarGestureBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeCustomizeId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeGestureEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -61,7 +62,7 @@ class StatusBarGestureActivity : BaseActivity() {
         nativeHelper = NativeBannerSizeHelper(
             context = this,
             adId = getNativeCustomizeId(), // Replace with your real AdMob ID
-            showAdRemoteFlag = true, // Or get from remote config
+            showAdRemoteFlag = isNativeGestureEnabled, // Or get from remote config
             isProUser = preferences.isProUser,       // Or from preferences
             adContainer = binding.nativeAdContainer,
             onAdLoaded = { Log.d("AD", "Banner Ad loaded!") },

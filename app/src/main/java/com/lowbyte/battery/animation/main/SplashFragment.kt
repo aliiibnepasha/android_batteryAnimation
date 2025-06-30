@@ -22,6 +22,8 @@ import com.lowbyte.battery.animation.ads.GoogleMobileAdsConsentManager
 import com.lowbyte.battery.animation.ads.SplashBannerHelper
 import com.lowbyte.battery.animation.databinding.FragmentSplashBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenSplashId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerSplashEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenSplashEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -37,7 +39,7 @@ class SplashFragment : Fragment() {
     private var interstitialLoaded = false
     private var adsHandled = false
     private var hasResumed = false
-    private val splashTimeout = 15000L
+    private val splashTimeout = 8000L
     private val progressDuration = 3000L
 
     private val handler = Handler(Looper.getMainLooper())
@@ -83,10 +85,11 @@ class SplashFragment : Fragment() {
             onAdFailed = {
                 bannerLoaded = true
                 handleAdEvents()
-            }
+            },
+           remoteConfig = isBannerSplashEnabled
         )
 
-        AdManager.loadInterstitialAd(requireContext(), getFullscreenSplashId())
+        AdManager.loadInterstitialAd(requireContext(), getFullscreenSplashId(),isFullscreenSplashEnabled)
 
         // Simulate loading time for interstitial
         handler.postDelayed({
@@ -158,14 +161,27 @@ class SplashFragment : Fragment() {
         handler.postDelayed({
 
             if (isAdded && findNavController().currentDestination?.id == R.id.splashFragment) {
-                findNavController().navigate(R.id.action_splash_to_pro)
+                preferences = AppPreferences.getInstance(requireContext())
+                val destination = if (preferences.isFirstRun) {
+                    R.id.action_splash_to_language
+                } else {
+                    R.id.action_splash_to_main
+                }
+                if (isAdded && findNavController().currentDestination?.id == R.id.splashFragment) {
+                    if (preferences.isProUser){
+                        preferences.serviceRunningFlag = false
+                        preferences.isFirstRun = false
+                        findNavController().navigate(destination)
+                    }else{
+                        findNavController().navigate(R.id.action_splash_to_pro)
+                    }
+                } else {
+                    Log.w("Navigation", "Attempted to navigate from incorrect fragment")
+                }
+
+
+
             }
-
-
-
-
-
-
         }, progressDuration)
     }
 

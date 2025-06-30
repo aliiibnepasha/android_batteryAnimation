@@ -13,6 +13,23 @@ import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.model.Language
 
 object AnimationUtils {
+
+    var  isBannerSplashEnabled = true //
+    var  isBannerHomeEnabled = true //
+    var  isFullscreenSplashEnabled = true //
+    var  isFullscreenApplyEmojiEnabled = true //
+    var  isFullscreenApplyWidgetEnabled = true//
+    var  isFullscreenApplyAnimEnabled = true//
+    var  isNativeLangFirstEnabled = true  //
+    var  isNativeLangSecondEnabled = true //
+    var  isNativeApplyEmojiEnabled = true //
+    var  isNativeApplyWidgetEnabled = true//
+    var  isNativeApplyAnimEnabled = true//
+    var  isNativeStatusEnabled = true //
+    var  isNativeGestureEnabled = true
+
+
+
     const val BROADCAST_ACTION = "com.lowbyte.UPDATE_STATUSBAR"
     const val BROADCAST_ACTION_NOTIFICATION = "com.lowbyte.CUSTOM_NOTIFICATION_UPDATE"
     const val BROADCAST_ACTION_DYNAMIC = "com.lowbyte.BROADCAST_ACTION_DYNAMIC"

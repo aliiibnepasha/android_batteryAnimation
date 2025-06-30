@@ -17,6 +17,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyEmojiEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.skydoves.colorpickerview.ColorEnvelope
@@ -36,7 +37,7 @@ class EmojiEditApplyActivity : BaseActivity() {
         binding = ActivityEmojiEditApplayBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
-        AdManager.loadInterstitialAd(this, getFullscreenId())
+        AdManager.loadInterstitialAd(this, getFullscreenId(),isFullscreenApplyEmojiEnabled)
 
         FirebaseAnalyticsUtils.logScreenView(this, "EmojiEditApplyScreen")
         FirebaseAnalyticsUtils.startScreenTimer("EmojiEditApplyScreen")
@@ -155,7 +156,7 @@ class EmojiEditApplyActivity : BaseActivity() {
             finish()
             if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
                 FirebaseAnalyticsUtils.logClickEvent(this, "trigger_interstitial_ad", mapOf("screen" to "EmojiEditApplyScreen"))
-                AdManager.showInterstitialAd(this,true) {
+                AdManager.showInterstitialAd(this,isFullscreenApplyEmojiEnabled,true) {
                     Log.e("Ads", "FullScreenTobeShoe")
                 }
             }

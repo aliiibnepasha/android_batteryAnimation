@@ -24,6 +24,8 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeInsideId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyWidgetEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyWidgetEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -57,7 +59,7 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        AdManager.loadInterstitialAd(this, getFullscreenId())
+        AdManager.loadInterstitialAd(this, getFullscreenId(),isFullscreenApplyWidgetEnabled)
 
 
         position = intent.getIntExtra(EXTRA_POSITION, -1)
@@ -79,7 +81,7 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
         nativeAdHelper = NativeWidgetHelper(
             context = this,
             adId = getNativeInsideId(), // Replace with your ad unit ID
-            showAdRemoteFlag = true,  // From remote config or your logic
+            showAdRemoteFlag = isNativeApplyWidgetEnabled,  // From remote config or your logic
             isProUser = preferences.isProUser,        // Check from your user settings
             onAdLoaded = {
                 Log.d("Ad", "Native ad loaded successfully")
@@ -132,7 +134,7 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
             val widgetProvider = ComponentName(this, BatteryWidgetProvider::class.java)
 
             if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
-                AdManager.showInterstitialAd(this, true) {
+                AdManager.showInterstitialAd(this, isFullscreenApplyWidgetEnabled,true,) {
                     Log.e("Ads", "FullScreenTobeShoe")
                     if (!(SDK_INT < VERSION_CODES.O || !appWidgetManager.isRequestPinAppWidgetSupported)) {
 

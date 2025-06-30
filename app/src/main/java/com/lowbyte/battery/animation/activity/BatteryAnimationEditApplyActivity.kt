@@ -18,6 +18,8 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeInsideId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyAnimEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyAnimEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -36,7 +38,7 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
         binding = ActivityBatteryAnimationEditApplyBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
-        AdManager.loadInterstitialAd(this, getFullscreenId())
+        AdManager.loadInterstitialAd(this, getFullscreenId(),isFullscreenApplyAnimEnabled)
 
         // Track screen view & time
         FirebaseAnalyticsUtils.logScreenView(this, "BatteryAnimationEditApplyScreen")
@@ -73,7 +75,7 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
         nativeAdHelper = NativeAnimationHelper(
             context = this,
             adId = getNativeInsideId(), // Replace with your ad unit ID
-            showAdRemoteFlag = true,  // From remote config or your logic
+            showAdRemoteFlag = isNativeApplyAnimEnabled,  // From remote config or your logic
             isProUser = preferences.isProUser,        // Check from your user settings
             onAdLoaded = {
                 Log.d("Ad", "Native ad loaded successfully")
@@ -121,7 +123,7 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
             ).show()
 
             if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
-                AdManager.showInterstitialAd(this, true) {
+                AdManager.showInterstitialAd(this, true,true) {
                     Log.e("Ads", "FullScreenTobeShoe")
                 }
             }

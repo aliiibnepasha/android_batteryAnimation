@@ -10,6 +10,7 @@ import androidx.activity.addCallback
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
@@ -25,9 +26,12 @@ import com.lowbyte.battery.animation.databinding.FragmentProBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_MONTHLY
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_WEEKLY
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_YEARLY
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenSplashEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.openUrl
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ProFragment : Fragment() {
 
@@ -196,7 +200,13 @@ class ProFragment : Fragment() {
                 requireContext(), "click_restore", mapOf("screen" to "ProScreen")
             )
         }
+        binding.closeScreen.visibility = View.INVISIBLE // Hide initially
 
+
+        lifecycleScope.launch {
+            delay(2000) // Wait for 2 seconds
+            binding.closeScreen.visibility = View.VISIBLE
+        }
         binding.closeScreen.setOnClickListener {
             val destination = if (preferences.isFirstRun) {
                 preferences.serviceRunningFlag = false
@@ -206,7 +216,7 @@ class ProFragment : Fragment() {
                 R.id.action_pro_to_main
             }
 
-            AdManager.showInterstitialAd(requireActivity(), false) {
+            AdManager.showInterstitialAd(requireActivity(), isFullscreenSplashEnabled,false) {
                 if (isAdded && findNavController().currentDestination?.id == R.id.proFragment) {
                     findNavController().navigate(destination)
                 } else {
@@ -281,7 +291,18 @@ class ProFragment : Fragment() {
             requireContext(), "purchase_success", mapOf("sku" to sku)
         )
         Toast.makeText(requireContext(), "Subscribed to $sku", Toast.LENGTH_SHORT).show()
-        requireActivity().finish()
+        val destination = if (preferences.isFirstRun) {
+            preferences.serviceRunningFlag = false
+            preferences.isFirstRun = false
+            R.id.action_pro_to_language
+        } else {
+            R.id.action_pro_to_main
+        }
+        if (isAdded && findNavController().currentDestination?.id == R.id.proFragment) {
+            findNavController().navigate(destination)
+        } else {
+            Log.w("Navigation", "Attempted to navigate from incorrect fragment")
+        }
     }
 
     private fun saveSubscription(sku: String) {

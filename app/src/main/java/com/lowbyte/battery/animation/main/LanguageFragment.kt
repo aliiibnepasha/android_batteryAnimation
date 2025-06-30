@@ -15,6 +15,7 @@ import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.FragmentLanguageBinding
 import com.lowbyte.battery.animation.model.Language
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeLanguageId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeLangFirstEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.lowbyte.battery.animation.utils.LocaleHelper
@@ -99,7 +100,7 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
         NativeLanguageHelper(
             context = requireContext(),
             adId = getNativeLanguageId(),
-            showAdRemoteFlag = true,
+            showAdRemoteFlag = isNativeLangFirstEnabled,
             isProUser = preferences.isProUser,
             adContainer = binding.nativeAdLangFirstContainer,
             onAdLoaded = { Log.d("AD", "Native ad shown") },

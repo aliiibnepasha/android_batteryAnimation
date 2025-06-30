@@ -25,6 +25,7 @@ object SplashBannerHelper {
         context: Context,
         container: ViewGroup,
         isProUser: Boolean,
+        remoteConfig: Boolean,
         maxHeightDp: Int? = 150,
         onAdLoaded: (() -> Unit)? = null,
         onAdFailed: (() -> Unit)? = null
@@ -32,7 +33,7 @@ object SplashBannerHelper {
         val shimmer = container.findViewById<ShimmerFrameLayout?>(R.id.shimmerSplashBanner)
         val adPlaceholder = container.findViewById<ViewGroup?>(R.id.inlineAdSplashContainer)
 
-        if (isProUser || !isInternetAvailable(context)) {
+        if (isProUser || !isInternetAvailable(context) || remoteConfig) {
             Log.d(TAG, "Pro user — hiding splash banner")
             shimmer?.visibility = View.GONE
             adPlaceholder?.removeAllViews()

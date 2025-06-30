@@ -2,12 +2,15 @@ package com.lowbyte.battery.animation.ads
 
 import android.app.Activity
 import android.content.Context
-import android.os.Bundle
 import android.util.Log
-import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
@@ -50,9 +53,9 @@ object AdManager {
         }
     }
 
-    fun loadInterstitialAd(context: Context, fullscreenAdId: String) {
+    fun loadInterstitialAd(context: Context, fullscreenAdId: String, remoteConfig: Boolean) {
         preferences = AppPreferences.getInstance(context)
-        if (preferences.isProUser) {
+        if (preferences.isProUser || remoteConfig) {
             Log.d(TAG, "Pro user — skipping interstitial ad load")
             return
         }
@@ -96,10 +99,15 @@ object AdManager {
         )
     }
 
-    fun showInterstitialAd(activity: Activity, isFromActivity: Boolean, onDismiss: () -> Unit) {
+    fun showInterstitialAd(
+        activity: Activity,
+        remoteConfig: Boolean,
+        isFromActivity: Boolean,
+        onDismiss: () -> Unit
+    ) {
         Log.d(TAG, "Attempting to show interstitial ad")
 
-        if (preferences.isProUser) {
+        if (preferences.isProUser || remoteConfig) {
             Log.d(TAG, "Pro user — skipping interstitial ad show")
             onDismiss()
             return
@@ -114,7 +122,7 @@ object AdManager {
         if (interstitialAd == null) {
             Log.d(TAG, "Interstitial ad not ready — fallback and reload")
             onDismiss()
-            loadInterstitialAd(activity, getFullscreenId())
+            loadInterstitialAd(activity, getFullscreenId(),remoteConfig)
             return
         }
 

@@ -93,7 +93,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         // Log screen view
         FirebaseAnalyticsUtils.logScreenView(this, "HomeFragment")
 
-        AdManager.loadInterstitialAd(requireContext(), getFullscreenId())
+        AdManager.loadInterstitialAd(requireContext(), getFullscreenId(),true)
 
         Handler(Looper.getMainLooper()).postDelayed({
             binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
