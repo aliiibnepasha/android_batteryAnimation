@@ -46,7 +46,7 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
         preferences =  AppPreferences.getInstance(this)
 
         val lang = LocaleHelper.getLanguage(this)
-        LocaleHelper.setLocale(this, if (lang.isBlank()) "en" else lang)
+        LocaleHelper.setLocale(this, lang.ifBlank { "" })
         MobileAds.initialize(this)
         registerActivityLifecycleCallbacks(this)
 

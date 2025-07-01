@@ -115,6 +115,7 @@ class SplashActivity : BaseActivity() {
              isNativeApplyAnimEnabled = jsonObject.optBoolean("NativeApplyAnimation_enabled", true)
              isNativeStatusEnabled = jsonObject.optBoolean("NativeSmallStatusBar_enabled", true)
              isNativeGestureEnabled = jsonObject.optBoolean("NativeSmallGesture_enabled", true)
+            Log.e("RemoteConfig", "Json $adConfigJson")
 
         } catch (e: JSONException) {
             Log.e("RemoteConfig", "Failed to parse ads_config JSON: ${e.message}")

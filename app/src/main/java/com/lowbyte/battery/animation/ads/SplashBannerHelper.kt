@@ -33,7 +33,7 @@ object SplashBannerHelper {
         val shimmer = container.findViewById<ShimmerFrameLayout?>(R.id.shimmerSplashBanner)
         val adPlaceholder = container.findViewById<ViewGroup?>(R.id.inlineAdSplashContainer)
 
-        if (isProUser || !isInternetAvailable(context) || remoteConfig) {
+        if (isProUser || !isInternetAvailable(context) || !remoteConfig) {
             Log.d(TAG, "Pro user — hiding splash banner")
             shimmer?.visibility = View.GONE
             adPlaceholder?.removeAllViews()

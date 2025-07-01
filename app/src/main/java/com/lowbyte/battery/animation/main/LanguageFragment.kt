@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -49,9 +50,9 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
         FirebaseAnalyticsUtils.logScreenView(this, "language_screen")
 
         val languages = listOf(
-            Language("English", "en"),
             Language("العربية", "ar"),
             Language("Español", "es-rES"),
+            Language("English", "en"),
             Language("Français", "fr-rFR"),
             Language("हिंदी", "hi"),
             Language("Italiano", "it-rIT"),
@@ -70,6 +71,7 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
 
         adapter = LanguageAdapter(languages, currentLanguageCode) { language ->
             selectedLanguage = language.name
+            binding.ibNextButton.visibility = View.VISIBLE
             LocaleHelper.setLocale(requireContext(), language.code)
 
             // Log language selection event
@@ -79,7 +81,6 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
                 mapOf("language_name" to language.name, "language_code" to language.code)
             )
 
-            requireActivity().recreate()
         }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -93,7 +94,12 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
         binding.ibNextButton.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "click_language_next")
             if (isAdded && findNavController().currentDestination?.id == R.id.languageFragment) {
-                findNavController().navigate(R.id.action_language_to_intro)
+                if (LocaleHelper.getLanguage(requireContext()) != "") {
+                    requireActivity().recreate()
+                    findNavController().navigate(R.id.action_language_to_intro)
+                } else {
+                    Toast.makeText(requireContext(), "Please select a language", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 

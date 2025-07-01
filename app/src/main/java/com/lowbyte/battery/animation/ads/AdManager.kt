@@ -55,7 +55,7 @@ object AdManager {
 
     fun loadInterstitialAd(context: Context, fullscreenAdId: String, remoteConfig: Boolean) {
         preferences = AppPreferences.getInstance(context)
-        if (preferences.isProUser || remoteConfig) {
+        if (preferences.isProUser || !remoteConfig) {
             Log.d(TAG, "Pro user — skipping interstitial ad load")
             return
         }
@@ -107,7 +107,7 @@ object AdManager {
     ) {
         Log.d(TAG, "Attempting to show interstitial ad")
 
-        if (preferences.isProUser || remoteConfig) {
+        if (preferences.isProUser || !remoteConfig) {
             Log.d(TAG, "Pro user — skipping interstitial ad show")
             onDismiss()
             return

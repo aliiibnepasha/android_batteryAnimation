@@ -31,7 +31,7 @@ object BannerAdHelper {
         val shimmer = container.findViewById<ViewGroup>(R.id.shimmerBanner)
         val adPlaceholder = container.findViewById<ViewGroup>(R.id.bannerAdContainer)
 
-        if (isProUser || !isInternetAvailable(context) ||remoteConfig) {
+        if (isProUser || !isInternetAvailable(context) || !remoteConfig) {
             Log.d(TAG, "User is Pro — Banner ad will not be shown")
             container.visibility = View.GONE
             shimmer?.visibility = View.GONE

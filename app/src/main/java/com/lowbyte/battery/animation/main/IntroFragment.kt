@@ -7,22 +7,28 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.IntroAdapter
 import com.lowbyte.battery.animation.databinding.FragmentIntroBinding
+import com.lowbyte.battery.animation.main.shared.SharedIntroViewModel
 import com.lowbyte.battery.animation.model.IntroItem
 import com.lowbyte.battery.animation.model.SlideType
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeIntroEnabled
+import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 
 class IntroFragment : Fragment(R.layout.fragment_intro) {
-
+    val sharedViewModel: SharedIntroViewModel by activityViewModels()
     private lateinit var binding: FragmentIntroBinding
-    private lateinit var items: List<IntroItem> // <-- shared between adapter & logic
 
+    private lateinit var preferences: AppPreferences
+
+
+    private lateinit var items: List<IntroItem> // <-- shared between adapter & logic
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,6 +36,11 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
     ): View? {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             Log.d("backPress", "closeBackOnIntro")
+        }
+        preferences = AppPreferences.getInstance(requireContext())
+        sharedViewModel.childEvent.observe(viewLifecycleOwner) { event ->
+            Log.d("SharedVM", "Child event: $event")
+            binding.viewPager.currentItem = 2
         }
         return super.onCreateView(inflater, container, savedInstanceState)
     }
@@ -68,7 +79,7 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
         )
 
         // Choose the correct list
-        items = if (isNativeIntroEnabled) itemsWithAds else itemsWithoutAds
+        items = if (isNativeIntroEnabled || !preferences.isProUser) itemsWithAds else itemsWithoutAds
 
         // Set adapter
         binding.viewPager.adapter = IntroAdapter(requireActivity(), items)

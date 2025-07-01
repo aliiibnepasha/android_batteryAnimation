@@ -8,7 +8,7 @@ import androidx.core.content.edit
 
 object LocaleHelper {
     private const val SELECTED_LANGUAGE = "Locale.Helper.Selected.Language"
-    private const val DEFAULT_LANGUAGE = "en"
+    private const val DEFAULT_LANGUAGE = ""
 
     fun getLanguage(context: Context): String {
         return getPersistedData(context, DEFAULT_LANGUAGE)
