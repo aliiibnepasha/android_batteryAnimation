@@ -36,8 +36,8 @@ class BatteryWidgetForegroundService : Service() {
         super.onCreate()
         preferences = AppPreferences.getInstance(this)
         preferences.serviceRunningFlag = true
-        registerBatteryReceiver()
         startForegroundWithNotification()
+        registerBatteryReceiver()
         updateWidgets()
     }
 
@@ -142,7 +142,7 @@ class BatteryWidgetForegroundService : Service() {
                     setOnClickPendingIntent(R.id.widget_root, clickPendingIntent)
 
                     val startIntent = Intent(this@BatteryWidgetForegroundService, BatteryWidgetForegroundService::class.java).apply {
-                        action = ACTION_START_SERVICE
+                        action = BatteryWidgetForegroundService.ACTION_START_SERVICE
                     }
                     val startPendingIntent = PendingIntent.getService(
                         this@BatteryWidgetForegroundService,

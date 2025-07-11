@@ -62,9 +62,7 @@ class IslandFragment : Fragment() {
                 preferences.notchYAxis = realValue
                 Log.d("TAG_Access", "notchYAxis $realValue")
 
-                FirebaseAnalyticsUtils.logClickEvent(
-                    this@IslandFragment, "notchYAxis", mapOf("value" to realValue.toString())
-                )
+
 
                 requireContext().sendBroadcast(Intent(BROADCAST_ACTION))
             }
@@ -231,25 +229,28 @@ class IslandFragment : Fragment() {
         }
         try {
             Handler(Looper.getMainLooper()).postDelayed({
-                try {
-                    binding.switchEnableDynamic.isChecked = preferences.isDynamicEnabled && isAccessibilityServiceEnabled()
-                    Log.d("TAG_Access", "Create ${preferences.isDynamicEnabled}")
-                    binding.switchEnableDynamic.setOnCheckedChangeListener { _, isChecked ->
-                        preferences.isDynamicEnabled = isChecked
-                        FirebaseAnalyticsUtils.logClickEvent(
-                            requireActivity(), "toggle_dynamic_service",
-                            mapOf("enabled" to isChecked.toString())
-                        )
-                        if (::preferences.isInitialized && preferences.isDynamicEnabled && isChecked) {
-                            checkAccessibilityPermission()
-                        } else {
-                            requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+                if (isAdded){
+                    try {
+                        binding.switchEnableDynamic.isChecked = preferences.isDynamicEnabled && isAccessibilityServiceEnabled()
+                        Log.d("TAG_Access", "Create ${preferences.isDynamicEnabled}")
+                        binding.switchEnableDynamic.setOnCheckedChangeListener { _, isChecked ->
+                            preferences.isDynamicEnabled = isChecked
+                            FirebaseAnalyticsUtils.logClickEvent(
+                                requireActivity(), "toggle_dynamic_service",
+                                mapOf("enabled" to isChecked.toString())
+                            )
+                            if (::preferences.isInitialized && preferences.isDynamicEnabled && isChecked) {
+                                checkAccessibilityPermission()
+                            } else {
+                                requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+                            }
                         }
+                    } catch (e: NullPointerException) {
+                        e.printStackTrace()
+                        return@postDelayed
                     }
-                } catch (e: NullPointerException) {
-                    e.printStackTrace()
-                    return@postDelayed
                 }
+
             }, 500)
             binding.switchEnableDynamic.isChecked = preferences.isDynamicEnabled
         } catch (e: NullPointerException) {
@@ -321,11 +322,17 @@ class IslandFragment : Fragment() {
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "accessibility_prompt_shown")
-            if (BuildConfig.DEBUG){
-                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-            }else{
-                sheet.show(childFragmentManager, "AccessibilityPermission")
-            }
+//            if (BuildConfig.DEBUG){
+//                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+//            }else{
+                val existing = childFragmentManager.findFragmentByTag("AccessibilityPermission")
+                if (existing == null || !existing.isAdded) {
+                    sheet.show(childFragmentManager, "AccessibilityPermission")
+                } else {
+                    Log.d("Accessibility", "AccessibilityPermissionBottomSheet already shown")
+                }
+              //  sheet.show(childFragmentManager, "AccessibilityPermission")
+          //  }
         } else {
             binding.switchEnableDynamic.isChecked = preferences.isDynamicEnabled
             requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))

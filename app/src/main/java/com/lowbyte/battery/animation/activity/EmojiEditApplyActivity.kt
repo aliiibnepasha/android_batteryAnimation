@@ -84,7 +84,7 @@ class EmojiEditApplyActivity : BaseActivity() {
                     getString(R.string.view_all_battery_emoji),
                     progress
                 )
-                FirebaseAnalyticsUtils.logClickEvent(this@EmojiEditApplyActivity, "change_battery_icon_size", mapOf("size" to progress.toString()))
+              //  FirebaseAnalyticsUtils.logClickEvent(this@EmojiEditApplyActivity, "change_battery_icon_size", mapOf("size" to progress.toString()))
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -104,7 +104,7 @@ class EmojiEditApplyActivity : BaseActivity() {
                     getString(R.string.percentage_size),
                     progress
                 )
-                FirebaseAnalyticsUtils.logClickEvent(this@EmojiEditApplyActivity, "change_percentage_size", mapOf("size" to progress.toString()))
+               // FirebaseAnalyticsUtils.logClickEvent(this@EmojiEditApplyActivity, "change_percentage_size", mapOf("size" to progress.toString()))
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}

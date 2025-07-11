@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,21 +74,23 @@ class ViewAllEmojiFragment : Fragment() {
 
         binding.switchEnableBatteryEmojiViewAll.setOnCheckedChangeListener { _, isChecked ->
             Handler(Looper.getMainLooper()).postDelayed({
-                preferences.isStatusBarEnabled = isChecked
 
-                // Log toggle
-                FirebaseAnalyticsUtils.logClickEvent(
-                    requireActivity(),
-                    "toggle_statusbar_emoji_from_emoji_screen",
-                    mapOf("enabled" to isChecked.toString())
-                )
+                if (isAdded){
+                    preferences.isStatusBarEnabled = isChecked
+                    // Log toggle
+                    FirebaseAnalyticsUtils.logClickEvent(
+                        requireActivity(),
+                        "toggle_statusbar_emoji_from_emoji_screen",
+                        mapOf("enabled" to isChecked.toString())
+                    )
+                    if (preferences.isStatusBarEnabled && isChecked) {
+                        checkAccessibilityPermission()
+                    } else {
+                        requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+                    }
+                    requireActivity().sendBroadcast(Intent(BROADCAST_ACTION_DYNAMIC))
 
-                if (preferences.isStatusBarEnabled && isChecked) {
-                    checkAccessibilityPermission()
-                } else {
-                    requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
                 }
-                requireActivity().sendBroadcast(Intent(BROADCAST_ACTION_DYNAMIC))
 
             }, 500)
         }
@@ -110,11 +113,16 @@ class ViewAllEmojiFragment : Fragment() {
 
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
-            if (BuildConfig.DEBUG){
-                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-            }else{
-                sheet.show(childFragmentManager, "AccessibilityPermission")
-            }
+//            if (BuildConfig.DEBUG){
+//                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+//            }else{
+                val existing = childFragmentManager.findFragmentByTag("AccessibilityPermission")
+                if (existing == null || !existing.isAdded) {
+                    sheet.show(childFragmentManager, "AccessibilityPermission")
+                } else {
+                    Log.d("Accessibility", "AccessibilityPermissionBottomSheet already shown")
+                }
+         //   }
         } else {
             binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled
             requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))

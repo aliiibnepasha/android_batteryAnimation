@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
@@ -155,11 +156,11 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
                         Toast.makeText(this, "Device not supported", Toast.LENGTH_SHORT).show()
                     }
                     val serviceIntent = Intent(this, BatteryWidgetForegroundService::class.java)
-                    if (SDK_INT >= VERSION_CODES.O) {
-                        startForegroundService(serviceIntent)
-                    } else {
-                        startService(serviceIntent)
-                    }
+                  //  if (SDK_INT >= VERSION_CODES.O) {
+                    ContextCompat.startForegroundService(this,serviceIntent)
+                   // } else {
+                   //     startService(serviceIntent)
+                 //   }
 
                     Toast.makeText(this, getString(R.string.widget_applied_successfully), Toast.LENGTH_SHORT).show()
 
@@ -185,11 +186,11 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
                     Toast.makeText(this, "Device not supported", Toast.LENGTH_SHORT).show()
                 }
                 val serviceIntent = Intent(this, BatteryWidgetForegroundService::class.java)
-                if (SDK_INT >= VERSION_CODES.O) {
-                    startForegroundService(serviceIntent)
-                } else {
-                    startService(serviceIntent)
-                }
+              //  if (SDK_INT >= VERSION_CODES.O) {
+                    ContextCompat.startForegroundService(this,serviceIntent)
+//                } else {
+//                    startService(serviceIntent)
+//                }
 
                 Toast.makeText(this, getString(R.string.widget_applied_successfully), Toast.LENGTH_SHORT).show()
 

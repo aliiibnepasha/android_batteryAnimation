@@ -74,11 +74,11 @@ class StatusBarIconSettingsActivity : BaseActivity() {
             override fun onProgressChanged(seekBar: android.widget.SeekBar?, progress: Int, fromUser: Boolean) {
                 applyIconSize("size_$position", progress)
                 binding.labelIconSize.text = getString(R.string.size_dp, label, progress)
-                FirebaseAnalyticsUtils.logClickEvent(this@StatusBarIconSettingsActivity, "change_icon_size", mapOf(
-                    "position" to position.toString(),
-                    "size" to progress.toString(),
-                    "label" to label
-                ))
+//                FirebaseAnalyticsUtils.logClickEvent(this@StatusBarIconSettingsActivity, "change_icon_size", mapOf(
+//                    "position" to position.toString(),
+//                    "size" to progress.toString(),
+//                    "label" to label
+//                ))
             }
 
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}

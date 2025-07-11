@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
@@ -40,27 +41,22 @@ class ViewAllWidgetsFragment : Fragment() {
             val preferences = AppPreferences.getInstance(context)
 
             if (isChecked) {
-
                 if (!preferences.serviceRunningFlag) {
-                    val serviceIntent = Intent(context, BatteryWidgetForegroundService::class.java).apply {
-                        action = BatteryWidgetForegroundService.ACTION_START_SERVICE
-                    }
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        context.startForegroundService(serviceIntent)
-                    } else {
-                        context.startService(serviceIntent)
-                    }
-
                     preferences.serviceRunningFlag = true
+                    requireActivity().window.decorView.post {
+                        val serviceIntent = Intent(requireContext(), BatteryWidgetForegroundService::class.java).apply {
+                            action = BatteryWidgetForegroundService.ACTION_START_SERVICE
+                        }
+                        ContextCompat.startForegroundService(requireContext(), serviceIntent)
+                    }
                 }
-
             } else {
                 preferences.serviceRunningFlag = false
-                val stopIntent = Intent(context, BatteryWidgetForegroundService::class.java).apply {
+                val stopIntent = Intent(requireContext(), BatteryWidgetForegroundService::class.java).apply {
                     action = BatteryWidgetForegroundService.ACTION_STOP_SERVICE
                 }
-                context.startService(stopIntent)
+                requireContext().startService(stopIntent)
+
             }
 
             // Log event to Firebase

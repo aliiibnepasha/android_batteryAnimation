@@ -131,6 +131,7 @@
         <service
             android:name=".service.BatteryWidgetForegroundService"
             android:enabled="true"
+            android:exported="false"
             android:foregroundServiceType="specialUse" /> <!-- <receiver -->
         <receiver
             android:name=".broadcastReciver.BatteryWidgetProvider"

@@ -69,11 +69,11 @@ class ViewAllAnimationFragment : Fragment() {
                 requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
 
                 // Log size change
-                FirebaseAnalyticsUtils.logClickEvent(
-                    requireActivity(),
-                    "lottie_icon_size_changed",
-                    mapOf("new_size" to progress.toString())
-                )
+//                FirebaseAnalyticsUtils.logClickEvent(
+//                    requireActivity(),
+//                    "lottie_icon_size_changed",
+//                    mapOf("new_size" to progress.toString())
+//                )
             }
 
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}

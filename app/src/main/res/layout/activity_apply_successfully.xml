@@ -62,7 +62,7 @@
 
     <!-- Home Button -->
     <TextView
-        android:id="@+id/buttonHome"
+        android:id="@+id/buttonEmojiHome"
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginTop="12dp"
@@ -89,7 +89,7 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/buttonHome"
+        app:layout_constraintStart_toEndOf="@id/buttonEmojiHome"
         app:layout_constraintTop_toBottomOf="@id/iconGreeting"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.4" />
@@ -105,6 +105,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/buttonHome"
+        app:layout_constraintTop_toBottomOf="@id/buttonEmojiHome"
         app:layout_constraintWidth_percent="0.95" />
 </androidx.constraintlayout.widget.ConstraintLayout>

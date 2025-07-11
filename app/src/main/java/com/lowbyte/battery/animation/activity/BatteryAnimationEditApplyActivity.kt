@@ -93,7 +93,7 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
             finish()
         }
 
-        binding.buttonForApply.setOnClickListener {
+        binding.buttonForAnimApply.setOnClickListener {
             if (preferences.statusLottieName==""){
                 Toast.makeText(
                     this,

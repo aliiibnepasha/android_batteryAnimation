@@ -146,7 +146,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
                 val safeProgress = progress.coerceIn(0, 50)
                 preferences.statusBarHeight = safeProgress
                 binding.statusBarHeight.text = getString(R.string.height_dp, safeProgress)
-                FirebaseAnalyticsUtils.logClickEvent(this@StatusBarCustomizeActivity, "change_statusbar_height", mapOf("value" to safeProgress.toString()))
+               // FirebaseAnalyticsUtils.logClickEvent(this@StatusBarCustomizeActivity, "change_statusbar_height", mapOf("value" to safeProgress.toString()))
                 sendBroadcast(Intent(BROADCAST_ACTION))
             }
 
@@ -163,7 +163,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 preferences.statusBarMarginLeft = progress
                 binding.leftMarginLabel.text = getString(R.string.left_margin_dp, progress)
-                FirebaseAnalyticsUtils.logClickEvent(this@StatusBarCustomizeActivity, "change_left_margin", mapOf("value" to progress.toString()))
+             //   FirebaseAnalyticsUtils.logClickEvent(this@StatusBarCustomizeActivity, "change_left_margin", mapOf("value" to progress.toString()))
                 sendBroadcast(Intent(BROADCAST_ACTION))
             }
 
@@ -180,7 +180,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 preferences.statusBarMarginRight = progress
                 binding.rightMarginLabel.text = getString(R.string.right_margin_dp, progress)
-                FirebaseAnalyticsUtils.logClickEvent(this@StatusBarCustomizeActivity, "change_right_margin", mapOf("value" to progress.toString()))
+              //  FirebaseAnalyticsUtils.logClickEvent(this@StatusBarCustomizeActivity, "change_right_margin", mapOf("value" to progress.toString()))
                 sendBroadcast(Intent(BROADCAST_ACTION))
             }
 
@@ -232,11 +232,16 @@ class StatusBarCustomizeActivity : BaseActivity() {
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
             FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_prompt_shown", null)
-            if (BuildConfig.DEBUG){
-                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-            }else{
-                sheet.show(supportFragmentManager, "AccessibilityPermission")
-            }
+//            if (BuildConfig.DEBUG){
+//                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+//            }else{
+                val existing = supportFragmentManager.findFragmentByTag("AccessibilityPermission")
+                if (existing == null || !existing.isAdded) {
+                    sheet.show(supportFragmentManager, "AccessibilityPermission")
+                } else {
+                    Log.d("Accessibility", "AccessibilityPermissionBottomSheet already shown")
+                }
+         //   }
         } else {
             FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
             sendBroadcast(Intent(BROADCAST_ACTION))

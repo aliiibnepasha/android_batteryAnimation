@@ -57,6 +57,7 @@ class SplashFragment : Fragment() {
         if (!preferences.isProUser) {
             googleMobileAdsConsentManager = GoogleMobileAdsConsentManager.getInstance(requireContext())
             googleMobileAdsConsentManager.gatherConsent(requireActivity()) { consentError ->
+                if (!isAdded) return@gatherConsent
                 if (consentError != null) {
                     Log.w("Consent", "${consentError.errorCode}: ${consentError.message}")
                     FirebaseAnalyticsUtils.logClickEvent(requireContext(), "ads_consent_fail")
@@ -79,12 +80,18 @@ class SplashFragment : Fragment() {
             isProUser = preferences.isProUser,
             maxHeightDp = 150,
             onAdLoaded = {
-                bannerLoaded = true
-                handleAdEvents()
+                if (isAdded) {
+                    bannerLoaded = true
+                    handleAdEvents()
+                }
+
             },
             onAdFailed = {
-                bannerLoaded = true
-                handleAdEvents()
+                if (isAdded) {
+                    bannerLoaded = true
+                    handleAdEvents()
+                }
+
             },
            remoteConfig = isBannerSplashEnabled
         )
@@ -93,8 +100,11 @@ class SplashFragment : Fragment() {
 
         // Simulate loading time for interstitial
         handler.postDelayed({
-            interstitialLoaded = true
-            handleAdEvents()
+            if (isAdded){
+                interstitialLoaded = true
+                handleAdEvents()
+            }
+
         }, 3000)
 
         return binding.root

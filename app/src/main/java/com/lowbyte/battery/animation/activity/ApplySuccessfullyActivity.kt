@@ -38,7 +38,7 @@ class ApplySuccessfullyActivity : BaseActivity() {
             insets
         }
 
-        binding.buttonHome.setOnClickListener {
+        binding.buttonEmojiHome.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_home_button", mapOf("source" to "ApplySuccessfullyScreen"))
             finish()
         }

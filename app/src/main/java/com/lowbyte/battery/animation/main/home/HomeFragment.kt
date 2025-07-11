@@ -96,26 +96,25 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         AdManager.loadInterstitialAd(requireContext(), getFullscreenId(),true)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
-            Log.d("TAG_Access", "Create ${preferences.isStatusBarEnabled}")
-
-            binding.switchEnableBatteryEmoji.setOnCheckedChangeListener { _, isChecked ->
-                preferences.isStatusBarEnabled = isChecked
-                FirebaseAnalyticsUtils.logClickEvent(
-                    requireActivity(), "toggle_battery_emoji_service",
-                    mapOf("enabled" to isChecked.toString())
-                )
-
-                if (::preferences.isInitialized && preferences.isStatusBarEnabled && isChecked) {
-                    checkAccessibilityPermission()
-                    requireActivity().sendBroadcast(Intent(BROADCAST_ACTION_DYNAMIC))
-
-                } else {
-                    requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
-                    requireActivity().sendBroadcast(Intent(BROADCAST_ACTION_DYNAMIC))
-
+            if (isAdded){
+                binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
+                Log.d("TAG_Access", "Create ${preferences.isStatusBarEnabled}")
+                binding.switchEnableBatteryEmoji.setOnCheckedChangeListener { _, isChecked ->
+                    preferences.isStatusBarEnabled = isChecked
+                    FirebaseAnalyticsUtils.logClickEvent(
+                        requireActivity(), "toggle_battery_emoji_service",
+                        mapOf("enabled" to isChecked.toString())
+                    )
+                    if (::preferences.isInitialized && preferences.isStatusBarEnabled && isChecked) {
+                        checkAccessibilityPermission()
+                        requireActivity().sendBroadcast(Intent(BROADCAST_ACTION_DYNAMIC))
+                    } else {
+                        requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+                        requireActivity().sendBroadcast(Intent(BROADCAST_ACTION_DYNAMIC))
+                    }
                 }
             }
+
         }, 500)
 
         val data = listOf(
@@ -187,11 +186,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "accessibility_prompt_shown")
-            if (BuildConfig.DEBUG){
-                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-            }else{
-                sheet.show(childFragmentManager, "AccessibilityPermission")
-            }
+//            if (BuildConfig.DEBUG){
+//                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+//            }else{
+                val existing = childFragmentManager.findFragmentByTag("AccessibilityPermission")
+                if (existing == null || !existing.isAdded) {
+                    sheet.show(childFragmentManager, "AccessibilityPermission")
+                } else {
+                    Log.d("Accessibility", "AccessibilityPermissionBottomSheet already shown")
+                }
+         //   }
         } else {
             binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled
             requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
@@ -199,16 +203,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun isAccessibilityServiceEnabled(): Boolean {
-        val expectedComponentName =
-            "${requireContext().packageName}/${NotchAccessibilityService::class.java.canonicalName}"
-        val enabledServices = Settings.Secure.getString(
-            requireContext().contentResolver,
-            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
-        ) ?: return false
+       if (isAdded){
+           val expectedComponentName =
+               "${requireContext().packageName}/${NotchAccessibilityService::class.java.canonicalName}"
+           val enabledServices = Settings.Secure.getString(
+               requireContext().contentResolver,
+               Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+           ) ?: return false
 
-        return enabledServices.split(':').any {
-            it.equals(expectedComponentName, ignoreCase = true)
-        }
+           return enabledServices.split(':').any {
+               it.equals(expectedComponentName, ignoreCase = true)
+           }
+       }else{
+           return false
+       }
+
     }
 
     override fun onResume() {

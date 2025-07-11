@@ -488,11 +488,24 @@ class NotchAccessibilityService : AccessibilityService() {
 
         val view = statusBarBinding?.root
         if (::preferences.isInitialized && preferences.isStatusBarEnabled) {
+
             if (view?.parent == null) {
-                windowManager?.addView(view, layoutParams)
+                try {
+                    windowManager?.addView(view, layoutParams)
+                    Log.d("NotchService", "Notch notch added")
+                } catch (e: WindowManager.BadTokenException) {
+                    Log.e("NotchService", "BadTokenException: ${e.message}")
+                } catch (e: IllegalStateException) {
+                    Log.e("NotchService", "IllegalStateException: ${e.message}")
+                } catch (e: Exception) {
+                    Log.e("NotchService", "Unexpected error adding notification notch", e)
+                }
             } else {
                 Log.w("StatusBar", "View already added. Skipping re-add.")
             }
+
+
+
         }
 
     }
@@ -586,117 +599,128 @@ class NotchAccessibilityService : AccessibilityService() {
             return
         } else {
             if (binding.root.parent == null) {
-                windowManager?.addView(binding.root, layoutParams)
+                try {
+                    windowManager?.addView(binding.root, layoutParams)
+                    Log.d("NotchService", "Status bar view added")
+                } catch (e: WindowManager.BadTokenException) {
+                    Log.e("NotchService", "WindowManager token invalid, can't add view", e)
+                } catch (e: Exception) {
+                    Log.e("NotchService", "Unexpected error while adding view", e)
+                }
+            } else {
+                Log.d("NotchService", "Status bar view already attached")
             }
         }
         Log.d("servicesListenerCalling", "updateStatusBarAppearance: $logi")
 
-        animateStatusBarHeight((preferences.statusBarHeight * resources.displayMetrics.density).toInt())
-        binding.root.setPadding(
-            (preferences.statusBarMarginLeft * resources.displayMetrics.density).toInt(),
-            0,
-            (preferences.statusBarMarginRight * resources.displayMetrics.density).toInt(),
-            0
-        )
-        binding.root.setBackgroundColor(preferences.statusBarBgColor)
+        try {
+            animateStatusBarHeight((preferences.statusBarHeight * resources.displayMetrics.density).toInt())
+            binding.root.setPadding(
+                (preferences.statusBarMarginLeft * resources.displayMetrics.density).toInt(),
+                0,
+                (preferences.statusBarMarginRight * resources.displayMetrics.density).toInt(),
+                0
+            )
+            binding.root.setBackgroundColor(preferences.statusBarBgColor)
 
-        // Real System State Checks — Replace with actual checks
-        val isWifiEnabled = isWifiEnabled(this)
-        val isAirplaneModeOn = isAirplaneModeOn(this)
-        val isHotspotOn = isHotspotEnabled(this)
-        val isMobileDataEnabled = isMobileDataEnabled(this)
+            // Real System State Checks — Replace with actual checks
+            val isWifiEnabled = isWifiEnabled(this)
+            val isAirplaneModeOn = isAirplaneModeOn(this)
+            val isHotspotOn = isHotspotEnabled(this)
+            val isMobileDataEnabled = isMobileDataEnabled(this)
 
-        with(binding) {
-            wifiIcon.visibility =
-                if (preferences.showWifi && isWifiEnabled) View.VISIBLE else View.GONE
-            hotspotIcon.visibility =
-                if (preferences.showHotspot && isHotspotOn) View.VISIBLE else View.GONE
+            with(binding) {
+                wifiIcon.visibility =
+                    if (preferences.showWifi && isWifiEnabled) View.VISIBLE else View.GONE
+                hotspotIcon.visibility =
+                    if (preferences.showHotspot && isHotspotOn) View.VISIBLE else View.GONE
 
-            if (isAirplaneModeOn) {
-                airplaneIcon.visibility = if (preferences.showAirplane) View.VISIBLE else View.GONE
-                dataIcon.visibility = View.GONE
-                signalIcon.visibility = View.GONE
-            } else {
-                airplaneIcon.visibility = View.GONE
-                dataIcon.visibility =
-                    if (preferences.showData && isMobileDataEnabled) View.VISIBLE else View.GONE
-                signalIcon.visibility = if (preferences.showSignal) View.VISIBLE else View.GONE
+                if (isAirplaneModeOn) {
+                    airplaneIcon.visibility = if (preferences.showAirplane) View.VISIBLE else View.GONE
+                    dataIcon.visibility = View.GONE
+                    signalIcon.visibility = View.GONE
+                } else {
+                    airplaneIcon.visibility = View.GONE
+                    dataIcon.visibility =
+                        if (preferences.showData && isMobileDataEnabled) View.VISIBLE else View.GONE
+                    signalIcon.visibility = if (preferences.showSignal) View.VISIBLE else View.GONE
+                }
+
+                batteryIcon.visibility = preferences.showBatteryIcon.toVisibility()
+                timeText.visibility = preferences.showTime.toVisibility()
+                dateText.visibility = preferences.showDate.toVisibility()
+                batteryPercent.visibility = preferences.showBatteryPercent.toVisibility()
+
+                applyIconSize(
+                    this@NotchAccessibilityService, wifiIcon, preferences.getIconSize("size_0", 24)
+                )
+                applyIconSize(
+                    this@NotchAccessibilityService, dataIcon, preferences.getIconSize("size_1", 24)
+                )
+                applyIconSize(
+                    this@NotchAccessibilityService, signalIcon, preferences.getIconSize("size_2", 24)
+                )
+                applyIconSize(
+                    this@NotchAccessibilityService, airplaneIcon, preferences.getIconSize("size_3", 24)
+                )
+                applyIconSize(
+                    this@NotchAccessibilityService, hotspotIcon, preferences.getIconSize("size_4", 24)
+                )
+                applyIconSize(
+                    this@NotchAccessibilityService,
+                    batteryIcon,
+                    preferences.getIconSize("batteryIconSize", 24)
+                )
+                applyIconSize(
+                    this@NotchAccessibilityService,
+                    lottieIcon,
+                    preferences.getIconSize("lottieView", 24)
+                )
+
+                timeText.setTextSizeInSp(preferences.getIconSize("size_5", 12))
+                batteryPercent.setTextSizeInSp(preferences.getIconSize("percentageSize", 12))
+
+                wifiIcon.setTint(preferences.getInt("tint_0", Color.BLACK))
+                dataIcon.setTint(preferences.getInt("tint_1", Color.BLACK))
+                signalIcon.setTint(preferences.getInt("tint_2", Color.BLACK))
+                airplaneIcon.setTint(preferences.getInt("tint_3", Color.BLACK))
+                hotspotIcon.setTint(preferences.getInt("tint_4", Color.BLACK))
+                timeText.setTextColor(preferences.getInt("tint_5", Color.BLACK))
+                dateText.setTextColor(preferences.getInt("tint_5", Color.BLACK))
+                batteryPercent.setTextColor(preferences.getInt("percentageColor", Color.BLACK))
+
+                // Battery icon
+                val batteryIconRes =
+                    resources.getIdentifier(preferences.batteryIconName, "drawable", packageName)
+                if (preferences.batteryIconName.isNotBlank() && batteryIconRes != 0) {
+                    batteryIcon.setImageResource(batteryIconRes)
+                }
+
+                // Custom icon
+                val customIconRes =
+                    resources.getIdentifier(preferences.customIconName, "drawable", packageName)
+                if (preferences.customIconName.isNotBlank() && customIconRes != 0) {
+                    customIcon.setImageResource(customIconRes)
+                    customIcon.visibility = View.GONE
+                } else {
+                    customIcon.visibility = View.GONE
+                }
+
+                // Lottie icon
+                val lottieRes = resources.getIdentifier(preferences.statusLottieName, "raw", packageName)
+                if (preferences.statusLottieName.isNotBlank() && lottieRes != 0) {
+                    lottieIcon.setAnimation(lottieRes)
+                    lottieIcon.visibility = View.VISIBLE
+                    lottieIcon.playAnimation()
+                } else {
+                    lottieIcon.visibility = View.GONE
+                }
+                updateBatteryInfo()
+                windowManager?.updateViewLayout(binding.root, layoutParams)
             }
-
-            batteryIcon.visibility = preferences.showBatteryIcon.toVisibility()
-            timeText.visibility = preferences.showTime.toVisibility()
-            dateText.visibility = preferences.showDate.toVisibility()
-            batteryPercent.visibility = preferences.showBatteryPercent.toVisibility()
-
-            applyIconSize(
-                this@NotchAccessibilityService, wifiIcon, preferences.getIconSize("size_0", 24)
-            )
-            applyIconSize(
-                this@NotchAccessibilityService, dataIcon, preferences.getIconSize("size_1", 24)
-            )
-            applyIconSize(
-                this@NotchAccessibilityService, signalIcon, preferences.getIconSize("size_2", 24)
-            )
-            applyIconSize(
-                this@NotchAccessibilityService, airplaneIcon, preferences.getIconSize("size_3", 24)
-            )
-            applyIconSize(
-                this@NotchAccessibilityService, hotspotIcon, preferences.getIconSize("size_4", 24)
-            )
-            applyIconSize(
-                this@NotchAccessibilityService,
-                batteryIcon,
-                preferences.getIconSize("batteryIconSize", 24)
-            )
-            applyIconSize(
-                this@NotchAccessibilityService,
-                lottieIcon,
-                preferences.getIconSize("lottieView", 24)
-            )
-
-            timeText.setTextSizeInSp(preferences.getIconSize("size_5", 12))
-            batteryPercent.setTextSizeInSp(preferences.getIconSize("percentageSize", 12))
-
-            wifiIcon.setTint(preferences.getInt("tint_0", Color.BLACK))
-            dataIcon.setTint(preferences.getInt("tint_1", Color.BLACK))
-            signalIcon.setTint(preferences.getInt("tint_2", Color.BLACK))
-            airplaneIcon.setTint(preferences.getInt("tint_3", Color.BLACK))
-            hotspotIcon.setTint(preferences.getInt("tint_4", Color.BLACK))
-            timeText.setTextColor(preferences.getInt("tint_5", Color.BLACK))
-            dateText.setTextColor(preferences.getInt("tint_5", Color.BLACK))
-            batteryPercent.setTextColor(preferences.getInt("percentageColor", Color.BLACK))
-
-            // Battery icon
-            val batteryIconRes =
-                resources.getIdentifier(preferences.batteryIconName, "drawable", packageName)
-            if (preferences.batteryIconName.isNotBlank() && batteryIconRes != 0) {
-                batteryIcon.setImageResource(batteryIconRes)
-            }
-
-            // Custom icon
-            val customIconRes =
-                resources.getIdentifier(preferences.customIconName, "drawable", packageName)
-            if (preferences.customIconName.isNotBlank() && customIconRes != 0) {
-                customIcon.setImageResource(customIconRes)
-                customIcon.visibility = View.GONE
-            } else {
-                customIcon.visibility = View.GONE
-            }
-
-            // Lottie icon
-            val lottieRes = resources.getIdentifier(preferences.statusLottieName, "raw", packageName)
-            if (preferences.statusLottieName.isNotBlank() && lottieRes != 0) {
-                lottieIcon.setAnimation(lottieRes)
-                lottieIcon.visibility = View.VISIBLE
-                lottieIcon.playAnimation()
-            } else {
-                lottieIcon.visibility = View.GONE
-            }
-            updateBatteryInfo()
-            windowManager?.updateViewLayout(binding.root, layoutParams)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-
-
 
 
     }
@@ -853,9 +877,21 @@ class NotchAccessibilityService : AccessibilityService() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
-        statusBarBinding?.root?.let { windowManager?.removeView(it) }
-        notificationViewBinding?.root?.let { windowManager?.removeView(it) }
-        notificationNotchBinding?.root?.let { windowManager?.removeView(it) }
+        statusBarBinding?.root?.let {
+            if (it.isAttachedToWindow) windowManager?.removeView(it)
+        }
+        notificationViewBinding?.root?.let {
+            if (it.isAttachedToWindow) windowManager?.removeView(it)
+        }
+        notificationNotchBinding?.root?.let {
+            if (it.isAttachedToWindow) windowManager?.removeView(it)
+        }
+
+        //  Also fix for notificationView if it's shown
+        notificationView?.let {
+            if (it.isAttachedToWindow) windowManager?.removeView(it)
+        }
+
         statusBarBinding = null
         notificationViewBinding = null
         notificationNotchBinding = null

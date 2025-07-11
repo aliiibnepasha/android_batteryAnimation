@@ -14,8 +14,8 @@ android {
         applicationId = "emojibattery.widget.statusbar"
         minSdk = 24
         targetSdk = 35
-        versionCode = 14
-        versionName = "2.3"
+        versionCode = 15
+        versionName = "2.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -80,6 +80,13 @@ dependencies {
     implementation (libs.glide)
     implementation (libs.picasso)
     implementation (libs.dotsindicator)
+    implementation(libs.mintegral)
+    implementation(libs.pangle)
+    implementation(libs.user.messaging.platform)
+
+
+
+    //Pamngel  , mentegral
 
 
 }

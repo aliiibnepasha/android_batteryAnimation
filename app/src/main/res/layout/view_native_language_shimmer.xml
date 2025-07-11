@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/shimmerNativeDark"
+    android:id="@+id/sh_shimmerNativeDark"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="12dp"
@@ -13,7 +13,7 @@
 
         <!-- Ad Tag -->
         <TextView
-            android:id="@+id/ad_badge"
+            android:id="@+id/sh_ad_badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_shimmer_rect"
@@ -28,25 +28,25 @@
 
         <!-- Icon -->
         <View
-            android:id="@+id/shimmer_icon"
+            android:id="@+id/sh_shimmer_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/bg_shimmer_circle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ad_badge"
-            app:layout_constraintBottom_toTopOf="@+id/cta_button"
+            app:layout_constraintTop_toBottomOf="@id/sh_ad_badge"
+            app:layout_constraintBottom_toTopOf="@+id/sh_cta_button"
             app:layout_constraintVertical_bias="0.0"
             android:layout_marginTop="8dp" />
 
         <!-- Headline + Body -->
         <LinearLayout
-            android:id="@+id/shimmer_texts"
+            android:id="@+id/sh_shimmer_texts"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="12dp"
-            app:layout_constraintStart_toEndOf="@id/shimmer_icon"
-            app:layout_constraintTop_toTopOf="@id/shimmer_icon"
+            app:layout_constraintStart_toEndOf="@id/sh_shimmer_icon"
+            app:layout_constraintTop_toTopOf="@id/sh_shimmer_icon"
             app:layout_constraintEnd_toEndOf="parent">
 
             <View
@@ -63,13 +63,13 @@
 
         <!-- CTA Button -->
         <View
-            android:id="@+id/cta_button"
+            android:id="@+id/sh_cta_button"
             android:layout_width="0dp"
             android:layout_height="36dp"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/bg_shimmer_rect"
-            app:layout_constraintTop_toBottomOf="@id/shimmer_icon"
+            app:layout_constraintTop_toBottomOf="@id/sh_shimmer_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

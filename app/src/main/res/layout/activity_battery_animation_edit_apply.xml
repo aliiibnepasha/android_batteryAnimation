@@ -88,7 +88,7 @@
 
     <!-- Buttons -->
     <TextView
-        android:id="@+id/buttonForApply"
+        android:id="@+id/buttonForAnimApply"
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginTop="16dp"
@@ -115,7 +115,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/previewBatteryAnimation"
-        app:layout_constraintStart_toEndOf="@id/buttonForApply"
+        app:layout_constraintStart_toEndOf="@id/buttonForAnimApply"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.4" />
 
@@ -127,7 +127,7 @@
         android:minHeight="270dp"
         android:layout_marginVertical="8dp"
         android:background="@color/bg_statusbar_menu"
-        app:layout_constraintTop_toBottomOf="@id/buttonForApply"
+        app:layout_constraintTop_toBottomOf="@id/buttonForAnimApply"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

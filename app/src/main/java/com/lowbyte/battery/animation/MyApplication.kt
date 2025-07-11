@@ -10,6 +10,8 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDexApplication
+import com.bytedance.sdk.openadsdk.api.PAGConstant
+import com.google.ads.mediation.pangle.PangleMediationAdapter
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -17,7 +19,6 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.lowbyte.battery.animation.ads.AdStateController
 import com.lowbyte.battery.animation.ads.GoogleMobileAdsConsentManager
 import com.lowbyte.battery.animation.utils.AnimationUtils.getOpenAppId
@@ -44,6 +45,22 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
     override fun onCreate() {
         super<MultiDexApplication>.onCreate()
         preferences =  AppPreferences.getInstance(this)
+
+//        val gdprConsent = loadGdprConsent() // true/false
+//        val usConsent = loadUsPrivacyConsent() // true/false
+
+        // Set Pangle GDPR consent
+//        PangleMediationAdapter.setGDPRConsent(
+//            if (gdprConsent) PAGConstant.PAGGDPRConsentType.PAG_GDPR_CONSENT_TYPE_CONSENT
+//            else PAGConstant.PAGGDPRConsentType.PAG_GDPR_CONSENT_TYPE_NO_CONSENT
+//        )
+
+        // Set Pangle US privacy consent
+//        PangleMediationAdapter.setPAConsent(
+//            if (usConsent) PAGConstant.PAGPAConsentType.PAG_PA_CONSENT_TYPE_CONSENT
+//            else PAGConstant.PAGPAConsentType.PAG_PA_CONSENT_TYPE_NO_CONSENT
+//        )
+
 
         val lang = LocaleHelper.getLanguage(this)
         LocaleHelper.setLocale(this, lang.ifBlank { "" })
@@ -83,8 +100,7 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
 
     private inner class AppOpenAdManager {
 
-        private val googleMobileAdsConsentManager: GoogleMobileAdsConsentManager =
-            GoogleMobileAdsConsentManager.getInstance(applicationContext)
+        private val googleMobileAdsConsentManager: GoogleMobileAdsConsentManager = GoogleMobileAdsConsentManager.getInstance(applicationContext)
         private var appOpenAd: AppOpenAd? = null
         private var isLoadingAd = false
         var isShowingAd = false
@@ -193,5 +209,6 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
             AdStateController.isOpenAdShowing = true
             if (preferences.isProUser) return
             appOpenAd?.show(activity)
-        }    }
+        }
+    }
 }

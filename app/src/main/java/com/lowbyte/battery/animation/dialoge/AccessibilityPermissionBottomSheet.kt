@@ -72,7 +72,7 @@ class AccessibilityPermissionBottomSheet(
 
 
 
-        binding.btnAllow.setOnClickListener {
+        binding.btnAllowTxt.setOnClickListener {
             if (isTermsAccepted) {
                 onAllowClicked.invoke()
                 dismiss()
