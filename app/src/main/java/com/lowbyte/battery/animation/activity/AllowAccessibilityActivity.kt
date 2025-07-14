@@ -3,15 +3,20 @@ package com.lowbyte.battery.animation.activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import androidx.appcompat.app.AppCompatActivity
+import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
+import com.lowbyte.battery.animation.ads.BannerAdHelper
 import com.lowbyte.battery.animation.databinding.ActivityAllowAccecibilityBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerPermissionId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
+import com.lowbyte.battery.animation.utils.AppPreferences
 
 class AllowAccessibilityActivity :  BaseActivity() {
 
     private lateinit var binding: ActivityAllowAccecibilityBinding
+    private lateinit var preferences: AppPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,10 +29,28 @@ class AllowAccessibilityActivity :  BaseActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        preferences = AppPreferences.getInstance(this)
 
         binding.buttonForSetting.setOnClickListener {
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             finish()
         }
+        loadBannerAd()
+    }
+
+    private fun loadBannerAd() {
+        if (preferences.isProUser) {
+            binding.bannerAdPermission.visibility = View.GONE
+            return
+        }
+
+        BannerAdHelper.loadBannerAd(
+            context = this,
+            container = binding.bannerAdPermission,
+            bannerAdId = getBannerPermissionId(false),
+            isCollapsable = false,
+            isProUser = preferences.isProUser,
+            isBannerHomeEnabled
+        )
     }
 }

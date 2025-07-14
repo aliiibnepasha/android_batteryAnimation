@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.main.IntroSlideFragment
-import com.lowbyte.battery.animation.main.NativeAdFragment
+import com.lowbyte.battery.animation.main.intro.NativeAdFragment
 import com.lowbyte.battery.animation.model.IntroItem
 import com.lowbyte.battery.animation.model.SlideType
 

@@ -37,7 +37,7 @@ class ViewAllAnimationFragment : Fragment() {
         // Log screen view event
         FirebaseAnalyticsUtils.logScreenView(this, "ViewAllAnimationFragment")
 
-        binding.switchVibrateFeedback.isChecked = preferences.statusLottieName.isNotBlank()
+     //   binding.switchVibrateFeedback.isChecked = preferences.statusLottieName.isNotBlank()
 
         binding.switchVibrateFeedback.setOnCheckedChangeListener { _, isChecked ->
             if (!preferences.isStatusBarEnabled && isChecked) {
@@ -120,5 +120,10 @@ class ViewAllAnimationFragment : Fragment() {
         }
 
         adapter.submitList(combinedAnimationList)
+    }
+
+    override fun onResume() {
+        binding.switchVibrateFeedback.isChecked = preferences.statusLottieName.isNotBlank()
+        super.onResume()
     }
 }

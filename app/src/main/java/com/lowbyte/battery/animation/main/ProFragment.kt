@@ -21,12 +21,13 @@ import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
 import com.lowbyte.battery.animation.R
-import com.lowbyte.battery.animation.ads.AdManager
+import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.FragmentProBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_MONTHLY
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_WEEKLY
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_YEARLY
-import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenSplashEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeLanguageId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeLangFirstEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.openUrl
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
@@ -45,7 +46,19 @@ class ProFragment : Fragment() {
     ): View {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            Log.d("backPress", "closedonSplash")
+            Log.d("backPress", "ProBackPress")
+            val destination = if (preferences.isFirstRun) {
+                preferences.serviceRunningFlag = false
+                R.id.action_pro_to_language
+            } else {
+                R.id.action_pro_to_language
+            }
+            if (isAdded && findNavController().currentDestination?.id == R.id.proFragment) {
+                findNavController().navigate(destination)
+            } else {
+                Log.w("Navigation", "Attempted to navigate from incorrect fragment")
+            }
+
         }
 
         binding = FragmentProBinding.inflate(inflater, container, false)
@@ -67,6 +80,18 @@ class ProFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        NativeLanguageHelper(
+            context = requireContext(),
+            adId = getNativeLanguageId(),
+            showAdRemoteFlag = isNativeLangFirstEnabled,
+            isProUser = preferences.isProUser,
+            adContainer = null,
+            onAdLoaded = { Log.d("AD", "Native ad shown") },
+            onAdFailed = { Log.d("AD", "Ad failed to load") }
+        )
+        super.onViewCreated(view, savedInstanceState)
+    }
     private fun setupBillingClient() {
         billingClient = BillingClient.newBuilder(requireContext()).enablePendingPurchases()
             .setListener { billingResult, purchases ->
@@ -210,19 +235,16 @@ class ProFragment : Fragment() {
         binding.closeScreen.setOnClickListener {
             val destination = if (preferences.isFirstRun) {
                 preferences.serviceRunningFlag = false
-                preferences.isFirstRun = false
                 R.id.action_pro_to_language
             } else {
-                R.id.action_pro_to_main
+                R.id.action_pro_to_language
+            }
+            if (isAdded && findNavController().currentDestination?.id == R.id.proFragment) {
+                findNavController().navigate(destination)
+            } else {
+                Log.w("Navigation", "Attempted to navigate from incorrect fragment")
             }
 
-            AdManager.showInterstitialAd(requireActivity(), isFullscreenSplashEnabled,false) {
-                if (isAdded && findNavController().currentDestination?.id == R.id.proFragment) {
-                    findNavController().navigate(destination)
-                } else {
-                    Log.w("Navigation", "Attempted to navigate from incorrect fragment")
-                }
-            }
         }
 
         binding.tvPremiumTermOfUse.setOnClickListener {
@@ -293,7 +315,6 @@ class ProFragment : Fragment() {
         Toast.makeText(requireContext(), "Subscribed to $sku", Toast.LENGTH_SHORT).show()
         val destination = if (preferences.isFirstRun) {
             preferences.serviceRunningFlag = false
-            preferences.isFirstRun = false
             R.id.action_pro_to_language
         } else {
             R.id.action_pro_to_main

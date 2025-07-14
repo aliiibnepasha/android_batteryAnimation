@@ -1,10 +1,12 @@
 package com.lowbyte.battery.animation.utils
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.util.Log
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
@@ -14,9 +16,11 @@ import com.lowbyte.battery.animation.model.Language
 
 object AnimationUtils {
 
-    var  isBannerSplashEnabled = true //
+    var  isNativeSplashEnabled = true //
     var  isBannerHomeEnabled = true //
+    var  isNativeHomeEnabled = true //
     var  isFullscreenSplashEnabled = true //
+  //  var  isFullscreenLangDoneEnabled = false //
     var  isFullscreenStatusEnabled = true //
     var  isFullscreenGestureEnabled = true //
     var  isFullscreenApplyEmojiEnabled = true //
@@ -52,11 +56,19 @@ object AnimationUtils {
             "ca-app-pub-9844943887550892/2606120023"
         }
     }
+    fun getNativeSplashId(): String {
+        return if (BuildConfig.DEBUG) {
+            "ca-app-pub-3940256099942544/2247696110"
+        } else {
+            "ca-app-pub-9844943887550892/7637591449"
+        }
+    }
+
     fun getNativeOnBoardingId(): String {
         return if (BuildConfig.DEBUG) {
             "ca-app-pub-3940256099942544/2247696110"
         } else {
-            "ca-app-pub-9844943887550892/3042084357"
+            "ca-app-pub-9844943887550892/1653200236"
         }
     }
     fun getNativeCustomizeId(): String {
@@ -75,13 +87,25 @@ object AnimationUtils {
         }
     }
 
+       fun getNativeHomeId(): String {
+        return if (BuildConfig.DEBUG) {
+            "ca-app-pub-3940256099942544/2247696110"
+        } else {
+            "ca-app-pub-9844943887550892/7239519082"
+        }
+    }
+
+
+
+
+
 
 // TODO Update Banner Id
 
 
-      fun getBannerId(): String {
+      fun getBannerId(isCollapsable: Boolean= false): String {
         return if (BuildConfig.DEBUG) {
-            "ca-app-pub-3940256099942544/9214589741"
+           if (!isCollapsable) "ca-app-pub-3940256099942544/9214589741" else "ca-app-pub-3940256099942544/2014213617"
         } else {
             "ca-app-pub-9844943887550892/2195014922"
         }
@@ -90,19 +114,36 @@ object AnimationUtils {
 
 
 
-  fun getBannerSplashId(): String {
-        return if (BuildConfig.DEBUG) {
-            "ca-app-pub-3940256099942544/9214589741"
-        } else {
-            "ca-app-pub-9844943887550892/5668247690"
+//  fun getBannerSplashId(): String {
+//        return if (BuildConfig.DEBUG) {
+//            "ca-app-pub-3940256099942544/9214589741"
+//        } else {
+//            "ca-app-pub-9844943887550892/5668247690"
+//        }
+//    }
+     fun getBannerPermissionId(isCollapsable: Boolean= false): String {
+         return if (BuildConfig.DEBUG) {
+             if (!isCollapsable) "ca-app-pub-3940256099942544/9214589741" else "ca-app-pub-3940256099942544/2014213617"
+         } else {
+            "ca-app-pub-9844943887550892/5016648603"
         }
     }
+
+
+
 // TODO Update Fullscreen Ad Id
     fun getFullscreenId(): String {
         return if (BuildConfig.DEBUG) {
             "ca-app-pub-3940256099942544/1033173712"
         } else {
             "ca-app-pub-9844943887550892/2857359904"
+        }
+    }
+    fun getFullscreenHome2Id(): String {
+        return if (BuildConfig.DEBUG) {
+            "ca-app-pub-3940256099942544/1033173712"
+        } else {
+            "ca-app-pub-9844943887550892/7946381505"
         }
     }
 
@@ -252,6 +293,23 @@ object AnimationUtils {
             context.startActivity(intent)
         } catch (_: Exception) {
             Toast.makeText(context, "Unable to open URL", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+     fun showAdLoadingDialog(activity: Activity, durationMillis: Long, onDialogDismiss: () -> Unit) {
+        val dialog = Dialog(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog.setContentView(R.layout.dialog_ad_loading)
+        dialog.setCancelable(false)
+
+        try {
+            dialog.show()
+            activity.window?.decorView?.postDelayed({
+                if (dialog.isShowing) dialog.dismiss()
+                onDialogDismiss()
+            }, durationMillis)
+        } catch (e: Exception) {
+            Log.e("AdManager", "Failed to show loading dialog: ${e.localizedMessage}")
+            onDialogDismiss()
         }
     }
 

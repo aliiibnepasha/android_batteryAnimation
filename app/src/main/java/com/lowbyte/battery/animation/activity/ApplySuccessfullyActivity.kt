@@ -3,14 +3,15 @@ package com.lowbyte.battery.animation.activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.enableEdgeToEdge
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
-import com.lowbyte.battery.animation.ads.NativeAnimationHelper
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.NativeEmojiHelper
 import com.lowbyte.battery.animation.databinding.ActivityApplySuccessfullyBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeInsideId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyEmojiEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyEmojiEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils // Make sure this exists
@@ -45,13 +46,25 @@ class ApplySuccessfullyActivity : BaseActivity() {
 
         binding.buttonCustomizeAgain.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_customize_again", mapOf("source" to "ApplySuccessfullyScreen"))
-            startActivity(Intent(this, StatusBarCustomizeActivity::class.java))
-            finish()
+
+            FirebaseAnalyticsUtils.logClickEvent(this, "trigger_interstitial_ad", mapOf("screen" to "EmojiEditApplyScreen"))
+            AdManager.showInterstitialAd(this,isFullscreenApplyEmojiEnabled,true) {
+                startActivity(Intent(this, StatusBarCustomizeActivity::class.java))
+                finish()
+                Log.e("Ads", "FullScreenTobeShoe")
+            }
         }
 
         binding.actionClose.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_close_button", mapOf("source" to "ApplySuccessfullyScreen"))
-            finish()
+
+           // if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
+                FirebaseAnalyticsUtils.logClickEvent(this, "trigger_interstitial_ad", mapOf("screen" to "EmojiEditApplyScreen"))
+                AdManager.showInterstitialAd(this,isFullscreenApplyEmojiEnabled,true) {
+                    finish()
+                    Log.e("Ads", "FullScreenTobeShoe")
+                }
+         //   }
         }
 
         nativeAdHelper = NativeEmojiHelper(
@@ -67,6 +80,15 @@ class ApplySuccessfullyActivity : BaseActivity() {
             },
             adContainer = binding.nativeAdContainer   // Optional: Pass only if you want to show immediately
         )
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                AdManager.showInterstitialAd(this@ApplySuccessfullyActivity, isFullscreenApplyEmojiEnabled,true) {
+                    finish()
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
+
     }
 
     override fun onPause() {

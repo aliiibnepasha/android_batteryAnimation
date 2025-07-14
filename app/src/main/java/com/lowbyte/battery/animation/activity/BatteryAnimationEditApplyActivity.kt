@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -19,6 +20,8 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeInsideId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyAnimEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyEmojiEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyWidgetEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyAnimEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
@@ -29,6 +32,7 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
     private lateinit var preferences: AppPreferences
     private var position: Int = -1
     private lateinit var label: String
+    private var isUserActionPerformed: Boolean = false
 
     private var nativeAdHelper: NativeAnimationHelper? = null
 
@@ -85,23 +89,44 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
             },
             adContainer = binding.nativeAdContainer   // Optional: Pass only if you want to show immediately
         )
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (isUserActionPerformed) {
+                    AdManager.showInterstitialAd(this@BatteryAnimationEditApplyActivity, isFullscreenApplyAnimEnabled, true) {
+                        finish()
+                    }
+                } else {
+                    finish()
+
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
     }
 
     private fun setupClickListeners() {
         binding.ibBackButton.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_back_button", mapOf("screen" to "BatteryAnimationEditApplyScreen"))
-            finish()
+            if (isUserActionPerformed) {
+                AdManager.showInterstitialAd(this, isFullscreenApplyAnimEnabled, true) {
+                    finish()
+                }
+            } else {
+                finish()
+            }
         }
 
         binding.buttonForAnimApply.setOnClickListener {
-            if (preferences.statusLottieName==""){
-                Toast.makeText(
-                    this,
-                    getString(R.string.please_enable_animation),
-                    Toast.LENGTH_LONG
-                ).show()
-                return@setOnClickListener
-            }
+            isUserActionPerformed = true
+//            if (preferences.statusLottieName==""){
+//                Toast.makeText(
+//                    this,
+//                    getString(R.string.please_enable_animation),
+//                    Toast.LENGTH_LONG
+//                ).show()
+//                return@setOnClickListener
+//            }
             FirebaseAnalyticsUtils.logClickEvent(this, "click_apply_animation", mapOf("label" to label))
 
             if (!preferences.isStatusBarEnabled) {
@@ -122,18 +147,23 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
                 Toast.LENGTH_SHORT
             ).show()
 
-            if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
-                AdManager.showInterstitialAd(this, true,true) {
-                    Log.e("Ads", "FullScreenTobeShoe")
-                }
-            }
+//                AdManager.showInterstitialAd(this, isFullscreenApplyAnimEnabled,true) {
+//                    Log.e("Ads", "FullScreenTobeShoe")
+//                }
+
 
 
         }
 
         binding.buttonHome.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_home_button", mapOf("screen" to "BatteryAnimationEditApplyScreen"))
-            finish()
+            if (isUserActionPerformed) {
+                AdManager.showInterstitialAd(this, isFullscreenApplyAnimEnabled, true) {
+                    finish()
+                }
+            } else {
+                finish()
+            }
         }
     }
 

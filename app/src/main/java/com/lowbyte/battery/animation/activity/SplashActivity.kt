@@ -13,7 +13,7 @@ import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ActivitySplashBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
-import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerSplashEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeSplashEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyAnimEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyEmojiEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyWidgetEnabled
@@ -24,6 +24,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyAnimEnabl
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyEmojiEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyWidgetEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeGestureEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeIntroEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeLangFirstEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeLangSecondEnabled
@@ -62,15 +63,17 @@ class SplashActivity : BaseActivity() {
         val configDefaults = mapOf(
             "ads_config" to """
         {
-            "BannerAdSplash_enabled": true,
+            "NativeAdSplash_enabled": true,
             "BannerAdHome_enabled": true,
+            "NativeAdHome_enabled": true,
             "FullscreenSplash_enabled": true,
+            "FullscreenLang_enabled": false,
             "FullscreenGestureBack_enabled": true,
             "FullscreenStatusBack_enabled": true,
             "FullscreenApplyEmoji_enabled": true,
             "FullscreenApplyWidget_enabled": true,
             "FullscreenApplyAnim_enabled": true,
-            "NativeLanguageFirst_enabled": true,
+            "NativeLanguageFirst_enabled": false,
             "NativeLanguageSecond_enabled": true,
             "NativeApplyEmoji_enabled": true,
             "NativeApplyWidget_enabled": true,
@@ -99,8 +102,9 @@ class SplashActivity : BaseActivity() {
         val adConfigJson = remoteConfig.getString("ads_config")
         try {
             val jsonObject = JSONObject(adConfigJson)
-             isBannerSplashEnabled = jsonObject.optBoolean("BannerAdSplash_enabled", true)
+             isNativeSplashEnabled = jsonObject.optBoolean("NativeAdSplash_enabled", true)
              isBannerHomeEnabled = jsonObject.optBoolean("BannerAdHome_enabled", true)
+             isNativeHomeEnabled = jsonObject.optBoolean("NativeAdHome_enabled", true)
              isFullscreenSplashEnabled = jsonObject.optBoolean("FullscreenSplash_enabled", true)
              isFullscreenStatusEnabled = jsonObject.optBoolean("FullscreenStatusBack_enabled", true)
              isFullscreenGestureEnabled = jsonObject.optBoolean("FullscreenGestureBack_enabled", true)
@@ -108,7 +112,7 @@ class SplashActivity : BaseActivity() {
              isFullscreenApplyWidgetEnabled = jsonObject.optBoolean("FullscreenApplyWidget_enabled", true)
              isFullscreenApplyAnimEnabled = jsonObject.optBoolean("FullscreenApplyAnim_enabled", true)
              isNativeIntroEnabled = jsonObject.optBoolean("NativeIntro_enabled", true)
-             isNativeLangFirstEnabled = jsonObject.optBoolean("NativeLanguageFirst_enabled", true)
+             isNativeLangFirstEnabled = jsonObject.optBoolean("NativeLanguageFirst_enabled", false)
              isNativeLangSecondEnabled = jsonObject.optBoolean("NativeLanguageSecond_enabled", true)
              isNativeApplyEmojiEnabled = jsonObject.optBoolean("NativeApplyEmoji_enabled", true)
              isNativeApplyWidgetEnabled = jsonObject.optBoolean("NativeApplyWidget_enabled", true)

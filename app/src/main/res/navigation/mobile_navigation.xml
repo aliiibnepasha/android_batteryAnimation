@@ -40,6 +40,13 @@
         <action
             android:id="@+id/action_language_to_intro"
             app:destination="@id/introFragment" />
+
+         <action
+            android:id="@+id/action_language_to_main"
+            app:destination="@id/getMainFragment" />
+
+
+
     </fragment>
 
     <fragment

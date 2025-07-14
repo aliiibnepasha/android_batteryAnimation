@@ -40,7 +40,7 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
         preferences = AppPreferences.getInstance(requireContext())
         sharedViewModel.childEvent.observe(viewLifecycleOwner) { event ->
             Log.d("SharedVM", "Child event: $event")
-            binding.viewPager.currentItem = 2
+            binding.viewPager.currentItem = 3
         }
         return super.onCreateView(inflater, container, savedInstanceState)
     }
@@ -52,8 +52,8 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
         // Define both versions
         val itemsWithAds = listOf(
             IntroItem(getString(R.string.intro_title_1), getString(R.string.intro_description_1), R.drawable.intro_1, SlideType.INTRO),
-            IntroItem(type = SlideType.NATIVE_AD),
             IntroItem(getString(R.string.intro_title_2), getString(R.string.intro_description_2), R.drawable.intro_2, SlideType.INTRO),
+            IntroItem(type = SlideType.NATIVE_AD),
             IntroItem(getString(R.string.welcome), getString(R.string.intro_description_3), R.drawable.intro_3, SlideType.INTRO)
         )
 
@@ -91,6 +91,7 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
                 binding.viewPager.currentItem = currentItem + 1
             } else {
                 if (isAdded && findNavController().currentDestination?.id == R.id.introFragment) {
+                    preferences.isFirstRun = false
                     findNavController().navigate(R.id.action_intro_to_main)
                 }
             }

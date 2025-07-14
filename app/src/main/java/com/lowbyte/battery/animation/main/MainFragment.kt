@@ -24,8 +24,13 @@ import com.lowbyte.battery.animation.activity.HowToUseActivity
 import com.lowbyte.battery.animation.activity.ProActivity
 import com.lowbyte.battery.animation.activity.SettingsActivity
 import com.lowbyte.battery.animation.ads.BannerAdHelper
+import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.FragmentMainBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
+import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeCustomizeId
+import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeHomeId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeHomeEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -34,6 +39,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private lateinit var binding: FragmentMainBinding
     private var doubleBackPressedOnce = false
     private lateinit var preferences: AppPreferences
+
+    private var nativeHelper: NativeBannerSizeHelper? = null
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentMainBinding.bind(view)
@@ -184,7 +192,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     binding.ibBackButton.visibility = View.INVISIBLE
                     binding.ibHowToUseButton.visibility = View.INVISIBLE
                     binding.ifvPro.visibility = View.INVISIBLE
-                    binding.ifvInfoRight.visibility = View.VISIBLE
+                    binding.ifvInfoRight.visibility = View.INVISIBLE
 
                     "customize_screen"
                 }
@@ -202,7 +210,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     binding.ibBackButton.visibility = View.VISIBLE
                     binding.ibHowToUseButton.visibility = View.INVISIBLE
                     binding.ifvPro.visibility = View.INVISIBLE
-                    binding.ifvInfoRight.visibility = View.VISIBLE
+                    binding.ifvInfoRight.visibility = View.INVISIBLE
 
                     "view_all_emoji_screen"
                 }
@@ -211,7 +219,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     binding.ibBackButton.visibility = View.VISIBLE
                     binding.ibHowToUseButton.visibility = View.INVISIBLE
                     binding.ifvPro.visibility = View.INVISIBLE
-                    binding.ifvInfoRight.visibility = View.VISIBLE
+                    binding.ifvInfoRight.visibility = View.INVISIBLE
 
 
                     "view_all_widget_screen"
@@ -221,7 +229,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     binding.ibBackButton.visibility = View.VISIBLE
                     binding.ibHowToUseButton.visibility = View.INVISIBLE
                     binding.ifvPro.visibility = View.INVISIBLE
-                    binding.ifvInfoRight.visibility = View.VISIBLE
+                    binding.ifvInfoRight.visibility = View.INVISIBLE
 
 
                     "view_all_animation_screen"
@@ -233,7 +241,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 FirebaseAnalyticsUtils.logClickEvent(requireContext(), "nav_screen_view", mapOf("screen_name" to it))
             }
         }
-        askNotificationPermission()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            askNotificationPermission()
+        }
+
+
     }
 
     private val requestPermissionLauncher = registerForActivityResult(
@@ -267,7 +279,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             .setMessage(getString(R.string.notification_mesg))
             .setPositiveButton(getString(R.string.allow)) { _, _ ->
                 markNotificationDialogShown()
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
             }
             .setNegativeButton(getString(R.string.later)) { dialogInterface, _ ->
                 markNotificationDialogShown()
@@ -305,19 +319,36 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             }
     }
 
+
     private fun loadBannerAd() {
         if (preferences.isProUser) {
             binding.bannerAdHome.visibility = View.GONE
             binding.ifvPro.visibility = View.GONE
             return
         }
+        if (isBannerHomeEnabled) {
+            binding.shimmerBanner.visibility = View.VISIBLE
+            BannerAdHelper.loadBannerAd(
+                context = requireContext(),
+                container = binding.bannerAdHome,
+                bannerAdId = getBannerId(true),
+                isCollapsable = true,
+                isProUser = preferences.isProUser,
+                remoteConfig = isBannerHomeEnabled
+            )
+        } else {
+            binding.shimmerBanner.visibility = View.GONE
+            nativeHelper = NativeBannerSizeHelper(
+                context = requireContext(),
+                adId = getNativeHomeId(), // Replace with your real AdMob ID
+                showAdRemoteFlag = isNativeHomeEnabled, // Or get from remote config
+                isProUser = preferences.isProUser,       // Or from preferences
+                adContainer = binding.bannerAdContainer,
+                onAdLoaded = { Log.d("AD", "Banner Ad loaded!") },
+                onAdFailed = { Log.d("AD", "Banner Ad failed!") }
+            )
+        }
 
-        BannerAdHelper.loadBannerAd(
-            context = requireContext(),
-            container = binding.bannerAdHome,
-            isProUser = preferences.isProUser,
-            isBannerHomeEnabled
-        )
     }
 
     override fun onResume() {

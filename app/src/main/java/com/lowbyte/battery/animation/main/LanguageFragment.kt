@@ -36,7 +36,20 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
         savedInstanceState: Bundle?
     ): View? {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            Log.d("backPress","closeBackOnLanguage")
+            Log.d("backPress","Move Next")
+            if (isAdded && findNavController().currentDestination?.id == R.id.languageFragment) {
+                if (LocaleHelper.getLanguage(requireContext()) != "") {
+                    requireActivity().recreate()
+                    if (preferences.isFirstRun) {
+                        findNavController().navigate(R.id.action_language_to_intro)
+                    } else {
+                        findNavController().navigate(R.id.action_language_to_main)
+                    }
+
+                } else {
+                    Toast.makeText(requireContext(), "Please select a language", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         return super.onCreateView(inflater, container, savedInstanceState)
@@ -68,6 +81,11 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
         )
 
         val currentLanguageCode = LocaleHelper.getLanguage(requireContext())
+        if (currentLanguageCode == "") {
+            binding.ibNextButton.visibility = View.GONE
+        } else {
+            binding.ibNextButton.visibility = View.VISIBLE
+        }
 
         adapter = LanguageAdapter(languages, currentLanguageCode) { language ->
             selectedLanguage = language.name
@@ -96,7 +114,11 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
             if (isAdded && findNavController().currentDestination?.id == R.id.languageFragment) {
                 if (LocaleHelper.getLanguage(requireContext()) != "") {
                     requireActivity().recreate()
-                    findNavController().navigate(R.id.action_language_to_intro)
+                    if (preferences.isFirstRun) {
+                        findNavController().navigate(R.id.action_language_to_intro)
+                    } else {
+                        findNavController().navigate(R.id.action_language_to_main)
+                    }
                 } else {
                     Toast.makeText(requireContext(), "Please select a language", Toast.LENGTH_SHORT).show()
                 }

@@ -14,15 +14,15 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.MyApplication
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.GoogleMobileAdsConsentManager
-import com.lowbyte.battery.animation.ads.SplashBannerHelper
+import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.FragmentSplashBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenSplashId
-import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerSplashEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeSplashId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeSplashEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenSplashEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
@@ -36,6 +36,7 @@ class SplashFragment : Fragment() {
     private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
 
     private var bannerLoaded = false
+    private var moveNextIfGetStartedAllow = false
     private var interstitialLoaded = false
     private var adsHandled = false
     private var hasResumed = false
@@ -68,12 +69,43 @@ class SplashFragment : Fragment() {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            Log.d("backPress","closedonSplash")
+            if (moveNextIfGetStartedAllow) {
+                moveNext()
+            } else {
+                Log.d("backPress", "closedonSplash")
+            }
         }
 
 
         hasResumed = false
 
+
+        binding.buttonStartApp.setOnClickListener {
+            moveNext()
+        }
+
+        NativeLanguageHelper(
+            context = requireContext(),
+            adId = getNativeSplashId(),
+            showAdRemoteFlag = isNativeSplashEnabled,
+            isProUser = preferences.isProUser,
+            adContainer = binding.nativeAdSplashFirstContainer,
+            onAdLoaded = {
+                if (isAdded) {
+                    bannerLoaded = true
+                    handleAdEvents()
+                }
+                Log.d("AD", "Native ad shown")
+                         },
+            onAdFailed = {
+                if (isAdded) {
+                    bannerLoaded = true
+                    handleAdEvents()
+                }
+                Log.d("AD", "Ad failed to load") }
+        )
+
+/*
         SplashBannerHelper.loadInlineAdaptiveBanner(
             context = requireContext(),
             container = binding.bannerAdSplash,
@@ -95,6 +127,7 @@ class SplashFragment : Fragment() {
             },
            remoteConfig = isBannerSplashEnabled
         )
+*/
 
         AdManager.loadInterstitialAd(requireContext(), getFullscreenSplashId(),isFullscreenSplashEnabled)
 
@@ -110,6 +143,37 @@ class SplashFragment : Fragment() {
         return binding.root
     }
 
+
+    fun moveNext() {
+        if (isAdded && findNavController().currentDestination?.id == R.id.splashFragment) {
+            preferences = AppPreferences.getInstance(requireContext())
+            val destination = if (preferences.isFirstRun) {
+                preferences.serviceRunningFlag = false
+                R.id.action_splash_to_pro
+            } else {
+                R.id.action_splash_to_pro
+            }
+            if (isAdded && findNavController().currentDestination?.id == R.id.splashFragment) {
+                AdManager.showInterstitialAd(
+                    requireActivity(),
+                    isFullscreenSplashEnabled,
+                    false
+                ) {
+                    if (preferences.isProUser) {
+                        findNavController().navigate(R.id.action_splash_to_language)
+                    } else {
+                        findNavController().navigate(destination)
+                    }
+                }
+
+            } else {
+                Log.w("Navigation", "Attempted to navigate from incorrect fragment")
+            }
+
+
+        }
+
+    }
     override fun onResume() {
         super.onResume()
         hasResumed = true
@@ -169,29 +233,14 @@ class SplashFragment : Fragment() {
         animator.start()
 
         handler.postDelayed({
-
             if (isAdded && findNavController().currentDestination?.id == R.id.splashFragment) {
-                preferences = AppPreferences.getInstance(requireContext())
-                val destination = if (preferences.isFirstRun) {
-                    R.id.action_splash_to_language
-                } else {
-                    R.id.action_splash_to_main
-                }
-                if (isAdded && findNavController().currentDestination?.id == R.id.splashFragment) {
-                    if (preferences.isProUser){
-                        preferences.serviceRunningFlag = false
-                        preferences.isFirstRun = false
-                        findNavController().navigate(destination)
-                    }else{
-                        findNavController().navigate(R.id.action_splash_to_pro)
-                    }
-                } else {
-                    Log.w("Navigation", "Attempted to navigate from incorrect fragment")
-                }
-
-
-
+                binding.buttonStartApp.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.INVISIBLE
+                moveNextIfGetStartedAllow = true
             }
+
+
+
         }, progressDuration)
     }
 

@@ -11,12 +11,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
-import com.lowbyte.battery.animation.adapter.ActionDynamicItem
 import com.lowbyte.battery.animation.adapter.ActionScrollItem
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarGestureBinding
-import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
+import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenHome2Id
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeCustomizeId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenGestureEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeGestureEnabled
@@ -40,7 +39,7 @@ class StatusBarGestureActivity : BaseActivity() {
         _binding = ActivityStatusBarGestureBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
-        AdManager.loadInterstitialAd(this, getFullscreenId(),isFullscreenGestureEnabled)
+        AdManager.loadInterstitialAd(this, getFullscreenHome2Id(),isFullscreenGestureEnabled)
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -78,7 +77,9 @@ class StatusBarGestureActivity : BaseActivity() {
 
         binding.ibBackButton.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_back_button", null)
-            finish()
+            AdManager.showInterstitialAd(this@StatusBarGestureActivity, isFullscreenGestureEnabled,true) {
+                finish()
+            }
         }
 
         // Load saved actions
@@ -190,8 +191,6 @@ class StatusBarGestureActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        nativeHelper?.destroy()
-        nativeHelper = null
         super.onDestroy()
     }
 }

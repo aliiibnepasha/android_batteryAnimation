@@ -4,16 +4,17 @@ import android.content.Context
 import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import com.lowbyte.battery.animation.R
-import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 object BannerAdHelper {
@@ -23,6 +24,8 @@ object BannerAdHelper {
     fun loadBannerAd(
         context: Context,
         container: ViewGroup,
+        bannerAdId: String,
+        isCollapsable: Boolean,
         isProUser: Boolean,
         remoteConfig: Boolean,
         onAdLoaded: (() -> Unit)? = null,
@@ -47,7 +50,7 @@ object BannerAdHelper {
         val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, adWidth)
 
         val adView = AdManagerAdView(context).apply {
-            adUnitId = getBannerId()
+            adUnitId = bannerAdId
             setAdSize(adSize)
         }
 
@@ -80,9 +83,22 @@ object BannerAdHelper {
         adPlaceholder?.removeAllViews()
         adPlaceholder?.addView(adView)
 
-        val adRequest = AdRequest.Builder().build()
-        Log.d(TAG, "Requesting banner ad with ad unit: ${adView.adUnitId}")
-        adView.loadAd(adRequest)
+        if (isCollapsable) {
+            val extras = Bundle()
+            extras.putString("collapsible", "bottom")
+            val adRequest = AdRequest.Builder()
+                .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
+                .build()
+
+            adView.loadAd(adRequest)
+        } else {
+            val adRequest = AdRequest.Builder().build()
+            Log.d(TAG, "Requesting banner ad with ad unit: ${adView.adUnitId}")
+            adView.loadAd(adRequest)
+        }
+
+
+
     }
 
     private fun isInternetAvailable(context: Context): Boolean {

@@ -1,4 +1,4 @@
-package com.lowbyte.battery.animation.main
+package com.lowbyte.battery.animation.main.intro
 
 import android.os.Bundle
 import android.util.Log
@@ -10,11 +10,10 @@ import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.NativeFullscreenHelper
 import com.lowbyte.battery.animation.databinding.FragmentFullscreenNativeAdBinding
 import com.lowbyte.battery.animation.main.shared.SharedIntroViewModel
-import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeInsideId
+import com.lowbyte.battery.animation.utils.AnimationUtils
 import com.lowbyte.battery.animation.utils.AppPreferences
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.getValue
 
 class NativeAdFragment : Fragment(R.layout.fragment_fullscreen_native_ad) {
     private var _binding: FragmentFullscreenNativeAdBinding? = null
@@ -29,7 +28,7 @@ class NativeAdFragment : Fragment(R.layout.fragment_fullscreen_native_ad) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentFullscreenNativeAdBinding.bind(view)
-        preferences = AppPreferences.getInstance(requireContext())
+        preferences = AppPreferences.Companion.getInstance(requireContext())
 
         binding.progressBar.max = 100
         binding.progressBar.progress = 0
@@ -55,7 +54,7 @@ class NativeAdFragment : Fragment(R.layout.fragment_fullscreen_native_ad) {
         }
         nativeAdHelper = NativeFullscreenHelper(
             context = requireContext(),
-            adId = getNativeInsideId(), // Replace with your ad unit ID
+            adId = AnimationUtils.getNativeOnBoardingId(), // Replace with your ad unit ID
             showAdRemoteFlag = true,  // From remote config or your logic
             isProUser = preferences.isProUser,        // Check from your user settings
             onAdLoaded = {

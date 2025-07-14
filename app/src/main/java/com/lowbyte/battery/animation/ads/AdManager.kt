@@ -2,6 +2,8 @@ package com.lowbyte.battery.animation.ads
 
 import android.app.Activity
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.Log
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -12,6 +14,7 @@ import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
+import com.lowbyte.battery.animation.utils.AnimationUtils.showAdLoadingDialog
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
 import kotlinx.coroutines.CoroutineScope
@@ -108,13 +111,39 @@ object AdManager {
         Log.d(TAG, "Attempting to show interstitial ad")
 
         if (preferences.isProUser || !remoteConfig) {
-            Log.d(TAG, "Pro user — skipping interstitial ad show")
+            Log.d(TAG, "Pro user or remote config disabled — skipping ad and dialog")
             onDismiss()
             return
         }
 
+        if (!isInternetAvailable(activity)) {
+            Log.d(TAG, "No internet connection — skipping ad and dialog")
+            onDismiss()
+            return
+        }
+
+        val dialogDuration = if (interstitialAd != null) 1000L else 3000L
+        showAdLoadingDialog(activity, dialogDuration) {
+            continueWithInterstitialAd(activity, remoteConfig, isFromActivity, onDismiss)
+        }
+    }
+
+    private fun continueWithInterstitialAd(
+        activity: Activity,
+        remoteConfig: Boolean,
+        isFromActivity: Boolean,
+        onDismiss: () -> Unit
+    ) {
         if (AdStateController.isOpenAdShowing) {
-            Log.d(TAG, "Open Ad is currently showing — skipping interstitial")
+            Log.d(TAG, "Open Ad is showing — skipping interstitial")
+            onDismiss()
+            return
+        }
+
+        if (activity.isFinishing || activity.isDestroyed) {
+            Log.w(TAG, "Activity is not in a valid state — skip showing ad")
+            interstitialAd = null
+            AdStateController.isInterstitialShowing = false
             onDismiss()
             return
         }
@@ -122,22 +151,17 @@ object AdManager {
         if (interstitialAd == null) {
             Log.d(TAG, "Interstitial ad not ready — fallback and reload")
             onDismiss()
-            loadInterstitialAd(activity, getFullscreenId(),remoteConfig)
+            loadInterstitialAd(activity, getFullscreenId(), remoteConfig)
             return
         }
 
         AdStateController.isInterstitialShowing = true
-        Log.d(TAG, "Showing interstitial ad now")
         interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
                 Log.d(TAG, "Interstitial ad dismissed")
                 interstitialAd = null
                 AdStateController.isInterstitialShowing = false
-
-                if (isFromActivity) {
-                    Log.d(TAG, "Callback: isFromActivity=true — executing onDismiss()")
-                    onDismiss()
-                }
+                if (isFromActivity) onDismiss()
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
@@ -149,10 +173,7 @@ object AdManager {
 
             override fun onAdImpression() {
                 Log.d(TAG, "Interstitial ad impression recorded")
-                if (!isFromActivity) {
-                    Log.d(TAG, "Callback: isFromActivity=false — executing onDismiss() after impression")
-                    onDismiss()
-                }
+                if (!isFromActivity) onDismiss()
             }
 
             override fun onAdShowedFullScreenContent() {
@@ -160,6 +181,21 @@ object AdManager {
             }
         }
 
-        interstitialAd?.show(activity)
+        try {
+            Log.d(TAG, "Showing interstitial ad")
+            interstitialAd?.show(activity)
+        } catch (e: Exception) {
+            Log.e(TAG, "Exception while showing interstitial ad: ${e.localizedMessage}")
+            interstitialAd = null
+            AdStateController.isInterstitialShowing = false
+            onDismiss()
+        }
+    }
+
+    private fun isInternetAvailable(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 }

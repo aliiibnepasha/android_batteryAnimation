@@ -154,12 +154,7 @@ class EmojiEditApplyActivity : BaseActivity() {
             sendBroadcast(Intent(BROADCAST_ACTION))
             startActivity(Intent(this, ApplySuccessfullyActivity::class.java))
             finish()
-            if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
-                FirebaseAnalyticsUtils.logClickEvent(this, "trigger_interstitial_ad", mapOf("screen" to "EmojiEditApplyScreen"))
-                AdManager.showInterstitialAd(this,isFullscreenApplyEmojiEnabled,true) {
-                    Log.e("Ads", "FullScreenTobeShoe")
-                }
-            }
+
 
             }
         }

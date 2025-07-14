@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
+    id("com.google.firebase.firebase-perf")
+
 
 }
 
@@ -14,8 +16,8 @@ android {
         applicationId = "emojibattery.widget.statusbar"
         minSdk = 24
         targetSdk = 35
-        versionCode = 15
-        versionName = "2.4"
+        versionCode = 16
+        versionName = "2.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -69,10 +71,12 @@ dependencies {
     implementation (libs.colorpickerview)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
-    implementation(libs.play.services.ads)
-    implementation (libs.billing)
     implementation(libs.firebase.config)
     implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.perf)
+    implementation(libs.firebase.messaging.ktx)
+    implementation(libs.play.services.ads)
+    implementation (libs.billing)
     implementation (libs.androidx.lifecycle.process)
     implementation (libs.androidx.multidex)
     implementation(libs.shimmer)

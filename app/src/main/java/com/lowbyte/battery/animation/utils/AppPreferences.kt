@@ -147,7 +147,7 @@ class AppPreferences private constructor(context: Context) {
 
       // For booleans (show/hide)
     var isGestureMode: Boolean
-        get() = sharedPreferences.getBoolean(KEY_IS_GESTURE_MODE, false)
+        get() = sharedPreferences.getBoolean(KEY_IS_GESTURE_MODE, true)
         set(value) = sharedPreferences.edit { putBoolean(KEY_IS_GESTURE_MODE, value) }
 
       // For booleans (show/hide)
