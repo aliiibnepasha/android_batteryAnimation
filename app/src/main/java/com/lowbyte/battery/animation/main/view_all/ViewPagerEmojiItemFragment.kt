@@ -1,15 +1,19 @@
 package com.lowbyte.battery.animation.main.view_all
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
 import com.lowbyte.battery.animation.adapter.AllEmojiAdapter
+import com.lowbyte.battery.animation.ads.RewardedAdManager
+import com.lowbyte.battery.animation.databinding.DialogGoProBinding
 import com.lowbyte.battery.animation.databinding.ItemViewPagerBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
@@ -58,11 +62,11 @@ class ViewPagerEmojiItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+        RewardedAdManager.loadAd(requireActivity())
     }
 
     private fun setupRecyclerView() {
-        adapter = AllEmojiAdapter { position, label ->
-            // Log emoji click
+        adapter = AllEmojiAdapter { position, label, isRewarded ->
             FirebaseAnalyticsUtils.logClickEvent(
                 requireActivity(),
                 "emoji_selected",
@@ -72,13 +76,54 @@ class ViewPagerEmojiItemFragment : Fragment() {
                     "emoji_position" to position.toString()
                 )
             )
+            if (isRewarded) {
+                val dialog = Dialog(requireContext())
+                val binding = DialogGoProBinding.inflate(LayoutInflater.from(requireContext()))
+                dialog.setContentView(binding.root)
+                dialog.setCancelable(true)
 
-            // Navigate to edit screen
-            val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java).apply {
-                putExtra(EXTRA_POSITION, position)
-                putExtra(EXTRA_LABEL, label)
+                dialog.window?.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+                binding.ivClose.setOnClickListener { dialog.dismiss() }
+
+                binding.btnWatchAd.setOnClickListener {
+                    dialog.dismiss()
+                    RewardedAdManager.showRewardedAd(
+                        activity = requireActivity(),
+                        onRewardEarned = {
+                            val intent = Intent(
+                                requireActivity(), EmojiEditApplyActivity::class.java
+                            ).apply {
+                                putExtra(EXTRA_POSITION, position)
+                                putExtra(EXTRA_LABEL, label)
+                            }
+                            startActivity(intent)
+                        },
+                        onAdShown = {
+                            // Log analytics or UI update
+                        },
+                        onAdDismissed = {
+                            Toast.makeText(requireActivity(), "Ad dismissed", Toast.LENGTH_SHORT)
+                                .show()
+                        })
+                }
+
+                binding.btnPremium.setOnClickListener {
+                    dialog.dismiss()
+                    // handle premium click (maybe navigate to paywall)
+                }
+
+                dialog.show()
+            } else {
+                val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java).apply {
+                    putExtra(EXTRA_POSITION, position)
+                    putExtra(EXTRA_LABEL, label)
+                }
+                startActivity(intent)
             }
-            startActivity(intent)
         }
 
         binding.recyclerView.apply {

@@ -7,10 +7,18 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.google.android.gms.ads.*
-import com.google.android.gms.ads.nativead.*
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdOptions
+import com.google.android.gms.ads.nativead.NativeAdView
 import com.lowbyte.battery.animation.R
 
 class NativeLanguageHelper(
@@ -24,7 +32,7 @@ class NativeLanguageHelper(
 ) {
 
     companion object {
-        private const val TAG = "NativeLanguageHelper"
+        private const val TAG = "AdHelperNativeLanguage"
     }
 
     private var nativeAd: NativeAd? = null
@@ -33,6 +41,7 @@ class NativeLanguageHelper(
 
     init {
         if (context!=null){
+            adContainer?.removeAllViews()
             if (!isInternetAvailable(context)) {
                 Log.d(TAG, "No internet — skipping native ad.")
                 hideAdView()
@@ -50,18 +59,22 @@ class NativeLanguageHelper(
     }
 
     private fun loadAd() {
+
         if (isDestroyed) return
 
         adLoader = AdLoader.Builder(context?:return, adId)
             .forNativeAd { ad ->
-                if (isDestroyed) {
+                if (isDestroyed && context.isFinishing || context.isDestroyed) {
+                    adContainer?.removeAllViews()
                     ad.destroy() // prevent leak if ad finishes after destroy
                     return@forNativeAd
                 }
                 if (!context.isFinishing || !context.isDestroyed){
                     if (nativeAd!=null){
+                        adContainer?.removeAllViews()
                         nativeAd?.destroy()
                     }
+                    adContainer?.removeAllViews()
                     nativeAd = ad
                     Log.d(TAG, "Native ad loaded")
                     onAdLoaded?.invoke()
@@ -121,18 +134,25 @@ class NativeLanguageHelper(
         }
 
         adView.setNativeAd(ad)
-
         container.removeAllViews()
-        container.addView(adView)
+        if (context?.isFinishing == false && !context.isDestroyed) {
+            container.addView(adView)
+        }
+
+
     }
 
     private fun showShimmer() {
-        adContainer?.let {
-            val shimmer = LayoutInflater.from(context)
-                .inflate(R.layout.view_native_language_shimmer, it, false)
-            it.removeAllViews()
-            it.addView(shimmer)
+        if (context?.isFinishing == false && !context.isDestroyed) {
+            adContainer?.let {
+                val shimmer = LayoutInflater.from(context)
+                    .inflate(R.layout.view_native_language_shimmer, it, false)
+                it.removeAllViews()
+                it.addView(shimmer)
+            }
         }
+
+
     }
 
     private fun hideAdView() {

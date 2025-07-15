@@ -19,7 +19,15 @@ import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 object BannerAdHelper {
 
-    private const val TAG = "BannerAdHelper"
+    private const val TAG = "AdHelperBanner"
+
+    private val adViewMap = mutableMapOf<ViewGroup, AdManagerAdView>()
+    private val bannerStateMap = mutableMapOf<ViewGroup, BannerState>()
+
+    private data class BannerState(
+        var isLoading: Boolean = false,
+        var isLoaded: Boolean = false
+    )
 
     fun loadBannerAd(
         context: Context,
@@ -34,14 +42,23 @@ object BannerAdHelper {
         val shimmer = container.findViewById<ViewGroup>(R.id.shimmerBanner)
         val adPlaceholder = container.findViewById<ViewGroup>(R.id.bannerAdContainer)
 
+        // Skip ad load if not eligible
         if (isProUser || !isInternetAvailable(context) || !remoteConfig) {
-            Log.d(TAG, "User is Pro — Banner ad will not be shown")
+            Log.d(TAG, "Ad skipped: Pro user / no internet / remoteConfig off")
             container.visibility = View.GONE
             shimmer?.visibility = View.GONE
             adPlaceholder?.removeAllViews()
             return
         }
+        // Prevent multiple simultaneous loads
+        val state = bannerStateMap[container] ?: BannerState()
+        if (state.isLoading || state.isLoaded) {
+            Log.d(TAG, "Banner already loading or loaded")
+            return
+        }
 
+        state.isLoading = true
+        bannerStateMap[container] = state
         shimmer?.visibility = View.VISIBLE
         container.visibility = View.VISIBLE
 
@@ -56,26 +73,32 @@ object BannerAdHelper {
 
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                Log.d(TAG, "Banner ad loaded successfully")
+                Log.d(TAG, "Banner loaded")
                 shimmer?.visibility = View.GONE
                 container.visibility = View.VISIBLE
+                state.isLoading = false
+                state.isLoaded = true
+                bannerStateMap[container] = state
+                adViewMap[container] = adView
                 onAdLoaded?.invoke()
             }
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
-                Log.e(TAG, "Banner ad failed to load: ${adError.message}")
+                Log.e(TAG, "Banner failed: ${adError.message}")
                 shimmer?.visibility = View.GONE
                 container.visibility = View.GONE
+                state.isLoading = false
+                state.isLoaded = false
+                bannerStateMap[container] = state
+                adViewMap.remove(container)
                 onAdFailed?.invoke()
             }
 
             override fun onAdClicked() {
-                Log.d(TAG, "Banner ad clicked")
                 FirebaseAnalyticsUtils.logClickEvent(context, "ad_banner_clicked")
             }
 
             override fun onAdImpression() {
-                Log.d(TAG, "Banner ad impression recorded")
                 FirebaseAnalyticsUtils.logClickEvent(context, "ad_banner_impression")
             }
         }
@@ -83,22 +106,18 @@ object BannerAdHelper {
         adPlaceholder?.removeAllViews()
         adPlaceholder?.addView(adView)
 
-        if (isCollapsable) {
-            val extras = Bundle()
-            extras.putString("collapsible", "bottom")
-            val adRequest = AdRequest.Builder()
+        val adRequest = if (isCollapsable) {
+            Log.d(TAG, "Loading collapsable banner")
+            val extras = Bundle().apply { putString("collapsible", "bottom") }
+            AdRequest.Builder()
                 .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
                 .build()
-
-            adView.loadAd(adRequest)
         } else {
-            val adRequest = AdRequest.Builder().build()
-            Log.d(TAG, "Requesting banner ad with ad unit: ${adView.adUnitId}")
-            adView.loadAd(adRequest)
+            Log.d(TAG, "Loading standard banner")
+            AdRequest.Builder().build()
         }
 
-
-
+        adView.loadAd(adRequest)
     }
 
     private fun isInternetAvailable(context: Context): Boolean {
@@ -106,5 +125,15 @@ object BannerAdHelper {
         val network = cm.activeNetwork ?: return false
         val capabilities = cm.getNetworkCapabilities(network) ?: return false
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    fun destroyBanner(container: ViewGroup) {
+        adViewMap[container]?.destroy()
+        adViewMap.remove(container)
+        bannerStateMap.remove(container)
+    }
+
+    fun resetBanner(container: ViewGroup) {
+        bannerStateMap[container]?.isLoaded = false
     }
 }

@@ -41,7 +41,10 @@ class ApplySuccessfullyActivity : BaseActivity() {
 
         binding.buttonEmojiHome.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_home_button", mapOf("source" to "ApplySuccessfullyScreen"))
-            finish()
+            AdManager.showInterstitialAd(this,isFullscreenApplyEmojiEnabled,true) {
+                finish()
+                Log.e("Ads", "FullScreenTobeShoe")
+            }
         }
 
         binding.buttonCustomizeAgain.setOnClickListener {

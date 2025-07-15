@@ -23,7 +23,7 @@ class NativeWidgetHelper(
 ) {
 
     companion object {
-        private const val TAG = "NativeWidgetHelper"
+        private const val TAG = "AdHelperNativeWidget"
     }
 
     private var nativeAd: NativeAd? = null
@@ -34,7 +34,7 @@ class NativeWidgetHelper(
             hideAdView()
             onAdFailed?.invoke()
         } else if (!showAdRemoteFlag || isProUser) {
-            Log.d(TAG, "Pro user or remote flag disabled — skipping ad.")
+            Log.d(TAG, "widget Pro user or remote flag disabled — skipping ad.")
             hideAdView()
             onAdFailed?.invoke()
         } else {

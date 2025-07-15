@@ -215,6 +215,12 @@
     <string name="stop_service">Stop Service</string>
     <string name="enable_notification_access">Enable Notification Access</string>
     <string name="allow_notification_access_so_we_can_show_notifications_in_your_custom_notch">Allow notification access so we can show notifications in your custom notch.</string>
+    <string name="go_pro">Go PRO!</string>
+    <string name="experience_high_quality_nchoose_your_access_method_below">Experience high-quality.\nchoose your access method below!</string>
+    <string name="watch_an_ad_to_continue">Watch An Ad To Continue</string>
+    <string name="takes_15_30_seconds">Takes 15–30 Seconds</string>
+    <string name="go_premium_unlimited_access">Go Premium – Unlimited Access</string>
+    <string name="support_the">Support The App To Remove Ads And\nUnlock Faster Generation.</string>
 
 
 </resources>

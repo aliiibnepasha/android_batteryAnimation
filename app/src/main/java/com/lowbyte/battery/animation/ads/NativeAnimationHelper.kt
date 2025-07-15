@@ -12,5 +12,5 @@ class NativeAnimationHelper(
     onAdFailed: (() -> Unit)? = null,
     adContainer: FrameLayout? = null
 ) : BaseNativeAdHelper(context, adId, showAdRemoteFlag,  isProUser, onAdLoaded, onAdFailed, adContainer) {
-    override val logTag: String = "NativeAnimationHelper"
+    override val logTag: String = "AdHelperNativeAnimation"
 }

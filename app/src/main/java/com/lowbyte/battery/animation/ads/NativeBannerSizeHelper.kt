@@ -24,7 +24,7 @@ class NativeBannerSizeHelper(
 ) {
 
     companion object {
-        private const val TAG = "NativeBannerSizeHelper"
+        private const val TAG = "AdHelperNativeBannerSize"
     }
 
     private var nativeAd: NativeAd? = null
@@ -35,7 +35,7 @@ class NativeBannerSizeHelper(
             hideAdView()
             onAdFailed?.invoke()
         } else if (!showAdRemoteFlag || isProUser) {
-            Log.d(TAG, "Pro user or remote flag disabled — skipping ad.")
+            Log.d(TAG, "Small Pro user or remote flag disabled — skipping ad.")
             hideAdView()
             onAdFailed?.invoke()
         } else {

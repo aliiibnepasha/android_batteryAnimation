@@ -12,6 +12,7 @@ import com.google.android.gms.ads.MobileAds
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.ads.AdManager
+import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.ActivitySplashBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeSplashEnabled
@@ -43,6 +44,9 @@ class SplashActivity : BaseActivity() {
     private lateinit var binding: ActivitySplashBinding
     private lateinit var preferences: AppPreferences
     private lateinit var billingClient: BillingClient
+
+    private var nativeHelper: NativeLanguageHelper? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -194,5 +198,11 @@ class SplashActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         Log.d("SplashActivityLog", "onResume called")
+    }
+
+    override fun onDestroy() {
+        nativeHelper?.destroy()
+        nativeHelper = null
+        super.onDestroy()
     }
 }

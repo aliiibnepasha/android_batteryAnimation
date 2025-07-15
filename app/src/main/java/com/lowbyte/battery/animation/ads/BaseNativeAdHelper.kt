@@ -33,7 +33,7 @@ abstract class BaseNativeAdHelper(
             hideAdView()
             onAdFailed?.invoke()
         } else if (!showAdRemoteFlag || isProUser) {
-            Log.d(logTag, "Pro user or remote flag disabled — skipping ad.")
+            Log.d(logTag, " Base Pro user or remote flag disabled — skipping ad.")
             hideAdView()
             onAdFailed?.invoke()
         } else {
@@ -97,7 +97,7 @@ abstract class BaseNativeAdHelper(
         }
 
         ad.mediaContent?.let {
-            (adView.mediaView as? MediaView)?.setMediaContent(it)
+            adView.mediaView?.mediaContent = it
         }
 
         adView.setNativeAd(ad)

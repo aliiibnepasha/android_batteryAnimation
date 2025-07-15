@@ -21,9 +21,19 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        create("release") {
+            storeFile = file("/Users/admin/BatteryAnimation/batteryemoji.jks")
+            storePassword = "batteryemoji"
+            keyAlias = "batteryemoji"
+            keyPassword = "batteryemoji"
 
+
+        }
+    }
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(

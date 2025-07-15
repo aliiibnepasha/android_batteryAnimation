@@ -14,6 +14,7 @@ import com.lowbyte.battery.animation.model.Language
 
 object AnimationUtils {
 
+    var finishingLang = false
     var  isNativeSplashEnabled = true //
     var  isBannerHomeEnabled = true //
     var  isNativeHomeEnabled = true //
@@ -47,6 +48,14 @@ object AnimationUtils {
      var initialLanguageCode = ""
 
 // TODO Update Native Id
+fun getRewardedId(): String {
+        return if (BuildConfig.DEBUG) {
+            "ca-app-pub-3940256099942544/5224354917"
+        } else {
+            "ca-app-pub-9844943887550892/8218608589"
+        }
+}
+
     fun getNativeLanguageId(): String {
         return if (BuildConfig.DEBUG) {
             "ca-app-pub-3940256099942544/2247696110"

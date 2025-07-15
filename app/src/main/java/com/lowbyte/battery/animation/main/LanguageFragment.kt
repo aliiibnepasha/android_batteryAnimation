@@ -20,6 +20,7 @@ import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.FragmentLanguageBinding
 import com.lowbyte.battery.animation.model.Language
+import com.lowbyte.battery.animation.utils.AnimationUtils.finishingLang
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeLanguageId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeLangFirstEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
@@ -133,8 +134,9 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
             }
         }
 
-        if ((!requireActivity().isDestroyed && !requireActivity().isFinishing)) {
-            nativeHelper =    NativeLanguageHelper(
+        if ((!requireActivity().isDestroyed && !requireActivity().isFinishing) && !finishingLang) {
+            finishingLang  = true
+            nativeHelper = NativeLanguageHelper(
                 context = requireActivity(),
                 adId = getNativeLanguageId(),
                 showAdRemoteFlag = true,
@@ -148,7 +150,7 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
         }
 
     }
-    
+
     override fun onDestroyView() {
         super.onDestroyView()
         nativeHelper?.destroy()

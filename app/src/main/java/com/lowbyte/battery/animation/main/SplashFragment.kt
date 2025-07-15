@@ -229,20 +229,20 @@ class SplashFragment : Fragment() {
     }
 
     private fun showProgressAndNavigate() {
-        val animator = ObjectAnimator.ofInt(binding.progressBar, "progress", 0, 100)
-        animator.duration = progressDuration
-        animator.start()
+        if (isAdded && !isDetached){
+            val animator = ObjectAnimator.ofInt(binding.progressBar, "progress", 0, 100)
+            animator.duration = progressDuration
+            animator.start()
+            handler.postDelayed({
+                if (isAdded && findNavController().currentDestination?.id == R.id.splashFragment) {
+                    binding.buttonStartApp.visibility = View.VISIBLE
+                    binding.progressBar.visibility = View.INVISIBLE
+                    moveNextIfGetStartedAllow = true
+                }
 
-        handler.postDelayed({
-            if (isAdded && findNavController().currentDestination?.id == R.id.splashFragment) {
-                binding.buttonStartApp.visibility = View.VISIBLE
-                binding.progressBar.visibility = View.INVISIBLE
-                moveNextIfGetStartedAllow = true
-            }
+            }, progressDuration)
+        }
 
-
-
-        }, progressDuration)
     }
 
     override fun onDestroyView() {
