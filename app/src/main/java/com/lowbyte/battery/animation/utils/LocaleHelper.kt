@@ -46,6 +46,9 @@ object LocaleHelper {
         val config = Configuration(context.resources.configuration)
         config.setLocale(locale)
 
+        // 👇 Apply layout direction for RTL languages like Arabic or Hebrew
+        config.setLayoutDirection(locale)
+
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             context.createConfigurationContext(config)
         } else {
@@ -54,5 +57,4 @@ object LocaleHelper {
             context
         }
     }
-
 } 

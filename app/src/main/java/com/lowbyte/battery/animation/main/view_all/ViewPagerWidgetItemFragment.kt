@@ -13,7 +13,6 @@ import com.lowbyte.battery.animation.adapter.AllWidgetAdapter
 import com.lowbyte.battery.animation.databinding.ItemViewPagerBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
-import com.lowbyte.battery.animation.utils.AnimationUtils.allWidgets
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListAction
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListBasic
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListCute
@@ -86,12 +85,11 @@ class ViewPagerWidgetItemFragment : Fragment() {
         }
 
         val widgetList = when (currentPos) {
-            0 -> allWidgets
-            1 -> widgetListFantasy
-            2 -> widgetListAction
-            3 -> widgetListBasic
-            4 -> widgetListCute
-            5 -> widgetListFashion
+            0 -> widgetListFantasy
+            1 -> widgetListAction
+            2 -> widgetListBasic
+            3 -> widgetListCute
+            4 -> widgetListFashion
             else -> emptyList()
         }
 

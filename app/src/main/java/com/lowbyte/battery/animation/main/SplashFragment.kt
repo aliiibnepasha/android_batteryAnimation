@@ -45,6 +45,7 @@ class SplashFragment : Fragment() {
 
     private val handler = Handler(Looper.getMainLooper())
     private var resumeTimeoutRunnable: Runnable? = null
+    private var nativeHelper: NativeLanguageHelper? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,8 +85,8 @@ class SplashFragment : Fragment() {
             moveNext()
         }
 
-        NativeLanguageHelper(
-            context = requireContext(),
+        nativeHelper =  NativeLanguageHelper(
+            context = requireActivity(),
             adId = getNativeSplashId(),
             showAdRemoteFlag = isNativeSplashEnabled,
             isProUser = preferences.isProUser,
@@ -247,6 +248,8 @@ class SplashFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         handler.removeCallbacksAndMessages(null)
+        nativeHelper?.destroy()
+        nativeHelper = null
         _binding = null
     }
 }

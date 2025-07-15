@@ -84,7 +84,7 @@ class ProFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         NativeLanguageHelper(
-            context = requireContext(),
+            context = requireActivity(),
             adId = getNativeLanguageId(),
             showAdRemoteFlag = isNativeLangFirstEnabled,
             isProUser = preferences.isProUser,

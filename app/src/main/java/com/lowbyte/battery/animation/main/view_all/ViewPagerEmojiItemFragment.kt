@@ -13,13 +13,12 @@ import com.lowbyte.battery.animation.adapter.AllEmojiAdapter
 import com.lowbyte.battery.animation.databinding.ItemViewPagerBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
-import com.lowbyte.battery.animation.utils.AnimationUtils.allEmojis
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiAnimListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiBasicListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiComicListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiFashionListFantasy
-import com.lowbyte.battery.animation.utils.AnimationUtils.emojiListFantasy
+import com.lowbyte.battery.animation.utils.AnimationUtils.emojiListCartoon
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class ViewPagerEmojiItemFragment : Fragment() {
@@ -88,13 +87,12 @@ class ViewPagerEmojiItemFragment : Fragment() {
         }
 
         val emojiList = when (currentPos) {
-            0 -> allEmojis
-            1 -> emojiListFantasy
-            2 -> emojiAnimListFantasy
-            3 -> emojiBasicListFantasy
-            4 -> emojiCuteListFantasy
-            5 -> emojiFashionListFantasy
-            6 -> emojiComicListFantasy
+            0 -> emojiFashionListFantasy
+            1 -> emojiAnimListFantasy
+            2 -> emojiBasicListFantasy
+            3 -> emojiCuteListFantasy
+            4 -> emojiListCartoon
+            5 -> emojiComicListFantasy
             else -> emptyList()
         }
 

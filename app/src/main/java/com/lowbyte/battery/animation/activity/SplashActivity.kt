@@ -1,5 +1,6 @@
 package com.lowbyte.battery.animation.activity
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import com.android.billingclient.api.BillingClient
@@ -97,6 +98,11 @@ class SplashActivity : BaseActivity() {
         checkSubscriptionStatus()
         fetchAdSettingsAndLoad()
     }
+
+//    override fun attachBaseContext(newBase: Context) {
+//        val updatedContext = LocaleHelper.setLocale(newBase, LocaleHelper.getLanguage(newBase))
+//        super.attachBaseContext(updatedContext)
+//    }
     fun fetchAdSettingsAndLoad() {
         val remoteConfig = FirebaseRemoteConfig.getInstance()
         val adConfigJson = remoteConfig.getString("ads_config")

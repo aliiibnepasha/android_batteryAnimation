@@ -1,12 +1,10 @@
 package com.lowbyte.battery.animation.utils
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.util.Log
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
@@ -174,69 +172,102 @@ object AnimationUtils {
         List(14) { index -> "anim_${index + 1}" }
     }
   // Lotti Animations
-    val animationListNew: List<String> by lazy {
-        List(15) { index -> "a_${index + 1}" }
-    }
-
-    // Total widgets
-    val allWidgets: List<String> = List(54) { i -> "widget_${i + 1}" }
-
-    // Force even count per group
-    const val widgetEvenCount = (54 / 5) / 2 * 2 // = 10
-
-    val widgetLists = List(5) { i ->
-        allWidgets.subList(i * widgetEvenCount, (i + 1) * widgetEvenCount)
-    }
+  val animationListNew: List<String> = listOf(
+      "a_5", "a_11", "a_14", "a_6", "a_4", "a_8", "a_12", "a_15", "a_1", "a_2", "a_3",
+      "a_7", "a_9", "a_10",
+      "a_13",
+  )
 
     // Final categorized widget lists
-    val widgetListFantasy = widgetLists[0]
-    val widgetListAction = widgetLists[1]
-    val widgetListBasic = widgetLists[2]
-    val widgetListCute = widgetLists[3]
-    val widgetListFashion = widgetLists[4]
+    val widgetListFantasy = listOf(
+        "widget_1", "widget_2", "widget_3", "widget_4", "widget_5",
+        "widget_25",  "widget_36","widget_32", "widget_9",  "widget_27"
+    )
+
+    val widgetListAction = listOf(
+        "widget_11", "widget_12", "widget_13", "widget_14", "widget_15",
+        "widget_16", "widget_17", "widget_18", "widget_19", "widget_20"
+    )
+
+    val widgetListBasic = listOf(
+        "widget_21", "widget_22", "widget_23", "widget_24", "widget_7",
+        "widget_26", "widget_10" , "widget_28", "widget_29", "widget_30"
+    )
+
+    val widgetListCute = listOf(
+        "widget_31","widget_6",  "widget_33", "widget_34", "widget_35",
+         "widget_37", "widget_38", "widget_39", "widget_40","widget_8",
+    )
+
+    val widgetListFashion = listOf(
+        "widget_41", "widget_42", "widget_43", "widget_44", "widget_45",
+        "widget_46", "widget_47", "widget_48", "widget_49", "widget_50"
+    )
 
 
+    val emojiListCartoon = listOf(
+        "emoji_1","emoji_15", "emoji_16","emoji_14",
+        "emoji_12", "emoji_9", "emoji_3",
+        "emoji_4", "emoji_6", "emoji_7", "emoji_5",
+        "emoji_8", "emoji_10", "emoji_11", "emoji_13","emoji_2"
+    )
 
-    //  Emoji List
-    const val evenCount = (92 / 6) / 2 * 2 // Force even count
+    val emojiAnimListFantasy = listOf(
+        "emoji_21", "emoji_24", "emoji_17", "emoji_18",
+        "emoji_19", "emoji_20", "emoji_22", "emoji_23",
+        "emoji_28", "emoji_29", "emoji_30", "emoji_31",
+        "emoji_32","emoji_25", "emoji_26", "emoji_27"
+    )
 
+    val emojiBasicListFantasy = listOf(
+        "emoji_33", "emoji_34", "emoji_35", "emoji_36",
+        "emoji_37", "emoji_38", "emoji_39", "emoji_40",
+        "emoji_41", "emoji_42", "emoji_43", "emoji_44",
+        "emoji_45", "emoji_46", "emoji_47", "emoji_48"
+    )
 
-    val emojis = List(92) { i -> "emoji_${i + 1}" }
+    val emojiCuteListFantasy = listOf(
+        "emoji_61",  "emoji_59","emoji_58", "emoji_63",
+        "emoji_64", "emoji_60" , "emoji_57","emoji_49", "emoji_50",
+        "emoji_51", "emoji_52", "emoji_53", "emoji_54",
+        "emoji_55", "emoji_56", "emoji_62"
+    )
 
-    val lists = List(6) { i ->
-        emojis.subList(i * evenCount, (i + 1) * evenCount)
-    }
+    val emojiFashionListFantasy = listOf(
+        "emoji_65", "emoji_78",   "emoji_74",
+        "emoji_75","emoji_76", "emoji_71",
+        "emoji_70", "emoji_69", "emoji_72",
+        "emoji_73", "emoji_77",  "emoji_79",
+        "emoji_66","emoji_67", "emoji_68","emoji_80"
+    )
 
-    val allEmojis = List(92) { index -> "emoji_${index + 1}" }
-
-    val emojiListFantasy = lists[0]
-    val emojiAnimListFantasy = lists[1]
-    val emojiBasicListFantasy = lists[2]
-    val emojiCuteListFantasy = lists[3]
-    val emojiFashionListFantasy = lists[4]
-    val emojiComicListFantasy = lists[5]
+    val emojiComicListFantasy = listOf(
+        "emoji_81", "emoji_82", "emoji_83", "emoji_84",
+        "emoji_85", "emoji_86", "emoji_87", "emoji_88",
+        "emoji_89", "emoji_90", "emoji_91", "emoji_92"
+    )
 
 
     fun getTabTitlesEmoji(context: Context): List<String> {
         return listOf(
-            context.getString(R.string.all),
-            context.getString(R.string.cat_1),
-            context.getString(R.string.cat_2),
+            // context.getString(R.string.all),
+            context.getString(R.string.cat_6),
             context.getString(R.string.cat_3),
             context.getString(R.string.cat_4),
             context.getString(R.string.cat_5),
-            context.getString(R.string.cat_6)
+            context.getString(R.string.cat_2),
+            context.getString(R.string.cat_1)
         )
     }
 
   fun getTabTitlesWidget(context: Context): List<String> {
         return listOf(
-            context.getString(R.string.all),
-            context.getString(R.string.cat_1),
-            context.getString(R.string.cat_2),
+            //  context.getString(R.string.all),
+            context.getString(R.string.cat_6),
             context.getString(R.string.cat_3),
             context.getString(R.string.cat_4),
-            context.getString(R.string.cat_5)
+            context.getString(R.string.cat_5),
+            context.getString(R.string.cat_1)
         )
     }
 

@@ -31,10 +31,13 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.combinedAnimationList
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
+import com.lowbyte.battery.animation.utils.AnimationUtils.emojiFashionListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListAction
+import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListFantasy
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
+import com.lowbyte.battery.animation.utils.LocaleHelper
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -52,6 +55,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        LocaleHelper.setLocale(requireContext(),LocaleHelper.getLanguage(requireContext()))
         preferences = AppPreferences.getInstance(requireContext())
         super.onCreate(savedInstanceState)
     }
@@ -117,9 +121,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val data = listOf(
             MultiViewItem.TitleItem(getString(R.string.cat_emojis)),
-            MultiViewItem.ListEmojiOrWidgetItem(emojiCuteListFantasy),
+            MultiViewItem.ListEmojiOrWidgetItem(emojiFashionListFantasy),
             MultiViewItem.TitleItem(getString(R.string.cat_widgets)),
-            MultiViewItem.ListEmojiOrWidgetItem(widgetListAction),
+            MultiViewItem.ListEmojiOrWidgetItem(widgetListFantasy),
             MultiViewItem.TitleItem(getString(R.string.cat_animations)),
             MultiViewItem.ListAnimationItem(combinedAnimationList),
         )

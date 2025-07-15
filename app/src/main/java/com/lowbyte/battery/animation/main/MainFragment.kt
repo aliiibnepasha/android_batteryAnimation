@@ -10,7 +10,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,6 +36,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeHomeEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
+import com.lowbyte.battery.animation.utils.LocaleHelper
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
@@ -320,7 +323,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 putBoolean("notification_dialog_shown", true)
             }
     }
-
 
     private fun loadBannerAd() {
         if (preferences.isProUser) {

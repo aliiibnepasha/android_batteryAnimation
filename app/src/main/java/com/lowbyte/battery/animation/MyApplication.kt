@@ -59,6 +59,13 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
         appOpenAdManager = AppOpenAdManager()
     }
 
+
+    override fun attachBaseContext(newBase: Context) {
+        val langUpdatedContext = LocaleHelper.setLocale(newBase, LocaleHelper.getLanguage(newBase))
+        super.attachBaseContext(langUpdatedContext)
+    }
+
+
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
         currentActivity?.let {

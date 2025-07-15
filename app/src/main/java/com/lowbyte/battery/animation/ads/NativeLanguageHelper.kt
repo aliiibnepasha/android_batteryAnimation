@@ -1,5 +1,6 @@
 package com.lowbyte.battery.animation.ads
 
+import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -13,7 +14,7 @@ import com.google.android.gms.ads.nativead.*
 import com.lowbyte.battery.animation.R
 
 class NativeLanguageHelper(
-    private val context: Context,
+    private val context: Activity?= null,
     private val adId: String,
     private val showAdRemoteFlag: Boolean,
     private val isProUser: Boolean,
@@ -27,44 +28,66 @@ class NativeLanguageHelper(
     }
 
     private var nativeAd: NativeAd? = null
+    private var adLoader: AdLoader? = null
+    private var isDestroyed = false
 
     init {
-        if (!isInternetAvailable(context)) {
-            Log.d(TAG, "No internet — skipping native ad.")
-            hideAdView()
-            onAdFailed?.invoke()
-        } else if (!showAdRemoteFlag || isProUser) {
-            Log.d(TAG, "Pro user or remote flag disabled — skipping ad.")
-            hideAdView()
-            onAdFailed?.invoke()
-        } else {
-            showShimmer()
-            loadAd()
+        if (context!=null){
+            if (!isInternetAvailable(context)) {
+                Log.d(TAG, "No internet — skipping native ad.")
+                hideAdView()
+                onAdFailed?.invoke()
+            } else if (!showAdRemoteFlag || isProUser) {
+                Log.d(TAG, "Pro user or remote flag disabled — skipping ad.")
+                hideAdView()
+                onAdFailed?.invoke()
+            } else {
+                showShimmer()
+                loadAd()
+            }
         }
+
     }
 
     private fun loadAd() {
-        Log.d(TAG, "Loading native ad: $adId")
-        val adLoader = AdLoader.Builder(context, adId)
+        if (isDestroyed) return
+
+        adLoader = AdLoader.Builder(context?:return, adId)
             .forNativeAd { ad ->
-                nativeAd = ad
-                Log.d(TAG, "Native ad loaded")
-                onAdLoaded?.invoke()
-                adContainer?.let { showAdInView(it, ad) }
+                if (isDestroyed) {
+                    ad.destroy() // prevent leak if ad finishes after destroy
+                    return@forNativeAd
+                }
+                if (!context.isFinishing || !context.isDestroyed){
+                    if (nativeAd!=null){
+                        nativeAd?.destroy()
+                    }
+                    nativeAd = ad
+                    Log.d(TAG, "Native ad loaded")
+                    onAdLoaded?.invoke()
+                    adContainer?.let { showAdInView(it, ad) }
+                }
+
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(error: LoadAdError) {
                     Log.e(TAG, "Native ad failed: ${error.message}")
-                    hideAdView()
-                    onAdFailed?.invoke()
+                    if (!context.isFinishing || !context.isDestroyed){
+                        hideAdView()
+                        onAdFailed?.invoke()
+                    }
+
+
                 }
             })
-            .withNativeAdOptions(NativeAdOptions.Builder()
-                .setRequestCustomMuteThisAd(false)
-                .build())
+            .withNativeAdOptions(
+                NativeAdOptions.Builder()
+                    .setRequestCustomMuteThisAd(false)
+                    .build()
+            )
             .build()
 
-        adLoader.loadAd(AdRequest.Builder().build())
+        adLoader?.loadAd(AdRequest.Builder().build())
     }
 
     fun showAdInView(container: FrameLayout, ad: NativeAd? = nativeAd) {
@@ -125,7 +148,10 @@ class NativeLanguageHelper(
     }
 
     fun destroy() {
+        isDestroyed = true
         nativeAd?.destroy()
         nativeAd = null
+        adLoader = null
+        adContainer?.removeAllViews()
     }
 }
