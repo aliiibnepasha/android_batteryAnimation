@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 object AdManager {
     private const val TAG = "AdManager"
 
-    private var interstitialAd: InterstitialAd? = null
+     var interstitialAd: InterstitialAd? = null
     private var adIsLoading = false
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)
     private lateinit var preferences: AppPreferences

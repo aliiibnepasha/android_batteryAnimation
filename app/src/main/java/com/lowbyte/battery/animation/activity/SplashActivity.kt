@@ -10,6 +10,7 @@ import com.android.billingclient.api.QueryPurchasesParams
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.ads.AdManager
+import com.lowbyte.battery.animation.ads.BaseNativeAdHelper
 import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.ActivitySplashBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
@@ -188,6 +189,8 @@ class SplashActivity : BaseActivity() {
 
     override fun onDestroy() {
         nativeHelper = null
+
+        AdManager.interstitialAd = null
         super.onDestroy()
     }
 }

@@ -27,7 +27,7 @@ class NativeBannerSizeHelper(
         private const val TAG = "AdHelperNativeBannerSize"
     }
 
-    private var nativeAd: NativeAd? = null
+     var nativeAd: NativeAd? = null
 
     init {
         if (!isInternetAvailable(context)) {

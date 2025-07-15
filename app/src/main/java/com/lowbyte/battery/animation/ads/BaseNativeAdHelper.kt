@@ -23,7 +23,7 @@ abstract class BaseNativeAdHelper(
     protected val adContainer: FrameLayout? = null
 ) {
 
-    private var nativeAd: NativeAd? = null
+     var nativeAd: NativeAd? = null
 
     protected abstract val logTag: String
 
