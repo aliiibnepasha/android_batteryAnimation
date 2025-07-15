@@ -22,6 +22,7 @@ import com.lowbyte.battery.animation.databinding.FragmentLanguageBinding
 import com.lowbyte.battery.animation.model.Language
 import com.lowbyte.battery.animation.utils.AnimationUtils.finishingLang
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeLanguageId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeLangFirstEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.lowbyte.battery.animation.utils.LocaleHelper
@@ -131,7 +132,6 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "click_language_next")
             if (isAdded && findNavController().currentDestination?.id == R.id.languageFragment) {
                 if (LocaleHelper.getLanguage(requireContext()) != "") {
-                    NativeLanguageHelper.destroy(getNativeLanguageId())
                     binding.nativeAdLangFirstContainer.removeAllViews()
                     (requireActivity() as SplashActivity).changeLanguage(selectedLanguage)
                         if (preferences.isFirstRun) {
@@ -148,13 +148,12 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
         if ((!requireActivity().isDestroyed && !requireActivity().isFinishing) && isAdded && !finishingLang) {
             Log.d("ADNativeFunc", "Native ad shown call Language")
             finishingLang = true
-            NativeLanguageHelper.destroy(getNativeLanguageId())
             Handler(Looper.getMainLooper()).postDelayed({
                 if (isAdded && !isDetached) {
                     NativeLanguageHelper.loadAd(
                         context = requireActivity(),
                         adId = getNativeLanguageId(),
-                        showAdRemoteFlag = true,
+                        showAdRemoteFlag = isNativeLangFirstEnabled,
                         isProUser = preferences.isProUser,
                         adContainer = binding.nativeAdLangFirstContainer,
                         onAdLoaded = {
@@ -172,6 +171,7 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
         }
 
     }
+
 
     override fun onDestroyView() {
         NativeLanguageHelper.destroy(getNativeLanguageId())

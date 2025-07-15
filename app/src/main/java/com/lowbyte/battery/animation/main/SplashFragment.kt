@@ -20,6 +20,7 @@ import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.GoogleMobileAdsConsentManager
 import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.FragmentSplashBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.finishingLang
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenSplashId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeSplashId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenSplashEnabled
@@ -128,6 +129,7 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (isAdded) {
+            Log.d("ADNativeFunc", "Native ad shown call Splash")
             NativeLanguageHelper.loadAd(
                 context = requireActivity(),
                 adId = getNativeSplashId(),
@@ -149,6 +151,9 @@ class SplashFragment : Fragment() {
                     Log.d("AD", "Ad failed to load")
                 }
             )
+
+        }else{
+            Log.d("ADNativeFunc", "Native ad else")
 
         }
         AdManager.loadInterstitialAd(
@@ -190,6 +195,7 @@ class SplashFragment : Fragment() {
 
     }
     override fun onResume() {
+
         super.onResume()
         hasResumed = true
 
@@ -241,6 +247,7 @@ class SplashFragment : Fragment() {
             }
         }
     }
+
 
     private fun showProgressAndNavigate() {
         if (isAdded && !isDetached){

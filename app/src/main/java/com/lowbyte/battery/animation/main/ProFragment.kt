@@ -83,15 +83,15 @@ class ProFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        NativeLanguageHelper(
-//            context = requireActivity(),
-//            adId = getNativeLanguageId(),
-//            showAdRemoteFlag = isNativeLangFirstEnabled,
-//            isProUser = preferences.isProUser,
-//            adContainer = null,
-//            onAdLoaded = { Log.d("AD", "Native ad shown") },
-//            onAdFailed = { Log.d("AD", "Ad failed to load") }
-//        )
+        NativeLanguageHelper.loadAd(
+            context = requireActivity(),
+            adId = getNativeLanguageId(),
+            showAdRemoteFlag = isNativeLangFirstEnabled,
+            isProUser = preferences.isProUser,
+            adContainer = null,
+            onAdLoaded = { Log.d("AD", "Native ad shown") },
+            onAdFailed = { Log.d("AD", "Ad failed to load") }
+        )
         super.onViewCreated(view, savedInstanceState)
     }
     private fun setupBillingClient() {

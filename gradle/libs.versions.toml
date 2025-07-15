@@ -1,5 +1,5 @@
 [versions]
-agp = "8.11.0"
+agp = "8.11.1"
 billing = "7.1.1"
 colorpickerview = "2.3.0"
 dotsindicator = "5.1.0"
