@@ -296,21 +296,23 @@ object AnimationUtils {
         }
     }
 
-     fun showAdLoadingDialog(activity: Activity, durationMillis: Long, onDialogDismiss: () -> Unit) {
-        val dialog = Dialog(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        dialog.setContentView(R.layout.dialog_ad_loading)
-        dialog.setCancelable(false)
-
-        try {
-            dialog.show()
-            activity.window?.decorView?.postDelayed({
-                if (dialog.isShowing) dialog.dismiss()
-                onDialogDismiss()
-            }, durationMillis)
-        } catch (e: Exception) {
-            Log.e("AdManager", "Failed to show loading dialog: ${e.localizedMessage}")
-            onDialogDismiss()
-        }
-    }
+//     fun showAdLoadingDialog(activity: Activity, durationMillis: Long, onDialogDismiss: () -> Unit) {
+//        val dialog = Dialog(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+//        dialog.setContentView(R.layout.dialog_ad_loading)
+//        dialog.setCancelable(false)
+//        try {
+//            dialog.show()
+//            activity.window?.decorView?.postDelayed({
+//                if (dialog.isShowing){
+//                    dialog.dismiss()
+//                }
+//                onDialogDismiss()
+//            }, durationMillis)
+//        } catch (e: Exception) {
+//            dialog.dismiss()
+//            Log.e("AdManager", "Failed to show loading dialog: ${e.localizedMessage}")
+//            onDialogDismiss()
+//        }
+//    }
 
 }

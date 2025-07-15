@@ -20,6 +20,7 @@ import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
+import com.lowbyte.battery.animation.MyApplication
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.FragmentProBinding
@@ -76,6 +77,7 @@ class ProFragment : Fragment() {
         setupBillingClient()
         setupListeners()
         highlightSelection("weekly")
+        MyApplication.enableOpenAd(false)
 
         return binding.root
     }

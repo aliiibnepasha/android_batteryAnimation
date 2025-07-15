@@ -132,10 +132,11 @@
     <LinearLayout
         android:id="@+id/bannerAdHome"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:orientation="vertical"
         android:background="@color/bg_statusbar_menu"
         android:visibility="visible"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -144,7 +145,7 @@
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmerBanner"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="match_parent"
             android:padding="8dp"
             android:visibility="visible"
             app:shimmer_auto_start="true"

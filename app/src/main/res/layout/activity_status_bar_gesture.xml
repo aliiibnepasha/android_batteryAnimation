@@ -166,6 +166,17 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <FrameLayout
+        android:id="@+id/nativeAdContainer"
+        android:layout_width="0dp"
+        android:layout_marginVertical="20dp"
+        android:layout_height="90dp"
+        app:layout_constraintWidth_percent="0.95"
+        android:background="@drawable/bg_rectangle_gradient"
+        android:minHeight="85dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vibrateFeedbackEnable" />
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/viewSingleTap"
         android:layout_width="0dp"
@@ -175,7 +186,7 @@
         android:padding="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vibrateFeedbackEnable"
+        app:layout_constraintTop_toBottomOf="@+id/nativeAdContainer"
         app:layout_constraintWidth_percent="0.95">
 
         <TextView
@@ -313,16 +324,4 @@
             app:layout_constraintWidth_percent="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <FrameLayout
-        android:id="@+id/nativeAdContainer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:minHeight="85dp"
-        android:layout_marginVertical="5dp"
-        android:background="@color/bg_statusbar_menu"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
 </androidx.constraintlayout.widget.ConstraintLayout>

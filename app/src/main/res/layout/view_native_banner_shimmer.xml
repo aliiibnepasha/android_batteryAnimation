@@ -15,7 +15,7 @@
         <!-- AD Tag Placeholder -->
         <TextView
             android:id="@+id/shimmer_ad_tag"
-            android:layout_width="36dp"
+            android:layout_width="30dp"
             android:layout_height="18dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"

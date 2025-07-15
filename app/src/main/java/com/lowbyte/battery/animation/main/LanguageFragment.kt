@@ -1,6 +1,8 @@
 package com.lowbyte.battery.animation.main
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +12,9 @@ import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lowbyte.battery.animation.MyApplication
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.activity.SplashActivity
 import com.lowbyte.battery.animation.adapter.LanguageAdapter
 import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.FragmentLanguageBinding
@@ -58,6 +62,7 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentLanguageBinding.bind(view)
         preferences = AppPreferences.getInstance(requireContext())
+        MyApplication.enableOpenAd(false)
 
         // Log screen view
         FirebaseAnalyticsUtils.logScreenView(this, "language_screen")
@@ -114,26 +119,32 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
             if (isAdded && findNavController().currentDestination?.id == R.id.languageFragment) {
                 if (LocaleHelper.getLanguage(requireContext()) != "") {
                     requireActivity().recreate()
-                    if (preferences.isFirstRun) {
-                        findNavController().navigate(R.id.action_language_to_intro)
-                    } else {
-                        findNavController().navigate(R.id.action_language_to_main)
-                    }
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        if (preferences.isFirstRun) {
+                            findNavController().navigate(R.id.action_language_to_intro)
+                        } else {
+                            findNavController().navigate(R.id.action_language_to_main)
+                        }
+                    }, 500) // or longer
+
                 } else {
                     Toast.makeText(requireContext(), "Please select a language", Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
-        NativeLanguageHelper(
-            context = requireContext(),
-            adId = getNativeLanguageId(),
-            showAdRemoteFlag = isNativeLangFirstEnabled,
-            isProUser = preferences.isProUser,
-            adContainer = binding.nativeAdLangFirstContainer,
-            onAdLoaded = { Log.d("AD", "Native ad shown") },
-            onAdFailed = { Log.d("AD", "Ad failed to load") }
-        )
+        if ((!requireActivity().isDestroyed && !requireActivity().isFinishing)) {
+            NativeLanguageHelper(
+                context = requireContext(),
+                adId = getNativeLanguageId(),
+                showAdRemoteFlag = isNativeLangFirstEnabled,
+                isProUser = preferences.isProUser,
+                adContainer = binding.nativeAdLangFirstContainer,
+                onAdLoaded = { Log.d("AD", "Native ad shown") },
+                onAdFailed = { Log.d("AD", "Ad failed to load") }
+            )
+        }
+
     }
 
     override fun onDestroyView() {

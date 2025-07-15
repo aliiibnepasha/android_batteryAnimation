@@ -3,6 +3,8 @@ package com.lowbyte.battery.animation
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -10,8 +12,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDexApplication
-import com.bytedance.sdk.openadsdk.api.PAGConstant
-import com.google.ads.mediation.pangle.PangleMediationAdapter
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -21,6 +21,7 @@ import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
 import com.lowbyte.battery.animation.ads.AdStateController
 import com.lowbyte.battery.animation.ads.GoogleMobileAdsConsentManager
+import com.lowbyte.battery.animation.utils.AdLoadingDialogManager
 import com.lowbyte.battery.animation.utils.AnimationUtils.getOpenAppId
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
@@ -46,22 +47,6 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
         super<MultiDexApplication>.onCreate()
         preferences =  AppPreferences.getInstance(this)
 
-//        val gdprConsent = loadGdprConsent() // true/false
-//        val usConsent = loadUsPrivacyConsent() // true/false
-
-        // Set Pangle GDPR consent
-//        PangleMediationAdapter.setGDPRConsent(
-//            if (gdprConsent) PAGConstant.PAGGDPRConsentType.PAG_GDPR_CONSENT_TYPE_CONSENT
-//            else PAGConstant.PAGGDPRConsentType.PAG_GDPR_CONSENT_TYPE_NO_CONSENT
-//        )
-
-        // Set Pangle US privacy consent
-//        PangleMediationAdapter.setPAConsent(
-//            if (usConsent) PAGConstant.PAGPAConsentType.PAG_PA_CONSENT_TYPE_CONSENT
-//            else PAGConstant.PAGPAConsentType.PAG_PA_CONSENT_TYPE_NO_CONSENT
-//        )
-
-
         val lang = LocaleHelper.getLanguage(this)
         LocaleHelper.setLocale(this, lang.ifBlank { "" })
         MobileAds.initialize(this)
@@ -77,7 +62,20 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
         currentActivity?.let {
-            appOpenAdManager.showAdIfAvailable(it)
+            if (!it.isDestroyed && !it.isFinishing){
+                if (appOpenAdManager.appOpenAd == null && !appOpenAdManager.isLoadingAd) {
+                    appOpenAdManager.loadAd(it)
+                } else {
+                    appOpenAdManager.showAdIfAvailable(it, object : OnShowAdCompleteListener {
+                        override fun onShowAdComplete() {
+
+                        }
+
+                    })
+                }
+            }
+
+
         }
     }
 
@@ -101,8 +99,8 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
     private inner class AppOpenAdManager {
 
         private val googleMobileAdsConsentManager: GoogleMobileAdsConsentManager = GoogleMobileAdsConsentManager.getInstance(applicationContext)
-        private var appOpenAd: AppOpenAd? = null
-        private var isLoadingAd = false
+        var appOpenAd: AppOpenAd? = null
+        var isLoadingAd = false
         var isShowingAd = false
         private var loadTime: Long = 0
 
@@ -149,66 +147,104 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
             return appOpenAd != null && wasLoadTimeLessThanNHoursAgo(4)
         }
 
-        fun showAdIfAvailable(activity: Activity) {
-            if (preferences.isProUser) return
-            showAdIfAvailable(activity, object : OnShowAdCompleteListener {
-                override fun onShowAdComplete() {}
-            })
+        fun showAdIfAvailable(activity: Activity, onShowAdCompleteListener: OnShowAdCompleteListener) {
+
+            try {
+                if (preferences.isProUser) {
+                    Log.d("LOG_TAG", "Pro user — skipping open ad.")
+                    onShowAdCompleteListener.onShowAdComplete()
+                    return
+                }
+
+                if (!isInternetAvailable(activity)) {
+                    Log.d("LOG_TAG", "No internet — skipping open ad.")
+                    onShowAdCompleteListener.onShowAdComplete()
+                    return
+                }
+
+                if (!isOpenAdEnabled) {
+                    Log.d("LOG_TAG", "Open ad is disabled.")
+                    onShowAdCompleteListener.onShowAdComplete()
+                    return
+                }
+
+                if (AdStateController.isInterstitialShowing) {
+                    Log.d("LOG_TAG", "Interstitial showing — skipping open ad.")
+                    onShowAdCompleteListener.onShowAdComplete()
+                    return
+                }
+
+                if (isShowingAd) {
+                    Log.d("LOG_TAG", "Already showing open ad.")
+                    return
+                }
+
+                val duration = if (isAdAvailable()) 1000L else 3000L
+                if (!isOpenAdEnabled) {
+                    return
+                }else{
+                    AdLoadingDialogManager.show(activity, duration) {
+                        try {
+                            if (!isAdAvailable()) {
+                                Log.d("LOG_TAG", "Ad not available after delay — loading.")
+                                onShowAdCompleteListener.onShowAdComplete()
+                                if (googleMobileAdsConsentManager.canRequestAds) loadAd(activity)
+                               return@show
+                            }
+
+                            if (activity.isFinishing || activity.isDestroyed) {
+                                Log.w("LOG_TAG", "Activity is not valid — cannot show ad.")
+                                onShowAdCompleteListener.onShowAdComplete()
+                                return@show
+                            }
+
+                            isShowingAd = true
+                            AdStateController.isOpenAdShowing = true
+
+                            appOpenAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                                override fun onAdDismissedFullScreenContent() {
+                                    appOpenAd = null
+                                    isShowingAd = false
+                                    AdStateController.isOpenAdShowing = false
+                                    onShowAdCompleteListener.onShowAdComplete()
+                                    if (googleMobileAdsConsentManager.canRequestAds) loadAd(activity)
+                                }
+
+                                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                                    Log.e("LOG_TAG", "Open ad failed: ${adError.message}")
+                                    appOpenAd = null
+                                    isShowingAd = false
+                                    AdStateController.isOpenAdShowing = false
+                                    onShowAdCompleteListener.onShowAdComplete()
+                                    if (googleMobileAdsConsentManager.canRequestAds) loadAd(activity)
+                                }
+
+                                override fun onAdShowedFullScreenContent() {
+                                    Log.d("LOG_TAG", "Open ad is showing.")
+                                    AdStateController.isOpenAdShowing = true
+                                }
+                            }
+
+                            appOpenAd?.show(activity)
+                        } catch (e: Exception) {
+                            Log.e("LOG_TAG", "Error showing ad: ${e.localizedMessage}")
+                            isShowingAd = false
+                            AdStateController.isOpenAdShowing = false
+                            onShowAdCompleteListener.onShowAdComplete()
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+               e.printStackTrace()
+            }
+
         }
 
-        fun showAdIfAvailable(activity: Activity, onShowAdCompleteListener: OnShowAdCompleteListener) {
-            if (!isOpenAdEnabled) {
-                Log.d("LOG_TAG", "Open ad is disabled.")
-                onShowAdCompleteListener.onShowAdComplete()
-                return
-            }
-
-            if (AdStateController.isInterstitialShowing) {
-                Log.d("LOG_TAG", "Fullscreen ad is showing. Skipping open ad.")
-                onShowAdCompleteListener.onShowAdComplete()
-                return
-            }
-
-            if (isShowingAd) {
-                Log.d("LOG_TAG", "Open ad is already showing.")
-                return
-            }
-
-            if (!isAdAvailable()) {
-                Log.d("LOG_TAG", "Open ad not ready. Triggering load.")
-                onShowAdCompleteListener.onShowAdComplete()
-                if (googleMobileAdsConsentManager.canRequestAds) loadAd(activity)
-                return
-            }
-
-            Log.d("LOG_TAG", "Showing open ad.")
-            appOpenAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                override fun onAdDismissedFullScreenContent() {
-                    appOpenAd = null
-                    isShowingAd = false
-                    AdStateController.isOpenAdShowing = false
-                    onShowAdCompleteListener.onShowAdComplete()
-                    if (googleMobileAdsConsentManager.canRequestAds) loadAd(activity)
-                }
-
-                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                    appOpenAd = null
-                    isShowingAd = false
-                    AdStateController.isOpenAdShowing = false
-                    onShowAdCompleteListener.onShowAdComplete()
-                    if (googleMobileAdsConsentManager.canRequestAds) loadAd(activity)
-                }
-
-                override fun onAdShowedFullScreenContent() {
-                    Log.d("LOG_TAG", "Open ad is showing.")
-                    AdStateController.isOpenAdShowing = true
-                }
-            }
-
-            isShowingAd = true
-            AdStateController.isOpenAdShowing = true
-            if (preferences.isProUser) return
-            appOpenAd?.show(activity)
+        private fun isInternetAvailable(context: Context): Boolean {
+            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val network = cm.activeNetwork ?: return false
+            val capabilities = cm.getNetworkCapabilities(network) ?: return false
+            return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
         }
     }
 }

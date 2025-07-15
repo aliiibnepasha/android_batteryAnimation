@@ -19,6 +19,7 @@ import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.lowbyte.battery.animation.MyApplication
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.HowToUseActivity
 import com.lowbyte.battery.animation.activity.ProActivity
@@ -49,6 +50,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         preferences = AppPreferences.getInstance(requireContext())
         FirebaseAnalyticsUtils.logScreenView(this, "main_screen")
+        MyApplication.enableOpenAd(true)
 
         val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController

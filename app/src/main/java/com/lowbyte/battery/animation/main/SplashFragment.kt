@@ -247,7 +247,6 @@ class SplashFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         handler.removeCallbacksAndMessages(null)
-        MyApplication.enableOpenAd(true)
         _binding = null
     }
 }

@@ -13,8 +13,8 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.lowbyte.battery.animation.utils.AdLoadingDialogManager
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
-import com.lowbyte.battery.animation.utils.AnimationUtils.showAdLoadingDialog
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
 import kotlinx.coroutines.CoroutineScope
@@ -122,8 +122,11 @@ object AdManager {
             return
         }
 
+        if (activity.isFinishing || activity.isDestroyed){
+            return
+        }
         val dialogDuration = if (interstitialAd != null) 1000L else 3000L
-        showAdLoadingDialog(activity, dialogDuration) {
+        AdLoadingDialogManager.show(activity, dialogDuration) {
             continueWithInterstitialAd(activity, remoteConfig, isFromActivity, onDismiss)
         }
     }

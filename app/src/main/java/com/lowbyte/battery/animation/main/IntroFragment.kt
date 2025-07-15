@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import com.lowbyte.battery.animation.MyApplication
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.IntroAdapter
 import com.lowbyte.battery.animation.databinding.FragmentIntroBinding
@@ -48,6 +49,7 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentIntroBinding.bind(view)
         FirebaseAnalyticsUtils.logScreenView(this, "intro_screen")
+        MyApplication.enableOpenAd(true)
 
         // Define both versions
         val itemsWithAds = listOf(

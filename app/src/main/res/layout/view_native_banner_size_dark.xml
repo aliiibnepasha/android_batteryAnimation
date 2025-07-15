@@ -10,17 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+
         <!-- AD Tag (Top Left) -->
         <TextView
             android:id="@+id/ad_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_ad_tag"
-            android:paddingHorizontal="6dp"
-            android:paddingVertical="2dp"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="1dp"
             android:text="@string/ad"
+            android:gravity="center"
             android:textColor="@color/black"
-            android:textSize="11sp"
+            android:textSize="10sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -35,7 +37,7 @@
             android:layout_marginEnd="25dp"
             android:paddingVertical="2dp"
             android:textColor="@color/gray_unselected"
-            android:textSize="11sp"
+            android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,10 +46,10 @@
             android:id="@+id/ad_app_icon"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:visibility="visible"
             android:layout_marginStart="4dp"
             app:layout_constraintTop_toBottomOf="@+id/ad_tag"
             android:contentDescription="@string/app_name"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <!-- Headline -->
@@ -63,7 +65,8 @@
             app:layout_constraintEnd_toStartOf="@id/ad_call_to_action"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@id/ad_app_icon"
-            app:layout_constraintTop_toTopOf="@id/ad_app_icon" />
+            app:layout_constraintTop_toBottomOf="@+id/ad_tag"
+            />
 
         <!-- Body -->
         <TextView
@@ -72,6 +75,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
+            android:minLines="2"
             android:textColor="@color/gray_unselected"
             android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@id/ad_call_to_action"
@@ -83,15 +87,16 @@
             android:id="@+id/ad_call_to_action"
             android:layout_width="wrap_content"
             android:layout_height="38dp"
+
             android:layout_marginEnd="4dp"
             android:backgroundTint="@color/blue_app_color"
-            android:minWidth="80dp"
+            android:minWidth="95dp"
             android:text="Install"
             android:textColor="@android:color/white"
             android:textSize="12sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/ad_app_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/ad_app_icon" />
+            app:layout_constraintTop_toBottomOf="@+id/ad_advertiser" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.gms.ads.nativead.NativeAdView>
