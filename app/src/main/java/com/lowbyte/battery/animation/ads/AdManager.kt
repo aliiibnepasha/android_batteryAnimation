@@ -50,10 +50,7 @@ object AdManager {
                 .build()
         )
 
-        CoroutineScope(Dispatchers.IO).launch {
-            Log.d(TAG, "Calling MobileAds.initialize()")
-            MobileAds.initialize(context)
-        }
+
     }
 
     fun loadInterstitialAd(context: Context, fullscreenAdId: String, remoteConfig: Boolean) {

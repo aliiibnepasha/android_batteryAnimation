@@ -22,8 +22,8 @@ import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.FragmentSplashBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenSplashId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeSplashId
-import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeSplashEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenSplashEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeSplashEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -45,7 +45,6 @@ class SplashFragment : Fragment() {
 
     private val handler = Handler(Looper.getMainLooper())
     private var resumeTimeoutRunnable: Runnable? = null
-    private var nativeHelper: NativeLanguageHelper? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,27 +83,9 @@ class SplashFragment : Fragment() {
         binding.buttonStartApp.setOnClickListener {
             moveNext()
         }
+        Log.d("ADNativeFunc", "Native ad shown call Splash")
 
-        nativeHelper =  NativeLanguageHelper(
-            context = requireActivity(),
-            adId = getNativeSplashId(),
-            showAdRemoteFlag = isNativeSplashEnabled,
-            isProUser = preferences.isProUser,
-            adContainer = binding.nativeAdSplashFirstContainer,
-            onAdLoaded = {
-                if (isAdded) {
-                    bannerLoaded = true
-                    handleAdEvents()
-                }
-                Log.d("AD", "Native ad shown")
-                         },
-            onAdFailed = {
-                if (isAdded) {
-                    bannerLoaded = true
-                    handleAdEvents()
-                }
-                Log.d("AD", "Ad failed to load") }
-        )
+
 
 /*
         SplashBannerHelper.loadInlineAdaptiveBanner(
@@ -130,7 +111,7 @@ class SplashFragment : Fragment() {
         )
 */
 
-        AdManager.loadInterstitialAd(requireContext(), getFullscreenSplashId(),isFullscreenSplashEnabled)
+
 
         // Simulate loading time for interstitial
         handler.postDelayed({
@@ -144,6 +125,39 @@ class SplashFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (isAdded) {
+            NativeLanguageHelper.loadAd(
+                context = requireActivity(),
+                adId = getNativeSplashId(),
+                showAdRemoteFlag = isNativeSplashEnabled,
+                isProUser = preferences.isProUser,
+                adContainer = binding.nativeAdSplashFirstContainer,
+                onAdLoaded = {
+                    if (isAdded) {
+                        bannerLoaded = true
+                        handleAdEvents()
+                    }
+                    Log.d("AD", "Native ad shown")
+                },
+                onAdFailed = {
+                    if (isAdded) {
+                        bannerLoaded = true
+                        handleAdEvents()
+                    }
+                    Log.d("AD", "Ad failed to load")
+                }
+            )
+
+        }
+        AdManager.loadInterstitialAd(
+            requireContext(),
+            getFullscreenSplashId(),
+            isFullscreenSplashEnabled
+        )
+
+    }
 
     fun moveNext() {
         if (isAdded && findNavController().currentDestination?.id == R.id.splashFragment) {
@@ -248,8 +262,7 @@ class SplashFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         handler.removeCallbacksAndMessages(null)
-        nativeHelper?.destroy()
-        nativeHelper = null
+        NativeLanguageHelper.destroy(getNativeSplashId())
         _binding = null
     }
 }

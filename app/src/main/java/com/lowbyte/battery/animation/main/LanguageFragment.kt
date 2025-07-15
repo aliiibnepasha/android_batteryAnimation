@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.core.text.layoutDirection
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,25 +17,23 @@ import com.lowbyte.battery.animation.MyApplication
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.SplashActivity
 import com.lowbyte.battery.animation.adapter.LanguageAdapter
-import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.FragmentLanguageBinding
 import com.lowbyte.battery.animation.model.Language
 import com.lowbyte.battery.animation.utils.AnimationUtils.finishingLang
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeLanguageId
-import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeLangFirstEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.lowbyte.battery.animation.utils.LocaleHelper
+import java.util.Locale
 
 class LanguageFragment : Fragment(R.layout.fragment_language) {
 
     private var _binding: FragmentLanguageBinding? = null
     private val binding get() = _binding!!
-    private var nativeHelper: NativeLanguageHelper? = null
 
     private lateinit var adapter: LanguageAdapter
-    private var selectedLanguage: String = "English"
+    private var selectedLanguage: String = "en"
     private lateinit var preferences: AppPreferences
 
     override fun onCreateView(
@@ -45,14 +44,15 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             Log.d("backPress","Move Next")
             if (isAdded && findNavController().currentDestination?.id == R.id.languageFragment) {
+                (requireActivity() as SplashActivity).changeLanguage(selectedLanguage)
+                NativeLanguageHelper.destroy(getNativeLanguageId())
+                binding.nativeAdLangFirstContainer.removeAllViews()
                 if (LocaleHelper.getLanguage(requireContext()) != "") {
-                    requireActivity().recreate()
                     if (preferences.isFirstRun) {
                         findNavController().navigate(R.id.action_language_to_intro)
                     } else {
                         findNavController().navigate(R.id.action_language_to_main)
                     }
-
                 } else {
                     Toast.makeText(requireContext(), "Please select a language", Toast.LENGTH_SHORT).show()
                 }
@@ -96,11 +96,20 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
         }
 
         adapter = LanguageAdapter(languages, currentLanguageCode) { language ->
-            selectedLanguage = language.name
+            selectedLanguage = language.code
             binding.ibNextButton.visibility = View.VISIBLE
-            val context =  LocaleHelper.setLocale(requireContext(), language.code)
-            resources.updateConfiguration(context.resources.configuration, context.resources.displayMetrics)
 
+            LocaleHelper.setLocale(requireContext(), language.code)
+            val newLocale = Locale(language.code)
+            Locale.setDefault(newLocale)
+            val layoutDirection =
+                if (newLocale.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
+                    View.LAYOUT_DIRECTION_RTL
+                } else {
+                    View.LAYOUT_DIRECTION_LTR
+                }
+
+            requireActivity().window.decorView.layoutDirection = layoutDirection
             // Log language selection event
             FirebaseAnalyticsUtils.logClickEvent(
                 requireActivity(),
@@ -122,7 +131,9 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "click_language_next")
             if (isAdded && findNavController().currentDestination?.id == R.id.languageFragment) {
                 if (LocaleHelper.getLanguage(requireContext()) != "") {
-                    requireActivity().recreate()
+                    NativeLanguageHelper.destroy(getNativeLanguageId())
+                    binding.nativeAdLangFirstContainer.removeAllViews()
+                    (requireActivity() as SplashActivity).changeLanguage(selectedLanguage)
                         if (preferences.isFirstRun) {
                             findNavController().navigate(R.id.action_language_to_intro)
                         } else {
@@ -134,27 +145,38 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
             }
         }
 
-        if ((!requireActivity().isDestroyed && !requireActivity().isFinishing) && !finishingLang) {
-            finishingLang  = true
-            nativeHelper = NativeLanguageHelper(
-                context = requireActivity(),
-                adId = getNativeLanguageId(),
-                showAdRemoteFlag = true,
-                isProUser = preferences.isProUser,
-                adContainer = binding.nativeAdLangFirstContainer,
-                onAdLoaded = {
-                    Log.d("AD", "Native ad shown") },
-                onAdFailed = {
-                    Log.d("AD", "Ad failed to load") }
-            )
+        if ((!requireActivity().isDestroyed && !requireActivity().isFinishing) && isAdded && !finishingLang) {
+            Log.d("ADNativeFunc", "Native ad shown call Language")
+            finishingLang = true
+            NativeLanguageHelper.destroy(getNativeLanguageId())
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (isAdded && !isDetached) {
+                    NativeLanguageHelper.loadAd(
+                        context = requireActivity(),
+                        adId = getNativeLanguageId(),
+                        showAdRemoteFlag = true,
+                        isProUser = preferences.isProUser,
+                        adContainer = binding.nativeAdLangFirstContainer,
+                        onAdLoaded = {
+                            Log.d("AD", "Native ad shown")
+                        },
+                        onAdFailed = {
+                            Log.d("AD", "Ad failed to load")
+                        }
+                    )
+                }
+
+            }, 500)
+
+
         }
 
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
-        nativeHelper?.destroy()
-        nativeHelper = null
+        NativeLanguageHelper.destroy(getNativeLanguageId())
         _binding = null
+        super.onDestroyView()
+
     }
 }

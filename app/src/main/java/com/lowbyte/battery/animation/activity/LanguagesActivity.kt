@@ -4,10 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import androidx.core.text.layoutDirection
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.adapter.LanguageAdapter
-import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.ActivityLanguagesBinding
 import com.lowbyte.battery.animation.model.Language
@@ -17,6 +18,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeLangSecondEnab
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.lowbyte.battery.animation.utils.LocaleHelper
+import java.util.Locale
 
 class LanguagesActivity : BaseActivity() {
 
@@ -63,8 +65,23 @@ class LanguagesActivity : BaseActivity() {
                 "language_selected",
                 mapOf("language_name" to language.name, "language_code" to language.code)
             )
+         //   selectedLanguage = language.code
+            binding.ibNextButton.visibility = View.VISIBLE
+
             LocaleHelper.setLocale(this, language.code)
-            recreate()
+            val newLocale = Locale(language.code)
+            Locale.setDefault(newLocale)
+            val layoutDirection =
+                if (newLocale.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
+                    View.LAYOUT_DIRECTION_RTL
+                } else {
+                    View.LAYOUT_DIRECTION_LTR
+                }
+
+            window.decorView.layoutDirection = layoutDirection
+
+//            LocaleHelper.setLocale(this, language.code)
+//            recreate()
         }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
@@ -80,16 +97,15 @@ class LanguagesActivity : BaseActivity() {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_next_button", mapOf("screen" to "LanguagesScreen"))
             val currentLanguageCode = LocaleHelper.getLanguage(this)
             if (currentLanguageCode != initialLanguageCode) {
-                val intent = packageManager.getLaunchIntentForPackage(packageName)
-                intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-                finishAffinity()
+                setLanguage(currentLanguageCode)
+                finish()
+
             } else {
                 finish()
             }
         }
 
-        NativeLanguageHelper(
+        NativeLanguageHelper.loadAd(
             context = this,
             adId = getNativeLanguageId(),
             showAdRemoteFlag = isNativeLangSecondEnabled,

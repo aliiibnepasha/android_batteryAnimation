@@ -26,6 +26,9 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.getOpenAppId
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
 import com.lowbyte.battery.animation.utils.LocaleHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Date
 
 class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallbacks, DefaultLifecycleObserver {
@@ -49,7 +52,11 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
 
         val lang = LocaleHelper.getLanguage(this)
         LocaleHelper.setLocale(this, lang.ifBlank { "" })
-        MobileAds.initialize(this)
+        CoroutineScope(Dispatchers.IO).launch {
+            MobileAds.initialize(this@MyApplication) {
+                Log.d("SplashActivityLog", "MobileAds initialized")
+            }
+        }
         registerActivityLifecycleCallbacks(this)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

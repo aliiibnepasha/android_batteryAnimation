@@ -1,6 +1,5 @@
 package com.lowbyte.battery.animation.activity
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import com.android.billingclient.api.BillingClient
@@ -8,14 +7,12 @@ import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.QueryPurchasesParams
-import com.google.android.gms.ads.MobileAds
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.ActivitySplashBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
-import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeSplashEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyAnimEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyEmojiEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyWidgetEnabled
@@ -30,11 +27,9 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeIntroEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeLangFirstEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeLangSecondEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeSplashEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeStatusEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -50,63 +45,50 @@ class SplashActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("SplashActivityLog", "onCreate called")
-        binding = ActivitySplashBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        try {
+            Log.d("SplashActivityLog", "onCreate called")
+            binding = ActivitySplashBinding.inflate(layoutInflater)
+            setContentView(binding.root)
 
-        preferences = AppPreferences.getInstance(this)
-        Log.d("SplashActivityLog", "Preferences initialized: isProUser=${preferences.isProUser}")
+            preferences = AppPreferences.getInstance(this)
+            Log.d("SplashActivityLog", "Preferences initialized: isProUser=${preferences.isProUser}")
 
-        CoroutineScope(Dispatchers.IO).launch {
-            MobileAds.initialize(this@SplashActivity) {
-                Log.d("SplashActivityLog", "MobileAds initialized")
+            val configDefaults = mapOf(
+                "ads_config" to """
+            {
+                "NativeAdSplash_enabled": true,
+                "BannerAdHome_enabled": true,
+                "NativeAdHome_enabled": true,
+                "FullscreenSplash_enabled": true,
+                "FullscreenLang_enabled": false,
+                "FullscreenGestureBack_enabled": true,
+                "FullscreenStatusBack_enabled": true,
+                "FullscreenApplyEmoji_enabled": true,
+                "FullscreenApplyWidget_enabled": true,
+                "FullscreenApplyAnim_enabled": true,
+                "NativeLanguageFirst_enabled": false,
+                "NativeLanguageSecond_enabled": true,
+                "NativeApplyEmoji_enabled": true,
+                "NativeApplyWidget_enabled": true,
+                "NativeApplyAnimation_enabled": true,
+                "NativeSmallStatusBar_enabled": true,
+                "NativeSmallGesture_enabled": true
             }
+        """.trimIndent()
+            )
+
+            val remoteConfig = FirebaseRemoteConfig.getInstance()
+            remoteConfig.setDefaultsAsync(configDefaults)
+            remoteConfig.fetchAndActivate()
+            AdManager.initializeAds(this)
+            Log.d("SplashActivityLog", "AdManager initialized")
+            checkSubscriptionStatus()
+            fetchAdSettingsAndLoad()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-
-
-
-        val configDefaults = mapOf(
-            "ads_config" to """
-        {
-            "NativeAdSplash_enabled": true,
-            "BannerAdHome_enabled": true,
-            "NativeAdHome_enabled": true,
-            "FullscreenSplash_enabled": true,
-            "FullscreenLang_enabled": false,
-            "FullscreenGestureBack_enabled": true,
-            "FullscreenStatusBack_enabled": true,
-            "FullscreenApplyEmoji_enabled": true,
-            "FullscreenApplyWidget_enabled": true,
-            "FullscreenApplyAnim_enabled": true,
-            "NativeLanguageFirst_enabled": false,
-            "NativeLanguageSecond_enabled": true,
-            "NativeApplyEmoji_enabled": true,
-            "NativeApplyWidget_enabled": true,
-            "NativeApplyAnimation_enabled": true,
-            "NativeSmallStatusBar_enabled": true,
-            "NativeSmallGesture_enabled": true
-        }
-    """.trimIndent()
-        )
-
-        val remoteConfig = FirebaseRemoteConfig.getInstance()
-        remoteConfig.setDefaultsAsync(configDefaults)
-        remoteConfig.fetchAndActivate()
-
-
-
-
-        AdManager.initializeAds(this)
-        Log.d("SplashActivityLog", "AdManager initialized")
-
-        checkSubscriptionStatus()
-        fetchAdSettingsAndLoad()
     }
 
-//    override fun attachBaseContext(newBase: Context) {
-//        val updatedContext = LocaleHelper.setLocale(newBase, LocaleHelper.getLanguage(newBase))
-//        super.attachBaseContext(updatedContext)
-//    }
     fun fetchAdSettingsAndLoad() {
         val remoteConfig = FirebaseRemoteConfig.getInstance()
         val adConfigJson = remoteConfig.getString("ads_config")
@@ -194,6 +176,10 @@ class SplashActivity : BaseActivity() {
             }
         }
     }
+    fun changeLanguage(language: String) {
+        setLanguage(language)
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -201,7 +187,6 @@ class SplashActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        nativeHelper?.destroy()
         nativeHelper = null
         super.onDestroy()
     }

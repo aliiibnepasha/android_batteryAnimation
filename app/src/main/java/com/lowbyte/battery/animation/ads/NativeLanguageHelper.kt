@@ -21,95 +21,72 @@ import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.lowbyte.battery.animation.R
 
-class NativeLanguageHelper(
-    private val context: Activity?= null,
-    private val adId: String,
-    private val showAdRemoteFlag: Boolean,
-    private val isProUser: Boolean,
-    private val onAdLoaded: (() -> Unit)? = null,
-    private val onAdFailed: (() -> Unit)? = null,
-    private val adContainer: FrameLayout? = null // Optional: null = just preload
-) {
+object NativeLanguageHelper {
 
-    companion object {
-        private const val TAG = "AdHelperNativeLanguage"
-    }
+    private const val TAG = "AdHelperNativeLanguage"
 
-    private var nativeAd: NativeAd? = null
-    private var adLoader: AdLoader? = null
-    private var isDestroyed = false
+    private var nativeAdMap :NativeAd? = null
 
-    init {
-        if (context!=null){
-            adContainer?.removeAllViews()
+    fun loadAd(
+        context: Activity,
+        adId: String,
+        showAdRemoteFlag: Boolean,
+        isProUser: Boolean,
+        adContainer: FrameLayout?,
+        onAdLoaded: (() -> Unit)? = null,
+        onAdFailed: (() -> Unit)? = null
+    ) {
+
+
+        try {
             if (!isInternetAvailable(context)) {
                 Log.d(TAG, "No internet — skipping native ad.")
-                hideAdView()
+                adContainer?.visibility = View.GONE
                 onAdFailed?.invoke()
-            } else if (!showAdRemoteFlag || isProUser) {
-                Log.d(TAG, "Pro user or remote flag disabled — skipping ad.")
-                hideAdView()
-                onAdFailed?.invoke()
-            } else {
-                showShimmer()
-                loadAd()
+                return
             }
-        }
+            if (!showAdRemoteFlag || isProUser) {
+                Log.d(TAG, "Pro user or remote config off — skipping native ad.")
+                adContainer?.visibility = View.GONE
+                onAdFailed?.invoke()
+                return
+            }
+            showShimmer(context, adContainer)
 
-    }
-
-    private fun loadAd() {
-
-        if (isDestroyed) return
-
-        adLoader = AdLoader.Builder(context?:return, adId)
-            .forNativeAd { ad ->
-                if (isDestroyed && context.isFinishing || context.isDestroyed) {
-                    adContainer?.removeAllViews()
-                    ad.destroy() // prevent leak if ad finishes after destroy
-                    return@forNativeAd
-                }
-                if (!context.isFinishing || !context.isDestroyed){
-                    if (nativeAd!=null){
+            val adLoader = AdLoader.Builder(context, adId)
+                .forNativeAd { ad ->
+                    if (context.isFinishing || context.isDestroyed) {
                         adContainer?.removeAllViews()
-                        nativeAd?.destroy()
+                        ad.destroy()
+                        return@forNativeAd
                     }
+                    nativeAdMap?.destroy()
+                    nativeAdMap = ad
                     adContainer?.removeAllViews()
-                    nativeAd = ad
-                    Log.d(TAG, "Native ad loaded")
+                    showAd(context, adContainer, ad)
                     onAdLoaded?.invoke()
-                    adContainer?.let { showAdInView(it, ad) }
                 }
-
-            }
-            .withAdListener(object : AdListener() {
-                override fun onAdFailedToLoad(error: LoadAdError) {
-                    Log.e(TAG, "Native ad failed: ${error.message}")
-                    if (!context.isFinishing || !context.isDestroyed){
-                        hideAdView()
+                .withAdListener(object : AdListener() {
+                    override fun onAdFailedToLoad(error: LoadAdError) {
+                        Log.e(TAG, "Native ad failed: ${error.message}")
+                        adContainer?.visibility = View.GONE
                         onAdFailed?.invoke()
                     }
-
-
-                }
-            })
-            .withNativeAdOptions(
-                NativeAdOptions.Builder()
-                    .setRequestCustomMuteThisAd(false)
-                    .build()
-            )
-            .build()
-
-        adLoader?.loadAd(AdRequest.Builder().build())
-    }
-
-    fun showAdInView(container: FrameLayout, ad: NativeAd? = nativeAd) {
-        if (ad == null) {
-            Log.w(TAG, "No ad to show.")
-            return
+                })
+                .withNativeAdOptions(NativeAdOptions.Builder().build())
+                .build()
+            adLoader.loadAd(AdRequest.Builder().build())
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
-        val inflater = LayoutInflater.from(context)
+
+    }
+
+    fun showAd(activity: Activity, container: FrameLayout?, ad: NativeAd? = null) {
+        val nativeAd = ad ?: return
+
+        val inflater = LayoutInflater.from(activity)
         val adView = inflater.inflate(R.layout.view_native_language_dark, container, false) as NativeAdView
 
         val shimmer = adView.findViewById<ShimmerFrameLayout>(R.id.shimmerNativeDark)
@@ -122,42 +99,32 @@ class NativeLanguageHelper(
         adView.iconView = adView.findViewById(R.id.ad_app_icon)
         adView.advertiserView = adView.findViewById(R.id.ad_advertiser)
 
-        (adView.headlineView as? TextView)?.text = ad.headline
-        (adView.bodyView as? TextView)?.text = ad.body ?: "Today"
-        (adView.callToActionView as? Button)?.text = ad.callToAction
-        (adView.advertiserView as? TextView)?.text = ad.advertiser ?: "Sponsored"
+        (adView.headlineView as? TextView)?.text = nativeAd.headline
+        (adView.bodyView as? TextView)?.text = nativeAd.body ?: "Today"
+        (adView.callToActionView as? Button)?.text = nativeAd.callToAction
+        (adView.advertiserView as? TextView)?.text = nativeAd.advertiser ?: "Sponsored"
 
-        ad.icon?.drawable?.let {
+        nativeAd.icon?.drawable?.let {
             (adView.iconView as? ImageView)?.setImageDrawable(it)
         } ?: run {
             adView.iconView?.visibility = View.GONE
         }
 
-        adView.setNativeAd(ad)
-        container.removeAllViews()
-        if (context?.isFinishing == false && !context.isDestroyed) {
-            container.addView(adView)
-        }
-
-
+        adView.setNativeAd(nativeAd)
+        container?.removeAllViews()
+        container?.addView(adView)
     }
 
-    private fun showShimmer() {
-        if (context?.isFinishing == false && !context.isDestroyed) {
-            adContainer?.let {
-                val shimmer = LayoutInflater.from(context)
-                    .inflate(R.layout.view_native_language_shimmer, it, false)
-                it.removeAllViews()
-                it.addView(shimmer)
-            }
+    private fun showShimmer(context: Context, container: FrameLayout?) {
+        container?.let {
+            val shimmer = LayoutInflater.from(context).inflate(R.layout.view_native_language_shimmer, it, false)
+            it.removeAllViews()
+            it.addView(shimmer)
         }
-
-
     }
 
-    private fun hideAdView() {
-        adContainer?.visibility = View.GONE
-        adContainer?.removeAllViews()
+    fun destroy(adId: String) {
+        nativeAdMap?.destroy()
     }
 
     private fun isInternetAvailable(context: Context): Boolean {
@@ -165,13 +132,5 @@ class NativeLanguageHelper(
         val network = cm.activeNetwork ?: return false
         val capabilities = cm.getNetworkCapabilities(network) ?: return false
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    }
-
-    fun destroy() {
-        isDestroyed = true
-        nativeAd?.destroy()
-        nativeAd = null
-        adLoader = null
-        adContainer?.removeAllViews()
     }
 }
