@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <defaultsMap>
     <entry>
-        <key>ads_config</key>
+        <key>ads_config_v17</key>
         <value>
             {
-            "NativeAdSplash_enabled": true,
-            "NativeAdHome_enabled": true,
-            "BannerAdHome_enabled": true,
+            "Rewarded_enabled": true,
             "FullscreenGestureBack_enabled": true,
+            "FullscreenDynamicDone_enabled": true,
             "FullscreenStatusBack_enabled": true,
             "FullscreenSplash_enabled": true,
             "FullscreenApplyEmoji_enabled": true,
             "FullscreenApplyWidget_enabled": true,
             "FullscreenApplyAnim_enabled": true,
+            "BannerAdSettings_enabled": true,
+            "BannerAdHome_enabled": true,
+            "NativeAdSplash_enabled": true,
             "NativeLanguageFirst_enabled": false,
             "NativeLanguageSecond_enabled": true,
             "NativeApplyEmoji_enabled": true,
+            "NativeAdHome_enabled": true,
             "NativeIntro_enabled": true,
             "NativeApplyWidget_enabled": true,
             "NativeApplyAnimation_enabled": true,
             "NativeSmallStatusBar_enabled": true,
+            "NativeDynamic_enabled": true,
             "NativeSmallGesture_enabled": true
             }
         </value>

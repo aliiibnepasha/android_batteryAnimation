@@ -42,6 +42,7 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             Log.d("backPress","Move Next")
             if (isAdded && findNavController().currentDestination?.id == R.id.languageFragment) {

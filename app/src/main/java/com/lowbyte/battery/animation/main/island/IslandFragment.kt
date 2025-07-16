@@ -1,6 +1,7 @@
 package com.lowbyte.battery.animation.main.island
 
 import DynamicBottomSheetFragment
+import android.app.Dialog
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
@@ -14,20 +15,28 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
 import com.lowbyte.battery.animation.adapter.ActionDynamicItem
+import com.lowbyte.battery.animation.ads.AdManager
+import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
+import com.lowbyte.battery.animation.databinding.DialogSetNotchBinding
 import com.lowbyte.battery.animation.databinding.FragmentIslandBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
+import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeCustomizeId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenDynamicDoneEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeDynamicEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class IslandFragment : Fragment() {
 
     private var _binding: FragmentIslandBinding? = null
+    private lateinit var dialogNotch: Dialog
+    private var bindingDialog: DialogSetNotchBinding? = null
     private val binding get() = _binding!!
     private lateinit var preferences: AppPreferences
     private lateinit var sheet: AccessibilityPermissionBottomSheet // Declare the sheet
@@ -41,7 +50,25 @@ class IslandFragment : Fragment() {
         val root: View = binding.root
         preferences = AppPreferences.getInstance(requireContext())
         FirebaseAnalyticsUtils.logScreenView(this, "IslandFragment")
+        dialogNotch = Dialog(requireContext())
+        bindingDialog = DialogSetNotchBinding.inflate(LayoutInflater.from(requireContext()))
+        dialogNotch.setContentView(bindingDialog?.root!!)
+        dialogNotch.setCancelable(false)
+        dialogNotch.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        dialogNotch.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
+        NativeBannerSizeHelper(
+            context = requireContext(),
+            adId = getNativeCustomizeId(),
+            showAdRemoteFlag = isNativeDynamicEnabled, // Or get from remote config
+            isProUser = preferences.isProUser,       // Or from preferences
+            adContainer = binding.nativeAdContainerDynamic,
+            onAdLoaded = { Log.d("AD", "Banner Ad loaded!") },
+            onAdFailed = { Log.d("AD", "Banner Ad failed!") }
+        )
 
 
         if (preferences.getInt("widget_style_index", 0) == 0) {
@@ -331,11 +358,51 @@ class IslandFragment : Fragment() {
                 } else {
                     Log.d("Accessibility", "AccessibilityPermissionBottomSheet already shown")
                 }
-              //  sheet.show(childFragmentManager, "AccessibilityPermission")
           //  }
         } else {
-            binding.switchEnableDynamic.isChecked = preferences.isDynamicEnabled
-            requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+            AdManager.loadInterstitialAd(
+                requireContext(),
+                getFullscreenId(),
+                isFullscreenDynamicDoneEnabled
+            )
+
+            if (preferences.getInt("widget_style_index", 0) == 0) {
+                bindingDialog?.selectNotchStyle1?.visibility = View.VISIBLE
+                bindingDialog?.selectNotchStyle2?.visibility = View.GONE
+            } else {
+                bindingDialog?.selectNotchStyle1?.visibility = View.GONE
+                bindingDialog?.selectNotchStyle2?.visibility = View.VISIBLE
+            }
+            bindingDialog?.notchStyle2?.setOnClickListener {
+                bindingDialog?.selectNotchStyle2?.visibility = View.VISIBLE
+                bindingDialog?.selectNotchStyle1?.visibility = View.GONE
+                preferences.setInt("widget_style_index", 1)
+
+
+            }
+            bindingDialog?.notchStyle1?.setOnClickListener {
+                bindingDialog?.selectNotchStyle1?.visibility = View.VISIBLE
+                bindingDialog?.selectNotchStyle2?.visibility = View.GONE
+                preferences.setInt("widget_style_index", 0)
+
+            }
+            bindingDialog?.ivClose?.setOnClickListener {
+                binding.switchEnableDynamic.isChecked = false
+                dialogNotch.dismiss()
+            }
+            bindingDialog?.btnPremium?.setOnClickListener {
+                AdManager.showInterstitialAd(
+                    requireActivity(),
+                    isFullscreenDynamicDoneEnabled,
+                    false
+                ) {
+                    binding.switchEnableDynamic.isChecked = preferences.isDynamicEnabled
+                    requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+                    Log.e("Ads", "FullScreenTobeShoe")
+                }
+                dialogNotch.dismiss()
+            }
+            dialogNotch.show()
         }
     }
 
@@ -355,6 +422,9 @@ class IslandFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        if (dialogNotch.isShowing) {
+            dialogNotch.dismiss()
+        }
         _binding = null
     }
 

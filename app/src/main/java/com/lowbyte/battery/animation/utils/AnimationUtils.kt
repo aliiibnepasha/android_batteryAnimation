@@ -15,12 +15,18 @@ import com.lowbyte.battery.animation.model.Language
 object AnimationUtils {
 
     var finishingLang = false
+
+
+
     var  isNativeSplashEnabled = true //
     var  isBannerHomeEnabled = true //
+
+    var  isBannerPermissionSettings = true //
     var  isNativeHomeEnabled = true //
     var  isFullscreenSplashEnabled = true //
-  //  var  isFullscreenLangDoneEnabled = false //
+    var  isRewardedEnabled = true //
     var  isFullscreenStatusEnabled = true //
+    var  isFullscreenDynamicDoneEnabled = true //
     var  isFullscreenGestureEnabled = true //
     var  isFullscreenApplyEmojiEnabled = true //
     var  isFullscreenApplyWidgetEnabled = true//
@@ -32,6 +38,8 @@ object AnimationUtils {
     var  isNativeApplyWidgetEnabled = true//
     var  isNativeApplyAnimEnabled = true//
     var  isNativeStatusEnabled = true //
+
+    var  isNativeDynamicEnabled = true //
     var  isNativeGestureEnabled = true
 
 

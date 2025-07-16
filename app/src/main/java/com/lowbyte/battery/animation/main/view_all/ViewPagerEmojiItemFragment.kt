@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
+import com.lowbyte.battery.animation.activity.ProActivity
 import com.lowbyte.battery.animation.adapter.AllEmojiAdapter
 import com.lowbyte.battery.animation.ads.RewardedAdManager
 import com.lowbyte.battery.animation.databinding.DialogGoProBinding
@@ -23,6 +24,8 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.emojiComicListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiFashionListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiListCartoon
+import com.lowbyte.battery.animation.utils.AnimationUtils.isRewardedEnabled
+import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class ViewPagerEmojiItemFragment : Fragment() {
@@ -30,7 +33,11 @@ class ViewPagerEmojiItemFragment : Fragment() {
     private lateinit var binding: ItemViewPagerBinding
     private lateinit var adapter: AllEmojiAdapter
     private var currentPos: Int = 0
+    private lateinit var dialogRewarded: Dialog
 
+    private lateinit var preferences: AppPreferences
+
+    private var bindingReward: DialogGoProBinding? = null
     companion object {
         private const val ARG_POSITION = "arg_position"
 
@@ -52,9 +59,17 @@ class ViewPagerEmojiItemFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = ItemViewPagerBinding.inflate(inflater, container, false)
+        preferences = AppPreferences.getInstance(requireContext())
 
         // Log screen view for emoji tab
         FirebaseAnalyticsUtils.logScreenView(this, "EmojiTab_$currentPos")
+
+        dialogRewarded = Dialog(requireContext())
+        bindingReward = DialogGoProBinding.inflate(LayoutInflater.from(requireContext()))
+        dialogRewarded.setContentView(bindingReward?.root!!)
+        dialogRewarded.setCancelable(false)
+        dialogRewarded.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialogRewarded.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         return binding.root
     }
@@ -76,47 +91,42 @@ class ViewPagerEmojiItemFragment : Fragment() {
                     "emoji_position" to position.toString()
                 )
             )
-            if (isRewarded) {
-                val dialog = Dialog(requireContext())
-                val binding = DialogGoProBinding.inflate(LayoutInflater.from(requireContext()))
-                dialog.setContentView(binding.root)
-                dialog.setCancelable(true)
+            if (isRewarded && !preferences.isProUser) {
 
-                dialog.window?.setLayout(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
-                binding.ivClose.setOnClickListener { dialog.dismiss() }
-
-                binding.btnWatchAd.setOnClickListener {
-                    dialog.dismiss()
-                    RewardedAdManager.showRewardedAd(
-                        activity = requireActivity(),
-                        onRewardEarned = {
-                            val intent = Intent(
-                                requireActivity(), EmojiEditApplyActivity::class.java
-                            ).apply {
-                                putExtra(EXTRA_POSITION, position)
-                                putExtra(EXTRA_LABEL, label)
-                            }
-                            startActivity(intent)
-                        },
-                        onAdShown = {
-                            // Log analytics or UI update
-                        },
-                        onAdDismissed = {
-                            Toast.makeText(requireActivity(), "Ad dismissed", Toast.LENGTH_SHORT)
-                                .show()
-                        })
+                bindingReward?.ivClose?.setOnClickListener { dialogRewarded.dismiss() }
+                if (!isRewardedEnabled){
+                    bindingReward?.btnWatchAd?.visibility = View.GONE
+                    bindingReward?.btnPremium?.visibility = View.VISIBLE
+                }else{
+                    bindingReward?.btnWatchAd?.visibility = View.VISIBLE
+                    bindingReward?.btnPremium?.visibility = View.VISIBLE
+                    bindingReward?.btnWatchAd?.setOnClickListener {
+                        dialogRewarded.dismiss()
+                        RewardedAdManager.showRewardedAd(
+                            activity = requireActivity(),
+                            onRewardEarned = {
+                                val intent = Intent(
+                                    requireActivity(), EmojiEditApplyActivity::class.java
+                                ).apply {
+                                    putExtra(EXTRA_POSITION, position)
+                                    putExtra(EXTRA_LABEL, label)
+                                }
+                                startActivity(intent)
+                            },
+                            onAdShown = {
+                                // Log analytics or UI update
+                            },
+                            onAdDismissed = {
+                                Toast.makeText(requireActivity(), "Ad dismissed", Toast.LENGTH_SHORT)
+                                    .show()
+                            })
+                    }
                 }
-
-                binding.btnPremium.setOnClickListener {
-                    dialog.dismiss()
-                    // handle premium click (maybe navigate to paywall)
+                bindingReward?.btnPremium?.setOnClickListener {
+                    dialogRewarded.dismiss()
+                    startActivity(Intent(requireActivity(), ProActivity::class.java))
                 }
-
-                dialog.show()
+                dialogRewarded.show()
             } else {
                 val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java).apply {
                     putExtra(EXTRA_POSITION, position)

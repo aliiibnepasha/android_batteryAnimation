@@ -13,6 +13,7 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.lowbyte.battery.animation.utils.AdLoadingDialogManager
 import com.lowbyte.battery.animation.utils.AnimationUtils.getRewardedId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isRewardedEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 
 object RewardedAdManager {
@@ -23,7 +24,7 @@ object RewardedAdManager {
 
     fun loadAd(context: Activity) {
         if (rewardedAd != null || isLoading) return
-        //  if (!RemoteConfigUtils.getBoolean("show_rewarded_ad", defaultValue = true)) return TODO Remote
+          if (!isRewardedEnabled) return
         if (AppPreferences.getInstance(context).isProUser) return
         if (!isInternetAvailable(context)) return
 
@@ -52,7 +53,7 @@ object RewardedAdManager {
     ) {
         val prefs = AppPreferences.getInstance(activity)
 
-        // if (!RemoteConfigUtils.getBoolean("show_rewarded_ad", true)) return TODO Remote
+         if (!isRewardedEnabled) return
         if (prefs.isProUser) return
         if (!isInternetAvailable(activity)) return
 

@@ -10,7 +10,7 @@ import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.ads.BannerAdHelper
 import com.lowbyte.battery.animation.databinding.ActivityAllowAccecibilityBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerPermissionId
-import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerPermissionSettings
 import com.lowbyte.battery.animation.utils.AppPreferences
 
 class AllowAccessibilityActivity :  BaseActivity() {
@@ -39,7 +39,7 @@ class AllowAccessibilityActivity :  BaseActivity() {
     }
 
     private fun loadBannerAd() {
-        if (preferences.isProUser) {
+        if (preferences.isProUser || !isBannerPermissionSettings) {
             binding.bannerAdPermission.visibility = View.GONE
             return
         }
@@ -50,7 +50,7 @@ class AllowAccessibilityActivity :  BaseActivity() {
             bannerAdId = getBannerPermissionId(false),
             isCollapsable = false,
             isProUser = preferences.isProUser,
-            isBannerHomeEnabled
+            isBannerPermissionSettings
         )
     }
 }
