@@ -10,9 +10,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -30,13 +28,11 @@ import com.lowbyte.battery.animation.ads.BannerAdHelper
 import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.FragmentMainBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
-import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeCustomizeId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeHomeId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeHomeEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
-import com.lowbyte.battery.animation.utils.LocaleHelper
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
@@ -294,6 +290,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             }
             .setCancelable(false)
             .create()
+        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
         dialog.show()
     }
 
@@ -340,7 +337,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 isProUser = preferences.isProUser,
                 remoteConfig = isBannerHomeEnabled
             )
-        } else {
+        } else if (isNativeHomeEnabled) {
             binding.shimmerBanner.visibility = View.GONE
             nativeHelper = NativeBannerSizeHelper(
                 context = requireActivity(),
@@ -351,6 +348,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 onAdLoaded = { Log.d("AD", "Banner Ad loaded!") },
                 onAdFailed = { Log.d("AD", "Banner Ad failed!") }
             )
+        } else {
+            binding.bannerAdHome.visibility = View.GONE
         }
 
     }

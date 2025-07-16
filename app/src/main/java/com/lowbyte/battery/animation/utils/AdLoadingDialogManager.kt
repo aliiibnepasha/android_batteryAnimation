@@ -13,15 +13,15 @@ object AdLoadingDialogManager {
         // Prevent showing multiple dialogs
         if (dialog?.isShowing == true) return
 
-        if (dialog == null) {
             dialog = Dialog(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen).apply {
                 setContentView(R.layout.dialog_ad_loading)
                 setCancelable(false)
             }
-        }
+
 
 
         try {
+            Log.d("AdManager", "Show dialogeg ad and dialog")
             dialog?.show()
             activity.window?.decorView?.postDelayed({
                 if (dialog?.isShowing == true) {

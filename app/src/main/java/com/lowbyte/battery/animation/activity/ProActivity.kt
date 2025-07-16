@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.android.billingclient.api.*
 import com.lowbyte.battery.animation.BaseActivity
+import com.lowbyte.battery.animation.MyApplication
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ActivityProBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.SKU_MONTHLY
@@ -28,7 +29,7 @@ class ProActivity : BaseActivity() {
         binding = ActivityProBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
-
+        MyApplication.enableOpenAd(false)
         FirebaseAnalyticsUtils.logScreenView(this, "ProScreen")
         FirebaseAnalyticsUtils.startScreenTimer("ProScreen")
 
@@ -256,5 +257,10 @@ class ProActivity : BaseActivity() {
     override fun onPause() {
         super.onPause()
         FirebaseAnalyticsUtils.stopScreenTimer(this, "ProScreen")
+    }
+
+    override fun onDestroy() {
+        MyApplication.enableOpenAd(true)
+        super.onDestroy()
     }
 }

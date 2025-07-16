@@ -23,6 +23,7 @@ import com.lowbyte.battery.animation.model.Language
 import com.lowbyte.battery.animation.utils.AnimationUtils.finishingLang
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeLanguageId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeLangFirstEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isValid
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.lowbyte.battery.animation.utils.LocaleHelper
@@ -150,7 +151,7 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
             Log.d("ADNativeFunc", "Native ad shown call Language")
             finishingLang = true
             Handler(Looper.getMainLooper()).postDelayed({
-                if (isAdded && !isDetached) {
+                if (isAdded && requireActivity().isValid()) {
                     NativeLanguageHelper.loadAd(
                         context = requireActivity(),
                         adId = getNativeLanguageId(),

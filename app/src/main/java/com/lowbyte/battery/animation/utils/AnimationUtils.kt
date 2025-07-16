@@ -3,6 +3,7 @@ package com.lowbyte.battery.animation.utils
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.widget.Toast
@@ -366,4 +367,9 @@ fun getRewardedId(): String {
 fun Activity?.isValid(): Boolean {
     return this != null && !isFinishing && !isDestroyed
 }
+fun Activity?.is15SDK(): Boolean {
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
+}
+
+
 }

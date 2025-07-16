@@ -56,8 +56,8 @@ object AdManager {
 
     fun loadInterstitialAd(context: Activity, fullscreenAdId: String, remoteConfig: Boolean) {
         preferences = AppPreferences.getInstance(context)
-        if (preferences.isProUser || !remoteConfig || !context.isValid()) {
-            Log.d(TAG, "Pro user — skipping interstitial ad load")
+        if (preferences.isProUser || !remoteConfig) {
+            Log.d(TAG, "Pro user — skipping interstitial ad load ${preferences.isProUser} or $remoteConfig")
             return
         }
 
@@ -80,10 +80,10 @@ object AdManager {
             AdRequest.Builder().build(),
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
+                    adIsLoading = false
                     if (context.isValid()){
                         interstitialAd = ad
                         interstitialAd?.setImmersiveMode(true)
-                        adIsLoading = false
                         Log.d(TAG, "Interstitial Ad successfully loaded")
                         interstitialAd?.setOnPaidEventListener { adValue ->
                             logPaidEvent(context,adValue, "interstitialAd", ad.adUnitId)
@@ -167,6 +167,7 @@ object AdManager {
         AdStateController.isInterstitialShowing = true
         interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
+                adIsLoading = false
                 Log.d(TAG, "Interstitial ad dismissed")
                 interstitialAd = null
                 AdStateController.isInterstitialShowing = false
@@ -174,6 +175,7 @@ object AdManager {
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                adIsLoading = false
                 Log.e(TAG, "Interstitial failed to show: ${adError.message}")
                 interstitialAd = null
                 AdStateController.isInterstitialShowing = false

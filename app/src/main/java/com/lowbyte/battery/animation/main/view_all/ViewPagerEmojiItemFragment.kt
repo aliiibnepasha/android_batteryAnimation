@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
 import com.lowbyte.battery.animation.activity.ProActivity
 import com.lowbyte.battery.animation.adapter.AllEmojiAdapter
@@ -68,8 +69,10 @@ class ViewPagerEmojiItemFragment : Fragment() {
         bindingReward = DialogGoProBinding.inflate(LayoutInflater.from(requireContext()))
         dialogRewarded.setContentView(bindingReward?.root!!)
         dialogRewarded.setCancelable(false)
+        dialogRewarded.window?.attributes?.windowAnimations = R.style.DialogAnimation
         dialogRewarded.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialogRewarded.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
 
         return binding.root
     }
@@ -105,6 +108,12 @@ class ViewPagerEmojiItemFragment : Fragment() {
                         RewardedAdManager.showRewardedAd(
                             activity = requireActivity(),
                             onRewardEarned = {
+
+                            },
+                            onAdShown = {
+                                // Log analytics or UI update
+                            },
+                            onAdDismissed = {
                                 val intent = Intent(
                                     requireActivity(), EmojiEditApplyActivity::class.java
                                 ).apply {
@@ -112,13 +121,6 @@ class ViewPagerEmojiItemFragment : Fragment() {
                                     putExtra(EXTRA_LABEL, label)
                                 }
                                 startActivity(intent)
-                            },
-                            onAdShown = {
-                                // Log analytics or UI update
-                            },
-                            onAdDismissed = {
-                                Toast.makeText(requireActivity(), "Ad dismissed", Toast.LENGTH_SHORT)
-                                    .show()
                             })
                     }
                 }

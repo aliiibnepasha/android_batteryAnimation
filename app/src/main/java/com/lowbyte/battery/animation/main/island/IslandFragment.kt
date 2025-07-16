@@ -58,6 +58,7 @@ class IslandFragment : Fragment() {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
+        dialogNotch.window?.attributes?.windowAnimations = R.style.DialogAnimation
         dialogNotch.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         NativeBannerSizeHelper(
@@ -360,16 +361,12 @@ class IslandFragment : Fragment() {
                 }
           //  }
         } else {
-            AdManager.loadInterstitialAd(
-                requireActivity(),
-                getFullscreenId(),
-                isFullscreenDynamicDoneEnabled
-            )
 
             if (preferences.getInt("widget_style_index", 0) == 0) {
                 bindingDialog?.selectNotchStyle1?.visibility = View.VISIBLE
                 bindingDialog?.selectNotchStyle2?.visibility = View.GONE
-            } else {
+            }
+            else {
                 bindingDialog?.selectNotchStyle1?.visibility = View.GONE
                 bindingDialog?.selectNotchStyle2?.visibility = View.VISIBLE
             }
@@ -402,6 +399,11 @@ class IslandFragment : Fragment() {
                 }
                 dialogNotch.dismiss()
             }
+            AdManager.loadInterstitialAd(
+                requireActivity(),
+                getFullscreenId(),
+                isFullscreenDynamicDoneEnabled
+            )
             dialogNotch.show()
         }
     }

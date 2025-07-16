@@ -2,6 +2,7 @@ package com.lowbyte.battery.animation.activity
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingResult
@@ -57,8 +58,16 @@ class SplashActivity : BaseActivity() {
             binding = ActivitySplashBinding.inflate(layoutInflater)
             setContentView(binding.root)
 
+
             preferences = AppPreferences.getInstance(this)
             Log.d("SplashActivityLog", "Preferences initialized: isProUser=${preferences.isProUser}")
+            if (!preferences.isProUser){
+                window.decorView.systemUiVisibility = (
+                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+
+                        )
+            }
 
             val remoteConfig = FirebaseRemoteConfig.getInstance()
             val settings = FirebaseRemoteConfigSettings.Builder()

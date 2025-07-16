@@ -21,6 +21,7 @@ object RewardedAdManager {
 
     private var rewardedAd: RewardedAd? = null
     private var isLoading = false
+    private var isRewardEarned = false
     private const val TAG = "RewardedAdManager"
 
     fun loadAd(context: Activity) {
@@ -68,11 +69,14 @@ object RewardedAdManager {
                     rewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                         override fun onAdShowedFullScreenContent() {
                             Log.d(TAG, "Ad shown")
+                            AdStateController.isInterstitialShowing = true
+
                             onAdShown()
                         }
 
                         override fun onAdDismissedFullScreenContent() {
                             Log.d(TAG, "Ad dismissed")
+                            AdStateController.isInterstitialShowing = false
 
                             rewardedAd = null
                             onAdDismissed()
@@ -81,6 +85,8 @@ object RewardedAdManager {
 
                         override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                             Log.e(TAG, "Failed to show ad: ${adError.message}")
+                            AdStateController.isInterstitialShowing = false
+
                             rewardedAd = null
                             loadAd(activity)
                         }
@@ -97,6 +103,8 @@ object RewardedAdManager {
                     if (activity.isValid()){
                         loadAd(activity)
                     }
+                    AdStateController.isInterstitialShowing = false
+
                 }
             }
         }

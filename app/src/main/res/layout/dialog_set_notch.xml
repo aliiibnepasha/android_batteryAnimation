@@ -55,11 +55,11 @@
 
         <ImageView
             android:id="@+id/selectNotchStyle1"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="5dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:contentDescription="@string/notch_style"
             android:src="@drawable/ic_select_notch"
+            app:layout_constraintBottom_toTopOf="@+id/notchStyle1"
             app:layout_constraintEnd_toEndOf="@+id/notchStyle1"
             app:layout_constraintTop_toTopOf="@+id/notchStyle1" />
 
@@ -76,12 +76,12 @@
 
         <ImageView
             android:id="@+id/selectNotchStyle2"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="5dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:contentDescription="@string/notch_style"
             android:src="@drawable/ic_select_notch"
             android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/notchStyle2"
             app:layout_constraintEnd_toEndOf="@+id/notchStyle2"
             app:layout_constraintTop_toTopOf="@+id/notchStyle2" />
 

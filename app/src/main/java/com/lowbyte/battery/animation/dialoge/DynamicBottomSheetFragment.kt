@@ -148,6 +148,7 @@ class DynamicBottomSheetFragment(
             .setCancelable(false)
             .create()
 
+        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         binding.btnAllow.setOnClickListener {
