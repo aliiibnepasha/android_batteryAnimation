@@ -122,6 +122,10 @@ class SplashFragment : Fragment() {
 
         }, 3000)
 
+        if (preferences.isProUser) {
+            binding.tvContainAds.visibility = View.INVISIBLE
+        }
+
         return binding.root
     }
 
@@ -179,7 +183,7 @@ class SplashFragment : Fragment() {
                     false
                 ) {
                     if (preferences.isProUser) {
-                        findNavController().navigate(R.id.action_splash_to_language)
+                        findNavController().navigate(R.id.action_splash_to_main)
                     } else {
                         findNavController().navigate(destination)
                     }
