@@ -14,6 +14,7 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.lowbyte.battery.animation.utils.AdLoadingDialogManager
 import com.lowbyte.battery.animation.utils.AnimationUtils.getRewardedId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isRewardedEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isValid
 import com.lowbyte.battery.animation.utils.AppPreferences
 
 object RewardedAdManager {
@@ -23,8 +24,8 @@ object RewardedAdManager {
     private const val TAG = "RewardedAdManager"
 
     fun loadAd(context: Activity) {
-        if (rewardedAd != null || isLoading) return
-          if (!isRewardedEnabled) return
+        if (rewardedAd != null || isLoading || !isRewardedEnabled || !context.isValid()) return
+
         if (AppPreferences.getInstance(context).isProUser) return
         if (!isInternetAvailable(context)) return
 
@@ -32,8 +33,10 @@ object RewardedAdManager {
         val adRequest = AdRequest.Builder().build()
         RewardedAd.load(context, getRewardedId(), adRequest, object : RewardedAdLoadCallback() {
             override fun onAdLoaded(ad: RewardedAd) {
-                rewardedAd = ad
-                isLoading = false
+                if (context.isValid()){
+                    rewardedAd = ad
+                    isLoading = false
+                }
                 Log.d(TAG, "Rewarded ad loaded")
             }
 
@@ -59,36 +62,42 @@ object RewardedAdManager {
 
         val isAdReady = rewardedAd != null
         val dialogDuration = if (isAdReady) 1000L else 3000L
+        if (activity.isValid()){
+            AdLoadingDialogManager.show(activity, dialogDuration) {
+                if (rewardedAd != null && activity.isValid())  {
+                    rewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                        override fun onAdShowedFullScreenContent() {
+                            Log.d(TAG, "Ad shown")
+                            onAdShown()
+                        }
 
-        AdLoadingDialogManager.show(activity, dialogDuration) {
-            if (rewardedAd != null) {
-                rewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                    override fun onAdShowedFullScreenContent() {
-                        Log.d(TAG, "Ad shown")
-                        onAdShown()
+                        override fun onAdDismissedFullScreenContent() {
+                            Log.d(TAG, "Ad dismissed")
+
+                            rewardedAd = null
+                            onAdDismissed()
+                            loadAd(activity) // preload next
+                        }
+
+                        override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                            Log.e(TAG, "Failed to show ad: ${adError.message}")
+                            rewardedAd = null
+                            loadAd(activity)
+                        }
                     }
 
-                    override fun onAdDismissedFullScreenContent() {
-                        Log.d(TAG, "Ad dismissed")
-                        rewardedAd = null
-                        onAdDismissed()
-                        loadAd(activity) // preload next
+                    if (activity.isValid()){
+                        rewardedAd?.show(activity) { rewardItem: RewardItem ->
+                            Log.d(TAG, "User earned reward: ${rewardItem.amount} ${rewardItem.type}")
+                            onRewardEarned()
+                        }
                     }
-
-                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                        Log.e(TAG, "Failed to show ad: ${adError.message}")
-                        rewardedAd = null
+                } else {
+                    Log.w(TAG, "Rewarded ad not ready")
+                    if (activity.isValid()){
                         loadAd(activity)
                     }
                 }
-
-                rewardedAd?.show(activity) { rewardItem: RewardItem ->
-                    Log.d(TAG, "User earned reward: ${rewardItem.amount} ${rewardItem.type}")
-                    onRewardEarned()
-                }
-            } else {
-                Log.w(TAG, "Rewarded ad not ready")
-                loadAd(activity)
             }
         }
 

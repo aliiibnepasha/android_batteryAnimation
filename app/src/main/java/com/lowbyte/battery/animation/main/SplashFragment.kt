@@ -20,7 +20,6 @@ import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.GoogleMobileAdsConsentManager
 import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.FragmentSplashBinding
-import com.lowbyte.battery.animation.utils.AnimationUtils.finishingLang
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenSplashId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeSplashId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenSplashEnabled
@@ -157,7 +156,7 @@ class SplashFragment : Fragment() {
 
         }
         AdManager.loadInterstitialAd(
-            requireContext(),
+            requireActivity(),
             getFullscreenSplashId(),
             isFullscreenSplashEnabled
         )

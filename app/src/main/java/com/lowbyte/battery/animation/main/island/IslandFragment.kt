@@ -61,7 +61,7 @@ class IslandFragment : Fragment() {
         dialogNotch.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         NativeBannerSizeHelper(
-            context = requireContext(),
+            context = requireActivity(),
             adId = getNativeCustomizeId(),
             showAdRemoteFlag = isNativeDynamicEnabled, // Or get from remote config
             isProUser = preferences.isProUser,       // Or from preferences
@@ -361,7 +361,7 @@ class IslandFragment : Fragment() {
           //  }
         } else {
             AdManager.loadInterstitialAd(
-                requireContext(),
+                requireActivity(),
                 getFullscreenId(),
                 isFullscreenDynamicDoneEnabled
             )

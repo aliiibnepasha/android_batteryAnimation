@@ -202,4 +202,13 @@
     <string name="battery_widget_service">バッテリーウィジェットサービス</string>
     <string name="stop_service">サービスを停止</string>
 
+    <string name="enable_notification_access">通知アクセスを有効にする</string>
+    <string name="allow_notification_access_so_we_can_show_notifications_in_your_custom_notch">カスタムノッチに通知を表示するために通知アクセスを許可してください。</string>
+    <string name="go_pro">PRO にアップグレード！</string>
+    <string name="experience_high_quality_nchoose_your_access_method_below">高品質を体験してください。\n以下からアクセス方法を選択してください！</string>
+    <string name="watch_an_ad_to_continue">続けるには広告を視聴してください</string>
+    <string name="takes_15_30_seconds">15～30秒かかります</string>
+    <string name="go_premium_unlimited_access">プレミアムへ – 無制限アクセス</string>
+    <string name="support_the">アプリをサポートして広告を削除し、\n高速生成を解除しましょう。</string>
+
   </resources>

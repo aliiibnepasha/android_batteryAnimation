@@ -333,7 +333,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         if (isBannerHomeEnabled) {
             binding.shimmerBanner.visibility = View.VISIBLE
             BannerAdHelper.loadBannerAd(
-                context = requireContext(),
+                context = requireActivity(),
                 container = binding.bannerAdHome,
                 bannerAdId = getBannerId(true),
                 isCollapsable = true,
@@ -343,7 +343,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         } else {
             binding.shimmerBanner.visibility = View.GONE
             nativeHelper = NativeBannerSizeHelper(
-                context = requireContext(),
+                context = requireActivity(),
                 adId = getNativeHomeId(), // Replace with your real AdMob ID
                 showAdRemoteFlag = isNativeHomeEnabled, // Or get from remote config
                 isProUser = preferences.isProUser,       // Or from preferences

@@ -203,6 +203,13 @@
     </string>
     <string name="battery_widget_service">Layanan Widget Baterai</string>
     <string name="stop_service">Hentikan Layanan</string>
-
+    <string name="enable_notification_access">Aktifkan Akses Notifikasi</string>
+    <string name="allow_notification_access_so_we_can_show_notifications_in_your_custom_notch">Izinkan akses notifikasi agar kami dapat menampilkannya di notch kustom Anda.</string>
+    <string name="go_pro">Tingkatkan ke PRO!</string>
+    <string name="experience_high_quality_nchoose_your_access_method_below">Rasakan kualitas tinggi.\nPilih metode akses di bawah ini!</string>
+    <string name="watch_an_ad_to_continue">Tonton iklan untuk melanjutkan</string>
+    <string name="takes_15_30_seconds">Memakan waktu 15–30 detik</string>
+    <string name="go_premium_unlimited_access">Premium – Akses Tanpa Batas</string>
+    <string name="support_the">Dukung aplikasi untuk menghapus iklan dan\nmembuka akses pembuatan yang lebih cepat.</string>
 
 </resources>

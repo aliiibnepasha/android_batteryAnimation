@@ -202,4 +202,13 @@
     <string name="battery_widget_service">Service du widget batterie</string>
     <string name="stop_service">Arrêter le service</string>
 
+    <string name="enable_notification_access">Activer l accès aux notifications</string>
+    <string name="allow_notification_access_so_we_can_show_notifications_in_your_custom_notch">Autorisez l accès pour afficher les notifications dans votre encoche personnalisée.</string>
+    <string name="go_pro">Passez PRO !</string>
+    <string name="experience_high_quality_nchoose_your_access_method_below">Haute qualité.\nchoisissez votre méthode d accès ci-dessous.</string>
+    <string name="watch_an_ad_to_continue">Regardez une pub pour continuer</string>
+    <string name="takes_15_30_seconds">Prend 15–30 secondes</string>
+    <string name="go_premium_unlimited_access">Passez Premium – Accès illimité</string>
+    <string name="support_the">Soutenez l application pour supprimer les pubs\net débloquer une génération plus rapide.</string>
+
 </resources>

@@ -203,4 +203,13 @@
     <string name="battery_widget_service">บริการวิดเจ็ตแบตเตอรี่</string>
     <string name="stop_service">หยุดบริการ</string>
 
+    <string name="enable_notification_access">เปิดใช้งานการเข้าถึงการแจ้งเตือน</string>
+    <string name="allow_notification_access_so_we_can_show_notifications_in_your_custom_notch">อนุญาตการเข้าถึงการแจ้งเตือนเพื่อให้เราสามารถแสดงในการออกแบบ Notch ของคุณได้</string>
+    <string name="go_pro">อัปเกรดเป็น PRO!</string>
+    <string name="experience_high_quality_nchoose_your_access_method_below">สัมผัสคุณภาพระดับสูง\nเลือกวิธีเข้าถึงด้านล่าง!</string>
+    <string name="watch_an_ad_to_continue">ดูโฆษณาเพื่อดำเนินการต่อ</string>
+    <string name="takes_15_30_seconds">ใช้เวลา 15–30 วินาที</string>
+    <string name="go_premium_unlimited_access">สมัคร Premium – เข้าถึงแบบไม่จำกัด</string>
+    <string name="support_the">สนับสนุนแอปเพื่อเอาโฆษณาออกและ\nปลดล็อกการสร้างที่เร็วขึ้น</string>
+
 </resources>

@@ -208,4 +208,13 @@
     <string name="battery_widget_service">Dịch vụ widget pin</string>
     <string name="stop_service">Dừng dịch vụ</string>
 
+    <string name="enable_notification_access">Bật quyền truy cập thông báo</string>
+    <string name="allow_notification_access_so_we_can_show_notifications_in_your_custom_notch">Cho phép quyền truy cập thông báo để hiển thị trong notch tùy chỉnh của bạn.</string>
+    <string name="go_pro">Nâng cấp PRO!</string>
+    <string name="experience_high_quality_nchoose_your_access_method_below">Trải nghiệm chất lượng cao.\nChọn phương thức truy cập bên dưới!</string>
+    <string name="watch_an_ad_to_continue">Xem quảng cáo để tiếp tục</string>
+    <string name="takes_15_30_seconds">Mất 15–30 giây</string>
+    <string name="go_premium_unlimited_access">Nâng cấp Premium – Truy cập không giới hạn</string>
+    <string name="support_the">Hỗ trợ ứng dụng để xóa quảng cáo và\nmở khóa tính năng tạo nhanh hơn.</string>
+
 </resources>

@@ -204,5 +204,12 @@
     </string>
     <string name="battery_widget_service">Serbisyo ng Baterya Widget</string>
     <string name="stop_service">Itigil ang Serbisyo</string>
-
+    <string name="enable_notification_access">Paganahin ang Access sa Notification</string>
+    <string name="allow_notification_access_so_we_can_show_notifications_in_your_custom_notch">Pahintulutan ang access sa notification upang maipakita namin ito sa iyong custom notch.</string>
+    <string name="go_pro">Mag-PRO na!</string>
+    <string name="experience_high_quality_nchoose_your_access_method_below">Maranasan ang mataas na kalidad.\nPumili ng paraan ng access sa ibaba!</string>
+    <string name="watch_an_ad_to_continue">Manood ng ad para magpatuloy</string>
+    <string name="takes_15_30_seconds">Tumatagal ng 15–30 segundo</string>
+    <string name="go_premium_unlimited_access">Mag-Premium – Walang limitasyong access</string>
+    <string name="support_the">Suportahan ang app upang alisin ang mga ad at\ni-unlock ang mas mabilis na pagbuo.</string>
  </resources>

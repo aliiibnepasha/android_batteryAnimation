@@ -15,6 +15,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.lowbyte.battery.animation.utils.AdLoadingDialogManager
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isValid
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
 import kotlinx.coroutines.CoroutineScope
@@ -53,9 +54,9 @@ object AdManager {
 
     }
 
-    fun loadInterstitialAd(context: Context, fullscreenAdId: String, remoteConfig: Boolean) {
+    fun loadInterstitialAd(context: Activity, fullscreenAdId: String, remoteConfig: Boolean) {
         preferences = AppPreferences.getInstance(context)
-        if (preferences.isProUser || !remoteConfig) {
+        if (preferences.isProUser || !remoteConfig || !context.isValid()) {
             Log.d(TAG, "Pro user — skipping interstitial ad load")
             return
         }
@@ -79,15 +80,18 @@ object AdManager {
             AdRequest.Builder().build(),
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
-                    interstitialAd = ad
-                    interstitialAd?.setImmersiveMode(true)
-                    adIsLoading = false
-                    Log.d(TAG, "Interstitial Ad successfully loaded")
-                    interstitialAd?.setOnPaidEventListener { adValue ->
-                        logPaidEvent(context,adValue, "interstitialAd", ad.adUnitId)
+                    if (context.isValid()){
+                        interstitialAd = ad
+                        interstitialAd?.setImmersiveMode(true)
+                        adIsLoading = false
+                        Log.d(TAG, "Interstitial Ad successfully loaded")
+                        interstitialAd?.setOnPaidEventListener { adValue ->
+                            logPaidEvent(context,adValue, "interstitialAd", ad.adUnitId)
 
 
+                        }
                     }
+
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
@@ -107,7 +111,7 @@ object AdManager {
     ) {
         Log.d(TAG, "Attempting to show interstitial ad")
 
-        if (preferences.isProUser || !remoteConfig) {
+        if (preferences.isProUser || !remoteConfig || !activity.isValid()) {
             Log.d(TAG, "Pro user or remote config disabled — skipping ad and dialog")
             onDismiss()
             return
@@ -123,8 +127,13 @@ object AdManager {
             return
         }
         val dialogDuration = if (interstitialAd != null) 1000L else 3000L
-        AdLoadingDialogManager.show(activity, dialogDuration) {
-            continueWithInterstitialAd(activity, remoteConfig, isFromActivity, onDismiss)
+
+        if (activity.isValid()){
+            AdLoadingDialogManager.show(activity, dialogDuration) {
+                if (activity.isValid()){
+                    continueWithInterstitialAd(activity, remoteConfig, isFromActivity, onDismiss)
+                }
+            }
         }
     }
 
@@ -148,7 +157,7 @@ object AdManager {
             return
         }
 
-        if (interstitialAd == null) {
+        if (interstitialAd == null && activity.isValid()) {
             Log.d(TAG, "Interstitial ad not ready — fallback and reload")
             onDismiss()
             loadInterstitialAd(activity, getFullscreenId(), remoteConfig)
@@ -183,7 +192,9 @@ object AdManager {
 
         try {
             Log.d(TAG, "Showing interstitial ad")
-            interstitialAd?.show(activity)
+            if (activity.isValid()){
+                interstitialAd?.show(activity)
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Exception while showing interstitial ad: ${e.localizedMessage}")
             interstitialAd = null

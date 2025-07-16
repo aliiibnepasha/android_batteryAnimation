@@ -105,8 +105,10 @@ class ProFragment : Fragment() {
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    loadAllPrices()
-                    checkExistingSubscriptions()
+                    if (isAdded && findNavController().currentDestination?.id == R.id.proFragment){
+                        loadAllPrices()
+                        checkExistingSubscriptions()
+                    }
                 }
             }
 
@@ -123,22 +125,26 @@ class ProFragment : Fragment() {
         billingClient.queryPurchasesAsync(params) { billingResult, purchasesList ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
 
-                if (purchasesList.isNullOrEmpty()) {
-                    Log.d("Billing", "No active subscriptions found.")
-                    return@queryPurchasesAsync
-                }
-                for (purchase in purchasesList) {
-                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
-                        if (!purchase.isAcknowledged) {
-                            acknowledgePurchase(purchase)
+                if (isAdded && findNavController().currentDestination?.id == R.id.proFragment){
+
+                    if (purchasesList.isNullOrEmpty()) {
+                        Log.d("Billing", "No active subscriptions found.")
+                        return@queryPurchasesAsync
+                    }
+                    for (purchase in purchasesList) {
+                        if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                            if (!purchase.isAcknowledged) {
+                                acknowledgePurchase(purchase)
+                            }
+                            handlePurchase(purchase)
+                        } else {
+                            Log.d(
+                                "Billing", "Purchase not in PURCHASED state: ${purchase.purchaseState}"
+                            )
                         }
-                        handlePurchase(purchase)
-                    } else {
-                        Log.d(
-                            "Billing", "Purchase not in PURCHASED state: ${purchase.purchaseState}"
-                        )
                     }
                 }
+
 
             } else {
                 FirebaseAnalyticsUtils.logClickEvent(
@@ -174,15 +180,17 @@ class ProFragment : Fragment() {
 
         billingClient.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                for (productDetails in productDetailsList) {
-                    val pricing =
-                        productDetails.subscriptionOfferDetails?.firstOrNull()?.pricingPhases?.pricingPhaseList?.firstOrNull()?.formattedPrice
-                            ?: continue
-                    requireActivity().runOnUiThread {
-                        when (productDetails.productId) {
-                            SKU_WEEKLY -> binding.priceWeekly.text = pricing
-                            SKU_MONTHLY -> binding.priceMonthly.text = pricing
-                            SKU_YEARLY -> binding.priceYearly.text = pricing
+                if (isAdded && findNavController().currentDestination?.id == R.id.proFragment){
+                    for (productDetails in productDetailsList) {
+                        val pricing =
+                            productDetails.subscriptionOfferDetails?.firstOrNull()?.pricingPhases?.pricingPhaseList?.firstOrNull()?.formattedPrice
+                                ?: continue
+                        requireActivity().runOnUiThread {
+                            when (productDetails.productId) {
+                                SKU_WEEKLY -> binding.priceWeekly.text = pricing
+                                SKU_MONTHLY -> binding.priceMonthly.text = pricing
+                                SKU_YEARLY -> binding.priceYearly.text = pricing
+                            }
                         }
                     }
                 }
@@ -232,6 +240,7 @@ class ProFragment : Fragment() {
 
         lifecycleScope.launch {
             delay(2000) // Wait for 2 seconds
+
             binding.closeScreen.visibility = View.VISIBLE
         }
         binding.closeScreen.setOnClickListener {
@@ -282,29 +291,35 @@ class ProFragment : Fragment() {
         ).build()
 
         billingClient.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && productDetailsList.isNotEmpty()) {
-                val productDetails = productDetailsList[0]
-                val offerToken = productDetails.subscriptionOfferDetails?.firstOrNull()?.offerToken
-                    ?: return@queryProductDetailsAsync
-                val billingFlowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(
-                    listOf(
-                        BillingFlowParams.ProductDetailsParams.newBuilder()
-                            .setProductDetails(productDetails).setOfferToken(offerToken).build()
+
+            if (isAdded && findNavController().currentDestination?.id == R.id.proFragment) {
+                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && productDetailsList.isNotEmpty()) {
+                    val productDetails = productDetailsList[0]
+                    val offerToken = productDetails.subscriptionOfferDetails?.firstOrNull()?.offerToken
+                        ?: return@queryProductDetailsAsync
+                    val billingFlowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(
+                        listOf(
+                            BillingFlowParams.ProductDetailsParams.newBuilder()
+                                .setProductDetails(productDetails).setOfferToken(offerToken).build()
+                        )
+                    ).build()
+                    billingClient.launchBillingFlow(requireActivity(), billingFlowParams)
+                }
+                else {
+                    FirebaseAnalyticsUtils.logClickEvent(
+                        requireContext(),
+                        "billing_error",
+                        mapOf("message" to billingResult.debugMessage)
                     )
-                ).build()
-                billingClient.launchBillingFlow(requireActivity(), billingFlowParams)
-            } else {
-                FirebaseAnalyticsUtils.logClickEvent(
-                    requireContext(),
-                    "billing_error",
-                    mapOf("message" to billingResult.debugMessage)
-                )
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.subscription_not_available),
-                    Toast.LENGTH_SHORT
-                ).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.subscription_not_available),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
+
+
         }
     }
 

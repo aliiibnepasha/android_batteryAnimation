@@ -53,7 +53,7 @@ class NativeAdFragment : Fragment(R.layout.fragment_fullscreen_native_ad) {
             sharedViewModel.childEvent.value = "ClickedClose"
         }
         nativeAdHelper = NativeFullscreenHelper(
-            context = requireContext(),
+            context = requireActivity(),
             adId = AnimationUtils.getNativeOnBoardingId(), // Replace with your ad unit ID
             showAdRemoteFlag = true,  // From remote config or your logic
             isProUser = preferences.isProUser,        // Check from your user settings

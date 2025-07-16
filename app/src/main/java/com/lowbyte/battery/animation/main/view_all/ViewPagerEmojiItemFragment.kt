@@ -154,4 +154,11 @@ class ViewPagerEmojiItemFragment : Fragment() {
         Log.d("EmojiTab", "Tab $currentPos loaded with ${emojiList.size} items.")
         adapter.submitList(emojiList)
     }
+
+    override fun onDestroyView() {
+        if (dialogRewarded.isShowing){
+            dialogRewarded.dismiss()
+        }
+        super.onDestroyView()
+    }
 }

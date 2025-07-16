@@ -203,4 +203,13 @@
     <string name="battery_widget_service">배터리 위젯 서비스</string>
     <string name="stop_service">서비스 중지</string>
 
+    <string name="enable_notification_access">알림 접근 허용</string>
+    <string name="allow_notification_access_so_we_can_show_notifications_in_your_custom_notch">사용자 정의 노치에 알림을 표시하려면 알림 접근을 허용하세요.</string>
+    <string name="go_pro">PRO로 업그레이드!</string>
+    <string name="experience_high_quality_nchoose_your_access_method_below">고품질을 경험하세요.\n아래에서 접근 방법을 선택하세요!</string>
+    <string name="watch_an_ad_to_continue">계속하려면 광고를 시청하세요</string>
+    <string name="takes_15_30_seconds">15~30초 소요됩니다</string>
+    <string name="go_premium_unlimited_access">프리미엄 – 무제한 접근</string>
+    <string name="support_the">광고 제거 및 더 빠른 생성 해제를 위해 앱을 지원하세요.</string>
+
 </resources>

@@ -1,5 +1,6 @@
 package com.lowbyte.battery.animation.ads
 
+import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -11,10 +12,11 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.nativead.*
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.utils.AnimationUtils.isValid
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
 
 abstract class BaseNativeAdHelper(
-    protected val context: Context,
+    protected val context: Activity,
     protected val adId: String,
     protected val showAdRemoteFlag: Boolean,
     protected val isProUser: Boolean,
@@ -28,17 +30,19 @@ abstract class BaseNativeAdHelper(
     protected abstract val logTag: String
 
     init {
-        if (!isInternetAvailable(context)) {
-            Log.d(logTag, "No internet — skipping native ad.")
-            hideAdView()
-            onAdFailed?.invoke()
-        } else if (!showAdRemoteFlag || isProUser) {
-            Log.d(logTag, " Base Pro user or remote flag disabled — skipping ad.")
-            hideAdView()
-            onAdFailed?.invoke()
-        } else {
-            showShimmer()
-            loadAd()
+        if (context.isValid()){
+            if (!isInternetAvailable(context)) {
+                Log.d(logTag, "No internet — skipping native ad.")
+                hideAdView()
+                onAdFailed?.invoke()
+            } else if (!showAdRemoteFlag || isProUser) {
+                Log.d(logTag, " Base Pro user or remote flag disabled — skipping ad.")
+                hideAdView()
+                onAdFailed?.invoke()
+            } else {
+                showShimmer()
+                loadAd()
+            }
         }
     }
 
@@ -46,16 +50,20 @@ abstract class BaseNativeAdHelper(
         Log.d(logTag, "Loading native ad: $adId")
         val adLoader = AdLoader.Builder(context, adId)
             .forNativeAd { ad ->
-                nativeAd = ad
-                Log.d(logTag, "Native ad loaded")
-                onAdLoaded?.invoke()
-                adContainer?.let { showAdInView(it, ad) }
+                if (context.isValid()){
+                    nativeAd = ad
+                    Log.d(logTag, "Native ad loaded")
+                    onAdLoaded?.invoke()
+                    adContainer?.let { showAdInView(it, ad) }
+                }
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(error: LoadAdError) {
-                    Log.e(logTag, "Native ad failed: ${error.message}")
-                    hideAdView()
-                    onAdFailed?.invoke()
+                    if (context.isValid()){
+                        Log.e(logTag, "Native ad failed: ${error.message}")
+                        hideAdView()
+                        onAdFailed?.invoke()
+                    }
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().setRequestCustomMuteThisAd(false).build())
@@ -107,16 +115,20 @@ abstract class BaseNativeAdHelper(
     }
 
     private fun showShimmer() {
-        adContainer?.let {
-            val shimmer = LayoutInflater.from(context).inflate(R.layout.view_native_widget_shimmer, it, false)
-            it.removeAllViews()
-            it.addView(shimmer)
+        if (context.isValid()){
+            adContainer?.let {
+                val shimmer = LayoutInflater.from(context).inflate(R.layout.view_native_widget_shimmer, it, false)
+                it.removeAllViews()
+                it.addView(shimmer)
+            }
         }
     }
 
     private fun hideAdView() {
-        adContainer?.visibility = View.GONE
-        adContainer?.removeAllViews()
+        if (context.isValid()){
+            adContainer?.visibility = View.GONE
+            adContainer?.removeAllViews()
+        }
     }
 
     private fun isInternetAvailable(context: Context): Boolean {
@@ -127,7 +139,9 @@ abstract class BaseNativeAdHelper(
     }
 
     fun destroy() {
-        nativeAd?.destroy()
-        nativeAd = null
+        if (context.isValid()){
+            nativeAd?.destroy()
+            nativeAd = null
+        }
     }
 }

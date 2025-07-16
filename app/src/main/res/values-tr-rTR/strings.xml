@@ -207,4 +207,13 @@
     <string name="battery_widget_service">Pil Widget Hizmeti</string>
     <string name="stop_service">Hizmeti Durdur</string>
 
+    <string name="enable_notification_access">Bildirim Erişimini Etkinleştir</string>
+    <string name="allow_notification_access_so_we_can_show_notifications_in_your_custom_notch">Özel çentiğinizde bildirim gösterebilmemiz için bildirim erişimine izin verin.</string>
+    <string name="go_pro">PRO Sürümüne Geç!</string>
+    <string name="experience_high_quality_nchoose_your_access_method_below">Yüksek kaliteyi deneyimleyin.\nAşağıdan erişim yöntemini seçin!</string>
+    <string name="watch_an_ad_to_continue">Devam etmek için bir reklam izleyin</string>
+    <string name="takes_15_30_seconds">15–30 saniye sürer</string>
+    <string name="go_premium_unlimited_access">Premium a Geç – Sınırsız Erişim</string>
+    <string name="support_the">Reklamları kaldırmak ve\nhızlı oluşturmayı açmak için uygulamayı destekleyin.</string>
+
 </resources>

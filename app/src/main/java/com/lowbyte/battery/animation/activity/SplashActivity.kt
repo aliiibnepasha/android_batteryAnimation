@@ -35,6 +35,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeLangSecondEnab
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeSplashEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeStatusEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isRewardedEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.remoteJsonKey
 import com.lowbyte.battery.animation.utils.AppPreferences
 import org.json.JSONException
 import org.json.JSONObject
@@ -78,17 +79,18 @@ class SplashActivity : BaseActivity() {
                 }
 
             AdManager.initializeAds(this)
+            checkSubscriptionStatus()
             Log.d("SplashActivityLog", "AdManager initialized")
 
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        checkSubscriptionStatus()
+
     }
 
     fun fetchAdSettingsAndLoad() {
         val remoteConfig = FirebaseRemoteConfig.getInstance()
-        val adConfigJson = remoteConfig.getString("ads_config_v17")
+        val adConfigJson = remoteConfig.getString(remoteJsonKey)
         try {
             val jsonObject = JSONObject(adConfigJson)
             isFullscreenSplashEnabled = jsonObject.optBoolean("FullscreenSplash_enabled", true)

@@ -15,6 +15,7 @@ import com.lowbyte.battery.animation.model.Language
 object AnimationUtils {
 
     var finishingLang = false
+    var remoteJsonKey = "ads_config_v17"
 
 
 
@@ -362,5 +363,7 @@ fun getRewardedId(): String {
 //            onDialogDismiss()
 //        }
 //    }
-
+fun Activity?.isValid(): Boolean {
+    return this != null && !isFinishing && !isDestroyed
+}
 }

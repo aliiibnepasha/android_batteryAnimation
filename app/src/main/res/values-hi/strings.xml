@@ -201,4 +201,13 @@
     <string name="battery_widget_service">बैटरी विजेट सेवा</string>
     <string name="stop_service">सेवा बंद करें</string>
 
+    <string name="enable_notification_access">सूचना एक्सेस सक्षम करें</string>
+    <string name="allow_notification_access_so_we_can_show_notifications_in_your_custom_notch">कस्टम नॉच में सूचनाएं दिखाने के लिए अनुमति दें।</string>
+    <string name="go_pro">गो PRO!</string>
+    <string name="experience_high_quality_nchoose_your_access_method_below">उच्च गुणवत्ता का अनुभव करें।\nनीचे अपनी विधि चुनें!</string>
+    <string name="watch_an_ad_to_continue">जारी रखने के लिए एक विज्ञापन देखें</string>
+    <string name="takes_15_30_seconds">लगते हैं 15–30 सेकंड</string>
+    <string name="go_premium_unlimited_access">प्रो प्रीमियम – असीमित एक्सेस</string>
+    <string name="support_the">विज्ञापन हटाने और तेज़ जनरेशन अनलॉक करने के लिए ऐप का समर्थन करें।</string>
+
 </resources>

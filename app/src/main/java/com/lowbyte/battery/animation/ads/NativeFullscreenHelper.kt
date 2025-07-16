@@ -1,5 +1,6 @@
 package com.lowbyte.battery.animation.ads
 
+import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -11,9 +12,10 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.nativead.*
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.utils.AnimationUtils.isValid
 
 class NativeFullscreenHelper(
-    private val context: Context,
+    private val context: Activity,
     private val adId: String,
     private val showAdRemoteFlag: Boolean,
     private val isProUser: Boolean,
@@ -29,17 +31,19 @@ class NativeFullscreenHelper(
     private var nativeAd: NativeAd? = null
 
     init {
-        if (!isInternetAvailable(context)) {
-            Log.d(TAG, "No internet — skipping native ad.")
-            hideAdView()
-            onAdFailed?.invoke()
-        } else if (!showAdRemoteFlag || isProUser) {
-            Log.d(TAG, " Native full Pro user or remote flag disabled — skipping ad.")
-            hideAdView()
-            onAdFailed?.invoke()
-        } else {
-            showShimmer()
-            loadAd()
+        if (context.isValid()){
+            if (!isInternetAvailable(context)) {
+                Log.d(TAG, "No internet — skipping native ad.")
+                hideAdView()
+                onAdFailed?.invoke()
+            } else if (!showAdRemoteFlag || isProUser) {
+                Log.d(TAG, " Native full Pro user or remote flag disabled — skipping ad.")
+                hideAdView()
+                onAdFailed?.invoke()
+            } else {
+                showShimmer()
+                loadAd()
+            }
         }
     }
 
@@ -47,16 +51,20 @@ class NativeFullscreenHelper(
         Log.d(TAG, "Loading native ad: $adId")
         val adLoader = AdLoader.Builder(context, adId)
             .forNativeAd { ad ->
-                nativeAd = ad
-                Log.d(TAG, "Native ad loaded")
-                onAdLoaded?.invoke()
-                adContainer?.let { showAdInView(it, ad) }
+                if (context.isValid()){
+                    nativeAd = ad
+                    Log.d(TAG, "Native ad loaded")
+                    onAdLoaded?.invoke()
+                    adContainer?.let { showAdInView(it, ad) }
+                }
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(error: LoadAdError) {
-                    Log.e(TAG, "Native ad failed: ${error.message}")
-                    hideAdView()
-                    onAdFailed?.invoke()
+                    if (context.isValid()){
+                        Log.e(TAG, "Native ad failed: ${error.message}")
+                        hideAdView()
+                        onAdFailed?.invoke()
+                    }
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder()
@@ -108,17 +116,21 @@ class NativeFullscreenHelper(
     }
 
     private fun showShimmer() {
-        adContainer?.let {
-            val shimmer = LayoutInflater.from(context)
-                .inflate(R.layout.view_native_fullscreen_shimmer, it, false)
-            it.removeAllViews()
-            it.addView(shimmer)
+        if (context.isValid()){
+            adContainer?.let {
+                val shimmer = LayoutInflater.from(context)
+                    .inflate(R.layout.view_native_fullscreen_shimmer, it, false)
+                it.removeAllViews()
+                it.addView(shimmer)
+            }
         }
     }
 
     private fun hideAdView() {
-        adContainer?.visibility = View.GONE
-        adContainer?.removeAllViews()
+        if (context.isValid()){
+            adContainer?.visibility = View.GONE
+            adContainer?.removeAllViews()
+        }
     }
 
     private fun isInternetAvailable(context: Context): Boolean {
@@ -129,7 +141,9 @@ class NativeFullscreenHelper(
     }
 
     fun destroy() {
-        nativeAd?.destroy()
-        nativeAd = null
+        if (context.isValid()){
+            nativeAd?.destroy()
+            nativeAd = null
+        }
     }
 }

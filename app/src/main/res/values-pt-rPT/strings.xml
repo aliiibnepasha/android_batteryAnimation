@@ -205,6 +205,13 @@
     <string name="battery_widget_service">Serviço do widget de bateria</string>
     <string name="stop_service">Parar serviço</string>
 
-
+    <string name="enable_notification_access">Ativar Acesso a Notificações</string>
+    <string name="allow_notification_access_so_we_can_show_notifications_in_your_custom_notch">Permita o acesso às notificações para que possamos exibi-las na sua notch personalizada.</string>
+    <string name="go_pro">Torna-te PRO!</string>
+    <string name="experience_high_quality_nchoose_your_access_method_below">Experiencia qualidade superior.\nEscolhe o método de acesso abaixo!</string>
+    <string name="watch_an_ad_to_continue">Vê um anúncio para continuar</string>
+    <string name="takes_15_30_seconds">Demora 15–30 segundos</string>
+    <string name="go_premium_unlimited_access">Ir Premium – Acesso Ilimitado</string>
+    <string name="support_the">Apoia a aplicação para remover anúncios e\ndesbloquear geração mais rápida.</string>
 
 </resources>

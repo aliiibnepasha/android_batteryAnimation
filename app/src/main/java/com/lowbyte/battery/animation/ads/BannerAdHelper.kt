@@ -1,5 +1,6 @@
 package com.lowbyte.battery.animation.ads
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import android.net.ConnectivityManager
@@ -15,6 +16,7 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.utils.AnimationUtils.isValid
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 object BannerAdHelper {
@@ -30,7 +32,7 @@ object BannerAdHelper {
     )
 
     fun loadBannerAd(
-        context: Context,
+        context: Activity,
         container: ViewGroup,
         bannerAdId: String,
         isCollapsable: Boolean,
@@ -73,25 +75,29 @@ object BannerAdHelper {
 
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
+                if (context.isValid()){
+                    shimmer?.visibility = View.GONE
+                    container.visibility = View.VISIBLE
+                    state.isLoading = false
+                    state.isLoaded = true
+                    bannerStateMap[container] = state
+                    adViewMap[container] = adView
+                    onAdLoaded?.invoke()
+                }
                 Log.d(TAG, "Banner loaded")
-                shimmer?.visibility = View.GONE
-                container.visibility = View.VISIBLE
-                state.isLoading = false
-                state.isLoaded = true
-                bannerStateMap[container] = state
-                adViewMap[container] = adView
-                onAdLoaded?.invoke()
             }
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 Log.e(TAG, "Banner failed: ${adError.message}")
-                shimmer?.visibility = View.GONE
-                container.visibility = View.GONE
-                state.isLoading = false
-                state.isLoaded = false
-                bannerStateMap[container] = state
-                adViewMap.remove(container)
-                onAdFailed?.invoke()
+                if (context.isValid()){
+                    shimmer?.visibility = View.GONE
+                    container.visibility = View.GONE
+                    state.isLoading = false
+                    state.isLoaded = false
+                    bannerStateMap[container] = state
+                    adViewMap.remove(container)
+                    onAdFailed?.invoke()
+                }
             }
 
             override fun onAdClicked() {
@@ -103,21 +109,22 @@ object BannerAdHelper {
             }
         }
 
-        adPlaceholder?.removeAllViews()
-        adPlaceholder?.addView(adView)
+        if (context.isValid()){
+            adPlaceholder?.removeAllViews()
+            adPlaceholder?.addView(adView)
 
-        val adRequest = if (isCollapsable) {
-            Log.d(TAG, "Loading collapsable banner")
-            val extras = Bundle().apply { putString("collapsible", "bottom") }
-            AdRequest.Builder()
-                .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
-                .build()
-        } else {
-            Log.d(TAG, "Loading standard banner")
-            AdRequest.Builder().build()
+            val adRequest = if (isCollapsable) {
+                Log.d(TAG, "Loading collapsable banner")
+                val extras = Bundle().apply { putString("collapsible", "bottom") }
+                AdRequest.Builder()
+                    .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
+                    .build()
+            } else {
+                Log.d(TAG, "Loading standard banner")
+                AdRequest.Builder().build()
+            }
+            adView.loadAd(adRequest)
         }
-
-        adView.loadAd(adRequest)
     }
 
     private fun isInternetAvailable(context: Context): Boolean {
