@@ -23,7 +23,8 @@ class NativeBannerSizeHelper(
     private val onAdLoaded: (() -> Unit)? = null,
     private val onAdFailed: (() -> Unit)? = null,
     private val adContainer: FrameLayout? = null
-) {
+)
+{
 
     companion object {
         private const val TAG = "AdHelperNativeBannerSize"

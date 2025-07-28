@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="80dp"
+    android:layout_height="match_parent"
+    android:layout_margin="6dp">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/item_lottie"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        android:background="#EEEEEE" />
+
+    <ImageButton
+        android:id="@+id/btn_remove_lottie"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="2dp"
+        android:background="@android:color/transparent"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:contentDescription="Remove" />
+
+</FrameLayout>

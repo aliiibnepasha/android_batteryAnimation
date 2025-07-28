@@ -22,7 +22,8 @@ class NativeWidgetHelper(
     private val onAdLoaded: (() -> Unit)? = null,
     private val onAdFailed: (() -> Unit)? = null,
     private val adContainer: FrameLayout? = null // Optional: null = just preload
-) {
+)
+{
 
     companion object {
         private const val TAG = "AdHelperNativeWidget"

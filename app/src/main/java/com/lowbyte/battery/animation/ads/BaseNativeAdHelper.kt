@@ -23,7 +23,8 @@ abstract class BaseNativeAdHelper(
     protected val onAdLoaded: (() -> Unit)? = null,
     protected val onAdFailed: (() -> Unit)? = null,
     protected val adContainer: FrameLayout? = null
-) {
+)
+{
 
      var nativeAd: NativeAd? = null
 

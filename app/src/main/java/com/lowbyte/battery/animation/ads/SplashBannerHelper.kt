@@ -1,14 +1,26 @@
 package com.lowbyte.battery.animation.ads
 
 import android.content.Context
+import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.admanager.AdManagerAdView
+import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 
-object SplashBannerHelper {
-
-    private const val TAG = "SplashBannerHelper"
-
+//object SplashBannerHelper {
+//
+//    private const val TAG = "SplashBannerHelper"
+//
 //    fun loadInlineAdaptiveBanner(
 //        context: Context,
 //        container: ViewGroup,
@@ -74,11 +86,11 @@ object SplashBannerHelper {
 //        Log.d(TAG, "Requesting splash ad...")
 //        adView.loadAd(adRequest)
 //    }
-
-    private fun isInternetAvailable(context: Context): Boolean {
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val network = cm.activeNetwork ?: return false
-        val capabilities = cm.getNetworkCapabilities(network) ?: return false
-        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    }
-}
+//
+//    private fun isInternetAvailable(context: Context): Boolean {
+//        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//        val network = cm.activeNetwork ?: return false
+//        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+//        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+//    }
+//}

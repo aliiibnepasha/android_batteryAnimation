@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -21,6 +24,43 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    tasks.whenTaskAdded {
+        if (name.startsWith("bundle") && name.endsWith("Release")) {
+            doLast {
+                val variantName = name.removePrefix("bundle").removeSuffix("Release").lowercase()
+                val bundleDir = File(buildDir, "outputs/bundle/${variantName}/release")
+
+                val originalBundle = bundleDir.listFiles()?.find { it.extension == "aab" } ?: return@doLast
+
+                val appId = "BatteryEmoji"
+                val versionCode = android.defaultConfig.versionCode
+                val versionName = android.defaultConfig.versionName
+                val date = SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(Date())
+
+                val newName = "${appId}_V${versionCode}_${versionName}_${date}.aab"
+                val renamed = File(bundleDir, newName)
+
+                if (originalBundle.renameTo(renamed)) {
+                    println("✅ AAB renamed to: ${renamed.name}")
+                } else {
+                    println("❌ Failed to rename AAB")
+                }
+            }
+        }
+    }
+    applicationVariants.all {
+        outputs.all {
+            val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+
+            val appId ="BatteryEmoji"
+            val versionCode = versionCode
+            val versionName = versionName
+            val date = SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(Date())
+            val newApkName = "${appId}_V${versionCode}_${versionName}_${date}.apk"
+            outputImpl.outputFileName = newApkName
+        }
+    }
+
     signingConfigs {
         create("release") {
             storeFile = file("/Users/admin/BatteryAnimation/batteryemoji.jks")
@@ -66,7 +106,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.lottie)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
