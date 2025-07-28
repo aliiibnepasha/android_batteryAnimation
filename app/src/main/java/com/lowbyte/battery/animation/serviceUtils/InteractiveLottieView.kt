@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.FrameLayout
 import com.airbnb.lottie.LottieAnimationView
+import com.lowbyte.battery.animation.R
 
 class InteractiveLottieView @JvmOverloads constructor(
     context: Context,
@@ -16,11 +17,7 @@ class InteractiveLottieView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val lottieItems = mutableListOf<LottieItem>()
-    private val paint = Paint().apply {
-        color = Color.YELLOW
-        style = Paint.Style.STROKE
-        strokeWidth = 4f
-    }
+
     private var selectedItem: LottieItem? = null
     private var downX = 0f
     private var downY = 0f
@@ -42,6 +39,9 @@ class InteractiveLottieView @JvmOverloads constructor(
             playAnimation()
             repeatCount = 200
             layoutParams = LayoutParams(200, 200)
+            setBackgroundColor(Color.WHITE) // Change to Color.TRANSPARENT if needed
+            pivotX = 100f  // half of width
+            pivotY = 100f  // half of height
         }
 
         val item = LottieItem(lottie)
@@ -49,6 +49,9 @@ class InteractiveLottieView @JvmOverloads constructor(
         addView(lottie)
 
         lottie.post {
+            lottie.pivotX = lottie.width / 2f
+            lottie.pivotY = lottie.height / 2f
+
             lottie.translationX = (width - lottie.width) / 2f
             lottie.translationY = (height - lottie.height) / 2f
             invalidate()
@@ -59,6 +62,7 @@ class InteractiveLottieView @JvmOverloads constructor(
 
     fun removeSelectedItem() {
         selectedItem?.let {
+            it.view.setBackgroundColor(Color.TRANSPARENT)
             removeView(it.view)
             lottieItems.remove(it)
             selectedItem = null
@@ -67,12 +71,22 @@ class InteractiveLottieView @JvmOverloads constructor(
     }
 
     fun scaleSelectedItem(scale: Float) {
-        selectedItem?.view?.apply {
-            scaleX = scale
-            scaleY = scale
+        selectedItem?.view?.let { view ->
+            // Get current visual center
+            val centerX = view.translationX + view.width * view.scaleX / 2f
+            val centerY = view.translationY + view.height * view.scaleY / 2f
+
+            // Set scale
+            view.scaleX = scale
+            view.scaleY = scale
+
+            // Recompute translation so center remains fixed
+            view.translationX = centerX - view.width * scale / 2f
+            view.translationY = centerY - view.height * scale / 2f
         }
         invalidate()
     }
+
 
     fun rotateSelectedItem(angle: Float) {
         selectedItem?.view?.rotation = angle
@@ -90,8 +104,14 @@ class InteractiveLottieView @JvmOverloads constructor(
     }
 
     private fun selectItem(item: LottieItem) {
+        // Remove background from previous
+        selectedItem?.view?.setBackgroundColor(Color.TRANSPARENT)
+
+        // Set new selected item and apply border background
         selectedItem = item
         bringChildToFront(item.view)
+        item.view.setBackgroundResource(R.drawable.lottie_border)
+
         invalidate()
     }
 
@@ -100,13 +120,24 @@ class InteractiveLottieView @JvmOverloads constructor(
             MotionEvent.ACTION_DOWN -> {
                 downX = event.x
                 downY = event.y
+
+                var itemHit = false
                 for (item in lottieItems.reversed()) {
                     if (hitTest(item, event.x, event.y)) {
                         selectItem(item)
+                        itemHit = true
                         break
                     }
                 }
+
+                // If touch was outside all items, clear selection
+                if (!itemHit) {
+                    selectedItem?.view?.setBackgroundColor(Color.TRANSPARENT)
+                    selectedItem = null
+                    invalidate()
+                }
             }
+
             MotionEvent.ACTION_MOVE -> {
                 selectedItem?.view?.let { view ->
                     val newX = (view.translationX + (event.x - downX)).coerceIn(
@@ -125,7 +156,6 @@ class InteractiveLottieView @JvmOverloads constructor(
         }
         return true
     }
-
     private fun hitTest(item: LottieItem, x: Float, y: Float): Boolean {
         val view = item.view
         val left = view.translationX
@@ -137,13 +167,7 @@ class InteractiveLottieView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        selectedItem?.view?.let {
-            val left = it.translationX
-            val top = it.translationY
-            val right = left + it.width * it.scaleX
-            val bottom = top + it.height * it.scaleY
-            canvas.drawRect(left, top, right, bottom, paint)
-        }
+
     }
 
     private data class LottieItem(val view: LottieAnimationView)

@@ -8,8 +8,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.custom.InteractiveLottieView
+import com.lowbyte.battery.animation.serviceUtils.AllLottieAdapter
 
 class InteractiveLottieActivity : AppCompatActivity() {
+    private val availableLottieFiles = listOf(
+        R.raw.ccc,
+        R.raw.aaa,
+        R.raw.bbb,
+        R.raw.anim_7,
+        R.raw.a_5,
+        R.raw.a_12
+    )
+
 
     private lateinit var lottieView: InteractiveLottieView
     private lateinit var sizeSeekBar: SeekBar
@@ -59,7 +69,7 @@ class InteractiveLottieActivity : AppCompatActivity() {
         })
 
         findViewById<Button>(R.id.btn_add_lottie).setOnClickListener {
-            val resId = R.raw.a_1 // Replace with actual animation resource
+            val resId = R.raw.ccc // Replace with actual animation resource
             if (!lottieItems.contains(resId)) {
                 lottieView.addLottieItem(resId)
                 lottieItems.add(resId)
@@ -74,5 +84,20 @@ class InteractiveLottieActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_remove_selected).setOnClickListener {
             lottieView.removeSelectedItem()
         }
+
+
+        val allRecyclerView = findViewById<RecyclerView>(R.id.recycler_all_lotties)
+        allRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        val allLottieAdapter = AllLottieAdapter(availableLottieFiles) { resId ->
+            if (!lottieItems.contains(resId) && lottieItems.size < 5) {
+                lottieView.addLottieItem(resId)
+                lottieItems.add(resId)
+                adapter.notifyDataSetChanged()
+            } else {
+                Toast.makeText(this, "Already added or limit reached", Toast.LENGTH_SHORT).show()
+            }
+        }
+        allRecyclerView.adapter = allLottieAdapter
     }
 }
