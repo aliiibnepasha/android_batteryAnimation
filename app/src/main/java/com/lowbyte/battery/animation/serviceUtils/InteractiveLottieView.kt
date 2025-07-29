@@ -27,8 +27,9 @@ class InteractiveLottieView @JvmOverloads constructor(
             LayoutParams.MATCH_PARENT,
             (250 * context.resources.displayMetrics.density).toInt()
         )
+        background = resources.getDrawable(R.drawable.bg_board)
         setWillNotDraw(false)
-        setBackgroundColor(Color.LTGRAY)
+      //  setBackgroundColor(Color.LTGRAY)
     }
 
     fun addLottieItem(animationRes: Int) {

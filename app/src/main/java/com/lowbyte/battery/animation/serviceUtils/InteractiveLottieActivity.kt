@@ -1,17 +1,23 @@
-
 package com.lowbyte.battery.animation.ui
 
 import android.os.Bundle
-import android.widget.*
+import android.widget.SeekBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.lowbyte.battery.animation.R
-import com.lowbyte.battery.animation.custom.InteractiveLottieView
+import com.lowbyte.battery.animation.databinding.ActivityInteractiveLottieBinding
 import com.lowbyte.battery.animation.serviceUtils.AllLottieAdapter
 
 class InteractiveLottieActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityInteractiveLottieBinding
+    private val lottieItems = mutableListOf<Int>() // store res ids
+
     private val availableLottieFiles = listOf(
+        R.raw.ccc,
+        R.raw.aaa,
         R.raw.ccc,
         R.raw.aaa,
         R.raw.bbb,
@@ -20,84 +26,74 @@ class InteractiveLottieActivity : AppCompatActivity() {
         R.raw.a_12
     )
 
-
-    private lateinit var lottieView: InteractiveLottieView
-    private lateinit var sizeSeekBar: SeekBar
-    private lateinit var rotationSeekBar: SeekBar
-    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: LottieItemAdapter
-    private val lottieItems = mutableListOf<Int>() // store res ids
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_interactive_lottie)
-
-        lottieView = findViewById(R.id.lottie_canvas)
-        sizeSeekBar = findViewById(R.id.size_seekbar)
-        rotationSeekBar = findViewById(R.id.rotation_seekbar)
-        recyclerView = findViewById(R.id.recycler_lotties)
+        binding = ActivityInteractiveLottieBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         adapter = LottieItemAdapter(lottieItems) { resId ->
-            lottieView.removeSelectedItem()
+            binding.lottieCanvas.removeSelectedItem()
             lottieItems.remove(resId)
             adapter.notifyDataSetChanged()
         }
 
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView.adapter = adapter
+        binding.recyclerLotties.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.recyclerLotties.adapter = adapter
 
-        sizeSeekBar.max = 200
-        sizeSeekBar.progress = 100
-        sizeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        // Size SeekBar
+        binding.seekbarSize.max = 200
+        binding.seekbarSize.progress = 100
+        binding.seekbarSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val scale = progress / 100f
-                lottieView.scaleSelectedItem(scale)
+                binding.lottieCanvas.scaleSelectedItem(scale)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
-        rotationSeekBar.max = 360
-        rotationSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        // Rotation SeekBar
+        binding.seekbarRotation.max = 360
+        binding.seekbarRotation.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                lottieView.rotateSelectedItem(progress.toFloat())
+                binding.lottieCanvas.rotateSelectedItem(progress.toFloat())
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
-        findViewById<Button>(R.id.btn_add_lottie).setOnClickListener {
-            val resId = R.raw.ccc // Replace with actual animation resource
-            if (!lottieItems.contains(resId)) {
-                lottieView.addLottieItem(resId)
-                lottieItems.add(resId)
-                adapter.notifyDataSetChanged()
-            }
-        }
+      //   Buttons
+//        binding.btnAddLottie.setOnClickListener {
+//            val resId = R.raw.ccc
+//            if (!lottieItems.contains(resId)) {
+//                binding.lottieCanvas.addLottieItem(resId)
+//                lottieItems.add(resId)
+//                adapter.notifyDataSetChanged()
+//            }
+//        }
 
-        findViewById<Button>(R.id.btn_move_top).setOnClickListener { lottieView.moveSelectedItem(0, -20) }
-        findViewById<Button>(R.id.btn_move_bottom).setOnClickListener { lottieView.moveSelectedItem(0, 20) }
-        findViewById<Button>(R.id.btn_move_left).setOnClickListener { lottieView.moveSelectedItem(-20, 0) }
-        findViewById<Button>(R.id.btn_move_right).setOnClickListener { lottieView.moveSelectedItem(20, 0) }
-        findViewById<Button>(R.id.btn_remove_selected).setOnClickListener {
-            lottieView.removeSelectedItem()
-        }
+        binding.btnMoveTop.setOnClickListener { binding.lottieCanvas.moveSelectedItem(0, -20) }
+        binding.btnMoveBottom.setOnClickListener { binding.lottieCanvas.moveSelectedItem(0, 20) }
+        binding.btnMoveLeft.setOnClickListener { binding.lottieCanvas.moveSelectedItem(-20, 0) }
+        binding.btnMoveRight.setOnClickListener { binding.lottieCanvas.moveSelectedItem(20, 0) }
+     //   binding.btnRemoveSelected.setOnClickListener { binding.lottieCanvas.removeSelectedItem() }
 
-
-        val allRecyclerView = findViewById<RecyclerView>(R.id.recycler_all_lotties)
-        allRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-
+        // All Lotties
+        binding.recyclerAllLotties.layoutManager = GridLayoutManager(this, 4)//LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         val allLottieAdapter = AllLottieAdapter(availableLottieFiles) { resId ->
             if (!lottieItems.contains(resId) && lottieItems.size < 5) {
-                lottieView.addLottieItem(resId)
+                binding.lottieCanvas.addLottieItem(resId)
                 lottieItems.add(resId)
                 adapter.notifyDataSetChanged()
             } else {
+
                 Toast.makeText(this, "Already added or limit reached", Toast.LENGTH_SHORT).show()
             }
         }
-        allRecyclerView.adapter = allLottieAdapter
+        binding.recyclerAllLotties.adapter = allLottieAdapter
     }
 }
