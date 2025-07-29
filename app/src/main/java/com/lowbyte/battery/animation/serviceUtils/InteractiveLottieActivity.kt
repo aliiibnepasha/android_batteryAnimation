@@ -1,5 +1,6 @@
 package com.lowbyte.battery.animation.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.SeekBar
 import android.widget.Toast
@@ -10,6 +11,8 @@ import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ActivityInteractiveLottieBinding
 import com.lowbyte.battery.animation.serviceUtils.AllLottieAdapter
 import com.lowbyte.battery.animation.serviceUtils.OnItemInteractionListener
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AppPreferences
 
 class InteractiveLottieActivity : AppCompatActivity() {
 
@@ -107,6 +110,11 @@ class InteractiveLottieActivity : AppCompatActivity() {
             override fun onItemCountChanged(count: Int) {
                 binding.tvAddEmoji.text = getString(R.string.sticker_added_5, count)
             }
+        }
+
+        binding.btnActivateSelected.setOnClickListener {
+            AppPreferences.getInstance(this).setBoolean("show_lottie_top_view", true)
+            sendBroadcast(Intent(BROADCAST_ACTION))
         }
     }
 

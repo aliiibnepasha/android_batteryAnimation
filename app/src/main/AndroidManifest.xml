@@ -73,7 +73,7 @@
             android:screenOrientation="portrait" />
         <!-- android:name=".activity.SplashActivity"-->
         <activity
-            android:name=".ui.InteractiveLottieActivity"
+            android:name=".activity.SplashActivity"
 
             android:exported="true"
             android:screenOrientation="portrait">
@@ -87,6 +87,12 @@
             android:name=".activity.ProActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+
+          <activity
+            android:name=".ui.InteractiveLottieActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activity.BatteryWidgetEditApplyActivity"
             android:exported="true"

@@ -27,6 +27,7 @@ import com.lowbyte.battery.animation.activity.SettingsActivity
 import com.lowbyte.battery.animation.ads.BannerAdHelper
 import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.FragmentMainBinding
+import com.lowbyte.battery.animation.ui.InteractiveLottieActivity
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeHomeId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
@@ -121,7 +122,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         binding.ifvSetting.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_settings")
-            startActivity(Intent(requireContext(), SettingsActivity::class.java))
+            startActivity(Intent(requireContext(), InteractiveLottieActivity::class.java))
+           // startActivity(Intent(requireContext(), SettingsActivity::class.java))
         }
         binding.ibHowToUseButton.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_how_to_use")

@@ -66,6 +66,8 @@ class NotchAccessibilityService : AccessibilityService() {
     private var notificationView: View? = null
     private var notificationHandler = Handler(Looper.getMainLooper())
     private var packegeToOpen = ""
+    private var lottieOverlayView: View? = null
+
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -75,6 +77,7 @@ class NotchAccessibilityService : AccessibilityService() {
         createNotificationNotch()
         registerUpdateReceiver()
         startTimeUpdates()
+        updateLottieOverlayVisibility()
 
     }
 
@@ -135,6 +138,7 @@ class NotchAccessibilityService : AccessibilityService() {
                             Log.d("servicesListener", "Custom UI update action")
                             updateStatusBarAppearance("updateStatusBarAppearance Custom UI update action")
                             updateNotificationNotch("updateStatusBarAppearance Custom UI update action")
+                            updateLottieOverlayVisibility()
 
                         }
 
@@ -510,6 +514,44 @@ class NotchAccessibilityService : AccessibilityService() {
 
     }
 
+
+    private fun addLottieOverlayView() {
+        if (lottieOverlayView != null) return // already added
+
+        val inflater = LayoutInflater.from(this)
+        lottieOverlayView = inflater.inflate(R.layout.view_lottie_overlay, null)
+
+        val params = WindowManager.LayoutParams(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            dpToPx(250),
+            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, // 👈 Makes it non-touchable
+            PixelFormat.TRANSLUCENT
+        )
+        params.gravity = Gravity.TOP or Gravity.START
+
+        windowManager?.addView(lottieOverlayView, params)
+    }
+
+    private fun removeLottieOverlayView() {
+        lottieOverlayView?.let {
+            if (it.isAttachedToWindow) {
+                windowManager?.removeView(it)
+            }
+        }
+        lottieOverlayView = null
+    }
+
+    private fun updateLottieOverlayVisibility() {
+        if (preferences.getBoolean("show_lottie_top_view", false) == true) {
+            addLottieOverlayView()
+        } else {
+            removeLottieOverlayView()
+        }
+    }
     private fun createNotificationNotch() {
         if (notificationNotchBinding != null && notificationNotchBinding?.root?.parent != null) return
 
