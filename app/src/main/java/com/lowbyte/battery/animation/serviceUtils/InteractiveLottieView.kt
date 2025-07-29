@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import android.widget.FrameLayout
 import com.airbnb.lottie.LottieAnimationView
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.serviceUtils.OnItemInteractionListener
 
 class InteractiveLottieView @JvmOverloads constructor(
     context: Context,
@@ -17,7 +18,7 @@ class InteractiveLottieView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val lottieItems = mutableListOf<LottieItem>()
-
+    var itemInteractionListener: OnItemInteractionListener? = null
     private var selectedItem: LottieItem? = null
     private var downX = 0f
     private var downY = 0f
@@ -45,7 +46,7 @@ class InteractiveLottieView @JvmOverloads constructor(
             pivotY = 100f  // half of height
         }
 
-        val item = LottieItem(lottie)
+        val item = LottieItem(lottie, animationRes)
         lottieItems.add(item)
         addView(lottie)
 
@@ -57,15 +58,17 @@ class InteractiveLottieView @JvmOverloads constructor(
             lottie.translationY = (height - lottie.height) / 2f
             invalidate()
         }
+        itemInteractionListener?.onItemCountChanged(lottieItems.size)
 
         selectItem(item)
     }
 
     fun removeSelectedItem() {
         selectedItem?.let {
-            it.view.setBackgroundColor(Color.TRANSPARENT)
             removeView(it.view)
             lottieItems.remove(it)
+            itemInteractionListener?.onItemCountChanged(lottieItems.size)
+            itemInteractionListener?.onItemSelected(null)
             selectedItem = null
             invalidate()
         }
@@ -105,14 +108,11 @@ class InteractiveLottieView @JvmOverloads constructor(
     }
 
     private fun selectItem(item: LottieItem) {
-        // Remove background from previous
         selectedItem?.view?.setBackgroundColor(Color.TRANSPARENT)
-
-        // Set new selected item and apply border background
         selectedItem = item
         bringChildToFront(item.view)
         item.view.setBackgroundResource(R.drawable.lottie_border)
-
+        itemInteractionListener?.onItemSelected(item.resId)
         invalidate()
     }
 
@@ -132,9 +132,11 @@ class InteractiveLottieView @JvmOverloads constructor(
                 }
 
                 // If touch was outside all items, clear selection
+
                 if (!itemHit) {
                     selectedItem?.view?.setBackgroundColor(Color.TRANSPARENT)
                     selectedItem = null
+                    itemInteractionListener?.onItemSelected(null)
                     invalidate()
                 }
             }
@@ -171,5 +173,13 @@ class InteractiveLottieView @JvmOverloads constructor(
 
     }
 
-    private data class LottieItem(val view: LottieAnimationView)
-}
+    fun removeItemByResId(resId: Int) {
+        val item = lottieItems.find { it.resId == resId } ?: return
+        removeView(item.view)
+        lottieItems.remove(item)
+        if (selectedItem == item) selectedItem = null
+        itemInteractionListener?.onItemCountChanged(lottieItems.size)
+        itemInteractionListener?.onItemSelected(null)
+        invalidate()
+    }
+    private data class LottieItem(val view: LottieAnimationView, val resId: Int)}

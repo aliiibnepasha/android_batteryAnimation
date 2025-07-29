@@ -223,6 +223,7 @@
     <string name="support_the">Support The App To Remove Ads And\nUnlock Faster Generation.</string>
     <string name="size">Size</string>
     <string name="rotation">Rotation</string>
+    <string name="sticker_added_5">Sticker Added (%1$d/5)</string>
 
 
 </resources>
