@@ -47,6 +47,7 @@ object AnimationUtils {
 
 
     const val BROADCAST_ACTION = "com.lowbyte.UPDATE_STATUSBAR"
+    const val BROADCAST_ACTION_REMOVE = "com.lowbyte.UPDATE_REMOVE"
     const val BROADCAST_ACTION_NOTIFICATION = "com.lowbyte.CUSTOM_NOTIFICATION_UPDATE"
     const val BROADCAST_ACTION_DYNAMIC = "com.lowbyte.BROADCAST_ACTION_DYNAMIC"
     const val EXTRA_POSITION = "EXTRA_POSITION"

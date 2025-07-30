@@ -37,6 +37,7 @@ import com.lowbyte.battery.animation.databinding.CustomStatusBarBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_NOTIFICATION
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_REMOVE
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.AppPreferences.Companion.KEY_SHOW_LOTTIE_TOP_VIEW
 import com.lowbyte.battery.animation.utils.ServiceUtils.applyIconSize
@@ -68,7 +69,7 @@ class NotchAccessibilityService : AccessibilityService() {
     private var notificationView: View? = null
     private var notificationHandler = Handler(Looper.getMainLooper())
     private var packegeToOpen = ""
-    private var lottieOverlayView: View? = null
+    //  private var lottieOverlayView: View? = null
 
     private var overlayLottieCanvas: InteractiveLottieView? = null
 
@@ -152,18 +153,28 @@ class NotchAccessibilityService : AccessibilityService() {
                             val rotation = intent.getFloatExtra("rotation", 0f)
 
                             overlayLottieCanvas?.let { canvas ->
-                                // First check if the item already exists
                                 if (resId != -1) {
-                                    val itemExists = canvas.containsItem(resId)
-                                    if (!itemExists) {
+                                    if (!canvas.containsItem(resId)) {
                                         canvas.addLottieItem(resId)
                                     }
-
                                     canvas.updateItemTransform(resId, x, y, scale, rotation)
                                 }
                             }
 
                         }
+                        BROADCAST_ACTION_REMOVE->{
+                            val resId = intent.getIntExtra("resId", -1)
+                            overlayLottieCanvas?.let { canvas ->
+                                if (resId != -1) {
+                                    if (canvas.containsItem(resId)) {
+                                        canvas.removeItemByResId(resId)
+                                    }
+                                }
+                            }
+                        }
+
+
+
 
                         Intent.ACTION_BATTERY_CHANGED -> {
                             updateStatusBarAppearance("updateStatusBarAppearance Charging")
@@ -349,6 +360,7 @@ class NotchAccessibilityService : AccessibilityService() {
             val filter = IntentFilter().apply {
                 addAction(BROADCAST_ACTION_DYNAMIC)
                 addAction(BROADCAST_ACTION)
+                addAction(BROADCAST_ACTION_REMOVE)
                 addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
                 addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
                 addAction(ConnectivityManager.CONNECTIVITY_ACTION)
@@ -539,13 +551,14 @@ class NotchAccessibilityService : AccessibilityService() {
 
 
     private fun addLottieOverlayView() {
-        if (lottieOverlayView != null) return
+        if (overlayLottieCanvas != null && overlayLottieCanvas?.isAttachedToWindow == true) {
+            Log.d("LottieOverlay", "Already added, skipping...")
+            return
+        }
 
-        val inflater = LayoutInflater.from(this)
-        lottieOverlayView = inflater.inflate(R.layout.view_lottie_overlay, null)
-
-        // ✅ Get reference to InteractiveLottieView inside overlay
-        overlayLottieCanvas = lottieOverlayView?.findViewById(R.id.lottie_canvas)
+        overlayLottieCanvas = InteractiveLottieView(this).apply {
+            loadLottieItemsFromPrefs() // ⬅️ optional: load saved items
+        }
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -556,23 +569,35 @@ class NotchAccessibilityService : AccessibilityService() {
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             PixelFormat.TRANSLUCENT
-        )
-        params.gravity = Gravity.TOP or Gravity.START
+        ).apply {
+            gravity = Gravity.TOP or Gravity.START
+        }
 
-        windowManager?.addView(lottieOverlayView, params)
+        try {
+            windowManager?.addView(overlayLottieCanvas, params)
+            Log.d("LottieOverlay", "Added to WindowManager")
+        } catch (e: Exception) {
+            Log.e("LottieOverlay", "Error adding view: ${e.message}")
+        }
     }
-
     private fun removeLottieOverlayView() {
-        lottieOverlayView?.let {
-            if (it.isAttachedToWindow) {
-                windowManager?.removeView(it)
+        overlayLottieCanvas?.let { view ->
+            if (view.isAttachedToWindow) {
+                try {
+                    windowManager?.removeView(view)
+                    Log.d("LottieOverlay", "Removed from WindowManager")
+                } catch (e: Exception) {
+                    Log.e("LottieOverlay", "Error removing view: ${e.message}")
+                }
             }
         }
-        lottieOverlayView = null
+        overlayLottieCanvas = null
     }
 
+
     private fun updateLottieOverlayVisibility() {
-        if (preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false) == true) {
+        val show = preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false) ?: false
+        if (show) {
             addLottieOverlayView()
         } else {
             removeLottieOverlayView()

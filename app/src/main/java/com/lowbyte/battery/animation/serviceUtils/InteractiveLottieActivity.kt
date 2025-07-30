@@ -72,7 +72,7 @@ class InteractiveLottieActivity : AppCompatActivity() {
 
     private fun setupRecyclerViews() {
         lotteSelectedAdapter = LottieItemAdapter(lottieItems) { lottieItem ->
-            interactiveLottieView.removeItemByResId(lottieItem)
+            interactiveLottieView.removeItemByResId(lottieItem.resId)
            // lottieItems.remove(lottieItem)
          //   lotteSelectedAdapter.updateItems(lottieItems)
         }

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.widget.FrameLayout
 import com.airbnb.lottie.LottieAnimationView
@@ -13,6 +14,7 @@ import com.lowbyte.battery.animation.serviceUtils.LottieItem
 import com.lowbyte.battery.animation.serviceUtils.LottieItemData
 import com.lowbyte.battery.animation.serviceUtils.OnItemInteractionListener
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_REMOVE
 import com.lowbyte.battery.animation.utils.AppPreferences
 
 class InteractiveLottieView @JvmOverloads constructor(
@@ -43,7 +45,7 @@ class InteractiveLottieView @JvmOverloads constructor(
         val lottie = LottieAnimationView(context).apply {
             setAnimation(animationRes)
             playAnimation()
-            repeatCount = 200
+            repeatCount = 1000
             layoutParams = LayoutParams(200, 200)
             setBackgroundColor(Color.TRANSPARENT)
         }
@@ -76,17 +78,43 @@ class InteractiveLottieView @JvmOverloads constructor(
     }
 
 
-    fun removeItemByResId(lottieItem: LottieItem) {
-        removeView(lottieItem.view)
-        lottieItems.remove(lottieItem)
-        if (selectedItem == lottieItem) selectedItem = null
+
+    fun removeItemByResId(resId: Int) {
+        val itemToRemove = lottieItems.find { it.resId == resId } ?: return
+        Log.d("LottieView", "Trying to remove item with resId: $resId")
+        Log.d("LottieView", "Children before: $childCount")
+
+        try {
+            itemToRemove.view.apply {
+                cancelAnimation()
+                clearAnimation()
+                removeAllAnimatorListeners()
+                setImageDrawable(null)
+            }
+
+            if (itemToRemove.view.parent != null) {
+                removeView(itemToRemove.view)
+            }
+        } catch (e: Exception) {
+            Log.e("LottieView", "Error removing view", e)
+        }
+
+        Log.d("LottieView", "Children after: $childCount")
+
+        lottieItems.remove(itemToRemove)
+
+        if (selectedItem == itemToRemove) {
+            selectedItem = null
+        }
+
         itemInteractionListener?.onItemCountChanged(lottieItems)
         itemInteractionListener?.onItemSelected(null)
-        saveTransform(lottieItem)
-        sendBroadcast(lottieItem)
-        invalidate()
-    }
 
+        sendBroadcast(itemToRemove, BROADCAST_ACTION_REMOVE)
+        requestLayout()
+        invalidate()
+        Log.d("LottieView", "Final Log - Item Removed")
+    }
 
     fun removeSelectedItem() {
         selectedItem?.let {
@@ -96,6 +124,11 @@ class InteractiveLottieView @JvmOverloads constructor(
             itemInteractionListener?.onItemSelected(null)
             selectedItem = null
             invalidate()
+          //  saveTransform(itemToRemove)
+            sendBroadcast(it,BROADCAST_ACTION_REMOVE)
+            requestLayout()
+            invalidate()
+            // BROADCAST_ACTION_REMOVE
         }
     }
 
@@ -151,8 +184,8 @@ class InteractiveLottieView @JvmOverloads constructor(
         preferences.putFloat("${resId}_rotation", view.rotation)
     }
 
-    private fun sendBroadcast(item: LottieItem) {
-        val intent = Intent(BROADCAST_ACTION).apply {
+    private fun sendBroadcast(item: LottieItem, action : String = BROADCAST_ACTION) {
+        val intent = Intent(action).apply {
             putExtra("resId", item.resId)
             putExtra("x", item.view.translationX)
             putExtra("y", item.view.translationY)
