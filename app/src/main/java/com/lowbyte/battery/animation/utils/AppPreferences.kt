@@ -6,6 +6,8 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.util.Log
 import androidx.core.content.edit
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 
 class AppPreferences private constructor(context: Context) {
@@ -18,6 +20,7 @@ class AppPreferences private constructor(context: Context) {
         
         // Boolean keys
         private const val KEY_FIRST_RUN = "first_run"
+        const val KEY_SHOW_LOTTIE_TOP_VIEW = "show_lottie_top_view"
         private const val KEY_DYNAMIC_ENABLED = "isDynamicEnabled"
         private const val KEY_STATUS_ENABLED = "isStatusEnabled"
         private const val KEY_IS_DARK_MODE = "is_dark_mode"
@@ -304,6 +307,13 @@ class AppPreferences private constructor(context: Context) {
         get() = sharedPreferences.getBoolean(KEY_IS_DARK_MODE, false)
         set(value) = sharedPreferences.edit { putBoolean(KEY_IS_DARK_MODE, value) }
 
+    fun putFloat(key: String, value: Float) {
+        sharedPreferences.edit { putFloat(key, value) }
+    }
+
+    fun getFloat(key: String, defaultValue: Float): Float {
+        return sharedPreferences.getFloat(key, defaultValue)
+    }
 
     fun contains(key: String): Boolean {
         return sharedPreferences.contains(key)

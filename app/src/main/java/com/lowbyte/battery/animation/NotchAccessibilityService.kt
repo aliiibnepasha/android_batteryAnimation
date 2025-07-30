@@ -30,6 +30,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
+import com.lowbyte.battery.animation.custom.InteractiveLottieView
 import com.lowbyte.battery.animation.databinding.CustomNotchBarBinding
 import com.lowbyte.battery.animation.databinding.CustomNotificationBarBinding
 import com.lowbyte.battery.animation.databinding.CustomStatusBarBinding
@@ -37,6 +38,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_NOTIFICATION
 import com.lowbyte.battery.animation.utils.AppPreferences
+import com.lowbyte.battery.animation.utils.AppPreferences.Companion.KEY_SHOW_LOTTIE_TOP_VIEW
 import com.lowbyte.battery.animation.utils.ServiceUtils.applyIconSize
 import com.lowbyte.battery.animation.utils.ServiceUtils.dpToPx
 import com.lowbyte.battery.animation.utils.ServiceUtils.isAirplaneModeOn
@@ -67,6 +69,9 @@ class NotchAccessibilityService : AccessibilityService() {
     private var notificationHandler = Handler(Looper.getMainLooper())
     private var packegeToOpen = ""
     private var lottieOverlayView: View? = null
+
+    private var overlayLottieCanvas: InteractiveLottieView? = null
+
 
 
     override fun onServiceConnected() {
@@ -139,6 +144,24 @@ class NotchAccessibilityService : AccessibilityService() {
                             updateStatusBarAppearance("updateStatusBarAppearance Custom UI update action")
                             updateNotificationNotch("updateStatusBarAppearance Custom UI update action")
                             updateLottieOverlayVisibility()
+
+                            val resId = intent.getIntExtra("resId", -1)
+                            val x = intent.getFloatExtra("x", -1f)
+                            val y = intent.getFloatExtra("y", -1f)
+                            val scale = intent.getFloatExtra("scale", 1.0f)
+                            val rotation = intent.getFloatExtra("rotation", 0f)
+
+                            overlayLottieCanvas?.let { canvas ->
+                                // First check if the item already exists
+                                if (resId != -1) {
+                                    val itemExists = canvas.containsItem(resId)
+                                    if (!itemExists) {
+                                        canvas.addLottieItem(resId)
+                                    }
+
+                                    canvas.updateItemTransform(resId, x, y, scale, rotation)
+                                }
+                            }
 
                         }
 
@@ -516,10 +539,13 @@ class NotchAccessibilityService : AccessibilityService() {
 
 
     private fun addLottieOverlayView() {
-        if (lottieOverlayView != null) return // already added
+        if (lottieOverlayView != null) return
 
         val inflater = LayoutInflater.from(this)
         lottieOverlayView = inflater.inflate(R.layout.view_lottie_overlay, null)
+
+        // ✅ Get reference to InteractiveLottieView inside overlay
+        overlayLottieCanvas = lottieOverlayView?.findViewById(R.id.lottie_canvas)
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -528,7 +554,7 @@ class NotchAccessibilityService : AccessibilityService() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, // 👈 Makes it non-touchable
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             PixelFormat.TRANSLUCENT
         )
         params.gravity = Gravity.TOP or Gravity.START
@@ -546,12 +572,14 @@ class NotchAccessibilityService : AccessibilityService() {
     }
 
     private fun updateLottieOverlayVisibility() {
-        if (preferences.getBoolean("show_lottie_top_view", false) == true) {
+        if (preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false) == true) {
             addLottieOverlayView()
         } else {
             removeLottieOverlayView()
         }
     }
+
+
     private fun createNotificationNotch() {
         if (notificationNotchBinding != null && notificationNotchBinding?.root?.parent != null) return
 

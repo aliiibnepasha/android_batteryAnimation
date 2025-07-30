@@ -137,6 +137,9 @@ dependencies {
     implementation(libs.pangle)
     implementation(libs.user.messaging.platform)
     implementation(libs.localization)
+    implementation(libs.json)
+    implementation(libs.gson)
+
 
 
 

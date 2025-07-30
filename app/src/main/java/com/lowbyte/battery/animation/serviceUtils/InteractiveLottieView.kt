@@ -1,15 +1,17 @@
 package com.lowbyte.battery.animation.custom
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.FrameLayout
 import com.airbnb.lottie.LottieAnimationView
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.serviceUtils.OnItemInteractionListener
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AppPreferences
 
 class InteractiveLottieView @JvmOverloads constructor(
     context: Context,
@@ -18,6 +20,8 @@ class InteractiveLottieView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val lottieItems = mutableListOf<LottieItem>()
+    private val preferences = AppPreferences.getInstance(context)
+
     var itemInteractionListener: OnItemInteractionListener? = null
     private var selectedItem: LottieItem? = null
     private var downX = 0f
@@ -39,9 +43,7 @@ class InteractiveLottieView @JvmOverloads constructor(
             playAnimation()
             repeatCount = 200
             layoutParams = LayoutParams(200, 200)
-            setBackgroundColor(Color.TRANSPARENT) // Change to Color.TRANSPARENT if needed
-            pivotX = 100f  // half of width
-            pivotY = 100f  // half of height
+            setBackgroundColor(Color.TRANSPARENT)
         }
 
         val item = LottieItem(lottie, animationRes)
@@ -49,15 +51,21 @@ class InteractiveLottieView @JvmOverloads constructor(
         addView(lottie)
 
         lottie.post {
-            lottie.pivotX = lottie.width / 2f
-            lottie.pivotY = lottie.height / 2f
+            // Restore previous state if available
+            val savedX = preferences.getFloat("${animationRes}_x", (width - lottie.width) / 2f)
+            val savedY = preferences.getFloat("${animationRes}_y", (height - lottie.height) / 2f)
+            val savedScale = preferences.getFloat("${animationRes}_scale", 1.0f)
+            val savedRotation = preferences.getFloat("${animationRes}_rotation", 0f)
 
-            lottie.translationX = (width - lottie.width) / 2f
-            lottie.translationY = (height - lottie.height) / 2f
+            lottie.scaleX = savedScale
+            lottie.scaleY = savedScale
+            lottie.rotation = savedRotation
+            lottie.translationX = savedX
+            lottie.translationY = savedY
             invalidate()
         }
-        itemInteractionListener?.onItemCountChanged(lottieItems.size)
 
+        itemInteractionListener?.onItemCountChanged(lottieItems.size)
         selectItem(item)
     }
 
@@ -73,36 +81,65 @@ class InteractiveLottieView @JvmOverloads constructor(
     }
 
     fun scaleSelectedItem(scale: Float) {
-        selectedItem?.view?.let { view ->
-            // Get current visual center
+        selectedItem?.let { item ->
+            val view = item.view
             val centerX = view.translationX + view.width * view.scaleX / 2f
             val centerY = view.translationY + view.height * view.scaleY / 2f
 
-            // Set scale
             view.scaleX = scale
             view.scaleY = scale
 
-            // Recompute translation so center remains fixed
             view.translationX = centerX - view.width * scale / 2f
             view.translationY = centerY - view.height * scale / 2f
+
+            saveTransform(item)
+            sendBroadcast(item)
+            invalidate()
         }
-        invalidate()
     }
 
-
     fun rotateSelectedItem(angle: Float) {
-        selectedItem?.view?.rotation = angle
-        invalidate()
+        selectedItem?.let { item ->
+            item.view.rotation = angle
+            saveTransform(item)
+            sendBroadcast(item)
+            invalidate()
+        }
     }
 
     fun moveSelectedItem(dx: Int, dy: Int) {
-        selectedItem?.view?.let { view ->
-            val newX = (view.translationX + dx).coerceIn(0f, (width - view.width * view.scaleX))
-            val newY = (view.translationY + dy).coerceIn(0f, (height - view.height * view.scaleY))
+        selectedItem?.let { item ->
+            val view = item.view
+            val newX = (view.translationX + dx).coerceIn(0f, width - view.width * view.scaleX)
+            val newY = (view.translationY + dy).coerceIn(0f, height - view.height * view.scaleY)
             view.translationX = newX
             view.translationY = newY
+
+            saveTransform(item)
+            sendBroadcast(item)
             invalidate()
         }
+    }
+
+    private fun saveTransform(item: LottieItem) {
+        val resId = item.resId
+        val view = item.view
+
+        preferences.putFloat("${resId}_x", view.translationX)
+        preferences.putFloat("${resId}_y", view.translationY)
+        preferences.putFloat("${resId}_scale", view.scaleX)
+        preferences.putFloat("${resId}_rotation", view.rotation)
+    }
+
+    private fun sendBroadcast(item: LottieItem) {
+        val intent = Intent(BROADCAST_ACTION).apply {
+            putExtra("resId", item.resId)
+            putExtra("x", item.view.translationX)
+            putExtra("y", item.view.translationY)
+            putExtra("scale", item.view.scaleX)
+            putExtra("rotation", item.view.rotation)
+        }
+        context.sendBroadcast(intent)
     }
 
     private fun selectItem(item: LottieItem) {
@@ -129,8 +166,6 @@ class InteractiveLottieView @JvmOverloads constructor(
                     }
                 }
 
-                // If touch was outside all items, clear selection
-
                 if (!itemHit) {
                     selectedItem?.view?.setBackgroundColor(Color.TRANSPARENT)
                     selectedItem = null
@@ -142,21 +177,25 @@ class InteractiveLottieView @JvmOverloads constructor(
             MotionEvent.ACTION_MOVE -> {
                 selectedItem?.view?.let { view ->
                     val newX = (view.translationX + (event.x - downX)).coerceIn(
-                        0f, (width - view.width * view.scaleX)
+                        0f, width - view.width * view.scaleX
                     )
                     val newY = (view.translationY + (event.y - downY)).coerceIn(
-                        0f, (height - view.height * view.scaleY)
+                        0f, height - view.height * view.scaleY
                     )
                     view.translationX = newX
                     view.translationY = newY
                     downX = event.x
                     downY = event.y
+
+                    saveTransform(selectedItem!!)
+                    sendBroadcast(selectedItem!!)
                     invalidate()
                 }
             }
         }
         return true
     }
+
     private fun hitTest(item: LottieItem, x: Float, y: Float): Boolean {
         val view = item.view
         val left = view.translationX
@@ -168,7 +207,6 @@ class InteractiveLottieView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
     }
 
     fun removeItemByResId(resId: Int) {
@@ -180,4 +218,52 @@ class InteractiveLottieView @JvmOverloads constructor(
         itemInteractionListener?.onItemSelected(null)
         invalidate()
     }
-    private data class LottieItem(val view: LottieAnimationView, val resId: Int)}
+    // --- Size (Scale) ---
+    fun changeSize(scale: Float) {
+        scaleSelectedItem(scale)
+    }
+
+    // --- Rotation ---
+    fun changeRotation(angle: Float) {
+        rotateSelectedItem(angle)
+    }
+
+    // --- Move Top ---
+    fun moveTop(pixels: Int = 10) {
+        moveSelectedItem(0, -pixels)
+
+    }
+
+    // --- Move Bottom ---
+    fun moveBottom(pixels: Int = 10) {
+        moveSelectedItem(0, pixels)
+    }
+
+    // --- Move Left ---
+    fun moveLeft(pixels: Int = 10) {
+        moveSelectedItem(-pixels, 0)
+    }
+
+    // --- Move Right ---
+    fun moveRight(pixels: Int = 10) {
+        moveSelectedItem(pixels, 0)
+    }
+
+    fun containsItem(resId: Int): Boolean {
+        return lottieItems.any { it.resId == resId }
+    }
+
+    fun updateItemTransform(resId: Int, x: Float, y: Float, scale: Float, rotation: Float) {
+        val item = lottieItems.find { it.resId == resId } ?: return
+        val view = item.view
+
+        view.translationX = x
+        view.translationY = y
+        view.scaleX = scale
+        view.scaleY = scale
+        view.rotation = rotation
+
+        invalidate()
+    }
+    private data class LottieItem(val view: LottieAnimationView, val resId: Int)
+}

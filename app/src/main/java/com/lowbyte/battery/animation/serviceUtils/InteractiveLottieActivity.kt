@@ -6,51 +6,53 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.custom.InteractiveLottieView
 import com.lowbyte.battery.animation.databinding.ActivityInteractiveLottieBinding
 import com.lowbyte.battery.animation.serviceUtils.AllLottieAdapter
 import com.lowbyte.battery.animation.serviceUtils.OnItemInteractionListener
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AppPreferences
+import com.lowbyte.battery.animation.utils.AppPreferences.Companion.KEY_SHOW_LOTTIE_TOP_VIEW
 
 class InteractiveLottieActivity : AppCompatActivity() {
-    private lateinit var preferences: AppPreferences
 
     private lateinit var binding: ActivityInteractiveLottieBinding
-    private val lottieItems = mutableListOf<Int>() // store res ids
+    private lateinit var interactiveLottieView: InteractiveLottieView
+    private lateinit var preferences: AppPreferences
+
+    private val lottieItems = mutableListOf<Int>()  // Track added resIds
+    private lateinit var adapter: LottieItemAdapter
 
     private val availableLottieFiles = listOf(
         R.raw.ccc,
         R.raw.aaa,
-        R.raw.ccc,
-        R.raw.aaa,
+        R.raw.swing,
         R.raw.bbb,
         R.raw.anim_7,
         R.raw.a_5,
         R.raw.a_12
     )
 
-    private lateinit var adapter: LottieItemAdapter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityInteractiveLottieBinding.inflate(layoutInflater)
         enableEdgeToEdge()
+        binding = ActivityInteractiveLottieBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         preferences = AppPreferences.getInstance(this)
-        binding.btnActivateSelected.text = if (preferences.getBoolean(
-                "show_lottie_top_view",
-                false
-            ) == false
-        ) getString(R.string.turn_off) else getString(R.string.turn_on)
+        interactiveLottieView = InteractiveLottieView(this)
+
+        // Set toggle button text
+        binding.btnActivateSelected.text =
+            if (preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)==false)
+                getString(R.string.turn_off) else getString(R.string.turn_on)
+
+        // Setup adapter for selected Lottie items
         adapter = LottieItemAdapter(lottieItems) { resId ->
-            binding.includeCanvas.lottieCanvas.removeItemByResId(resId)
+            interactiveLottieView.removeItemByResId(resId)
             lottieItems.remove(resId)
             adapter.notifyDataSetChanged()
         }
@@ -64,7 +66,7 @@ class InteractiveLottieActivity : AppCompatActivity() {
         binding.seekbarSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val scale = progress / 100f
-                binding.includeCanvas.lottieCanvas.scaleSelectedItem(scale)
+                interactiveLottieView.scaleSelectedItem(scale)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -73,56 +75,47 @@ class InteractiveLottieActivity : AppCompatActivity() {
 
         // Rotation SeekBar
         binding.seekbarRotation.max = 360
-        binding.seekbarRotation.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.seekbarRotation.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                binding.includeCanvas.lottieCanvas.rotateSelectedItem(progress.toFloat())
+                interactiveLottieView.rotateSelectedItem(progress.toFloat())
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
-      //   Buttons
-//        binding.btnAddLottie.setOnClickListener {
-//            val resId = R.raw.ccc
-//            if (!lottieItems.contains(resId)) {
-//                binding.lottieCanvas.addLottieItem(resId)
-//                lottieItems.add(resId)
-//                adapter.notifyDataSetChanged()
-//            }
+        // Movement buttons
+        binding.btnMoveTop.setOnClickListener {
+            interactiveLottieView.moveSelectedItem(0,-10)
+        }
+
+        binding.btnMoveBottom.setOnClickListener {
+            interactiveLottieView.moveSelectedItem(0, 10)
+        }
+
+        binding.btnMoveLeft.setOnClickListener {
+            interactiveLottieView.moveSelectedItem(-10,0)
+        }
+
+        binding.btnMoveRight.setOnClickListener {
+            interactiveLottieView.moveSelectedItem(10,0)
+
+        }
+
+
+
+
+        // Remove selected item
+//        binding.btnRemoveSelected.setOnClickListener {
+//            interactiveLottieView.removeSelectedItem()
 //        }
 
-        binding.btnMoveTop.setOnClickListener {
-            binding.includeCanvas.lottieCanvas.moveSelectedItem(
-                0,
-                -20
-            )
-        }
-        binding.btnMoveBottom.setOnClickListener {
-            binding.includeCanvas.lottieCanvas.moveSelectedItem(
-                0,
-                20
-            )
-        }
-        binding.btnMoveLeft.setOnClickListener {
-            binding.includeCanvas.lottieCanvas.moveSelectedItem(
-                -20,
-                0
-            )
-        }
-        binding.btnMoveRight.setOnClickListener {
-            binding.includeCanvas.lottieCanvas.moveSelectedItem(
-                20,
-                0
-            )
-        }
-     //   binding.btnRemoveSelected.setOnClickListener { binding.lottieCanvas.removeSelectedItem() }
-
-        // All Lotties
-        binding.recyclerAllLotties.layoutManager = GridLayoutManager(this, 4)//LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        // Load all Lotties
+        binding.recyclerAllLotties.layoutManager = GridLayoutManager(this, 4)
         val allLottieAdapter = AllLottieAdapter(availableLottieFiles) { resId ->
             if (!lottieItems.contains(resId) && lottieItems.size < 5) {
-                binding.includeCanvas.lottieCanvas.addLottieItem(resId)
+                interactiveLottieView.addLottieItem(resId)
                 lottieItems.add(resId)
                 adapter.notifyDataSetChanged()
             } else {
@@ -130,14 +123,11 @@ class InteractiveLottieActivity : AppCompatActivity() {
             }
         }
         binding.recyclerAllLotties.adapter = allLottieAdapter
-        binding.includeCanvas.lottieCanvas.itemInteractionListener =
-            object : OnItemInteractionListener {
+
+        // Set listener for item events
+        interactiveLottieView.itemInteractionListener = object : OnItemInteractionListener {
             override fun onItemSelected(resId: Int?) {
-//                if (resId == null) {
-//                    Toast.makeText(this@InteractiveLottieActivity, "No item selected", Toast.LENGTH_SHORT).show()
-//                } else {
-//                    Toast.makeText(this@InteractiveLottieActivity, "Selected ID: $resId", Toast.LENGTH_SHORT).show()
-//                }
+                // Optional: show Toast or update UI
             }
 
             override fun onItemCountChanged(count: Int) {
@@ -145,17 +135,17 @@ class InteractiveLottieActivity : AppCompatActivity() {
             }
         }
 
+        // Toggle Lottie top view
         binding.btnActivateSelected.setOnClickListener {
-            if (preferences.getBoolean("show_lottie_top_view") == true) {
-                preferences.setBoolean("show_lottie_top_view", false)
+            if (preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW) == true) {
+                preferences.setBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)
                 binding.btnActivateSelected.text = getString(R.string.turn_on)
             } else {
-                preferences.setBoolean("show_lottie_top_view", true)
+                preferences.setBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, true)
                 binding.btnActivateSelected.text = getString(R.string.turn_off)
 
+                sendBroadcast(Intent(BROADCAST_ACTION))
             }
-            sendBroadcast(Intent(BROADCAST_ACTION))
         }
     }
-
 }

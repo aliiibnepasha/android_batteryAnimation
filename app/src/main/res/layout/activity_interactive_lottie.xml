@@ -12,17 +12,16 @@
     <FrameLayout
         android:id="@+id/emojiView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="250dp"
         android:background="@drawable/bg_board"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <include
-            android:id="@+id/include_canvas"
-            layout="@layout/view_lottie_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="250dp" />
+<!--        <com.lowbyte.battery.animation.custom.InteractiveLottieView-->
+<!--            android:id="@+id/lottieCanvas"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" />-->
     </FrameLayout>
 
 
