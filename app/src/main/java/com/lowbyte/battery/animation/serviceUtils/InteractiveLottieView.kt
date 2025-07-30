@@ -41,20 +41,30 @@ class InteractiveLottieView @JvmOverloads constructor(
 
     fun addLottieItem(animationRes: Int) {
         if (lottieItems.size >= 5) return
+
         val lottie = LottieAnimationView(context).apply {
-            setAnimation(animationRes)
+            setAnimation(animationRes) // or data.resId
             playAnimation()
             repeatCount = 1000
             layoutParams = LayoutParams(200, 200)
             setBackgroundColor(Color.TRANSPARENT)
+
+            isClickable = true
+            isFocusable = true
         }
 
         val item = LottieItem(lottie, animationRes)
+
+        // 👉 Set click listener
+        lottie.setOnClickListener {
+            selectItem(item)
+            Log.d("Clicked","Lottue ${item.resId}")
+        }
+
         lottieItems.add(item)
         addView(lottie)
 
         lottie.post {
-            // Restore previous state if available
             val savedX = preferences.getFloat("${animationRes}_x", (width - lottie.width) / 2f)
             val savedY = preferences.getFloat("${animationRes}_y", (height - lottie.height) / 2f)
             val savedScale = preferences.getFloat("${animationRes}_scale", 1.0f)
@@ -63,6 +73,7 @@ class InteractiveLottieView @JvmOverloads constructor(
             lottie.scaleX = savedScale
             lottie.scaleY = savedScale
             lottie.rotation = savedRotation
+
             lottie.translationX = savedX
             lottie.translationY = savedY
             invalidate()
@@ -73,9 +84,7 @@ class InteractiveLottieView @JvmOverloads constructor(
         saveTransform(item)
         sendBroadcast(item)
         invalidate()
-
     }
-
 
 
     fun removeItemByResId(resId: Int) {
@@ -200,59 +209,94 @@ class InteractiveLottieView @JvmOverloads constructor(
         context.sendBroadcast(intent)
     }
 
-    private fun selectItem(item: LottieItem) {
+    fun selectItem(item: LottieItem) {
+        Log.d("InteractiveLottieView", "Item selected: ${item.resId}")
         selectedItem?.view?.setBackgroundColor(Color.TRANSPARENT)
         selectedItem = item
         bringChildToFront(item.view)
         item.view.setBackgroundResource(R.drawable.lottie_border)
         itemInteractionListener?.onItemSelected(item.resId)
+        sendBroadcast(item)
         invalidate()
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
+    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+        return false // Let child views handle touch (including click)
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        val x = event.x
+        val y = event.y
+
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                downX = event.x
-                downY = event.y
-
-                var itemHit = false
                 for (item in lottieItems.reversed()) {
-                    if (hitTest(item, event.x, event.y)) {
+                    val view = item.view
+                    val left = view.translationX
+                    val top = view.translationY
+                    val right = left + view.width * view.scaleX
+                    val bottom = top + view.height * view.scaleY
+
+                    if (x in left..right && y in top..bottom) {
+                        Log.d("TouchTest", "Hit resId=${item.resId} at ($x,$y)")
                         selectItem(item)
-                        itemHit = true
-                        break
+                        return true // handle only if hit
                     }
                 }
 
-                if (!itemHit) {
-                    selectedItem?.view?.setBackgroundColor(Color.TRANSPARENT)
-                    selectedItem = null
-                    itemInteractionListener?.onItemSelected(null)
-                    invalidate()
-                }
-            }
-
-            MotionEvent.ACTION_MOVE -> {
-                selectedItem?.view?.let { view ->
-                    val newX = (view.translationX + (event.x - downX)).coerceIn(
-                        0f, width - view.width * view.scaleX
-                    )
-                    val newY = (view.translationY + (event.y - downY)).coerceIn(
-                        0f, height - view.height * view.scaleY
-                    )
-                    view.translationX = newX
-                    view.translationY = newY
-                    downX = event.x
-                    downY = event.y
-
-                    saveTransform(selectedItem!!)
-                    sendBroadcast(selectedItem!!)
-                    invalidate()
-                }
+                // Touch outside items → pass through to apps
+                Log.d("TouchTest", "No item hit, passing touch through")
+                return false
             }
         }
-        return true
+
+        return false
     }
+
+    //    override fun onTouchEvent(event: MotionEvent): Boolean {
+//        when (event.action) {
+//            MotionEvent.ACTION_DOWN -> {
+//                downX = event.x
+//                downY = event.y
+//
+//                var itemHit = false
+//                for (item in lottieItems.reversed()) {
+//                    if (hitTest(item, event.x, event.y)) {
+//                        selectItem(item)
+//                        itemHit = true
+//                        break
+//                    }
+//                }
+//
+//                if (!itemHit) {
+//                    selectedItem?.view?.setBackgroundColor(Color.TRANSPARENT)
+//                    selectedItem = null
+//                    itemInteractionListener?.onItemSelected(null)
+//                    invalidate()
+//                }
+//            }
+//
+//            MotionEvent.ACTION_MOVE -> {
+//                selectedItem?.view?.let { view ->
+//                    val newX = (view.translationX + (event.x - downX)).coerceIn(
+//                        0f, width - view.width * view.scaleX
+//                    )
+//                    val newY = (view.translationY + (event.y - downY)).coerceIn(
+//                        0f, height - view.height * view.scaleY
+//                    )
+//                    view.translationX = newX
+//                    view.translationY = newY
+//                    downX = event.x
+//                    downY = event.y
+//
+//                    saveTransform(selectedItem!!)
+//                    sendBroadcast(selectedItem!!)
+//                    invalidate()
+//                }
+//            }
+//        }
+//        return true
+//    }
 
     private fun hitTest(item: LottieItem, x: Float, y: Float): Boolean {
         val view = item.view
@@ -299,16 +343,22 @@ class InteractiveLottieView @JvmOverloads constructor(
             scaleX = data.scale
             scaleY = data.scale
             rotation = data.rotation
+            isClickable = true
+            isFocusable = true
         }
 
         val item = LottieItem(lottie, data.resId)
+
+        lottie.setOnClickListener {
+            selectItem(item)
+            Log.d("Clicked","Lottie ${item.resId}")
+        }
+
         lottieItems.add(item)
         addView(lottie)
         itemInteractionListener?.onItemCountChanged(lottieItems)
         invalidate()
     }
-
-
     fun getCurrentLottieItemData(): List<LottieItemData> {
         return lottieItems.map { item ->
             LottieItemData(

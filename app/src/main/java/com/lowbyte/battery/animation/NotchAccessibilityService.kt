@@ -34,6 +34,7 @@ import com.lowbyte.battery.animation.custom.InteractiveLottieView
 import com.lowbyte.battery.animation.databinding.CustomNotchBarBinding
 import com.lowbyte.battery.animation.databinding.CustomNotificationBarBinding
 import com.lowbyte.battery.animation.databinding.CustomStatusBarBinding
+import com.lowbyte.battery.animation.serviceUtils.LottieItem
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_NOTIFICATION
@@ -147,13 +148,6 @@ class NotchAccessibilityService : AccessibilityService() {
                             updateLottieOverlayVisibility()
 
                             val resId = intent.getIntExtra("resId", -1)
-//                            val x = intent.getFloatExtra("x", -1f)
-//                            val y = intent.getFloatExtra("y", -1f)
-//                            val scale = intent.getFloatExtra("scale", 1.0f)
-//                            val rotation = intent.getFloatExtra("rotation", 0f)
-//
-
-
                             val x = intent.getFloatExtra("x", Float.NaN)
                             val y = intent.getFloatExtra("y", Float.NaN)
                             val scale = intent.getFloatExtra("scale", 1.0f)
@@ -592,8 +586,7 @@ class NotchAccessibilityService : AccessibilityService() {
             WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
