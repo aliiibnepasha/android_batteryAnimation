@@ -4,7 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lowbyte.battery.animation.R
@@ -15,6 +20,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AppPreferences
 
 class InteractiveLottieActivity : AppCompatActivity() {
+    private lateinit var preferences: AppPreferences
 
     private lateinit var binding: ActivityInteractiveLottieBinding
     private val lottieItems = mutableListOf<Int>() // store res ids
@@ -35,10 +41,16 @@ class InteractiveLottieActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityInteractiveLottieBinding.inflate(layoutInflater)
+        enableEdgeToEdge()
         setContentView(binding.root)
-
+        preferences = AppPreferences.getInstance(this)
+        binding.btnActivateSelected.text = if (preferences.getBoolean(
+                "show_lottie_top_view",
+                false
+            ) == false
+        ) getString(R.string.turn_off) else getString(R.string.turn_on)
         adapter = LottieItemAdapter(lottieItems) { resId ->
-            binding.lottieCanvas.removeItemByResId(resId)
+            binding.includeCanvas.lottieCanvas.removeItemByResId(resId)
             lottieItems.remove(resId)
             adapter.notifyDataSetChanged()
         }
@@ -52,7 +64,7 @@ class InteractiveLottieActivity : AppCompatActivity() {
         binding.seekbarSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val scale = progress / 100f
-                binding.lottieCanvas.scaleSelectedItem(scale)
+                binding.includeCanvas.lottieCanvas.scaleSelectedItem(scale)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -63,7 +75,7 @@ class InteractiveLottieActivity : AppCompatActivity() {
         binding.seekbarRotation.max = 360
         binding.seekbarRotation.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                binding.lottieCanvas.rotateSelectedItem(progress.toFloat())
+                binding.includeCanvas.lottieCanvas.rotateSelectedItem(progress.toFloat())
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -80,17 +92,37 @@ class InteractiveLottieActivity : AppCompatActivity() {
 //            }
 //        }
 
-        binding.btnMoveTop.setOnClickListener { binding.lottieCanvas.moveSelectedItem(0, -20) }
-        binding.btnMoveBottom.setOnClickListener { binding.lottieCanvas.moveSelectedItem(0, 20) }
-        binding.btnMoveLeft.setOnClickListener { binding.lottieCanvas.moveSelectedItem(-20, 0) }
-        binding.btnMoveRight.setOnClickListener { binding.lottieCanvas.moveSelectedItem(20, 0) }
+        binding.btnMoveTop.setOnClickListener {
+            binding.includeCanvas.lottieCanvas.moveSelectedItem(
+                0,
+                -20
+            )
+        }
+        binding.btnMoveBottom.setOnClickListener {
+            binding.includeCanvas.lottieCanvas.moveSelectedItem(
+                0,
+                20
+            )
+        }
+        binding.btnMoveLeft.setOnClickListener {
+            binding.includeCanvas.lottieCanvas.moveSelectedItem(
+                -20,
+                0
+            )
+        }
+        binding.btnMoveRight.setOnClickListener {
+            binding.includeCanvas.lottieCanvas.moveSelectedItem(
+                20,
+                0
+            )
+        }
      //   binding.btnRemoveSelected.setOnClickListener { binding.lottieCanvas.removeSelectedItem() }
 
         // All Lotties
         binding.recyclerAllLotties.layoutManager = GridLayoutManager(this, 4)//LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         val allLottieAdapter = AllLottieAdapter(availableLottieFiles) { resId ->
             if (!lottieItems.contains(resId) && lottieItems.size < 5) {
-                binding.lottieCanvas.addLottieItem(resId)
+                binding.includeCanvas.lottieCanvas.addLottieItem(resId)
                 lottieItems.add(resId)
                 adapter.notifyDataSetChanged()
             } else {
@@ -98,7 +130,8 @@ class InteractiveLottieActivity : AppCompatActivity() {
             }
         }
         binding.recyclerAllLotties.adapter = allLottieAdapter
-        binding.lottieCanvas.itemInteractionListener = object : OnItemInteractionListener {
+        binding.includeCanvas.lottieCanvas.itemInteractionListener =
+            object : OnItemInteractionListener {
             override fun onItemSelected(resId: Int?) {
 //                if (resId == null) {
 //                    Toast.makeText(this@InteractiveLottieActivity, "No item selected", Toast.LENGTH_SHORT).show()
@@ -113,7 +146,14 @@ class InteractiveLottieActivity : AppCompatActivity() {
         }
 
         binding.btnActivateSelected.setOnClickListener {
-            AppPreferences.getInstance(this).setBoolean("show_lottie_top_view", true)
+            if (preferences.getBoolean("show_lottie_top_view") == true) {
+                preferences.setBoolean("show_lottie_top_view", false)
+                binding.btnActivateSelected.text = getString(R.string.turn_on)
+            } else {
+                preferences.setBoolean("show_lottie_top_view", true)
+                binding.btnActivateSelected.text = getString(R.string.turn_off)
+
+            }
             sendBroadcast(Intent(BROADCAST_ACTION))
         }
     }

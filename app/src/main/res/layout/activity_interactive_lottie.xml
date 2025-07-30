@@ -5,31 +5,40 @@
     android:id="@+id/main_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
     android:fitsSystemWindows="false"
+    android:background="@color/black"
     tools:context=".ui.InteractiveLottieActivity">
 
-    <com.lowbyte.battery.animation.custom.InteractiveLottieView
-        android:id="@+id/lottie_canvas"
-        android:layout_width="0dp"
+    <include
+        android:id="@+id/include_canvas"
+        layout="@layout/view_lottie_overlay"
+        android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:background="@drawable/bg_board"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <!--    <com.lowbyte.battery.animation.custom.InteractiveLottieView-->
+    <!--        android:id="@+id/lottie_canvas"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="250dp"-->
+    <!--        android:background="@drawable/bg_board"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <TextView
         android:id="@+id/tvAddEmoji"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sticker Added (2/5)"
+        android:text="Sticker Added (0/5)"
         android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold"
         android:layout_margin="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lottie_canvas" />
+        app:layout_constraintTop_toBottomOf="@+id/include_canvas" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_lotties"
@@ -198,13 +207,35 @@
 
         />
 
-    <Button
+    <TextView
         android:id="@+id/btn_activate_selected"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Activete"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="40dp"
+        android:text="@string/turn_off"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/home_button"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/btn_activate_disable"
+        app:layout_constraintWidth_percent="0.35"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="6dp" />
+
+    <TextView
+        android:id="@+id/btn_activate_disable"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_activate_selected"
+        app:layout_constraintWidth_percent="0.35" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

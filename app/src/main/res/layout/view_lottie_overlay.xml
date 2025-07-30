@@ -3,11 +3,12 @@
     android:id="@+id/lottie_overlay_root"
     android:layout_width="match_parent"
     android:layout_height="250dp"
+    android:background="@color/white50"
     android:clickable="false">
 
     <!-- Custom Interactive View or Lottie -->
     <com.lowbyte.battery.animation.custom.InteractiveLottieView
-        android:id="@+id/interactive_lottie"
+        android:id="@+id/lottie_canvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="false" />

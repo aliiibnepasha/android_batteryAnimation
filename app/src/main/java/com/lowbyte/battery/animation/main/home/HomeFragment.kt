@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
@@ -183,16 +184,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "accessibility_prompt_shown")
-//            if (BuildConfig.DEBUG){
-//                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-//            }else{
+            if (BuildConfig.DEBUG){
+                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            }else{
                 val existing = childFragmentManager.findFragmentByTag("AccessibilityPermission")
                 if (existing == null || !existing.isAdded) {
                     sheet.show(childFragmentManager, "AccessibilityPermission")
                 } else {
                     Log.d("Accessibility", "AccessibilityPermissionBottomSheet already shown")
                 }
-         //   }
+            }
         } else {
             binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled
             requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))

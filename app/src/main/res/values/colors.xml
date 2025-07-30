@@ -7,6 +7,7 @@
     <color name="teal_700">#64C7FF</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="white50">#50FFFFFF</color>
     <color name="gray_unselected">#999999</color>
     <color name="bg_color_enable">#111011</color>
     <color name="bg_statusbar_menu">#101010</color>
