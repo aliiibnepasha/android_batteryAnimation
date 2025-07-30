@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import android.widget.FrameLayout
 import com.airbnb.lottie.LottieAnimationView
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.serviceUtils.LottieItem
 import com.lowbyte.battery.animation.serviceUtils.OnItemInteractionListener
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AppPreferences
@@ -65,20 +66,11 @@ class InteractiveLottieView @JvmOverloads constructor(
             invalidate()
         }
 
-        itemInteractionListener?.onItemCountChanged(lottieItems.size)
+        itemInteractionListener?.onItemCountChanged(lottieItems)
         selectItem(item)
     }
 
-    fun removeSelectedItem() {
-        selectedItem?.let {
-            removeView(it.view)
-            lottieItems.remove(it)
-            itemInteractionListener?.onItemCountChanged(lottieItems.size)
-            itemInteractionListener?.onItemSelected(null)
-            selectedItem = null
-            invalidate()
-        }
-    }
+
 
     fun scaleSelectedItem(scale: Float) {
         selectedItem?.let { item ->
@@ -209,44 +201,25 @@ class InteractiveLottieView @JvmOverloads constructor(
         super.onDraw(canvas)
     }
 
-    fun removeItemByResId(resId: Int) {
-        val item = lottieItems.find { it.resId == resId } ?: return
-        removeView(item.view)
-        lottieItems.remove(item)
-        if (selectedItem == item) selectedItem = null
-        itemInteractionListener?.onItemCountChanged(lottieItems.size)
+    fun removeItemByResId(lottieItem: LottieItem) {
+        removeView(lottieItem.view)
+        lottieItems.remove(lottieItem)
+        if (selectedItem == lottieItem) selectedItem = null
+        itemInteractionListener?.onItemCountChanged(lottieItems)
         itemInteractionListener?.onItemSelected(null)
         invalidate()
     }
-    // --- Size (Scale) ---
-    fun changeSize(scale: Float) {
-        scaleSelectedItem(scale)
-    }
 
-    // --- Rotation ---
-    fun changeRotation(angle: Float) {
-        rotateSelectedItem(angle)
-    }
 
-    // --- Move Top ---
-    fun moveTop(pixels: Int = 10) {
-        moveSelectedItem(0, -pixels)
-
-    }
-
-    // --- Move Bottom ---
-    fun moveBottom(pixels: Int = 10) {
-        moveSelectedItem(0, pixels)
-    }
-
-    // --- Move Left ---
-    fun moveLeft(pixels: Int = 10) {
-        moveSelectedItem(-pixels, 0)
-    }
-
-    // --- Move Right ---
-    fun moveRight(pixels: Int = 10) {
-        moveSelectedItem(pixels, 0)
+    fun removeSelectedItem() {
+        selectedItem?.let {
+            removeView(it.view)
+            lottieItems.remove(it)
+            itemInteractionListener?.onItemCountChanged(lottieItems)
+            itemInteractionListener?.onItemSelected(null)
+            selectedItem = null
+            invalidate()
+        }
     }
 
     fun containsItem(resId: Int): Boolean {
@@ -265,5 +238,4 @@ class InteractiveLottieView @JvmOverloads constructor(
 
         invalidate()
     }
-    private data class LottieItem(val view: LottieAnimationView, val resId: Int)
 }
