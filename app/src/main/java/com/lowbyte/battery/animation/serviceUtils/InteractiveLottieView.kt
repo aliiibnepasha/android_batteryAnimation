@@ -10,6 +10,7 @@ import android.widget.FrameLayout
 import com.airbnb.lottie.LottieAnimationView
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.serviceUtils.LottieItem
+import com.lowbyte.battery.animation.serviceUtils.LottieItemData
 import com.lowbyte.battery.animation.serviceUtils.OnItemInteractionListener
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AppPreferences
@@ -237,5 +238,61 @@ class InteractiveLottieView @JvmOverloads constructor(
         view.rotation = rotation
 
         invalidate()
+    }
+    fun addLottieItemFromData(data: LottieItemData) {
+        if (containsItem(data.resId)) return
+
+        val lottie = LottieAnimationView(context).apply {
+            setAnimation(data.resId)
+            playAnimation()
+            repeatCount = 200
+            layoutParams = LayoutParams(200, 200)
+            setBackgroundColor(Color.TRANSPARENT)
+            translationX = data.x
+            translationY = data.y
+            scaleX = data.scale
+            scaleY = data.scale
+            rotation = data.rotation
+        }
+
+        val item = LottieItem(lottie, data.resId)
+        lottieItems.add(item)
+        addView(lottie)
+        itemInteractionListener?.onItemCountChanged(lottieItems)
+        invalidate()
+    }
+
+
+    fun getCurrentLottieItemData(): List<LottieItemData> {
+        return lottieItems.map { item ->
+            LottieItemData(
+                resId = item.resId,
+                x = item.view.translationX,
+                y = item.view.translationY,
+                scale = item.view.scaleX,
+                rotation = item.view.rotation
+            )
+        }
+    }
+
+    fun loadLottieItemsFromPrefs() {
+        val savedItems = preferences.getLottieItemList("lottie_item_list")
+        savedItems.forEach { data ->
+            addLottieItemFromData(data)
+        }
+    }
+
+
+    fun saveAllLottieItemsToPrefs() {
+        val dataList = lottieItems.map { item ->
+            LottieItemData(
+                resId = item.resId,
+                x = item.view.translationX,
+                y = item.view.translationY,
+                scale = item.view.scaleX,
+                rotation = item.view.rotation
+            )
+        }
+        preferences.putLottieItemList("lottie_item_list", dataList)
     }
 }

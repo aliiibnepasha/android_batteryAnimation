@@ -1,4 +1,3 @@
-
 package com.lowbyte.battery.animation.ui
 
 import android.util.Log
@@ -12,7 +11,7 @@ import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.serviceUtils.LottieItem
 
 class LottieItemAdapter(
-    private val items: ArrayList<LottieItem>,
+    private val items: MutableList<LottieItem>,
     private val onRemove: (LottieItem) -> Unit
 ) : RecyclerView.Adapter<LottieItemAdapter.ViewHolder>() {
 
@@ -28,21 +27,24 @@ class LottieItemAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val resId = items[position]
-        Log.d("LottieItemAdapter", "onBindViewHolder: $resId")
-        holder.lottie.setAnimation(resId.resId)
-        holder.lottie.repeatCount = 200
+        val item = items[position]
+
+        Log.d("LottieItemAdapter", "Binding item: ${item.resId}")
+
+        holder.lottie.setAnimation(item.resId)
+        holder.lottie.repeatCount = 1000
         holder.lottie.playAnimation()
+
         holder.btnRemove.setOnClickListener {
-            onRemove(resId)
+            onRemove(item)
         }
     }
 
+    override fun getItemCount(): Int = items.size
+
     fun updateItems(newItems: List<LottieItem>) {
         items.clear()
-        items == newItems
+        items.addAll(newItems)
         notifyDataSetChanged()
     }
-
-    override fun getItemCount(): Int = items.size
 }

@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.core.content.edit
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.lowbyte.battery.animation.serviceUtils.LottieItemData
 
 
 class AppPreferences private constructor(context: Context) {
@@ -317,6 +318,19 @@ class AppPreferences private constructor(context: Context) {
 
     fun contains(key: String): Boolean {
         return sharedPreferences.contains(key)
+    }
+
+    private val gson = Gson()
+
+    fun putLottieItemList(key: String, list: List<LottieItemData>) {
+        val json = gson.toJson(list)
+        sharedPreferences.edit().putString(key, json).apply()
+    }
+
+    fun getLottieItemList(key: String): List<LottieItemData> {
+        val json = sharedPreferences.getString(key, null) ?: return emptyList()
+        val type = object : TypeToken<List<LottieItemData>>() {}.type
+        return gson.fromJson(json, type)
     }
 
 }
