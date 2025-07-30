@@ -44,7 +44,7 @@ class InteractiveLottieActivity : AppCompatActivity() {
         setupRecyclerViews()
         setupSeekBars()
         setupMovementControls()
-        setupAllLotties()
+        setupAllLotteries()
         setupInteractionListener()
         loadItemsFromPreferences()
     }
@@ -103,13 +103,18 @@ class InteractiveLottieActivity : AppCompatActivity() {
     }
 
     private fun setupMovementControls() {
-        binding.btnMoveTop.setOnClickListener { interactiveLottieView.moveSelectedItem(0, -10) }
-        binding.btnMoveBottom.setOnClickListener { interactiveLottieView.moveSelectedItem(0, 10) }
-        binding.btnMoveLeft.setOnClickListener { interactiveLottieView.moveSelectedItem(-10, 0) }
-        binding.btnMoveRight.setOnClickListener { interactiveLottieView.moveSelectedItem(10, 0) }
+        binding.btnMoveTop.setOnClickListener {
+            interactiveLottieView.moveSelectedItem(0, -10)
+        }
+        binding.btnMoveBottom.setOnClickListener {
+            interactiveLottieView.moveSelectedItem(0, 10) }
+        binding.btnMoveLeft.setOnClickListener {
+            interactiveLottieView.moveSelectedItem(-10, 0) }
+        binding.btnMoveRight.setOnClickListener {
+            interactiveLottieView.moveSelectedItem(10, 0) }
     }
 
-    private fun setupAllLotties() {
+    private fun setupAllLotteries() {
         binding.recyclerAllLotties.layoutManager = GridLayoutManager(this, 4)
         val allLottieAdapter = AllLottieAdapter(availableLottieFiles) { resId ->
             if (interactiveLottieView.containsItem(resId)) {

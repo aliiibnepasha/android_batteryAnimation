@@ -147,10 +147,36 @@ class NotchAccessibilityService : AccessibilityService() {
                             updateLottieOverlayVisibility()
 
                             val resId = intent.getIntExtra("resId", -1)
-                            val x = intent.getFloatExtra("x", -1f)
-                            val y = intent.getFloatExtra("y", -1f)
+//                            val x = intent.getFloatExtra("x", -1f)
+//                            val y = intent.getFloatExtra("y", -1f)
+//                            val scale = intent.getFloatExtra("scale", 1.0f)
+//                            val rotation = intent.getFloatExtra("rotation", 0f)
+//
+
+
+                            val x = intent.getFloatExtra("x", Float.NaN)
+                            val y = intent.getFloatExtra("y", Float.NaN)
                             val scale = intent.getFloatExtra("scale", 1.0f)
                             val rotation = intent.getFloatExtra("rotation", 0f)
+
+                            overlayLottieCanvas?.let { canvas ->
+                                if (resId != -1) {
+                                    if (!canvas.containsItem(resId)) {
+                                        canvas.addLottieItem(resId)
+                                    }
+
+                                    // Get existing item position if x/y are invalid
+                                    val existingItem = canvas.getItemByResId(resId)
+                                    val currentX = existingItem?.view?.translationX ?: 0f
+                                    val currentY = existingItem?.view?.translationY ?: 0f
+
+                                    val safeX = if (x.isNaN()) currentX else x
+                                    val safeY = if (y.isNaN()) currentY else y
+
+                                    canvas.updateItemTransform(resId, safeX, safeY, scale, rotation)
+                                }
+                            }
+
 
                             overlayLottieCanvas?.let { canvas ->
                                 if (resId != -1) {

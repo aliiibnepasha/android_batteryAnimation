@@ -41,7 +41,6 @@ class InteractiveLottieView @JvmOverloads constructor(
 
     fun addLottieItem(animationRes: Int) {
         if (lottieItems.size >= 5) return
-
         val lottie = LottieAnimationView(context).apply {
             setAnimation(animationRes)
             playAnimation()
@@ -71,7 +70,7 @@ class InteractiveLottieView @JvmOverloads constructor(
 
         itemInteractionListener?.onItemCountChanged(lottieItems)
         selectItem(item)
-      //  saveTransform(lottieItem)
+        saveTransform(item)
         sendBroadcast(item)
         invalidate()
 
@@ -174,6 +173,10 @@ class InteractiveLottieView @JvmOverloads constructor(
         }
     }
 
+
+    fun getItemByResId(resId: Int): LottieItem? {
+        return lottieItems.find { it.resId == resId }
+    }
     private fun saveTransform(item: LottieItem) {
         val resId = item.resId
         val view = item.view
@@ -184,13 +187,15 @@ class InteractiveLottieView @JvmOverloads constructor(
         preferences.putFloat("${resId}_rotation", view.rotation)
     }
 
-    private fun sendBroadcast(item: LottieItem, action : String = BROADCAST_ACTION) {
+
+    private fun sendBroadcast(item: LottieItem, action: String = BROADCAST_ACTION) {
+        val view = item.view
         val intent = Intent(action).apply {
             putExtra("resId", item.resId)
-            putExtra("x", item.view.translationX)
-            putExtra("y", item.view.translationY)
-            putExtra("scale", item.view.scaleX)
-            putExtra("rotation", item.view.rotation)
+            putExtra("x", view.translationX)
+            putExtra("y", view.translationY)
+            putExtra("scale", view.scaleX)
+            putExtra("rotation", view.rotation)
         }
         context.sendBroadcast(intent)
     }
