@@ -46,7 +46,6 @@ class InteractiveLottieActivity : AppCompatActivity() {
         setupMovementControls()
         setupAllLotties()
         setupInteractionListener()
-
         loadItemsFromPreferences()
     }
 
@@ -60,9 +59,13 @@ class InteractiveLottieActivity : AppCompatActivity() {
         binding.btnActivateSelected.text = getString(if (isVisible) R.string.turn_off else R.string.turn_on)
 
         binding.btnActivateSelected.setOnClickListener {
-            val newState = preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)?:false
+            val currentState = preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)
+            val newState = !(currentState ?: true)
             preferences.setBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, newState)
-            binding.btnActivateSelected.text = getString(if (newState) R.string.turn_off else R.string.turn_on)
+            binding.btnActivateSelected.text = getString(
+                if (newState) R.string.turn_off else R.string.turn_on
+            )
+
             sendBroadcast(Intent(BROADCAST_ACTION))
         }
     }
@@ -70,8 +73,8 @@ class InteractiveLottieActivity : AppCompatActivity() {
     private fun setupRecyclerViews() {
         lotteSelectedAdapter = LottieItemAdapter(lottieItems) { lottieItem ->
             interactiveLottieView.removeItemByResId(lottieItem)
-            lottieItems.remove(lottieItem)
-            lotteSelectedAdapter.updateItems(lottieItems)
+           // lottieItems.remove(lottieItem)
+         //   lotteSelectedAdapter.updateItems(lottieItems)
         }
 
         binding.recyclerLotties.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)

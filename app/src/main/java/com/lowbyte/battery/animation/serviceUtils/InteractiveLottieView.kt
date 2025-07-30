@@ -69,8 +69,35 @@ class InteractiveLottieView @JvmOverloads constructor(
 
         itemInteractionListener?.onItemCountChanged(lottieItems)
         selectItem(item)
+      //  saveTransform(lottieItem)
+        sendBroadcast(item)
+        invalidate()
+
     }
 
+
+    fun removeItemByResId(lottieItem: LottieItem) {
+        removeView(lottieItem.view)
+        lottieItems.remove(lottieItem)
+        if (selectedItem == lottieItem) selectedItem = null
+        itemInteractionListener?.onItemCountChanged(lottieItems)
+        itemInteractionListener?.onItemSelected(null)
+        saveTransform(lottieItem)
+        sendBroadcast(lottieItem)
+        invalidate()
+    }
+
+
+    fun removeSelectedItem() {
+        selectedItem?.let {
+            removeView(it.view)
+            lottieItems.remove(it)
+            itemInteractionListener?.onItemCountChanged(lottieItems)
+            itemInteractionListener?.onItemSelected(null)
+            selectedItem = null
+            invalidate()
+        }
+    }
 
 
     fun scaleSelectedItem(scale: Float) {
@@ -202,26 +229,7 @@ class InteractiveLottieView @JvmOverloads constructor(
         super.onDraw(canvas)
     }
 
-    fun removeItemByResId(lottieItem: LottieItem) {
-        removeView(lottieItem.view)
-        lottieItems.remove(lottieItem)
-        if (selectedItem == lottieItem) selectedItem = null
-        itemInteractionListener?.onItemCountChanged(lottieItems)
-        itemInteractionListener?.onItemSelected(null)
-        invalidate()
-    }
 
-
-    fun removeSelectedItem() {
-        selectedItem?.let {
-            removeView(it.view)
-            lottieItems.remove(it)
-            itemInteractionListener?.onItemCountChanged(lottieItems)
-            itemInteractionListener?.onItemSelected(null)
-            selectedItem = null
-            invalidate()
-        }
-    }
 
     fun containsItem(resId: Int): Boolean {
         return lottieItems.any { it.resId == resId }
