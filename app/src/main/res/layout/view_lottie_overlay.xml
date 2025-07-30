@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/lottie_overlay_root"
+<com.lowbyte.battery.animation.custom.InteractiveLottieView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lottie_canvas"
     android:layout_width="match_parent"
     android:layout_height="250dp"
     android:background="@color/white50"
     android:clickable="false">
-
-    <!-- Custom Interactive View or Lottie -->
-    <com.lowbyte.battery.animation.custom.InteractiveLottieView
-        android:id="@+id/lottie_canvas"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="false" />
-
-</FrameLayout>
+</com.lowbyte.battery.animation.custom.InteractiveLottieView>

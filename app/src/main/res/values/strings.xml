@@ -226,6 +226,7 @@
     <string name="sticker_added_5">Sticker Added (%1$d/5)</string>
     <string name="turn_on">Turn On</string>
     <string name="turn_off">Turn Off</string>
+    <string name="sticker_added_0_5">Sticker Added (0/5)</string>
 
 
 </resources>

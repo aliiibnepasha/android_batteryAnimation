@@ -9,36 +9,35 @@
     android:background="@color/black"
     tools:context=".ui.InteractiveLottieActivity">
 
-    <include
-        android:id="@+id/include_canvas"
-        layout="@layout/view_lottie_overlay"
+    <FrameLayout
+        android:id="@+id/emojiView"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_board"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <!--    <com.lowbyte.battery.animation.custom.InteractiveLottieView-->
-    <!--        android:id="@+id/lottie_canvas"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="250dp"-->
-    <!--        android:background="@drawable/bg_board"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+        <include
+            android:id="@+id/include_canvas"
+            layout="@layout/view_lottie_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="250dp" />
+    </FrameLayout>
+
 
     <TextView
         android:id="@+id/tvAddEmoji"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sticker Added (0/5)"
+        android:text="@string/sticker_added_0_5"
         android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold"
         android:layout_margin="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include_canvas" />
+        app:layout_constraintTop_toBottomOf="@+id/emojiView" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_lotties"
