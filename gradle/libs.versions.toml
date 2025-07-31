@@ -30,6 +30,7 @@ picasso = "2.8"
 playServicesAds = "24.3.0"
 shimmer = "0.5.0"
 userMessagingPlatform = "3.2.0"
+vungle = "7.5.0.1"
 workRuntimeKtx = "2.10.1"
 json = "20250517"
 
@@ -71,6 +72,7 @@ picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
 shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
 user-messaging-platform = { module = "com.google.android.ump:user-messaging-platform", version.ref = "userMessagingPlatform" }
+vungle = { module = "com.google.ads.mediation:vungle", version.ref = "vungle" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

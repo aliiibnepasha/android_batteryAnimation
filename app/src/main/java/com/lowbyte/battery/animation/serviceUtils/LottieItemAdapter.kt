@@ -12,7 +12,8 @@ import com.lowbyte.battery.animation.serviceUtils.LottieItem
 
 class LottieItemAdapter(
     private val items: MutableList<LottieItem>,
-    private val onRemove: (LottieItem) -> Unit
+    private val onRemove: (LottieItem) -> Unit,
+    private val onSelect: (LottieItem) -> Unit,
 ) : RecyclerView.Adapter<LottieItemAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -34,6 +35,10 @@ class LottieItemAdapter(
         holder.lottie.setAnimation(item.resId)
         holder.lottie.repeatCount = 1000
         holder.lottie.playAnimation()
+
+        holder.lottie.setOnClickListener {
+            onSelect(item)
+        }
 
         holder.btnRemove.setOnClickListener {
             onRemove(item)

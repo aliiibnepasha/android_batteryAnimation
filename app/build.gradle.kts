@@ -135,6 +135,7 @@ dependencies {
     implementation(libs.dotsindicator)
     implementation(libs.mintegral)
     implementation(libs.pangle)
+    implementation(libs.vungle)
     implementation(libs.user.messaging.platform)
     implementation(libs.localization)
     implementation(libs.json)

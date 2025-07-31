@@ -2,22 +2,31 @@ package com.lowbyte.battery.animation.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.custom.InteractiveLottieView
 import com.lowbyte.battery.animation.databinding.ActivityInteractiveLottieBinding
+import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.serviceUtils.AllLottieAdapter
 import com.lowbyte.battery.animation.serviceUtils.LottieItem
 import com.lowbyte.battery.animation.serviceUtils.OnItemInteractionListener
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenHome2Id
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenStatusEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.AppPreferences.Companion.KEY_SHOW_LOTTIE_TOP_VIEW
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class InteractiveLottieActivity : AppCompatActivity() {
 
@@ -25,9 +34,10 @@ class InteractiveLottieActivity : AppCompatActivity() {
     private lateinit var preferences: AppPreferences
     private lateinit var lotteSelectedAdapter: LottieItemAdapter
     private lateinit var interactiveLottieView: InteractiveLottieView
-
     private val lottieItems = ArrayList<LottieItem>() // For adapter display only
     private val availableLottieFiles = mutableListOf<Int>() // Declare empty list
+    private lateinit var sheet: AccessibilityPermissionBottomSheet // Declare the sheet
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,11 +45,48 @@ class InteractiveLottieActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityInteractiveLottieBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        preferences = AppPreferences.getInstance(this)
+
+        AdManager.loadInterstitialAd(this, getFullscreenHome2Id(), isFullscreenStatusEnabled)
+
+        sheet = AccessibilityPermissionBottomSheet(
+            onAllowClicked = {
+                FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_lotti", null)
+                startActivity(Intent(this, AllowAccessibilityActivity::class.java))
+            },
+            onCancelClicked = {
+                preferences.setBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)
+                binding.btnActivateSelected.text = getString( R.string.turn_off)
+                FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_lotti", null)
+
+            }, onDismissListener = {
+                if (!isAccessibilityServiceEnabled()) {
+                    preferences.setBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)
+                    binding.btnActivateSelected.text = getString( R.string.turn_off)
+
+                }
+
+            }
+        )
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                AdManager.showInterstitialAd(
+                    this@InteractiveLottieActivity,
+                    isFullscreenStatusEnabled,
+                    true
+                ) {
+                    finish()
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
+
+
+
         availableLottieFiles.addAll((1..56).map {
             resources.getIdentifier("lottie_$it", "raw", packageName)
         })
-        preferences = AppPreferences.getInstance(this)
-        
         // Get the InteractiveLottieView from the layout instead of creating a new one
         interactiveLottieView = binding.customView
 
@@ -74,23 +121,20 @@ class InteractiveLottieActivity : AppCompatActivity() {
         }
 
         binding.btnActivateSelected.setOnClickListener {
-            val currentState = preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)
-            val newState = !(currentState ?: true)
-            preferences.setBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, newState)
-            binding.btnActivateSelected.text = getString(
-                if (newState) R.string.turn_off else R.string.turn_on
-            )
-            isEditing(true)
+            checkAccessibilityPermission()
         }
     }
 
     private fun setupRecyclerViews() {
-        lotteSelectedAdapter = LottieItemAdapter(lottieItems) { lottieItem ->
-            interactiveLottieView.removeItemByResId(lottieItem.resId)
-           // lottieItems.remove(lottieItem)
-         //   lotteSelectedAdapter.updateItems(lottieItems)
-        }
-
+        lotteSelectedAdapter = LottieItemAdapter(
+            lottieItems,
+            onRemove = { lottieItem ->
+                interactiveLottieView.removeItemByResId(lottieItem.resId)
+            },
+            onSelect = { lottieItem ->
+                interactiveLottieView.selectItem(lottieItem, "clickFromActivity")
+            }
+        )
         binding.recyclerLotties.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.recyclerLotties.adapter = lotteSelectedAdapter
     }
@@ -233,4 +277,41 @@ class InteractiveLottieActivity : AppCompatActivity() {
         }
         sendBroadcast(intent)
     }
+
+    private fun checkAccessibilityPermission() {
+        if (!isAccessibilityServiceEnabled()) {
+            FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_lotte_shown", null)
+//            if (BuildConfig.DEBUG){
+//                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+//            }else{
+            val existing = supportFragmentManager.findFragmentByTag("accessibility_lotti")
+            if (existing == null || !existing.isAdded) {
+                sheet.show(supportFragmentManager, "accessibility_lotti")
+            } else {
+                Log.d("Accessibility", "accessibility_lotti already shown")
+            }
+            //   }
+        } else {
+            FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_lotti", null)
+            val currentState = preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)
+            val newState = !(currentState ?: true)
+            preferences.setBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, newState)
+            binding.btnActivateSelected.text = getString(
+                if (newState) R.string.turn_off else R.string.turn_on
+            )
+            isEditing(true)
+        }
+    }
+
+    private fun isAccessibilityServiceEnabled(): Boolean {
+        val expectedComponentName =
+            "${packageName}/${NotchAccessibilityService::class.java.canonicalName}"
+        val enabledServices = Settings.Secure.getString(
+            contentResolver,
+            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        ) ?: return false
+        return enabledServices.split(':')
+            .any { it.equals(expectedComponentName, ignoreCase = true) }
+    }
+
 }

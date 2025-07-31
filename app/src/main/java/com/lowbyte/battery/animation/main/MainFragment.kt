@@ -27,7 +27,6 @@ import com.lowbyte.battery.animation.activity.SettingsActivity
 import com.lowbyte.battery.animation.ads.BannerAdHelper
 import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.FragmentMainBinding
-import com.lowbyte.battery.animation.ui.InteractiveLottieActivity
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeHomeId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled

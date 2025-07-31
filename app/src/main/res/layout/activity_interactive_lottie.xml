@@ -26,7 +26,6 @@
 
     </FrameLayout>
 
-
     <TextView
         android:id="@+id/tvAddEmoji"
         android:layout_width="match_parent"
@@ -41,7 +40,7 @@
         app:layout_constraintTop_toBottomOf="@+id/emojiView" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_lotties"
+        android:id="@+id/recyclerLotties"
         android:layout_width="0dp"
         android:layout_height="80dp"
         android:layout_marginTop="8dp"
@@ -61,7 +60,7 @@
         android:paddingVertical="14dp"
         android:layout_marginStart="15dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recycler_lotties"
+        app:layout_constraintTop_toBottomOf="@id/recyclerLotties"
         app:layout_constraintWidth_percent="0.55">
 
         <TextView
@@ -144,7 +143,7 @@
         android:padding="13dp"
         android:src="@drawable/ic_arrow_top"
         app:layout_constraintEnd_toStartOf="@+id/btn_move_right"
-        app:layout_constraintTop_toBottomOf="@+id/recycler_lotties" />
+       app:layout_constraintBottom_toTopOf="@+id/btn_move_left" />
 
     <ImageView
         android:id="@+id/btn_move_right"
@@ -154,9 +153,10 @@
         android:contentDescription="@string/app_name"
         android:padding="13dp"
         android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerAllLotties"
         android:src="@drawable/ic_arrow_right"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_move_top" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerLotties" />
 
     <ImageView
         android:id="@+id/btn_move_left"
@@ -165,9 +165,10 @@
         android:background="@drawable/bg_circle_button"
         android:contentDescription="@string/app_name"
         android:padding="13dp"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerAllLotties"
         app:layout_constraintEnd_toStartOf="@+id/btn_move_top"
         android:src="@drawable/ic_arrow_left"
-        app:layout_constraintTop_toBottomOf="@+id/btn_move_top" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerLotties" />
 
     <ImageView
         android:id="@+id/btn_move_bottom"
@@ -182,7 +183,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_all_lotties"
+        android:id="@+id/recyclerAllLotties"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"

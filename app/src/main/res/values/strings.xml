@@ -228,6 +228,9 @@
     <string name="turn_off">Turn Off</string>
     <string name="sticker_added_0_5">Sticker Added (0/5)</string>
     <string name="back">Back</string>
+    <string name="customize_now">Customize Now</string>
+    <string name="decorate_status_bar">Decorate Status Bar</string>
+    <string name="customize_your_top">Customize your top bar with cute stickers and photos.</string>
 
 
 </resources>

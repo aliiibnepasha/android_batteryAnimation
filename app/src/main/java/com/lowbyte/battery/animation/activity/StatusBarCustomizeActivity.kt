@@ -51,6 +51,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
         AdManager.loadInterstitialAd(this,getFullscreenHome2Id(),isFullscreenStatusEnabled)
+
         sheet = AccessibilityPermissionBottomSheet(
             onAllowClicked = {
                 FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
@@ -69,6 +70,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
 
             }
         )
+
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 AdManager.showInterstitialAd(this@StatusBarCustomizeActivity, isFullscreenStatusEnabled,true) {

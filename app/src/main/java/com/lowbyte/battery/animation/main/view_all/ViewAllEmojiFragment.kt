@@ -17,6 +17,7 @@ import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
 import com.lowbyte.battery.animation.databinding.FragmentViewAllEmojiBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
+import com.lowbyte.battery.animation.ui.InteractiveLottieActivity
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.getTabTitlesEmoji
@@ -69,8 +70,13 @@ class ViewAllEmojiFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupViewPager()
 
-        binding.switchEnableBatteryEmojiViewAll.isChecked =
-            preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
+        binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
+
+
+        binding.tvCustomize.setOnClickListener {
+            startActivity(Intent(requireContext(), InteractiveLottieActivity::class.java))
+        }
+
 
         binding.switchEnableBatteryEmojiViewAll.setOnCheckedChangeListener { _, isChecked ->
             Handler(Looper.getMainLooper()).postDelayed({

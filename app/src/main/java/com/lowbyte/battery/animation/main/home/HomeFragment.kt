@@ -169,8 +169,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     4 -> {
                         if (isAdded && findNavController().currentDestination?.id == R.id.navigation_home) {
                             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_animations", eventMap)
-                          //  findNavController().navigate(R.id.action_home_to_viewAllAnim)
-                            startActivity(Intent(requireContext(), InteractiveLottieActivity::class.java))
+                            findNavController().navigate(R.id.action_home_to_viewAllAnim)
 
                         }
 
