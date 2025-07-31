@@ -91,7 +91,7 @@ class InteractiveLottieView @JvmOverloads constructor(
         itemInteractionListener?.onItemCountChanged(lottieItems)
         selectItem(item)
         saveTransform(item)
-        sendBroadcast(item)
+        sendBroadcast(item = item, isEditing = true)
         invalidate()
         return true
     }
@@ -128,7 +128,7 @@ class InteractiveLottieView @JvmOverloads constructor(
         }
 
         itemInteractionListener?.onItemCountChanged(lottieItems)
-        sendBroadcast(itemToRemove, BROADCAST_ACTION_REMOVE)
+        sendBroadcast(itemToRemove, BROADCAST_ACTION_REMOVE, true)
         requestLayout()
         invalidate()
         Log.d("LottieView", "Final Log - Item Removed")
@@ -143,7 +143,7 @@ class InteractiveLottieView @JvmOverloads constructor(
             selectedItem = null
             invalidate()
           //  saveTransform(itemToRemove)
-            sendBroadcast(it,BROADCAST_ACTION_REMOVE)
+            sendBroadcast(it, BROADCAST_ACTION_REMOVE, true)
             requestLayout()
             invalidate()
             // BROADCAST_ACTION_REMOVE
@@ -172,7 +172,7 @@ class InteractiveLottieView @JvmOverloads constructor(
             view.translationY = view.translationY.coerceIn(0f, height - scaledHeight)
 
             saveTransform(item)
-            sendBroadcast(item)
+            sendBroadcast(item = item, isEditing = true)
             invalidate()
         }
     }
@@ -181,7 +181,7 @@ class InteractiveLottieView @JvmOverloads constructor(
         selectedItem?.let { item ->
             item.view.rotation = angle
             saveTransform(item)
-            sendBroadcast(item)
+            sendBroadcast(item = item, isEditing = true)
             invalidate()
         }
     }
@@ -198,7 +198,7 @@ class InteractiveLottieView @JvmOverloads constructor(
             view.translationY = newY
 
             saveTransform(item)
-            sendBroadcast(item)
+            sendBroadcast(item = item, isEditing = true)
             invalidate()
         }
     }
@@ -226,9 +226,14 @@ class InteractiveLottieView @JvmOverloads constructor(
     }
 
 
-    private fun sendBroadcast(item: LottieItem, action: String = BROADCAST_ACTION) {
+    private fun sendBroadcast(
+        item: LottieItem,
+        action: String = BROADCAST_ACTION,
+        isEditing: Boolean
+    ) {
         val view = item.view
         val intent = Intent(action).apply {
+            putExtra("isEditing", isEditing)
             putExtra("resId", item.resId)
             putExtra("x", view.translationX)
             putExtra("y", view.translationY)
@@ -255,7 +260,7 @@ class InteractiveLottieView @JvmOverloads constructor(
         }
         
         itemInteractionListener?.onItemSelected(item.resId)
-        sendBroadcast(item)
+        sendBroadcast(item = item, isEditing = true)
         invalidate()
     }
 
@@ -341,7 +346,7 @@ class InteractiveLottieView @JvmOverloads constructor(
                     downY = y
 
                     saveTransform(selectedItem!!)
-                    sendBroadcast(selectedItem!!)
+                    sendBroadcast(item = selectedItem!!, isEditing = true)
                     invalidate()
                     return true
                 }

@@ -58,6 +58,12 @@ class InteractiveLottieActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         saveItemsToPreferences()
+        isEditing(false) // activity not visible
+    }
+
+    override fun onResume() {
+        isEditing(true) // activity visible
+        super.onResume()
     }
 
     private fun setupToggleButton() {
@@ -216,5 +222,13 @@ class InteractiveLottieActivity : AppCompatActivity() {
     private fun loadItemsFromPreferences() {
         val savedItems = preferences.getLottieItemList("lottie_item_list")
         savedItems.forEach { interactiveLottieView.addLottieItemFromData(it) }
+    }
+
+    fun isEditing(isEditing: Boolean){
+        val intent = Intent(BROADCAST_ACTION).apply {
+            putExtra("isEditing", isEditing)
+
+        }
+        sendBroadcast(intent)
     }
 }

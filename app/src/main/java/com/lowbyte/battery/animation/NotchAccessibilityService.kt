@@ -83,7 +83,7 @@ class NotchAccessibilityService : AccessibilityService() {
         createNotificationNotch()
         registerUpdateReceiver()
         startTimeUpdates()
-        updateLottieOverlayVisibility()
+        updateLottieOverlayVisibility(false)
 
     }
 
@@ -144,14 +144,15 @@ class NotchAccessibilityService : AccessibilityService() {
                             Log.d("servicesListener", "Custom UI update action")
                             updateStatusBarAppearance("updateStatusBarAppearance Custom UI update action")
                             updateNotificationNotch("updateStatusBarAppearance Custom UI update action")
-                            updateLottieOverlayVisibility()
 
                             val resId = intent.getIntExtra("resId", -1)
                             val x = intent.getFloatExtra("x", Float.NaN)
                             val y = intent.getFloatExtra("y", Float.NaN)
                             val scale = intent.getFloatExtra("scale", 1.0f)
                             val rotation = intent.getFloatExtra("rotation", 0f)
+                            val isEditing = intent.getBooleanExtra("isEditing", false)
 
+                            updateLottieOverlayVisibility(isEditing)
                             overlayLottieCanvas?.let { canvas ->
                                 if (resId != -1) {
                                     if (!canvas.containsItem(resId)) {
@@ -169,7 +170,6 @@ class NotchAccessibilityService : AccessibilityService() {
                                     canvas.updateItemTransform(resId, safeX, safeY, scale, rotation)
                                 }
                             }
-
 
                             overlayLottieCanvas?.let { canvas ->
                                 if (resId != -1) {
@@ -612,9 +612,12 @@ class NotchAccessibilityService : AccessibilityService() {
     }
 
 
-    private fun updateLottieOverlayVisibility() {
-        val show = preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false) ?: false
-        if (show) {
+    private fun updateLottieOverlayVisibility(isEditing: Boolean) {
+        val show = preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)?:false
+
+        Log.d("LottieOverlay", "Pref: $show | isEditing: $isEditing")
+
+        if (show && !isEditing) {
             addLottieOverlayView()
         } else {
             removeLottieOverlayView()
