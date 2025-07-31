@@ -34,7 +34,6 @@ import com.lowbyte.battery.animation.custom.InteractiveLottieView
 import com.lowbyte.battery.animation.databinding.CustomNotchBarBinding
 import com.lowbyte.battery.animation.databinding.CustomNotificationBarBinding
 import com.lowbyte.battery.animation.databinding.CustomStatusBarBinding
-import com.lowbyte.battery.animation.serviceUtils.LottieItem
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_NOTIFICATION
@@ -585,8 +584,7 @@ class NotchAccessibilityService : AccessibilityService() {
             dpToPx(250),
             WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START

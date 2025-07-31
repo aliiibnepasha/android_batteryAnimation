@@ -302,52 +302,6 @@ class InteractiveLottieView @JvmOverloads constructor(
 
         return false // Pass through if not dragging
     }
-
-    //    override fun onTouchEvent(event: MotionEvent): Boolean {
-//        when (event.action) {
-//            MotionEvent.ACTION_DOWN -> {
-//                downX = event.x
-//                downY = event.y
-//
-//                var itemHit = false
-//                for (item in lottieItems.reversed()) {
-//                    if (hitTest(item, event.x, event.y)) {
-//                        selectItem(item)
-//                        itemHit = true
-//                        break
-//                    }
-//                }
-//
-//                if (!itemHit) {
-//                    selectedItem?.view?.setBackgroundColor(Color.TRANSPARENT)
-//                    selectedItem = null
-//                    itemInteractionListener?.onItemSelected(null)
-//                    invalidate()
-//                }
-//            }
-//
-//            MotionEvent.ACTION_MOVE -> {
-//                selectedItem?.view?.let { view ->
-//                    val newX = (view.translationX + (event.x - downX)).coerceIn(
-//                        0f, width - view.width * view.scaleX
-//                    )
-//                    val newY = (view.translationY + (event.y - downY)).coerceIn(
-//                        0f, height - view.height * view.scaleY
-//                    )
-//                    view.translationX = newX
-//                    view.translationY = newY
-//                    downX = event.x
-//                    downY = event.y
-//
-//                    saveTransform(selectedItem!!)
-//                    sendBroadcast(selectedItem!!)
-//                    invalidate()
-//                }
-//            }
-//        }
-//        return true
-//    }
-
     private fun hitTest(item: LottieItem, x: Float, y: Float): Boolean {
         val view = item.view
         val left = view.translationX
