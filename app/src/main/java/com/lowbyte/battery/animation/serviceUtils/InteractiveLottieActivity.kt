@@ -2,6 +2,7 @@ package com.lowbyte.battery.animation.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -27,7 +28,6 @@ class InteractiveLottieActivity : AppCompatActivity() {
 
     private val lottieItems = ArrayList<LottieItem>() // For adapter display only
     private val availableLottieFiles = mutableListOf<Int>() // Declare empty list
-    private var selectedItemResId: Int? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,6 +69,9 @@ class InteractiveLottieActivity : AppCompatActivity() {
     private fun setupToggleButton() {
         val isVisible = preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)?:false
         binding.btnActivateSelected.text = getString(if (isVisible) R.string.turn_off else R.string.turn_on)
+        binding.btnActivateDisable.setOnClickListener {
+            finish()
+        }
 
         binding.btnActivateSelected.setOnClickListener {
             val currentState = preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)
@@ -100,7 +103,7 @@ class InteractiveLottieActivity : AppCompatActivity() {
                 if (fromUser && interactiveLottieView.getSelectedItem() != null) {
                     val scale = progress / 100f
                     interactiveLottieView.scaleSelectedItem(scale)
-                    android.util.Log.d("InteractiveLottieActivity", "Scaling selected item to: $scale")
+                    Log.d("InteractiveLottieActivity", "Scaling selected item to: $scale")
                 }
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -113,7 +116,7 @@ class InteractiveLottieActivity : AppCompatActivity() {
                 if (fromUser && interactiveLottieView.getSelectedItem() != null) {
                     val rotation = progress.toFloat()
                     interactiveLottieView.rotateSelectedItem(rotation)
-                    android.util.Log.d("InteractiveLottieActivity", "Rotating selected item to: $rotation")
+                    Log.d("InteractiveLottieActivity", "Rotating selected item to: $rotation")
                 }
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -125,25 +128,25 @@ class InteractiveLottieActivity : AppCompatActivity() {
         binding.btnMoveTop.setOnClickListener {
             if (interactiveLottieView.getSelectedItem() != null) {
                 interactiveLottieView.moveSelectedItem(0, -10)
-                android.util.Log.d("InteractiveLottieActivity", "Moving selected item up")
+                Log.d("InteractiveLottieActivity", "Moving selected item up")
             }
         }
         binding.btnMoveBottom.setOnClickListener {
             if (interactiveLottieView.getSelectedItem() != null) {
                 interactiveLottieView.moveSelectedItem(0, 10)
-                android.util.Log.d("InteractiveLottieActivity", "Moving selected item down")
+                Log.d("InteractiveLottieActivity", "Moving selected item down")
             }
         }
         binding.btnMoveLeft.setOnClickListener {
             if (interactiveLottieView.getSelectedItem() != null) {
                 interactiveLottieView.moveSelectedItem(-10, 0)
-                android.util.Log.d("InteractiveLottieActivity", "Moving selected item left")
+                Log.d("InteractiveLottieActivity", "Moving selected item left")
             }
         }
         binding.btnMoveRight.setOnClickListener {
             if (interactiveLottieView.getSelectedItem() != null) {
                 interactiveLottieView.moveSelectedItem(10, 0)
-                android.util.Log.d("InteractiveLottieActivity", "Moving selected item right")
+                Log.d("InteractiveLottieActivity", "Moving selected item right")
             }
         }
     }
