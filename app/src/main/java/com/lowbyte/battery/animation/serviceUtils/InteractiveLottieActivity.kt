@@ -41,7 +41,7 @@ class InteractiveLottieActivity : AppCompatActivity() {
         preferences = AppPreferences.getInstance(this)
         
         // Get the InteractiveLottieView from the layout instead of creating a new one
-        interactiveLottieView = binding.emojiView.getChildAt(0) as InteractiveLottieView
+        interactiveLottieView = binding.customView
 
         setupToggleButton()
         setupRecyclerViews()
