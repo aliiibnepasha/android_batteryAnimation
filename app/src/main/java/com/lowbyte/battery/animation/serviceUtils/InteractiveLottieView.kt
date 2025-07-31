@@ -39,8 +39,11 @@ class InteractiveLottieView @JvmOverloads constructor(
         setWillNotDraw(false)
     }
 
-    fun addLottieItem(animationRes: Int) {
-        if (lottieItems.size >= 5) return
+    fun addLottieItem(animationRes: Int): Boolean {
+        if (lottieItems.size >= 5) {
+            Log.d("InteractiveLottieView", "Cannot add more items. Limit reached.")
+            return false
+        }
 
         val lottie = LottieAnimationView(context).apply {
             setAnimation(animationRes) // or data.resId
@@ -65,8 +68,8 @@ class InteractiveLottieView @JvmOverloads constructor(
         addView(lottie)
 
         lottie.post {
-            val savedX = preferences.getFloat("${animationRes}_x", (width - lottie.width) / 2f)
-            val savedY = preferences.getFloat("${animationRes}_y", (height - lottie.height) / 2f)
+            val savedX = preferences.getFloat("${animationRes}_x", -1f)
+            val savedY = preferences.getFloat("${animationRes}_y", -1f)
             val savedScale = preferences.getFloat("${animationRes}_scale", 1.0f)
             val savedRotation = preferences.getFloat("${animationRes}_rotation", 0f)
 
@@ -74,8 +77,14 @@ class InteractiveLottieView @JvmOverloads constructor(
             lottie.scaleY = savedScale
             lottie.rotation = savedRotation
 
-            lottie.translationX = savedX
-            lottie.translationY = savedY
+            // Center the item if it's a new item (no saved position)
+            if (savedX == -1f || savedY == -1f) {
+                lottie.translationX = (width - lottie.width * savedScale) / 2f
+                lottie.translationY = (height - lottie.height * savedScale) / 2f
+            } else {
+                lottie.translationX = savedX
+                lottie.translationY = savedY
+            }
             invalidate()
         }
 
@@ -84,6 +93,7 @@ class InteractiveLottieView @JvmOverloads constructor(
         saveTransform(item)
         sendBroadcast(item)
         invalidate()
+        return true
     }
 
 
@@ -111,13 +121,13 @@ class InteractiveLottieView @JvmOverloads constructor(
 
         lottieItems.remove(itemToRemove)
 
+        // Clear selection if the removed item was selected
         if (selectedItem == itemToRemove) {
             selectedItem = null
+            itemInteractionListener?.onItemSelected(null)
         }
 
         itemInteractionListener?.onItemCountChanged(lottieItems)
-        itemInteractionListener?.onItemSelected(null)
-
         sendBroadcast(itemToRemove, BROADCAST_ACTION_REMOVE)
         requestLayout()
         invalidate()
@@ -144,14 +154,22 @@ class InteractiveLottieView @JvmOverloads constructor(
     fun scaleSelectedItem(scale: Float) {
         selectedItem?.let { item ->
             val view = item.view
-            val centerX = view.translationX + view.width * view.scaleX / 2f
-            val centerY = view.translationY + view.height * view.scaleY / 2f
+            val oldScale = view.scaleX
+            val centerX = view.translationX + view.width * oldScale / 2f
+            val centerY = view.translationY + view.height * oldScale / 2f
 
             view.scaleX = scale
             view.scaleY = scale
 
             view.translationX = centerX - view.width * scale / 2f
             view.translationY = centerY - view.height * scale / 2f
+
+            // Ensure the item stays within bounds after scaling
+            val scaledWidth = view.width * scale
+            val scaledHeight = view.height * scale
+            
+            view.translationX = view.translationX.coerceIn(0f, width - scaledWidth)
+            view.translationY = view.translationY.coerceIn(0f, height - scaledHeight)
 
             saveTransform(item)
             sendBroadcast(item)
@@ -171,8 +189,11 @@ class InteractiveLottieView @JvmOverloads constructor(
     fun moveSelectedItem(dx: Int, dy: Int) {
         selectedItem?.let { item ->
             val view = item.view
-            val newX = (view.translationX + dx).coerceIn(0f, width - view.width * view.scaleX)
-            val newY = (view.translationY + dy).coerceIn(0f, height - view.height * view.scaleY)
+            val scaledWidth = view.width * view.scaleX
+            val scaledHeight = view.height * view.scaleY
+            
+            val newX = (view.translationX + dx).coerceIn(0f, width - scaledWidth)
+            val newY = (view.translationY + dy).coerceIn(0f, height - scaledHeight)
             view.translationX = newX
             view.translationY = newY
 
@@ -185,6 +206,14 @@ class InteractiveLottieView @JvmOverloads constructor(
 
     fun getItemByResId(resId: Int): LottieItem? {
         return lottieItems.find { it.resId == resId }
+    }
+
+    fun getSelectedItem(): LottieItem? {
+        return selectedItem
+    }
+
+    fun getSelectedItemResId(): Int? {
+        return selectedItem?.resId
     }
     private fun saveTransform(item: LottieItem) {
         val resId = item.resId
@@ -211,17 +240,45 @@ class InteractiveLottieView @JvmOverloads constructor(
 
     fun selectItem(item: LottieItem) {
         Log.d("InteractiveLottieView", "Item selected: ${item.resId}")
+        // Clear previous selection
         selectedItem?.view?.setBackgroundColor(Color.TRANSPARENT)
+        
         selectedItem = item
         bringChildToFront(item.view)
-        item.view.setBackgroundResource(R.drawable.lottie_border)
+        
+        // Set selection border
+        try {
+            item.view.setBackgroundResource(R.drawable.lottie_border)
+        } catch (e: Exception) {
+            // Fallback to color if drawable not found
+            item.view.setBackgroundColor(Color.YELLOW)
+        }
+        
         itemInteractionListener?.onItemSelected(item.resId)
         sendBroadcast(item)
         invalidate()
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        return false // Let child views handle touch (including click)
+        // Intercept touch events to handle selection and prevent system UI interaction
+        ev?.let { event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                val x = event.x
+                val y = event.y
+                
+                // Check if touch is on any Lottie item
+                for (item in lottieItems.reversed()) {
+                    if (hitTest(item, x, y)) {
+                        selectItem(item)
+                        return false // Let child handle it
+                    }
+                }
+                // Touch is outside any item - consume it
+                deselectItem()
+                return true
+            }
+        }
+        return false
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -230,19 +287,13 @@ class InteractiveLottieView @JvmOverloads constructor(
             val y = event.y
 
             for (item in lottieItems.reversed()) {
-                val view = item.view
-                val left = view.translationX
-                val top = view.translationY
-                val right = left + view.width * view.scaleX
-                val bottom = top + view.height * view.scaleY
-
-                if (x in left..right && y in top..bottom) {
+                if (hitTest(item, x, y)) {
                     selectItem(item)
                     return false // Let child handle it
                 }
             }
             deselectItem()
-            return false
+            return true // Consume the event when touching outside items
         }
 
         return super.dispatchTouchEvent(event)
@@ -277,10 +328,11 @@ class InteractiveLottieView @JvmOverloads constructor(
                     val dx = x - downX
                     val dy = y - downY
 
-                    val newX =
-                        (view.translationX + dx).coerceIn(0f, width - view.width * view.scaleX)
-                    val newY =
-                        (view.translationY + dy).coerceIn(0f, height - view.height * view.scaleY)
+                    val scaledWidth = view.width * view.scaleX
+                    val scaledHeight = view.height * view.scaleY
+
+                    val newX = (view.translationX + dx).coerceIn(0f, width - scaledWidth)
+                    val newY = (view.translationY + dy).coerceIn(0f, height - scaledHeight)
 
                     view.translationX = newX
                     view.translationY = newY
@@ -300,7 +352,7 @@ class InteractiveLottieView @JvmOverloads constructor(
             }
         }
 
-        return false // Pass through if not dragging
+        return true // Always consume the event to prevent system UI interaction
     }
     private fun hitTest(item: LottieItem, x: Float, y: Float): Boolean {
         val view = item.view

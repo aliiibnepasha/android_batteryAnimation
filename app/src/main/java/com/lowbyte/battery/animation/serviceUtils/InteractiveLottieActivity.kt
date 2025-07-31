@@ -21,12 +21,12 @@ import com.lowbyte.battery.animation.utils.AppPreferences.Companion.KEY_SHOW_LOT
 class InteractiveLottieActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityInteractiveLottieBinding
-    private lateinit var interactiveLottieView: InteractiveLottieView
     private lateinit var preferences: AppPreferences
     private lateinit var lotteSelectedAdapter: LottieItemAdapter
 
     private val lottieItems = ArrayList<LottieItem>() // For adapter display only
     private val availableLottieFiles = mutableListOf<Int>() // Declare empty list
+    private var selectedItemResId: Int? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +38,9 @@ class InteractiveLottieActivity : AppCompatActivity() {
             resources.getIdentifier("lottie_$it", "raw", packageName)
         })
         preferences = AppPreferences.getInstance(this)
-        interactiveLottieView = InteractiveLottieView(this)
+        
+        // Get the InteractiveLottieView from the layout instead of creating a new one
+        interactiveLottieView = binding.emojiView.getChildAt(0) as InteractiveLottieView
 
         setupToggleButton()
         setupRecyclerViews()
@@ -47,6 +49,9 @@ class InteractiveLottieActivity : AppCompatActivity() {
         setupAllLotteries()
         setupInteractionListener()
         loadItemsFromPreferences()
+        
+        // Initialize controls as disabled
+        enableControls(false)
     }
 
     override fun onPause() {
@@ -86,7 +91,11 @@ class InteractiveLottieActivity : AppCompatActivity() {
         binding.seekbarSize.progress = 100
         binding.seekbarSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                interactiveLottieView.scaleSelectedItem(progress / 100f)
+                if (fromUser && interactiveLottieView.getSelectedItem() != null) {
+                    val scale = progress / 100f
+                    interactiveLottieView.scaleSelectedItem(scale)
+                    android.util.Log.d("InteractiveLottieActivity", "Scaling selected item to: $scale")
+                }
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
@@ -95,7 +104,11 @@ class InteractiveLottieActivity : AppCompatActivity() {
         binding.seekbarRotation.max = 360
         binding.seekbarRotation.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                interactiveLottieView.rotateSelectedItem(progress.toFloat())
+                if (fromUser && interactiveLottieView.getSelectedItem() != null) {
+                    val rotation = progress.toFloat()
+                    interactiveLottieView.rotateSelectedItem(rotation)
+                    android.util.Log.d("InteractiveLottieActivity", "Rotating selected item to: $rotation")
+                }
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
@@ -104,14 +117,29 @@ class InteractiveLottieActivity : AppCompatActivity() {
 
     private fun setupMovementControls() {
         binding.btnMoveTop.setOnClickListener {
-            interactiveLottieView.moveSelectedItem(0, -10)
+            if (interactiveLottieView.getSelectedItem() != null) {
+                interactiveLottieView.moveSelectedItem(0, -10)
+                android.util.Log.d("InteractiveLottieActivity", "Moving selected item up")
+            }
         }
         binding.btnMoveBottom.setOnClickListener {
-            interactiveLottieView.moveSelectedItem(0, 10) }
+            if (interactiveLottieView.getSelectedItem() != null) {
+                interactiveLottieView.moveSelectedItem(0, 10)
+                android.util.Log.d("InteractiveLottieActivity", "Moving selected item down")
+            }
+        }
         binding.btnMoveLeft.setOnClickListener {
-            interactiveLottieView.moveSelectedItem(-10, 0) }
+            if (interactiveLottieView.getSelectedItem() != null) {
+                interactiveLottieView.moveSelectedItem(-10, 0)
+                android.util.Log.d("InteractiveLottieActivity", "Moving selected item left")
+            }
+        }
         binding.btnMoveRight.setOnClickListener {
-            interactiveLottieView.moveSelectedItem(10, 0) }
+            if (interactiveLottieView.getSelectedItem() != null) {
+                interactiveLottieView.moveSelectedItem(10, 0)
+                android.util.Log.d("InteractiveLottieActivity", "Moving selected item right")
+            }
+        }
     }
 
     private fun setupAllLotteries() {
@@ -122,12 +150,10 @@ class InteractiveLottieActivity : AppCompatActivity() {
                 return@AllLottieAdapter
             }
 
-            if (lottieItems.size >= 5) {
+            val success = interactiveLottieView.addLottieItem(resId)
+            if (!success) {
                 Toast.makeText(this, "Limit reached", Toast.LENGTH_SHORT).show()
-                return@AllLottieAdapter
             }
-
-            interactiveLottieView.addLottieItem(resId)
         }
         binding.recyclerAllLotties.adapter = allLottieAdapter
     }
@@ -135,15 +161,50 @@ class InteractiveLottieActivity : AppCompatActivity() {
     private fun setupInteractionListener() {
         interactiveLottieView.itemInteractionListener = object : OnItemInteractionListener {
             override fun onItemSelected(resId: Int?) {
-                // Optional: handle selected item
+                // Update seekbar values when item is selected
+                if (resId != null) {
+                    val selectedItem = interactiveLottieView.getSelectedItem()
+                    selectedItem?.let { item ->
+                        // Update size seekbar
+                        val scalePercent = (item.view.scaleX * 100).toInt()
+                        binding.seekbarSize.progress = scalePercent.coerceIn(0, 200)
+                        
+                        // Update rotation seekbar
+                        val rotationDegrees = item.view.rotation.toInt()
+                        binding.seekbarRotation.progress = rotationDegrees.coerceIn(0, 360)
+                    }
+                    enableControls(true)
+                } else {
+                    // Clear seekbar values when no item is selected
+                    binding.seekbarSize.progress = 100
+                    binding.seekbarRotation.progress = 0
+                    enableControls(false)
+                }
             }
 
             override fun onItemCountChanged(items: List<LottieItem>) {
-
                 lotteSelectedAdapter.updateItems(items)
                 binding.tvAddEmoji.text = getString(R.string.sticker_added_5, items.size)
             }
         }
+    }
+
+    private fun enableControls(enabled: Boolean) {
+        binding.seekbarSize.isEnabled = enabled
+        binding.seekbarRotation.isEnabled = enabled
+        binding.btnMoveTop.isEnabled = enabled
+        binding.btnMoveBottom.isEnabled = enabled
+        binding.btnMoveLeft.isEnabled = enabled
+        binding.btnMoveRight.isEnabled = enabled
+        
+        // Visual feedback
+        val alpha = if (enabled) 1.0f else 0.5f
+        binding.seekbarSize.alpha = alpha
+        binding.seekbarRotation.alpha = alpha
+        binding.btnMoveTop.alpha = alpha
+        binding.btnMoveBottom.alpha = alpha
+        binding.btnMoveLeft.alpha = alpha
+        binding.btnMoveRight.alpha = alpha
     }
 
     private fun saveItemsToPreferences() {
