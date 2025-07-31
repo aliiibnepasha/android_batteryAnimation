@@ -58,7 +58,6 @@ class InteractiveLottieView @JvmOverloads constructor(
 
         val item = LottieItem(lottie, animationRes)
 
-        // Handle click to select
         lottie.setOnClickListener {
             selectItem(item)
             Log.d("Clicked", "Lottie ${item.resId}")
@@ -67,32 +66,29 @@ class InteractiveLottieView @JvmOverloads constructor(
         lottieItems.add(item)
         addView(lottie)
 
-        lottie.post {
+        lottie.viewTreeObserver.addOnGlobalLayoutListener {
             val savedX = preferences.getFloat("${animationRes}_x", -1f)
             val savedY = preferences.getFloat("${animationRes}_y", -1f)
             val savedScale = preferences.getFloat("${animationRes}_scale", 1.0f)
             val savedRotation = preferences.getFloat("${animationRes}_rotation", 0f)
 
-            // Apply saved transform values
             lottie.scaleX = savedScale
             lottie.scaleY = savedScale
             lottie.rotation = savedRotation
 
-            if (savedX == -1f || savedY == -1f) {
-                // No saved position — center by default in overlay (width x 250dp height)
-                val centerX = (this.width - lottie.width * savedScale) / 2f
-                val centerY = (this.height - lottie.height * savedScale) / 2f
-                lottie.translationX = centerX
-                lottie.translationY = centerY
-            } else {
-                // Use saved position
-                lottie.translationX = savedX
-                lottie.translationY = savedY
-            }
+            val defaultCenterX = (this.width - lottie.width * savedScale) / 2f
+            val defaultCenterY = (this.height - lottie.height * savedScale) / 2f
+
+            val finalX = if (savedX == -1f) defaultCenterX else savedX
+            val finalY = if (savedY == -1f) defaultCenterY else savedY
+
+            lottie.translationX = defaultCenterX
+            lottie.translationY = defaultCenterY
+
+            Log.d("LottiePlacement", "Placed Lottie ID: $animationRes at X: $finalX / $defaultCenterX, Y: $finalY / $defaultCenterY")
 
             invalidate()
         }
-
         itemInteractionListener?.onItemCountChanged(lottieItems)
         selectItem(item)
         saveTransform(item)
@@ -101,6 +97,7 @@ class InteractiveLottieView @JvmOverloads constructor(
 
         return true
     }
+
 
     fun removeItemByResId(resId: Int) {
         val itemToRemove = lottieItems.find { it.resId == resId } ?: return

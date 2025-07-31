@@ -146,13 +146,16 @@ class NotchAccessibilityService : AccessibilityService() {
                             updateNotificationNotch("updateStatusBarAppearance Custom UI update action")
 
                             val resId = intent.getIntExtra("resId", -1)
-                            val x = intent.getFloatExtra("x", -1f)
-                            val y = intent.getFloatExtra("y", -1f)
-                            val scale = intent.getFloatExtra("scale", 1.0f)
-                            val rotation = intent.getFloatExtra("rotation", 0f)
+                            val x = intent.getFloatExtra("${resId}_x", -1f)
+                            val y = intent.getFloatExtra("${resId}_y", -1f)
+                            val scale = intent.getFloatExtra("${resId}_scale", 1.0f)
+                            val rotation = intent.getFloatExtra("${resId}_rotation", 0f)
                             val isEditing = intent.getBooleanExtra("isEditing", false)
-
                             updateLottieOverlayVisibility(isEditing)
+                            Log.d(
+                                "positionWidget",
+                                " BROADCAST_ACTION /  $x    /  $y"
+                            )
                             overlayLottieCanvas?.let { canvas ->
                                 if (resId != -1) {
                                     if (!canvas.containsItem(resId)) {
@@ -166,6 +169,10 @@ class NotchAccessibilityService : AccessibilityService() {
 
                                     val safeX = if (x.isNaN()) currentX else x
                                     val safeY = if (y.isNaN()) currentY else y
+                                    Log.d(
+                                        "positionWidget",
+                                        " updateLottieOverlayVisibility /  $safeX    /  $safeY"
+                                    )
 
                                     canvas.updateItemTransform(resId, safeX, safeY, scale, rotation)
                                 }
@@ -176,6 +183,7 @@ class NotchAccessibilityService : AccessibilityService() {
                                     if (!canvas.containsItem(resId)) {
                                         canvas.addLottieItem(resId)
                                     }
+                                    Log.d("positionWidget", " updateItemTransform /  $x    /  $y")
                                     canvas.updateItemTransform(resId, x, y, scale, rotation)
                                 }
                             }
