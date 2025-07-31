@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.widget.FrameLayout
 import com.airbnb.lottie.LottieAnimationView
+import com.airbnb.lottie.LottieDrawable
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.serviceUtils.LottieItem
 import com.lowbyte.battery.animation.serviceUtils.LottieItemData
@@ -46,22 +47,21 @@ class InteractiveLottieView @JvmOverloads constructor(
         }
 
         val lottie = LottieAnimationView(context).apply {
-            setAnimation(animationRes) // or data.resId
+            setAnimation(animationRes)
             playAnimation()
-            repeatCount = 1000
+            repeatCount = LottieDrawable.INFINITE
             layoutParams = LayoutParams(200, 200)
             setBackgroundColor(Color.TRANSPARENT)
-
             isClickable = true
             isFocusable = true
         }
 
         val item = LottieItem(lottie, animationRes)
 
-        // 👉 Set click listener
+        // Handle click to select
         lottie.setOnClickListener {
             selectItem(item)
-            Log.d("Clicked","Lottue ${item.resId}")
+            Log.d("Clicked", "Lottie ${item.resId}")
         }
 
         lottieItems.add(item)
@@ -73,18 +73,23 @@ class InteractiveLottieView @JvmOverloads constructor(
             val savedScale = preferences.getFloat("${animationRes}_scale", 1.0f)
             val savedRotation = preferences.getFloat("${animationRes}_rotation", 0f)
 
+            // Apply saved transform values
             lottie.scaleX = savedScale
             lottie.scaleY = savedScale
             lottie.rotation = savedRotation
 
-            // Center the item if it's a new item (no saved position)
             if (savedX == -1f || savedY == -1f) {
-                lottie.translationX = (width - lottie.width * savedScale) / 2f
-                lottie.translationY = (height - lottie.height * savedScale) / 2f
+                // No saved position — center by default in overlay (width x 250dp height)
+                val centerX = (this.width - lottie.width * savedScale) / 2f
+                val centerY = (this.height - lottie.height * savedScale) / 2f
+                lottie.translationX = centerX
+                lottie.translationY = centerY
             } else {
+                // Use saved position
                 lottie.translationX = savedX
                 lottie.translationY = savedY
             }
+
             invalidate()
         }
 
@@ -93,9 +98,9 @@ class InteractiveLottieView @JvmOverloads constructor(
         saveTransform(item)
         sendBroadcast(item = item, isEditing = true)
         invalidate()
+
         return true
     }
-
 
     fun removeItemByResId(resId: Int) {
         val itemToRemove = lottieItems.find { it.resId == resId } ?: return
@@ -396,7 +401,7 @@ class InteractiveLottieView @JvmOverloads constructor(
         val lottie = LottieAnimationView(context).apply {
             setAnimation(data.resId)
             playAnimation()
-            repeatCount = 200
+            repeatCount = LottieDrawable.INFINITE
             layoutParams = LayoutParams(200, 200)
             setBackgroundColor(Color.TRANSPARENT)
             translationX = data.x

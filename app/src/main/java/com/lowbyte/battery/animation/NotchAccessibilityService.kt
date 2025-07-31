@@ -146,8 +146,8 @@ class NotchAccessibilityService : AccessibilityService() {
                             updateNotificationNotch("updateStatusBarAppearance Custom UI update action")
 
                             val resId = intent.getIntExtra("resId", -1)
-                            val x = intent.getFloatExtra("x", Float.NaN)
-                            val y = intent.getFloatExtra("y", Float.NaN)
+                            val x = intent.getFloatExtra("x", -1f)
+                            val y = intent.getFloatExtra("y", -1f)
                             val scale = intent.getFloatExtra("scale", 1.0f)
                             val rotation = intent.getFloatExtra("rotation", 0f)
                             val isEditing = intent.getBooleanExtra("isEditing", false)
