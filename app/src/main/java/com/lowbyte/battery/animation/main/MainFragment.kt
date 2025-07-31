@@ -122,8 +122,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         binding.ifvSetting.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_settings")
-            startActivity(Intent(requireContext(), InteractiveLottieActivity::class.java))
-           // startActivity(Intent(requireContext(), SettingsActivity::class.java))
+            startActivity(Intent(requireContext(), SettingsActivity::class.java))
         }
         binding.ibHowToUseButton.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_how_to_use")

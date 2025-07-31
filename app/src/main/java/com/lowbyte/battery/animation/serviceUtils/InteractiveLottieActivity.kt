@@ -23,6 +23,7 @@ class InteractiveLottieActivity : AppCompatActivity() {
     private lateinit var binding: ActivityInteractiveLottieBinding
     private lateinit var preferences: AppPreferences
     private lateinit var lotteSelectedAdapter: LottieItemAdapter
+    private lateinit var interactiveLottieView: InteractiveLottieView
 
     private val lottieItems = ArrayList<LottieItem>() // For adapter display only
     private val availableLottieFiles = mutableListOf<Int>() // Declare empty list

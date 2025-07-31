@@ -24,6 +24,7 @@ import com.lowbyte.battery.animation.adapter.MultiViewAdapter
 import com.lowbyte.battery.animation.databinding.FragmentHomeBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.model.MultiViewItem
+import com.lowbyte.battery.animation.ui.InteractiveLottieActivity
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
@@ -168,7 +169,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     4 -> {
                         if (isAdded && findNavController().currentDestination?.id == R.id.navigation_home) {
                             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_animations", eventMap)
-                            findNavController().navigate(R.id.action_home_to_viewAllAnim)
+                          //  findNavController().navigate(R.id.action_home_to_viewAllAnim)
+                            startActivity(Intent(requireContext(), InteractiveLottieActivity::class.java))
+
                         }
 
 
