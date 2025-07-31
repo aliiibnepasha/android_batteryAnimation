@@ -52,16 +52,16 @@ class InteractiveLottieView @JvmOverloads constructor(
             repeatCount = LottieDrawable.INFINITE
             layoutParams = LayoutParams(200, 200)
             setBackgroundColor(Color.TRANSPARENT)
-            isClickable = true
-            isFocusable = true
+            isClickable = false
+            isFocusable = false
         }
 
         val item = LottieItem(lottie, animationRes)
 
-        lottie.setOnClickListener {
-            selectItem(item)
-            Log.d("Clicked", "Lottie ${item.resId}")
-        }
+//        lottie.setOnClickListener {
+//            selectItem(item)
+//            Log.d("Clicked", "Lottie ${item.resId}")
+//        }
 
         lottieItems.add(item)
         addView(lottie)
@@ -82,15 +82,17 @@ class InteractiveLottieView @JvmOverloads constructor(
             val finalX = if (savedX == -1f) defaultCenterX else savedX
             val finalY = if (savedY == -1f) defaultCenterY else savedY
 
-            lottie.translationX = defaultCenterX
-            lottie.translationY = defaultCenterY
+            // ✅ Correct usage: use saved or default
+            lottie.translationX = if (finalX== 0.0.toFloat()) defaultCenterX else finalX
+            lottie.translationY = if (finalY== 0.0.toFloat()) defaultCenterX else finalY
 
-            Log.d("LottiePlacement", "Placed Lottie ID: $animationRes at X: $finalX / $defaultCenterX, Y: $finalY / $defaultCenterY")
+            Log.d("LottiePlacement", "Placed Lottie ID: $animationRes at X: $finalX, Y: $finalY")
 
             invalidate()
         }
+
         itemInteractionListener?.onItemCountChanged(lottieItems)
-        selectItem(item)
+        selectItem(item,"addLottieItem")
         saveTransform(item)
         sendBroadcast(item = item, isEditing = true)
         invalidate()
@@ -245,8 +247,8 @@ class InteractiveLottieView @JvmOverloads constructor(
         context.sendBroadcast(intent)
     }
 
-    fun selectItem(item: LottieItem) {
-        Log.d("InteractiveLottieView", "Item selected: ${item.resId}")
+    fun selectItem(item: LottieItem , tag: String) {
+        Log.d("InteractiveLottieView", "Item selected:$tag ${item.resId}")
         // Clear previous selection
         selectedItem?.view?.setBackgroundColor(Color.TRANSPARENT)
         
@@ -267,7 +269,6 @@ class InteractiveLottieView @JvmOverloads constructor(
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        // Intercept touch events to handle selection and prevent system UI interaction
         ev?.let { event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 val x = event.x
@@ -276,7 +277,9 @@ class InteractiveLottieView @JvmOverloads constructor(
                 // Check if touch is on any Lottie item
                 for (item in lottieItems.reversed()) {
                     if (hitTest(item, x, y)) {
-                        selectItem(item)
+                        selectItem(item,"onInterceptTouchEvent")
+                        Log.d("onTouchEvent", "lottieItems $x  / $y")
+
                         return false // Let child handle it
                     }
                 }
@@ -288,23 +291,6 @@ class InteractiveLottieView @JvmOverloads constructor(
         return false
     }
 
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            val x = event.x
-            val y = event.y
-
-            for (item in lottieItems.reversed()) {
-                if (hitTest(item, x, y)) {
-                    selectItem(item)
-                    return false // Let child handle it
-                }
-            }
-            deselectItem()
-            return true // Consume the event when touching outside items
-        }
-
-        return super.dispatchTouchEvent(event)
-    }
 
     private fun deselectItem() {
         selectedItem?.view?.setBackgroundColor(Color.TRANSPARENT)
@@ -312,34 +298,79 @@ class InteractiveLottieView @JvmOverloads constructor(
         itemInteractionListener?.onItemSelected(null)
         invalidate()
     }
-
     private var dragging = false
+
+
+
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+      //  if (!isEditing) return false
+
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            val x = event.x
+            val y = event.y
+
+            for (item in lottieItems.reversed()) {
+                if (hitTest(item, x, y)) {
+                    selectItem(item, "dispatchTouchEvent")
+
+                    downX = x
+                    downY = y
+                    dragging = true
+
+                    Log.d("TouchEvent", "Selected ${item.resId} at X:$x Y:$y → Start drag")
+                    return super.dispatchTouchEvent(event) // let it go to onTouchEvent
+                }
+            }
+
+            deselectItem()
+            dragging = false
+            return true // consumed, no dragging
+        }
+
+        return super.dispatchTouchEvent(event)
+    }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x
         val y = event.y
-
+        Log.d("onTouchEvent", "onTouchEvent $x  / $y")
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
+
                 downX = x
                 downY = y
-                if (selectedItem?.let { hitTest(it, x, y) } == true) {
+                Log.d("onTouchEvent", "ACTION_DOWN $downX / $downY")
+                if (selectedItem?.let {
+
+
+                        Log.d("onTouchEvent", "hitTest $x / $y")
+                        hitTest(it, x, y)
+
+
+                    } == true) {
                     dragging = true
                     return true
                 }
             }
 
             MotionEvent.ACTION_MOVE -> {
+                Log.d("onTouchEvent", "ACTION_MOVE")
+
                 if (dragging && selectedItem != null) {
+
                     val view = selectedItem!!.view
                     val dx = x - downX
                     val dy = y - downY
 
+                    Log.d("onTouchEvent", " if ACTION_MOVE $dx / $dy")
                     val scaledWidth = view.width * view.scaleX
                     val scaledHeight = view.height * view.scaleY
 
                     val newX = (view.translationX + dx).coerceIn(0f, width - scaledWidth)
                     val newY = (view.translationY + dy).coerceIn(0f, height - scaledHeight)
+
+                    Log.d("onTouchEvent", " if view translate  $newX / $newY")
 
                     view.translationX = newX
                     view.translationY = newY
@@ -351,10 +382,15 @@ class InteractiveLottieView @JvmOverloads constructor(
                     sendBroadcast(item = selectedItem!!, isEditing = true)
                     invalidate()
                     return true
+                }else{
+                    Log.d("onTouchEvent", " else  ACTION_MOVE")
+
                 }
             }
 
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                Log.d("onTouchEvent", " else  ACTION_CANCEL  ACTION_UP")
+
                 dragging = false
             }
         }
@@ -369,6 +405,9 @@ class InteractiveLottieView @JvmOverloads constructor(
         val bottom = top + view.height * view.scaleY
         return x in left..right && y in top..bottom
     }
+
+
+
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -406,16 +445,16 @@ class InteractiveLottieView @JvmOverloads constructor(
             scaleX = data.scale
             scaleY = data.scale
             rotation = data.rotation
-            isClickable = true
-            isFocusable = true
+            isClickable = false
+            isFocusable = false
         }
 
         val item = LottieItem(lottie, data.resId)
 
-        lottie.setOnClickListener {
-            selectItem(item)
-            Log.d("Clicked","Lottie ${item.resId}")
-        }
+//        lottie.setOnClickListener {
+//            selectItem(item)
+//            Log.d("Clicked","Lottie ${item.resId}")
+//        }
 
         lottieItems.add(item)
         addView(lottie)

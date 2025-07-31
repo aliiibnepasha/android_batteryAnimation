@@ -77,8 +77,7 @@ class InteractiveLottieActivity : AppCompatActivity() {
             binding.btnActivateSelected.text = getString(
                 if (newState) R.string.turn_off else R.string.turn_on
             )
-
-            sendBroadcast(Intent(BROADCAST_ACTION))
+            isEditing(true)
         }
     }
 

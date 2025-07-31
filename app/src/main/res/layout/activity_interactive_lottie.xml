@@ -195,7 +195,7 @@
         />
 
     <TextView
-        android:id="@+id/btn_activate_selected"
+        android:id="@+id/btnActivateSelected"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:text="@string/turn_off"
@@ -204,14 +204,14 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/home_button"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/btn_activate_disable"
+        app:layout_constraintEnd_toStartOf="@+id/btnActivateDisable"
         app:layout_constraintWidth_percent="0.35"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="6dp" />
 
     <TextView
-        android:id="@+id/btn_activate_disable"
+        android:id="@+id/btnActivateDisable"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:gravity="center"
@@ -221,7 +221,7 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btn_activate_selected"
+        app:layout_constraintStart_toEndOf="@+id/btnActivateSelected"
         app:layout_constraintWidth_percent="0.35" />
 
 
