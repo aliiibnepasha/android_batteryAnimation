@@ -225,32 +225,82 @@ class InteractiveLottieView @JvmOverloads constructor(
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            val x = event.x
+            val y = event.y
+
+            for (item in lottieItems.reversed()) {
+                val view = item.view
+                val left = view.translationX
+                val top = view.translationY
+                val right = left + view.width * view.scaleX
+                val bottom = top + view.height * view.scaleY
+
+                if (x in left..right && y in top..bottom) {
+                    selectItem(item)
+                    return false // Let child handle it
+                }
+            }
+            deselectItem()
+            return false
+        }
+
+        return super.dispatchTouchEvent(event)
+    }
+
+    private fun deselectItem() {
+        selectedItem?.view?.setBackgroundColor(Color.TRANSPARENT)
+        selectedItem = null
+        itemInteractionListener?.onItemSelected(null)
+        invalidate()
+    }
+
+    private var dragging = false
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x
         val y = event.y
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                for (item in lottieItems.reversed()) {
-                    val view = item.view
-                    val left = view.translationX
-                    val top = view.translationY
-                    val right = left + view.width * view.scaleX
-                    val bottom = top + view.height * view.scaleY
-
-                    if (x in left..right && y in top..bottom) {
-                        Log.d("TouchTest", "Hit resId=${item.resId} at ($x,$y)")
-                        selectItem(item)
-                        return true // handle only if hit
-                    }
+                downX = x
+                downY = y
+                if (selectedItem?.let { hitTest(it, x, y) } == true) {
+                    dragging = true
+                    return true
                 }
+            }
 
-                // Touch outside items → pass through to apps
-                Log.d("TouchTest", "No item hit, passing touch through")
-                return false
+            MotionEvent.ACTION_MOVE -> {
+                if (dragging && selectedItem != null) {
+                    val view = selectedItem!!.view
+                    val dx = x - downX
+                    val dy = y - downY
+
+                    val newX =
+                        (view.translationX + dx).coerceIn(0f, width - view.width * view.scaleX)
+                    val newY =
+                        (view.translationY + dy).coerceIn(0f, height - view.height * view.scaleY)
+
+                    view.translationX = newX
+                    view.translationY = newY
+
+                    downX = x
+                    downY = y
+
+                    saveTransform(selectedItem!!)
+                    sendBroadcast(selectedItem!!)
+                    invalidate()
+                    return true
+                }
+            }
+
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                dragging = false
             }
         }
 
-        return false
+        return false // Pass through if not dragging
     }
 
     //    override fun onTouchEvent(event: MotionEvent): Boolean {
