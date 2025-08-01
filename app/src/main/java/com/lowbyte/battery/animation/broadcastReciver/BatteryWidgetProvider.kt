@@ -9,6 +9,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
@@ -89,7 +91,9 @@ class BatteryWidgetProvider : AppWidgetProvider() {
 
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
-        startRepeatingWidgetUpdate(context)
+        Handler(Looper.getMainLooper()).post {
+            startRepeatingWidgetUpdate(context)
+        }
     }
 
     override fun onDisabled(context: Context) {
@@ -104,39 +108,48 @@ class BatteryWidgetProvider : AppWidgetProvider() {
         val widgetIds = appWidgetManager.getAppWidgetIds(widgetProvider)
         val preferences = AppPreferences.getInstance(context)
 
-        widgetIds.forEach { widgetId ->
-            val iconName = preferences.getWidgetIcon(widgetId)
-            Log.d("BatteryLevelReceiver", "Updating widgetId: $widgetId with icon: $iconName")
+        try {
+            widgetIds.forEach { widgetId ->
+                val iconName = preferences.getWidgetIcon(widgetId)
+                Log.d("BatteryLevelReceiver", "Updating widgetId: $widgetId with icon: $iconName")
 
-            val batteryIntent = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-            val level = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
-            val scale = batteryIntent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
-            val batteryPct = level * 100 / scale.toFloat()
+                val batteryIntent =
+                    context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+                val level = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+                val scale = batteryIntent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+                val batteryPct = level * 100 / scale.toFloat()
 
-            val views = RemoteViews(context.packageName, R.layout.widget_battery).apply {
-                setViewVisibility(R.id.batteryLevelBottom, View.VISIBLE)
-                setTextViewText(R.id.batteryLevelBottom, "${batteryPct.toInt()} %")
-                setViewVisibility(R.id.batteryLevelTop, View.GONE)
-                setViewVisibility(R.id.batteryLevelCenter, View.GONE)
+                val views = RemoteViews(context.packageName, R.layout.widget_battery).apply {
+                    setViewVisibility(R.id.batteryLevelBottom, View.VISIBLE)
+                    setTextViewText(R.id.batteryLevelBottom, "${batteryPct.toInt()} %")
+                    setViewVisibility(R.id.batteryLevelTop, View.GONE)
+                    setViewVisibility(R.id.batteryLevelCenter, View.GONE)
 
-                val resId = context.resources.getIdentifier(iconName, "drawable", context.packageName)
-                if (resId != 0) setImageViewResource(R.id.battery_icon, resId)
-                else setImageViewResource(R.id.battery_icon, R.drawable.emoji_1)
+                    val resId =
+                        context.resources.getIdentifier(iconName, "drawable", context.packageName)
+                    if (resId != 0) setImageViewResource(R.id.battery_icon, resId)
+                    else setImageViewResource(R.id.battery_icon, R.drawable.emoji_1)
 
-                val intentClick = Intent(context, SplashActivity::class.java).apply {
-                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
-                    putExtra(AnimationUtils.EXTRA_LABEL, iconName)
-                    putExtra(AnimationUtils.EXTRA_POSITION, -1)
+                    val intentClick = Intent(context, SplashActivity::class.java).apply {
+                        putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+                        putExtra(AnimationUtils.EXTRA_LABEL, iconName)
+                        putExtra(AnimationUtils.EXTRA_POSITION, -1)
+                    }
+                    val pendingIntent = PendingIntent.getActivity(
+                        context,
+                        widgetId,
+                        intentClick,
+                        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                    )
+                    setOnClickPendingIntent(R.id.widget_root, pendingIntent)
                 }
-                val pendingIntent = PendingIntent.getActivity(
-                    context, widgetId, intentClick,
-                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-                )
-                setOnClickPendingIntent(R.id.widget_root, pendingIntent)
-            }
 
-            appWidgetManager.updateAppWidget(widgetId, views)
+                appWidgetManager.updateAppWidget(widgetId, views)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+
 
 
     }
@@ -145,13 +158,17 @@ class BatteryWidgetProvider : AppWidgetProvider() {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val widgetComponent = ComponentName(context, BatteryWidgetProvider::class.java)
         val widgetIds = appWidgetManager.getAppWidgetIds(widgetComponent)
-
         val preferences = AppPreferences.getInstance(context)
-        widgetIds.forEach { widgetId ->
-            val icon = preferences.getWidgetIcon(widgetId)
-            sendUpdateBroadcast(context, widgetId, icon)
+        try {
+            widgetIds.forEach { widgetId ->
+                val icon = preferences.getWidgetIcon(widgetId)
+                sendUpdateBroadcast(context, widgetId, icon)
+            }
+            Log.d(TAG, "Started repeating updates every 5 seconds.")
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        Log.d(TAG, "Started repeating updates every 5 seconds.")
+
     }
 
     private fun stopRepeatingWidgetUpdate() {

@@ -128,7 +128,6 @@ class ProFragment : Fragment() {
                 if (isAdded && findNavController().currentDestination?.id == R.id.proFragment){
 
                     if (purchasesList.isNullOrEmpty()) {
-                        Log.d("Billing", "No active subscriptions found.")
                         return@queryPurchasesAsync
                     }
                     for (purchase in purchasesList) {
@@ -152,7 +151,6 @@ class ProFragment : Fragment() {
                     "purchase_check_error",
                     mapOf("message" to billingResult.debugMessage)
                 )
-                Log.e("Billing", "Error checking purchases: ${billingResult.debugMessage}")
             }
         }
     }
@@ -162,11 +160,11 @@ class ProFragment : Fragment() {
             AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
 
         billingClient.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                Log.d("Billing", "Purchase acknowledged successfully")
-            } else {
-                Log.e("Billing", "Failed to acknowledge purchase: ${billingResult.debugMessage}")
-            }
+//            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+//                Log.d("Billing", "Purchase acknowledged successfully")
+//            } else {
+//                Log.e("Billing", "Failed to acknowledge purchase: ${billingResult.debugMessage}")
+//            }
         }
     }
 
@@ -275,9 +273,10 @@ class ProFragment : Fragment() {
                 )
                 launchPurchase(selectedPlanSku!!)
             } else {
-                Toast.makeText(
-                    requireContext(), getString(R.string.please_select_a_plan), Toast.LENGTH_SHORT
-                ).show()
+                context?.let { Toast.makeText(
+                    it, getString(R.string.please_select_a_plan), Toast.LENGTH_SHORT
+                ).show() }
+
             }
         }
     }
@@ -311,11 +310,10 @@ class ProFragment : Fragment() {
                         "billing_error",
                         mapOf("message" to billingResult.debugMessage)
                     )
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.subscription_not_available),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    context?.let { Toast.makeText(
+                        it, getString(R.string.subscription_not_available), Toast.LENGTH_SHORT
+                    ).show() }
+
                 }
             }
 
@@ -325,24 +323,34 @@ class ProFragment : Fragment() {
 
     private fun handlePurchase(purchase: Purchase) {
         val sku = purchase.products.firstOrNull() ?: return
+
+        if (!isAdded || context == null) {
+            Log.w("ProFragment", "Fragment not attached, skipping handlePurchase")
+            return
+        }
+
         saveSubscription(sku)
+
         FirebaseAnalyticsUtils.logClickEvent(
             requireContext(), "purchase_success", mapOf("sku" to sku)
         )
-        Toast.makeText(requireContext(), "Subscribed to $sku", Toast.LENGTH_SHORT).show()
+        context?.let { Toast.makeText(
+            it, "Subscribed to $sku", Toast.LENGTH_SHORT
+        ).show() }
+
         val destination = if (preferences.isFirstRun) {
             preferences.serviceRunningFlag = false
             R.id.action_pro_to_language
         } else {
             R.id.action_pro_to_main
         }
+
         if (isAdded && findNavController().currentDestination?.id == R.id.proFragment) {
             findNavController().navigate(destination)
         } else {
             Log.w("Navigation", "Attempted to navigate from incorrect fragment")
         }
     }
-
     private fun saveSubscription(sku: String) {
         preferences.isProUser = true
         preferences.setString("active_subscription", sku)
@@ -365,7 +373,4 @@ class ProFragment : Fragment() {
         binding.offerWeekly.setTextColor(if (plan == "weekly") selectedColor else defaultColor)
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
 }

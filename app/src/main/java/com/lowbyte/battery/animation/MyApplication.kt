@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.os.DeadSystemException
 import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -19,6 +20,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.AdStateController
 import com.lowbyte.battery.animation.ads.GoogleMobileAdsConsentManager
 import com.lowbyte.battery.animation.utils.AdLoadingDialogManager
@@ -50,11 +52,17 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
         super<MultiDexApplication>.onCreate()
         preferences =  AppPreferences.getInstance(this)
 
+        AdManager.initializeAds(this)
+
         val lang = LocaleHelper.getLanguage(this)
         LocaleHelper.setLocale(this, lang.ifBlank { "" })
-        CoroutineScope(Dispatchers.IO).launch {
-            MobileAds.initialize(this@MyApplication) {
-                Log.d("SplashActivityLog", "MobileAds initialized")
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                MobileAds.initialize(applicationContext)
+            } catch (e: DeadSystemException) {
+                Log.e("AdInit", "DeadSystemException — system is shutting down. Skipping ad init.")
+            } catch (e: Exception) {
+                Log.e("AdInit", "AdMob init error: ${e.message}")
             }
         }
         registerActivityLifecycleCallbacks(this)

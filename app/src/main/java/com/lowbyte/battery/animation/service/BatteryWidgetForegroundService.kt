@@ -98,7 +98,11 @@ class BatteryWidgetForegroundService : Service() {
             addAction(Intent.ACTION_POWER_CONNECTED)
             addAction(Intent.ACTION_POWER_DISCONNECTED)
         }
-        registerReceiver(batteryReceiver, filter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(batteryReceiver, filter, RECEIVER_EXPORTED)
+        } else {
+            registerReceiver(batteryReceiver, filter)
+        }
     }
 
     private fun startForegroundWithNotification() {

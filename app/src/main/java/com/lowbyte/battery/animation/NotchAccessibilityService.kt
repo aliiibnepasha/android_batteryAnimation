@@ -508,7 +508,20 @@ class NotchAccessibilityService : AccessibilityService() {
         // Apply enlarged layout
         try {
             if (binding.root.windowToken != null) {
-                windowManager?.updateViewLayout(binding.root, enlargedParams)
+
+                windowManager?.let { wm ->
+                    binding?.root?.let { view ->
+                        if (view.isAttachedToWindow) {
+                            wm.updateViewLayout(view, enlargedParams)
+                        } else {
+                            Log.w("animateStatusBarHeight", "View not attached to window.")
+                        }
+                    } ?: Log.e("animateStatusBarHeight", "statusBarBinding.root is null")
+                }
+
+             //   windowManager?.updateViewLayout(binding.root, enlargedParams)
+
+
                 handlerNotification.removeCallbacks(resetNotchRunnable)
                 handlerNotification.postDelayed(resetNotchRunnable, 3800)
             }
@@ -663,6 +676,7 @@ class NotchAccessibilityService : AccessibilityService() {
         }
 
         if (preferences.isDynamicEnabled) {
+            
             windowManager?.addView(view, notchParams)
         }
     }
@@ -712,7 +726,21 @@ class NotchAccessibilityService : AccessibilityService() {
                 Log.d("servicesListener", "Notch addView via broadcast")
             }
         }
-        windowManager?.updateViewLayout(binding.root, notchParams)
+
+        windowManager?.let { wm ->
+            binding?.root?.let { view ->
+                if (view.isAttachedToWindow) {
+                    wm.updateViewLayout(view, notchParams)
+                } else {
+                    Log.w("animateStatusBarHeight", "View not attached to window.")
+                }
+            } ?: Log.e("animateStatusBarHeight", "statusBarBinding.root is null")
+        }
+
+       // windowManager?.updateViewLayout(binding.root, notchParams)
+
+
+
         Log.d("servicesListener", "Notch updateViewLayout via broadcast")
     }
 
@@ -844,6 +872,15 @@ class NotchAccessibilityService : AccessibilityService() {
                     lottieIcon.visibility = View.GONE
                 }
                 updateBatteryInfo()
+                windowManager?.let { wm ->
+                    statusBarBinding?.root?.let { view ->
+                        if (view.isAttachedToWindow) {
+                            wm.updateViewLayout(view, layoutParams)
+                        } else {
+                            Log.w("animateStatusBarHeight", "View not attached to window.")
+                        }
+                    } ?: Log.e("animateStatusBarHeight", "statusBarBinding.root is null")
+                }
                 windowManager?.updateViewLayout(binding.root, layoutParams)
             }
         } catch (e: Exception) {
@@ -964,7 +1001,18 @@ class NotchAccessibilityService : AccessibilityService() {
             duration = 10
             addUpdateListener {
                 layoutParams?.height = it.animatedValue as Int
-                windowManager?.updateViewLayout(statusBarBinding?.root, layoutParams)
+
+             //   windowManager?.updateViewLayout(statusBarBinding?.root, layoutParams)
+
+                windowManager?.let { wm ->
+                    statusBarBinding?.root?.let { view ->
+                        if (view.isAttachedToWindow) {
+                            wm.updateViewLayout(view, layoutParams)
+                        } else {
+                            Log.w("animateStatusBarHeight", "View not attached to window.")
+                        }
+                    } ?: Log.e("animateStatusBarHeight", "statusBarBinding.root is null")
+                }
             }
             start()
         }
@@ -1032,10 +1080,17 @@ class NotchAccessibilityService : AccessibilityService() {
     fun showNotificationBanner(
         title: String?, text: String?, url: String?, pkg: String?
     ) {
-        // Remove old view if exists
-        if (notificationView != null) {
-            windowManager?.removeView(notificationView)
+        // Remove old view safely if exists
+        notificationView?.let {
+            if (it.isAttachedToWindow) {
+                try {
+                    windowManager?.removeView(it)
+                } catch (e: Exception) {
+                    Log.w("NotificationBanner", "Failed to remove existing view: ${e.message}")
+                }
+            }
             notificationHandler.removeCallbacksAndMessages(null)
+            notificationView = null
         }
 
         // Inflate new layout
@@ -1070,26 +1125,24 @@ class NotchAccessibilityService : AccessibilityService() {
             try {
                 val packageName = pkg ?: return@setOnClickListener
                 val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
-
                 if (launchIntent != null) {
                     launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(launchIntent)
                 } else {
-                    Log.e("NotchAccessibilityService", "App not found: $packageName")
+                    Log.e("NotificationBanner", "Launch intent is null for $packageName")
                 }
-                Log.e("NotchAccessibilityService", "App not found: $packageName")
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("NotificationBanner", "Failed to launch app: ${e.message}")
             }
         }
 
         // Prepare layout params
         val displayMetrics = Resources.getSystem().displayMetrics
         val screenWidth = displayMetrics.widthPixels
-        val desiredWidth = (screenWidth * 0.9).toInt() // 90% of screen width
+        val desiredWidth = (screenWidth * 0.9).toInt()
         val desiredHeight = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 85f, displayMetrics
-        ).toInt() // 85dp to px
+        ).toInt()
 
         val params = WindowManager.LayoutParams(
             desiredWidth,
@@ -1103,15 +1156,27 @@ class NotchAccessibilityService : AccessibilityService() {
             gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
         }
 
-        // Add to WindowManager
-        windowManager?.addView(view, params)
-        notificationView = view
+        // Add view safely
+        try {
+            if (view.parent == null) {
+                windowManager?.addView(view, params)
+                notificationView = view
+            } else {
+                Log.w("NotificationBanner", "View already has a parent. Skipping addView.")
+            }
+        } catch (e: Exception) {
+            Log.e("NotificationBanner", "Error adding view to WindowManager: ${e.message}")
+            return
+        }
 
         // Auto-remove after 3 seconds
         notificationHandler.postDelayed({
             try {
-                windowManager?.removeView(view)
-            } catch (_: Exception) {
+                if (view.isAttachedToWindow) {
+                    windowManager?.removeView(view)
+                }
+            } catch (e: Exception) {
+                Log.w("NotificationBanner", "Error during auto-remove: ${e.message}")
             }
             notificationView = null
         }, 3000)

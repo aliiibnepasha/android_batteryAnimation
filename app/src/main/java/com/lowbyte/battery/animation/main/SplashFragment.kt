@@ -132,28 +132,33 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (isAdded) {
-            Log.d("ADNativeFunc", "Native ad shown call Splash")
-            NativeLanguageHelper.loadAd(
-                context = requireActivity(),
-                adId = getNativeSplashId(),
-                showAdRemoteFlag = isNativeSplashEnabled,
-                isProUser = preferences.isProUser,
-                adContainer = binding.nativeAdSplashFirstContainer,
-                onAdLoaded = {
-                    if (isAdded) {
-                        bannerLoaded = true
-                        handleAdEvents()
+            try {
+                Log.d("ADNativeFunc", "Native ad shown call Splash")
+                NativeLanguageHelper.loadAd(
+                    context = requireActivity(),
+                    adId = getNativeSplashId(),
+                    showAdRemoteFlag = isNativeSplashEnabled,
+                    isProUser = preferences.isProUser,
+                    adContainer = binding.nativeAdSplashFirstContainer,
+                    onAdLoaded = {
+                        if (isAdded) {
+                            bannerLoaded = true
+                            handleAdEvents()
+                        }
+                        Log.d("AD", "Native ad shown")
+                    },
+                    onAdFailed = {
+                        if (isAdded) {
+                            bannerLoaded = true
+                            handleAdEvents()
+                        }
+                        Log.d("AD", "Ad failed to load")
                     }
-                    Log.d("AD", "Native ad shown")
-                },
-                onAdFailed = {
-                    if (isAdded) {
-                        bannerLoaded = true
-                        handleAdEvents()
-                    }
-                    Log.d("AD", "Ad failed to load")
-                }
-            )
+                )
+            } catch (e: Exception) {
+                Log.e("SplashAd", "Native ad crashed: ${e.localizedMessage}")
+                binding.nativeAdSplashFirstContainer.visibility = View.GONE
+            }
 
         }else{
             Log.d("ADNativeFunc", "Native ad else")

@@ -18,9 +18,6 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isValid
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
 
 object AdManager {
@@ -110,7 +107,7 @@ object AdManager {
         onDismiss: () -> Unit
     ) {
         Log.d(TAG, "Attempting to show interstitial ad")
-
+        AppPreferences.getInstance(activity)
         if (preferences.isProUser || !remoteConfig || !activity.isValid()) {
             Log.d(TAG, "Pro user or remote config disabled — skipping ad and dialog")
             onDismiss()

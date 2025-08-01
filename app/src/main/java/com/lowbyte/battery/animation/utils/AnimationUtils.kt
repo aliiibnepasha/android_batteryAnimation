@@ -254,6 +254,11 @@ fun getRewardedId(): String {
     )
 
     val emojiFashionListFantasy = listOf(
+        "emoji_101", "emoji_102", "emoji_103",
+        "emoji_104", "emoji_105", "emoji_106",
+        "emoji_107", "emoji_108", "emoji_109",
+        "emoji_110", "emoji_111", "emoji_112",
+
         "emoji_65", "emoji_78",   "emoji_74",
         "emoji_75","emoji_76", "emoji_71",
         "emoji_70", "emoji_69", "emoji_72",

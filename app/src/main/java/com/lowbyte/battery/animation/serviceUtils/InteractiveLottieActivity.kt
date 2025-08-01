@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -46,7 +47,11 @@ class InteractiveLottieActivity : AppCompatActivity() {
         binding = ActivityInteractiveLottieBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
+        window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
 
+                )
         AdManager.loadInterstitialAd(this, getFullscreenHome2Id(), isFullscreenStatusEnabled)
 
         sheet = AccessibilityPermissionBottomSheet(
