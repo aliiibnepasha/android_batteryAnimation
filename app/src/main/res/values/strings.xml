@@ -234,6 +234,7 @@
     <string name="please_select_a_language">Please select a language</string>
     <string name="already_added">Already added</string>
     <string name="limit_reached">Limit reached</string>
+    <string name="add_stickers">Add Stickers</string>
 
 
 </resources>

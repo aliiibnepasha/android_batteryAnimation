@@ -604,7 +604,7 @@ class NotchAccessibilityService : AccessibilityService() {
         }
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
-            dpToPx(250),
+            dpToPx(180),
             WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
@@ -676,7 +676,7 @@ class NotchAccessibilityService : AccessibilityService() {
         }
 
         if (preferences.isDynamicEnabled) {
-            
+
             windowManager?.addView(view, notchParams)
         }
     }

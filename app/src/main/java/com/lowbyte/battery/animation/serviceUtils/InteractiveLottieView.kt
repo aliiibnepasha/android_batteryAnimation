@@ -35,7 +35,7 @@ class InteractiveLottieView @JvmOverloads constructor(
     init {
         layoutParams = LayoutParams(
             LayoutParams.MATCH_PARENT,
-            (250 * context.resources.displayMetrics.density).toInt()
+            (180 * context.resources.displayMetrics.density).toInt()
         )
         setWillNotDraw(false)
     }

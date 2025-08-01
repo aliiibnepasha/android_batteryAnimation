@@ -46,13 +46,25 @@ class InteractiveLottieActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityInteractiveLottieBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         preferences = AppPreferences.getInstance(this)
         window.decorView.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                         or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-
                 )
         AdManager.loadInterstitialAd(this, getFullscreenHome2Id(), isFullscreenStatusEnabled)
+
+
+        binding.ibBackButton.setOnClickListener {
+            AdManager.showInterstitialAd(
+                this@InteractiveLottieActivity,
+                isFullscreenStatusEnabled,
+                true
+            ) {
+                finish()
+            }
+        }
+
 
         sheet = AccessibilityPermissionBottomSheet(
             onAllowClicked = {
@@ -89,7 +101,7 @@ class InteractiveLottieActivity : AppCompatActivity() {
 
 
 
-        availableLottieFiles.addAll((1..56).map {
+        availableLottieFiles.addAll((1..52).map {
             resources.getIdentifier("lottie_$it", "raw", packageName)
         })
         // Get the InteractiveLottieView from the layout instead of creating a new one
