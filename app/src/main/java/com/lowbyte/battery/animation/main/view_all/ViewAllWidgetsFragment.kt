@@ -42,7 +42,6 @@ class ViewAllWidgetsFragment : Fragment() {
 
             if (isChecked) {
                 if (!preferences.serviceRunningFlag) {
-                    preferences.serviceRunningFlag = true
                     requireActivity().window.decorView.post {
                         val serviceIntent = Intent(requireContext(), BatteryWidgetForegroundService::class.java).apply {
                             action = BatteryWidgetForegroundService.ACTION_START_SERVICE
@@ -51,11 +50,10 @@ class ViewAllWidgetsFragment : Fragment() {
                     }
                 }
             } else {
-                preferences.serviceRunningFlag = false
                 val stopIntent = Intent(requireContext(), BatteryWidgetForegroundService::class.java).apply {
                     action = BatteryWidgetForegroundService.ACTION_STOP_SERVICE
                 }
-                requireContext().startService(stopIntent)
+                ContextCompat.startForegroundService(requireContext(),stopIntent)
 
             }
 

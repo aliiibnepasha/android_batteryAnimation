@@ -20,7 +20,7 @@
             android:id="@+id/ibBackButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:padding="16dp"
+            android:padding="18dp"
             android:src="@drawable/ic_arrow_left"
             android:contentDescription="@string/app_name"
             app:layout_constraintDimensionRatio="1:1"

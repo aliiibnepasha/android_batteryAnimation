@@ -231,6 +231,9 @@
     <string name="customize_now">Customize Now</string>
     <string name="decorate_status_bar">Decorate Status Bar</string>
     <string name="customize_your_top">Customize your top bar with cute stickers and photos.</string>
+    <string name="please_select_a_language">Please select a language</string>
+    <string name="already_added">Already added</string>
+    <string name="limit_reached">Limit reached</string>
 
 
 </resources>

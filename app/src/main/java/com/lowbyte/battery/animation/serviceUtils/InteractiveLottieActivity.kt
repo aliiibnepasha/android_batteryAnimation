@@ -199,13 +199,13 @@ class InteractiveLottieActivity : AppCompatActivity() {
         binding.recyclerAllLotties.layoutManager = GridLayoutManager(this, 4)
         val allLottieAdapter = AllLottieAdapter(availableLottieFiles) { resId ->
             if (interactiveLottieView.containsItem(resId)) {
-                Toast.makeText(this, "Already added", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.already_added), Toast.LENGTH_SHORT).show()
                 return@AllLottieAdapter
             }
 
             val success = interactiveLottieView.addLottieItem(resId)
             if (!success) {
-                Toast.makeText(this, "Limit reached", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.limit_reached), Toast.LENGTH_SHORT).show()
             }
         }
         binding.recyclerAllLotties.adapter = allLottieAdapter

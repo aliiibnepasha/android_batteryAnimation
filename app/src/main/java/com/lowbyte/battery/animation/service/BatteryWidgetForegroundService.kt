@@ -1,8 +1,15 @@
 package com.lowbyte.battery.animation.service
 
-import android.app.*
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.appwidget.AppWidgetManager
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Build
 import android.os.IBinder
@@ -16,11 +23,16 @@ import com.lowbyte.battery.animation.broadcastReciver.BatteryWidgetProvider
 import com.lowbyte.battery.animation.utils.AnimationUtils
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class BatteryWidgetForegroundService : Service() {
 
     private lateinit var preferences: AppPreferences
+    private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -35,22 +47,44 @@ class BatteryWidgetForegroundService : Service() {
     override fun onCreate() {
         super.onCreate()
         preferences = AppPreferences.getInstance(this)
-        preferences.serviceRunningFlag = true
-        startForegroundWithNotification()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundWithNotification()
+        }
+
         registerBatteryReceiver()
         updateWidgets()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundWithNotification()
+        }
+
+        preferences.serviceRunningFlag = true
+
         when (intent?.action) {
-            ACTION_STOP_SERVICE -> stopSelf()
-            ACTION_START_SERVICE -> updateWidgets()
+            ACTION_STOP_SERVICE -> {
+                preferences.serviceRunningFlag = false
+                stopForeground(STOP_FOREGROUND_REMOVE)
+                stopSelf()
+            }
+            ACTION_START_SERVICE -> {
+                updateWidgets()
+            }
+            null -> {
+                updateWidgets()
+            }
+            else -> {
+                updateWidgets()
+            }
         }
         return START_STICKY
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        serviceScope.cancel()
         preferences.serviceRunningFlag = false
         unregisterReceiver(batteryReceiver)
         updateWidgets()
@@ -96,22 +130,26 @@ class BatteryWidgetForegroundService : Service() {
     }
 
     private fun updateWidgets() {
-        Thread {
-            val appWidgetManager = AppWidgetManager.getInstance(this)
-            val component = ComponentName(this, BatteryWidgetProvider::class.java)
+        //  Thread {
+        serviceScope.launch {
+            val appWidgetManager = AppWidgetManager.getInstance(this@BatteryWidgetForegroundService)
+            val component = ComponentName(
+                this@BatteryWidgetForegroundService, BatteryWidgetProvider::class.java
+            )
             val widgetIds = appWidgetManager.getAppWidgetIds(component)
             val isServiceRunning = preferences.serviceRunningFlag
 
             val batteryIntent = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-            val level = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+            val level = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: return@launch
             val scale = batteryIntent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: 100
             val percentage = (level * 100 / scale.toFloat()).toInt()
 
             widgetIds.forEach { widgetId ->
+
+
                 val iconName = preferences.getWidgetIcon(widgetId)
                 val resId = resources.getIdentifier(iconName, "drawable", packageName)
                 Log.e("widgetTracking", "loading bitmap for $iconName / $widgetId")
-
                 val bitmap = try {
                     if (resId != 0) Picasso.get().load(resId).get()
                     else Picasso.get().load(R.drawable.emoji_1).get()
@@ -127,7 +165,9 @@ class BatteryWidgetForegroundService : Service() {
                     setViewVisibility(R.id.batteryLevelCenter, View.GONE)
                     setImageViewBitmap(R.id.battery_icon, bitmap)
 
-                    val intentClick = Intent(this@BatteryWidgetForegroundService, SplashActivity::class.java).apply {
+                    val intentClick = Intent(
+                        this@BatteryWidgetForegroundService, SplashActivity::class.java
+                    ).apply {
                         putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
                         putExtra(AnimationUtils.EXTRA_LABEL, iconName)
                         putExtra(AnimationUtils.EXTRA_POSITION, -1)
@@ -141,7 +181,10 @@ class BatteryWidgetForegroundService : Service() {
                     )
                     setOnClickPendingIntent(R.id.widget_root, clickPendingIntent)
 
-                    val startIntent = Intent(this@BatteryWidgetForegroundService, BatteryWidgetForegroundService::class.java).apply {
+                    val startIntent = Intent(
+                        this@BatteryWidgetForegroundService,
+                        BatteryWidgetForegroundService::class.java
+                    ).apply {
                         action = BatteryWidgetForegroundService.ACTION_START_SERVICE
                     }
                     val startPendingIntent = PendingIntent.getService(
@@ -159,7 +202,8 @@ class BatteryWidgetForegroundService : Service() {
 
                 appWidgetManager.updateAppWidget(widgetId, views)
             }
-        }.start()
+        }
+        //  }.start()
     }
 
     companion object {

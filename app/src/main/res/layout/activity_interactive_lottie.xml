@@ -164,7 +164,7 @@
         android:layout_height="40dp"
         android:background="@drawable/bg_circle_button"
         android:contentDescription="@string/app_name"
-        android:padding="13dp"
+        android:padding="18dp"
         app:layout_constraintBottom_toTopOf="@+id/recyclerAllLotties"
         app:layout_constraintEnd_toStartOf="@+id/btn_move_top"
         android:src="@drawable/ic_arrow_left"

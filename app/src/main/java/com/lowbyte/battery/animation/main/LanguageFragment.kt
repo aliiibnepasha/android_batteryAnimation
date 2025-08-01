@@ -142,7 +142,8 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
                             findNavController().navigate(R.id.action_language_to_main)
                         }
                 } else {
-                    Toast.makeText(requireContext(), "Please select a language", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(),
+                        getString(R.string.please_select_a_language), Toast.LENGTH_SHORT).show()
                 }
             }
         }
