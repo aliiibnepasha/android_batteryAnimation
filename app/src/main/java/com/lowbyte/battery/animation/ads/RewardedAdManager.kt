@@ -109,6 +109,7 @@ object RewardedAdManager {
                 Log.d(TAG, "Ad shown")
                 AdStateController.isInterstitialShowing = true
                 onAdShown()
+                activity.isEditing(true)
             }
 
             override fun onAdDismissedFullScreenContent() {

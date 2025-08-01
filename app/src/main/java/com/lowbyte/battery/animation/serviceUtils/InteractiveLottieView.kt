@@ -160,28 +160,36 @@ class InteractiveLottieView @JvmOverloads constructor(
         selectedItem?.let { item ->
             val view = item.view
             val oldScale = view.scaleX
+            val safeScale = scale.coerceIn(0.1f, 5.0f)
+
             val centerX = view.translationX + view.width * oldScale / 2f
             val centerY = view.translationY + view.height * oldScale / 2f
 
-            view.scaleX = scale
-            view.scaleY = scale
+            view.scaleX = safeScale
+            view.scaleY = safeScale
 
-            view.translationX = centerX - view.width * scale / 2f
-            view.translationY = centerY - view.height * scale / 2f
+            view.translationX = centerX - view.width * safeScale / 2f
+            view.translationY = centerY - view.height * safeScale / 2f
 
-            // Ensure the item stays within bounds after scaling
-            val scaledWidth = view.width * scale
-            val scaledHeight = view.height * scale
-            
-            view.translationX = view.translationX.coerceIn(0f, width - scaledWidth)
-            view.translationY = view.translationY.coerceIn(0f, height - scaledHeight)
+            val scaledWidth = view.width * safeScale
+            val scaledHeight = view.height * safeScale
+
+            val maxX = width - scaledWidth
+            val maxY = height - scaledHeight
+
+            if (maxX >= 0 && maxY >= 0) {
+                view.translationX = view.translationX.coerceIn(0f, maxX)
+                view.translationY = view.translationY.coerceIn(0f, maxY)
+            } else {
+                view.translationX = ((width - view.width * safeScale) / 2f).coerceAtLeast(0f)
+                view.translationY = ((height - view.height * safeScale) / 2f).coerceAtLeast(0f)
+            }
 
             saveTransform(item)
             sendBroadcast(item = item, isEditing = true)
             invalidate()
         }
     }
-
     fun rotateSelectedItem(angle: Float) {
         selectedItem?.let { item ->
             item.view.rotation = angle

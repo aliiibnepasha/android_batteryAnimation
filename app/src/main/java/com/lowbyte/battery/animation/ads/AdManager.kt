@@ -187,11 +187,13 @@ object AdManager {
             }
 
             override fun onAdImpression() {
+                activity.isEditing(true)
                 Log.d(TAG, "Interstitial ad impression recorded")
                 if (!isFromActivity) onDismiss()
             }
 
             override fun onAdShowedFullScreenContent() {
+                activity.isEditing(true)
                 Log.d(TAG, "Interstitial ad is now visible")
             }
         }

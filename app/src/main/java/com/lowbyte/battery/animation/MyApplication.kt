@@ -246,6 +246,7 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
                                 }
 
                                 override fun onAdShowedFullScreenContent() {
+                                    activity.isEditing(true)
                                     Log.d("LOG_TAG", "Open ad is showing.")
                                     AdStateController.isOpenAdShowing = true
                                 }
