@@ -18,15 +18,16 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.isValid
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.ServiceUtils.isEditing
 
+
 object RewardedAdManager {
 
     private var rewardedAd: RewardedAd? = null
     private var isLoading = false
+    private var pendingShowRequest = false
     private const val TAG = "RewardedAdManager"
 
-    fun loadAd(context: Activity) {
+    fun loadAd(context: Activity, onLoaded: (() -> Unit)? = null, onFailed: (() -> Unit)? = null) {
         if (rewardedAd != null || isLoading || !isRewardedEnabled || !context.isValid()) return
-
         if (AppPreferences.getInstance(context).isProUser) return
         if (!isInternetAvailable(context)) return
 
@@ -34,17 +35,19 @@ object RewardedAdManager {
         val adRequest = AdRequest.Builder().build()
         RewardedAd.load(context, getRewardedId(), adRequest, object : RewardedAdLoadCallback() {
             override fun onAdLoaded(ad: RewardedAd) {
-                if (context.isValid()){
+                if (context.isValid()) {
                     rewardedAd = ad
                     isLoading = false
+                    Log.d(TAG, "Rewarded ad loaded")
+                    onLoaded?.invoke()
                 }
-                Log.d(TAG, "Rewarded ad loaded")
             }
 
             override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                 Log.e(TAG, "Failed to load rewarded ad: ${loadAdError.message}")
                 isLoading = false
                 rewardedAd = null
+                onFailed?.invoke()
             }
         })
     }
@@ -57,64 +60,79 @@ object RewardedAdManager {
     ) {
         val prefs = AppPreferences.getInstance(activity)
 
-         if (!isRewardedEnabled) return
-        if (prefs.isProUser) return
-        if (!isInternetAvailable(activity)) return
+        if (!isRewardedEnabled || prefs.isProUser || !isInternetAvailable(activity)) return
 
-        val isAdReady = rewardedAd != null
-        val dialogDuration = if (isAdReady){
-            1000L
-        } else{
-            loadAd(activity)
-            8000L
-        }
-        if (activity.isValid()){
-            AdLoadingDialogManager.show(activity, dialogDuration) {
-                if (rewardedAd != null && activity.isValid())  {
-                    rewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                        override fun onAdShowedFullScreenContent() {
-                            Log.d(TAG, "Ad shown")
-                            AdStateController.isInterstitialShowing = true
-                            onAdShown()
-                        }
+        pendingShowRequest = true
 
-                        override fun onAdDismissedFullScreenContent() {
-                            Log.d(TAG, "Ad dismissed")
-                            AdStateController.isInterstitialShowing = false
-                            rewardedAd = null
-                            onAdDismissed()
-                          //  loadAd(activity) // preload next
-                            activity.isEditing(false)
-                        }
-
-                        override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                            Log.e(TAG, "Failed to show ad: ${adError.message}")
-                            AdStateController.isInterstitialShowing = false
-                            rewardedAd = null
-                            loadAd(activity)
-                            activity.isEditing(false)
-                        }
-                    }
-
-                    if (activity.isValid()){
-                        activity.isEditing(true)
-                        rewardedAd?.show(activity) { rewardItem: RewardItem ->
-                            Log.d(TAG, "User earned reward: ${rewardItem.amount} ${rewardItem.type}")
-                            onRewardEarned()
-                        }
-                    }
+        if (rewardedAd != null && activity.isValid()) {
+            showAdInternal(activity, onRewardEarned, onAdShown, onAdDismissed)
+        } else {
+            // show dialog while loading
+            AdLoadingDialogManager.show(activity, 8000L) {
+                pendingShowRequest = false // timeout reached
+                if (rewardedAd != null && activity.isValid()) {
+                    showAdInternal(activity, onRewardEarned, onAdShown, onAdDismissed)
                 } else {
-                    Log.w(TAG, "Rewarded ad not ready")
-//                    if (activity.isValid()){
-//                        loadAd(activity)
-//                    }
                     AdStateController.isInterstitialShowing = false
-
+                    activity.isEditing(false)
                 }
+            }
+
+            // begin loading ad
+            loadAd(
+                context = activity,
+                onLoaded = {
+                    if (pendingShowRequest && activity.isValid()) {
+                        AdLoadingDialogManager.dismiss()
+                        showAdInternal(activity, onRewardEarned, onAdShown, onAdDismissed)
+                    }
+                },
+                onFailed = {
+                    if (pendingShowRequest && activity.isValid()) {
+                        AdLoadingDialogManager.dismiss()
+                        AdStateController.isInterstitialShowing = false
+                        activity.isEditing(false)
+                    }
+                }
+            )
+        }
+    }
+
+    private fun showAdInternal(
+        activity: Activity,
+        onRewardEarned: () -> Unit,
+        onAdShown: () -> Unit,
+        onAdDismissed: () -> Unit
+    ) {
+        rewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+            override fun onAdShowedFullScreenContent() {
+                Log.d(TAG, "Ad shown")
+                AdStateController.isInterstitialShowing = true
+                onAdShown()
+            }
+
+            override fun onAdDismissedFullScreenContent() {
+                Log.d(TAG, "Ad dismissed")
+                AdStateController.isInterstitialShowing = false
+                rewardedAd = null
+                activity.isEditing(false)
+                onAdDismissed()
+            }
+
+            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                Log.e(TAG, "Failed to show ad: ${adError.message}")
+                AdStateController.isInterstitialShowing = false
+                rewardedAd = null
+                loadAd(activity) // optional preload
+                activity.isEditing(false)
             }
         }
 
-
+        activity.isEditing(true)
+        rewardedAd?.show(activity) { rewardItem: RewardItem ->
+            Log.d(TAG, "User earned reward: ${rewardItem.amount} ${rewardItem.type}")
+            onRewardEarned()
+        }
     }
 
     private fun isInternetAvailable(context: Activity): Boolean {

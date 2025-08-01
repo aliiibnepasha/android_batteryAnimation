@@ -94,6 +94,8 @@ class IntroFragment : Fragment(R.layout.fragment_intro) {
             } else {
                 if (isAdded && findNavController().currentDestination?.id == R.id.introFragment) {
                     preferences.isFirstRun = false
+                    FirebaseAnalyticsUtils.logClickEvent(requireContext(), "intro_to_main", null)
+
                     findNavController().navigate(R.id.action_intro_to_main)
                 }
             }

@@ -213,4 +213,23 @@
     <string name="go_premium_unlimited_access">Passa a Premium – Accesso illimitato</string>
     <string name="support_the">Supporta l app per rimuovere gli annunci e\nsbloccare una generazione più veloce.</string>
 
+    <string name="size">Dimensione</string>
+    <string name="rotation">Rotazione</string>
+    <string name="sticker_added_5">Adesivo aggiunto (%1$d/5)</string>
+    <string name="turn_on">Attiva</string>
+    <string name="turn_off">Disattiva</string>
+    <string name="sticker_added_0_5">Adesivo aggiunto (0/5)</string>
+    <string name="back">Indietro</string>
+    <string name="customize_now">Personalizza ora</string>
+    <string name="decorate_status_bar">Decora la barra di stato</string>
+    <string name="customize_your_top">Personalizza la tua barra superiore con adesivi e foto carini.</string>
+    <string name="please_select_a_language">Seleziona una lingua</string>
+    <string name="already_added">Già aggiunto</string>
+    <string name="limit_reached">Limite raggiunto</string>
+    <string name="add_stickers">Aggiungi adesivi</string>
+    <string name="trendy">Di tendenza</string>
+    <string name="toy">Giocattolo</string>
+    <string name="emoji_face">Faccina emoji</string>
+    <string name="pet">Animale domestico</string>
+    <string name="cute">Carino</string>
 </resources>

@@ -211,4 +211,23 @@
     <string name="go_premium_unlimited_access">Passez Premium – Accès illimité</string>
     <string name="support_the">Soutenez l application pour supprimer les pubs\net débloquer une génération plus rapide.</string>
 
+    <string name="size">Taille</string>
+    <string name="rotation">Rotation</string>
+    <string name="sticker_added_5">Autocollant ajouté (%1$d/5)</string>
+    <string name="turn_on">Activer</string>
+    <string name="turn_off">Désactiver</string>
+    <string name="sticker_added_0_5">Autocollant ajouté (0/5)</string>
+    <string name="back">Retour</string>
+    <string name="customize_now">Personnaliser maintenant</string>
+    <string name="decorate_status_bar">Décorer la barre d état</string>
+    <string name="customize_your_top">Personnalisez votre barre haute avec des stickers et photos mignons.</string>
+    <string name="please_select_a_language">Veuillez sélectionner une langue</string>
+    <string name="already_added">Déjà ajouté</string>
+    <string name="limit_reached">Limite atteinte</string>
+    <string name="add_stickers">Ajouter des stickers</string>
+    <string name="trendy">Tendance</string>
+    <string name="toy">Jouet</string>
+    <string name="emoji_face">Visage emoji</string>
+    <string name="pet">Animal de compagnie</string>
+    <string name="cute">Mignon</string>
 </resources>

@@ -126,12 +126,20 @@ class ViewPagerEmojiItemFragment : Fragment() {
                                     putExtra(EXTRA_LABEL, label)
                                 }
                                 startActivity(intent)
+                                FirebaseAnalyticsUtils.logClickEvent(
+                                    requireActivity(),
+                                    "EmojiEditApplyAct"
+                                )
                             })
                     }
                 }
                 bindingReward?.btnPremium?.setOnClickListener {
                     dialogRewarded.dismiss()
                     startActivity(Intent(requireActivity(), ProActivity::class.java))
+                    FirebaseAnalyticsUtils.logClickEvent(
+                        requireActivity(),
+                        "ProActivity"
+                    )
                 }
                 dialogRewarded.show()
             } else {
@@ -140,6 +148,10 @@ class ViewPagerEmojiItemFragment : Fragment() {
                     putExtra(EXTRA_LABEL, label)
                 }
                 startActivity(intent)
+                FirebaseAnalyticsUtils.logClickEvent(
+                    requireActivity(),
+                    "EmojiEditApplyAct"
+                )
             }
         }
 

@@ -52,6 +52,8 @@ class ApplySuccessfullyActivity : BaseActivity() {
 
             FirebaseAnalyticsUtils.logClickEvent(this, "trigger_interstitial_ad", mapOf("screen" to "EmojiEditApplyScreen"))
             AdManager.showInterstitialAd(this,isFullscreenApplyEmojiEnabled,true) {
+                FirebaseAnalyticsUtils.logClickEvent(this, "StatusBarCustomizeActivity", null)
+
                 startActivity(Intent(this, StatusBarCustomizeActivity::class.java))
                 finish()
                 Log.e("Ads", "FullScreenTobeShoe")

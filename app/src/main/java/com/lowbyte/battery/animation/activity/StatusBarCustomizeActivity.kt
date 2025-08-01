@@ -224,6 +224,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
 
         val adapter = CustomIconGridAdapter(items) { position, label ->
             FirebaseAnalyticsUtils.logClickEvent(this, "click_icon_item", mapOf("position" to position.toString(), "label" to label))
+            FirebaseAnalyticsUtils.logClickEvent(this, "StatusBarIconSettingsActivity", mapOf("position" to position.toString(), "label" to label))
             val intent = Intent(this, StatusBarIconSettingsActivity::class.java)
             intent.putExtra(EXTRA_POSITION, position)
             intent.putExtra(EXTRA_LABEL, label)

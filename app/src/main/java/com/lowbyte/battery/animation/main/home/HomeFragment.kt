@@ -155,6 +155,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_emojis", eventMap)
                             findNavController().navigate(R.id.action_home_to_viewAllEmoji)
+                            FirebaseAnalyticsUtils.logClickEvent(requireContext(), "home_to_view_all", null)
+
                         }
 
                     }

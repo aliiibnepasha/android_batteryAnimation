@@ -55,6 +55,8 @@ class ProFragment : Fragment() {
                 R.id.action_pro_to_language
             }
             if (isAdded && findNavController().currentDestination?.id == R.id.proFragment) {
+                FirebaseAnalyticsUtils.logClickEvent(requireContext(), "pro_to_language", null)
+
                 findNavController().navigate(destination)
             } else {
                 Log.w("Navigation", "Attempted to navigate from incorrect fragment")
@@ -89,8 +91,16 @@ class ProFragment : Fragment() {
             showAdRemoteFlag = isNativeLangFirstEnabled,
             isProUser = preferences.isProUser,
             adContainer = null,
-            onAdLoaded = { Log.d("AD", "Native ad shown") },
-            onAdFailed = { Log.d("AD", "Ad failed to load") }
+            onAdLoaded = {
+
+                Log.d("AD", "Native ad shown")
+
+            },
+
+            onAdFailed = {
+
+                Log.d("AD", "Ad failed to load")
+            }
         )
         super.onViewCreated(view, savedInstanceState)
     }
@@ -249,6 +259,8 @@ class ProFragment : Fragment() {
                 R.id.action_pro_to_language
             }
             if (isAdded && findNavController().currentDestination?.id == R.id.proFragment) {
+                FirebaseAnalyticsUtils.logClickEvent(requireContext(), "pro_to_language", null)
+
                 findNavController().navigate(destination)
             } else {
                 Log.w("Navigation", "Attempted to navigate from incorrect fragment")
@@ -339,9 +351,13 @@ class ProFragment : Fragment() {
         ).show() }
 
         val destination = if (preferences.isFirstRun) {
+            FirebaseAnalyticsUtils.logClickEvent(requireContext(), "pro_to_language", null)
+
             preferences.serviceRunningFlag = false
             R.id.action_pro_to_language
         } else {
+            FirebaseAnalyticsUtils.logClickEvent(requireContext(), "pro_to_main", null)
+
             R.id.action_pro_to_main
         }
 

@@ -38,6 +38,7 @@ class InteractiveLottieView @JvmOverloads constructor(
             (180 * context.resources.displayMetrics.density).toInt()
         )
         setWillNotDraw(false)
+        layoutDirection = LAYOUT_DIRECTION_LTR
     }
 
     fun addLottieItem(animationRes: Int): Boolean {

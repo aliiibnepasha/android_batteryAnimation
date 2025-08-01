@@ -60,7 +60,7 @@ object AnimationUtils {
 
 // TODO Update Native Id
 fun getRewardedId(): String {
-        return if (!BuildConfig.DEBUG) {
+        return if (BuildConfig.DEBUG) {
             "ca-app-pub-3940256099942544/5224354917"
         } else {
             "ca-app-pub-9844943887550892/8218608589"

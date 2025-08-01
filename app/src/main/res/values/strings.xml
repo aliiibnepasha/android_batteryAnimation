@@ -223,7 +223,6 @@
     <string name="go_premium_unlimited_access">Go Premium – Unlimited Access</string>
     <string name="support_the">Support The App To Remove Ads And\nUnlock Faster Generation.</string>
 
-
     <string name="size">Size</string>
     <string name="rotation">Rotation</string>
     <string name="sticker_added_5">Sticker Added (%1$d/5)</string>
@@ -243,6 +242,7 @@
     <string name="emoji_face">Emoji Face</string>
     <string name="pet">Pet</string>
     <string name="cute">Cute</string>
+
 
 
 

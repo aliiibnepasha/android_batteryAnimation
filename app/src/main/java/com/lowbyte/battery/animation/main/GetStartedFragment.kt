@@ -24,7 +24,7 @@ class GetStartedFragment : Fragment(R.layout.fragment_get_started) {
             // Log click event
             FirebaseAnalyticsUtils.logClickEvent(
                 requireActivity(),
-                "get_started_next_click"
+                "get_started_next_click_to_main"
             )
              findNavController().navigate(R.id.action_getStarted_to_main)
 

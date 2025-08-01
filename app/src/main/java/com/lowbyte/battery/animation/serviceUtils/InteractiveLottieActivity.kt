@@ -12,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
@@ -30,7 +31,7 @@ import com.lowbyte.battery.animation.utils.AppPreferences.Companion.KEY_SHOW_LOT
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.lowbyte.battery.animation.utils.ServiceUtils.isEditing
 
-class InteractiveLottieActivity : AppCompatActivity() {
+class InteractiveLottieActivity : BaseActivity() {
 
     private lateinit var binding: ActivityInteractiveLottieBinding
     private lateinit var preferences: AppPreferences
@@ -71,6 +72,10 @@ class InteractiveLottieActivity : AppCompatActivity() {
             onAllowClicked = {
                 FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_lotti", null)
                 startActivity(Intent(this, AllowAccessibilityActivity::class.java))
+                FirebaseAnalyticsUtils.logClickEvent(
+                    this,
+                    "AllowAccessibilityAct"
+                )
             },
             onCancelClicked = {
                 preferences.setBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)

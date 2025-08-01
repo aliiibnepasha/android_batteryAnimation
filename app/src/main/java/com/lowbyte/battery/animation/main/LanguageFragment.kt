@@ -52,8 +52,12 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
                 binding.nativeAdLangFirstContainer.removeAllViews()
                 if (LocaleHelper.getLanguage(requireContext()) != "") {
                     if (preferences.isFirstRun) {
+                        FirebaseAnalyticsUtils.logClickEvent(requireContext(), "lang_to_intro", null)
+
                         findNavController().navigate(R.id.action_language_to_intro)
                     } else {
+                        FirebaseAnalyticsUtils.logClickEvent(requireContext(), "lang_to_main", null)
+
                         findNavController().navigate(R.id.action_language_to_main)
                     }
                 } else {
@@ -137,8 +141,12 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
                     binding.nativeAdLangFirstContainer.removeAllViews()
                     (requireActivity() as SplashActivity).changeLanguage(selectedLanguage)
                         if (preferences.isFirstRun) {
+                            FirebaseAnalyticsUtils.logClickEvent(requireContext(), "lang_to_intro", null)
+
                             findNavController().navigate(R.id.action_language_to_intro)
                         } else {
+                            FirebaseAnalyticsUtils.logClickEvent(requireContext(), "lang_to_main", null)
+
                             findNavController().navigate(R.id.action_language_to_main)
                         }
                 } else {

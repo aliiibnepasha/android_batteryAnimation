@@ -212,4 +212,24 @@
     <string name="takes_15_30_seconds">Tumatagal ng 15–30 segundo</string>
     <string name="go_premium_unlimited_access">Mag-Premium – Walang limitasyong access</string>
     <string name="support_the">Suportahan ang app upang alisin ang mga ad at\ni-unlock ang mas mabilis na pagbuo.</string>
- </resources>
+    <string name="size">Sukat</string>
+    <string name="rotation">Pag-ikot</string>
+    <string name="sticker_added_5">Sticker naidagdag (%1$d/5)</string>
+    <string name="turn_on">I-on</string>
+    <string name="turn_off">I-off</string>
+    <string name="sticker_added_0_5">Sticker naidagdag (0/5)</string>
+    <string name="back">Bumalik</string>
+    <string name="customize_now">I-customize Ngayon</string>
+    <string name="decorate_status_bar">Palamutihan ang Status Bar</string>
+    <string name="customize_your_top">I-customize ang iyong top bar gamit ang cute na sticker at larawan.</string>
+    <string name="please_select_a_language">Pumili ng wika</string>
+    <string name="already_added">Naidagdag na</string>
+    <string name="limit_reached">Naabot na ang limit</string>
+    <string name="add_stickers">Magdagdag ng Sticker</string>
+    <string name="trendy">Uso</string>
+    <string name="toy">Laruan</string>
+    <string name="emoji_face">Mukhang Emoji</string>
+    <string name="pet">Alagang Hayop</string>
+    <string name="cute">Cute</string>
+
+</resources>

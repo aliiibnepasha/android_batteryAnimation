@@ -212,4 +212,24 @@
     <string name="go_premium_unlimited_access">สมัคร Premium – เข้าถึงแบบไม่จำกัด</string>
     <string name="support_the">สนับสนุนแอปเพื่อเอาโฆษณาออกและ\nปลดล็อกการสร้างที่เร็วขึ้น</string>
 
+    <string name="size">ขนาด</string>
+    <string name="rotation">การหมุน</string>
+    <string name="sticker_added_5">เพิ่มสติกเกอร์แล้ว (%1$d/5)</string>
+    <string name="turn_on">เปิด</string>
+    <string name="turn_off">ปิด</string>
+    <string name="sticker_added_0_5">เพิ่มสติกเกอร์แล้ว (0/5)</string>
+    <string name="back">กลับ</string>
+    <string name="customize_now">ปรับแต่งตอนนี้</string>
+    <string name="decorate_status_bar">ตกแต่งแถบสถานะ</string>
+    <string name="customize_your_top">ปรับแต่งแถบบนของคุณด้วยสติกเกอร์และรูปภาพน่ารัก</string>
+    <string name="please_select_a_language">กรุณาเลือกภาษา</string>
+    <string name="already_added">เพิ่มแล้ว</string>
+    <string name="limit_reached">ถึงขีดจำกัดแล้ว</string>
+    <string name="add_stickers">เพิ่มสติกเกอร์</string>
+    <string name="trendy">อินเทรนด์</string>
+    <string name="toy">ของเล่น</string>
+    <string name="emoji_face">ใบหน้าอิโมจิ</string>
+    <string name="pet">สัตว์เลี้ยง</string>
+    <string name="cute">น่ารัก</string>
+
 </resources>

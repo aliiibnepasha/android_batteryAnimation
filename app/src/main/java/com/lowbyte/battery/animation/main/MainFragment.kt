@@ -64,9 +64,13 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     if (current in listOf(R.id.navigation_view_all_emoji, R.id.navigation_view_all_widget, R.id.navigation_view_all_animation)) {
                         navController.navigateUp()
                         Log.d("navCustom", "Customize Reselected")
+                        FirebaseAnalyticsUtils.logClickEvent(requireContext(), "main_to_customize", null)
+
                         navHostFragment.navController.navigate(R.id.navigation_customize)
 
                     } else {
+                        FirebaseAnalyticsUtils.logClickEvent(requireContext(), "main_to_customize", null)
+
                         Log.d("navCustom", "Customize Reselected r")
                         navHostFragment.navController.navigate(R.id.navigation_customize)
 

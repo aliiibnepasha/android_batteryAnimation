@@ -77,6 +77,11 @@ class ViewPagerWidgetItemFragment : Fragment() {
                 putExtra(EXTRA_LABEL, label)
             }
             startActivity(intent)
+            FirebaseAnalyticsUtils.logClickEvent(
+                requireActivity(),
+                "BatteryWidgetEdit"
+            )
+
         }
 
         binding.recyclerView.apply {

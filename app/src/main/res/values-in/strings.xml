@@ -212,4 +212,23 @@
     <string name="go_premium_unlimited_access">Premium – Akses Tanpa Batas</string>
     <string name="support_the">Dukung aplikasi untuk menghapus iklan dan\nmembuka akses pembuatan yang lebih cepat.</string>
 
+    <string name="size">Ukuran</string>
+    <string name="rotation">Rotasi</string>
+    <string name="sticker_added_5">Stiker Ditambahkan (%1$d/5)</string>
+    <string name="turn_on">Nyalakan</string>
+    <string name="turn_off">Matikan</string>
+    <string name="sticker_added_0_5">Stiker Ditambahkan (0/5)</string>
+    <string name="back">Kembali</string>
+    <string name="customize_now">Sesuaikan Sekarang</string>
+    <string name="decorate_status_bar">Hiasi Bilah Status</string>
+    <string name="customize_your_top">Sesuaikan bilah atas dengan stiker dan foto lucu.</string>
+    <string name="please_select_a_language">Silakan pilih bahasa</string>
+    <string name="already_added">Sudah ditambahkan</string>
+    <string name="limit_reached">Batas tercapai</string>
+    <string name="add_stickers">Tambahkan Stiker</string>
+    <string name="trendy">Tren</string>
+    <string name="toy">Mainan</string>
+    <string name="emoji_face">Wajah Emoji</string>
+    <string name="pet">Hewan Peliharaan</string>
+    <string name="cute">Lucu</string>
 </resources>

@@ -177,11 +177,11 @@ class SplashFragment : Fragment() {
             preferences = AppPreferences.getInstance(requireContext())
             val destination = if (preferences.isFirstRun) {
                 preferences.serviceRunningFlag = false
-                R.id.action_splash_to_main
-               // R.id.action_splash_to_pro
+              //  R.id.action_splash_to_main
+                R.id.action_splash_to_pro
             } else {
-                R.id.action_splash_to_main
-               // R.id.action_splash_to_pro
+               // R.id.action_splash_to_main
+                R.id.action_splash_to_pro
             }
             if (isAdded && findNavController().currentDestination?.id == R.id.splashFragment) {
                 AdManager.showInterstitialAd(
@@ -192,6 +192,8 @@ class SplashFragment : Fragment() {
                     if (preferences.isProUser) {
                         findNavController().navigate(R.id.action_splash_to_main)
                     } else {
+                        FirebaseAnalyticsUtils.logClickEvent(requireContext(), "splash_to_language", null)
+
                         findNavController().navigate(destination)
                     }
                 }

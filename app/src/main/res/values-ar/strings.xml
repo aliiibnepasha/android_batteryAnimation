@@ -211,5 +211,24 @@
     <string name="go_premium_unlimited_access">اشترك في النسخة المميزة – وصول غير محدود</string>
     <string name="support_the">ادعم التطبيق لإزالة الإعلانات\nوفتح التوليد الأسرع.</string>
 
+    <string name="size">الحجم</string>
+    <string name="rotation">التدوير</string>
+    <string name="sticker_added_5">تم إضافة الملصق (%1$d/5)</string>
+    <string name="turn_on">تشغيل</string>
+    <string name="turn_off">إيقاف التشغيل</string>
+    <string name="sticker_added_0_5">تم إضافة الملصق (0/5)</string>
+    <string name="back">رجوع</string>
+    <string name="customize_now">خصص الآن</string>
+    <string name="decorate_status_bar">زيّن شريط الحالة</string>
+    <string name="customize_your_top">خصص شريطك العلوي بصور وملصقات لطيفة.</string>
+    <string name="please_select_a_language">يرجى اختيار لغة</string>
+    <string name="already_added">تمت الإضافة مسبقًا</string>
+    <string name="limit_reached">تم الوصول للحد الأقصى</string>
+    <string name="add_stickers">إضافة ملصقات</string>
+    <string name="trendy">عصري</string>
+    <string name="toy">لعبة</string>
+    <string name="emoji_face">وجه تعبيري</string>
+    <string name="pet">حيوان أليف</string>
+    <string name="cute">لطيف</string>
 </resources>
 

@@ -210,4 +210,23 @@
     <string name="go_premium_unlimited_access">प्रो प्रीमियम – असीमित एक्सेस</string>
     <string name="support_the">विज्ञापन हटाने और तेज़ जनरेशन अनलॉक करने के लिए ऐप का समर्थन करें।</string>
 
+    <string name="size">आकार</string>
+    <string name="rotation">रोटेशन</string>
+    <string name="sticker_added_5">स्टिकर जोड़ा गया (%1$d/5)</string>
+    <string name="turn_on">चालू करें</string>
+    <string name="turn_off">बंद करें</string>
+    <string name="sticker_added_0_5">स्टिकर जोड़ा गया (0/5)</string>
+    <string name="back">वापस</string>
+    <string name="customize_now">अब अनुकूलित करें</string>
+    <string name="decorate_status_bar">स्थिति पट्टी सजाएँ</string>
+    <string name="customize_your_top">अपने टॉप बार को प्यारे स्टिकर और फोटो से सजाएं।</string>
+    <string name="please_select_a_language">कृपया एक भाषा चुनें</string>
+    <string name="already_added">पहले ही जोड़ा गया है</string>
+    <string name="limit_reached">सीमा पहुंच चुकी है</string>
+    <string name="add_stickers">स्टिकर जोड़ें</string>
+    <string name="trendy">फैशनेबल</string>
+    <string name="toy">खिलौना</string>
+    <string name="emoji_face">इमोजी चेहरा</string>
+    <string name="pet">पालतू</string>
+    <string name="cute">प्यारा</string>
 </resources>

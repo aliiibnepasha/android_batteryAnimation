@@ -211,4 +211,23 @@
     <string name="go_premium_unlimited_access">プレミアムへ – 無制限アクセス</string>
     <string name="support_the">アプリをサポートして広告を削除し、\n高速生成を解除しましょう。</string>
 
+    <string name="size">サイズ</string>
+    <string name="rotation">回転</string>
+    <string name="sticker_added_5">ステッカーを追加しました（%1$d/5）</string>
+    <string name="turn_on">オンにする</string>
+    <string name="turn_off">オフにする</string>
+    <string name="sticker_added_0_5">ステッカーを追加しました（0/5）</string>
+    <string name="back">戻る</string>
+    <string name="customize_now">今すぐカスタマイズ</string>
+    <string name="decorate_status_bar">ステータスバーを飾る</string>
+    <string name="customize_your_top">ステッカーや写真で上部バーをかわいくカスタマイズしよう。</string>
+    <string name="please_select_a_language">言語を選択してください</string>
+    <string name="already_added">既に追加済み</string>
+    <string name="limit_reached">上限に達しました</string>
+    <string name="add_stickers">ステッカーを追加</string>
+    <string name="trendy">トレンディ</string>
+    <string name="toy">おもちゃ</string>
+    <string name="emoji_face">絵文字の顔</string>
+    <string name="pet">ペット</string>
+    <string name="cute">かわいい</string>
   </resources>

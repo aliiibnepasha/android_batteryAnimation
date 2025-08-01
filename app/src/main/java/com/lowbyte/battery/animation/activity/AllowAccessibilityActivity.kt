@@ -12,6 +12,7 @@ import com.lowbyte.battery.animation.databinding.ActivityAllowAccecibilityBindin
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerPermissionId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerPermissionSettings
 import com.lowbyte.battery.animation.utils.AppPreferences
+import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class AllowAccessibilityActivity :  BaseActivity() {
 
@@ -32,6 +33,8 @@ class AllowAccessibilityActivity :  BaseActivity() {
         preferences = AppPreferences.getInstance(this)
 
         binding.buttonForSetting.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_to_setting", null)
+
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             finish()
         }

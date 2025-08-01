@@ -216,4 +216,23 @@
     <string name="go_premium_unlimited_access">Naik Taraf Premium – Akses Tanpa Had</string>
     <string name="support_the">Sokong aplikasi untuk menghapuskan iklan dan\nnyahkunci penjanaan lebih pantas.</string>
 
+    <string name="size">Saiz</string>
+    <string name="rotation">Putaran</string>
+    <string name="sticker_added_5">Pelekat Ditambah (%1$d/5)</string>
+    <string name="turn_on">Hidupkan</string>
+    <string name="turn_off">Matikan</string>
+    <string name="sticker_added_0_5">Pelekat Ditambah (0/5)</string>
+    <string name="back">Kembali</string>
+    <string name="customize_now">Sesuaikan Sekarang</string>
+    <string name="decorate_status_bar">Hiasi Bar Status</string>
+    <string name="customize_your_top">Sesuaikan bar atas anda dengan pelekat dan gambar comel.</string>
+    <string name="please_select_a_language">Sila pilih bahasa</string>
+    <string name="already_added">Sudah ditambah</string>
+    <string name="limit_reached">Had tercapai</string>
+    <string name="add_stickers">Tambah Pelekat</string>
+    <string name="trendy">Trendi</string>
+    <string name="toy">Mainan</string>
+    <string name="emoji_face">Muka Emoji</string>
+    <string name="pet">Haiwan Peliharaan</string>
+    <string name="cute">Comel</string>
 </resources>

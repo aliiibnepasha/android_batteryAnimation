@@ -15,6 +15,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
+import com.lowbyte.battery.animation.activity.StatusBarIconSettingsActivity
 import com.lowbyte.battery.animation.databinding.FragmentViewAllEmojiBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.ui.InteractiveLottieActivity
@@ -74,6 +75,10 @@ class ViewAllEmojiFragment : Fragment() {
 
 
         binding.tvCustomize.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(
+                requireActivity(),
+                "InteractiveLottieAct"
+            )
             startActivity(Intent(requireContext(), InteractiveLottieActivity::class.java))
         }
 

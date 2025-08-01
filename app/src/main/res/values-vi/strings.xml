@@ -217,4 +217,23 @@
     <string name="go_premium_unlimited_access">Nâng cấp Premium – Truy cập không giới hạn</string>
     <string name="support_the">Hỗ trợ ứng dụng để xóa quảng cáo và\nmở khóa tính năng tạo nhanh hơn.</string>
 
+    <string name="size">Kích thước</string>
+    <string name="rotation">Xoay</string>
+    <string name="sticker_added_5">Đã thêm nhãn dán (%1$d/5)</string>
+    <string name="turn_on">Bật</string>
+    <string name="turn_off">Tắt</string>
+    <string name="sticker_added_0_5">Đã thêm nhãn dán (0/5)</string>
+    <string name="back">Quay lại</string>
+    <string name="customize_now">Tùy chỉnh ngay</string>
+    <string name="decorate_status_bar">Trang trí thanh trạng thái</string>
+    <string name="customize_your_top">Tùy chỉnh thanh trên cùng bằng nhãn dán và ảnh dễ thương.</string>
+    <string name="please_select_a_language">Vui lòng chọn ngôn ngữ</string>
+    <string name="already_added">Đã thêm</string>
+    <string name="limit_reached">Đã đạt giới hạn</string>
+    <string name="add_stickers">Thêm nhãn dán</string>
+    <string name="trendy">Xu hướng</string>
+    <string name="toy">Đồ chơi</string>
+    <string name="emoji_face">Mặt biểu tượng</string>
+    <string name="pet">Thú cưng</string>
+    <string name="cute">Dễ thương</string>
 </resources>

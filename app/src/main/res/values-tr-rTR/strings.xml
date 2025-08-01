@@ -216,4 +216,23 @@
     <string name="go_premium_unlimited_access">Premium a Geç – Sınırsız Erişim</string>
     <string name="support_the">Reklamları kaldırmak ve\nhızlı oluşturmayı açmak için uygulamayı destekleyin.</string>
 
+    <string name="size">Boyut</string>
+    <string name="rotation">Döndürme</string>
+    <string name="sticker_added_5">Çıkartma Eklendi (%1$d/5)</string>
+    <string name="turn_on">Aç</string>
+    <string name="turn_off">Kapat</string>
+    <string name="sticker_added_0_5">Çıkartma Eklendi (0/5)</string>
+    <string name="back">Geri</string>
+    <string name="customize_now">Şimdi Özelleştir</string>
+    <string name="decorate_status_bar">Durum Çubuğunu Süsle</string>
+    <string name="customize_your_top">Üst çubuğunuzu sevimli çıkartmalar ve fotoğraflarla özelleştirin.</string>
+    <string name="please_select_a_language">Lütfen bir dil seçin</string>
+    <string name="already_added">Zaten eklendi</string>
+    <string name="limit_reached">Sınıra ulaşıldı</string>
+    <string name="add_stickers">Çıkartma Ekle</string>
+    <string name="trendy">Trend</string>
+    <string name="toy">Oyuncak</string>
+    <string name="emoji_face">Emoji Yüzü</string>
+    <string name="pet">Evcil Hayvan</string>
+    <string name="cute">Sevimli</string>
 </resources>

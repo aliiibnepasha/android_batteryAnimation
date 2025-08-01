@@ -214,4 +214,23 @@
     <string name="go_premium_unlimited_access">Ir Premium – Acesso Ilimitado</string>
     <string name="support_the">Apoia a aplicação para remover anúncios e\ndesbloquear geração mais rápida.</string>
 
+    <string name="size">Tamanho</string>
+    <string name="rotation">Rotação</string>
+    <string name="sticker_added_5">Autocolante adicionado (%1$d/5)</string>
+    <string name="turn_on">Ligar</string>
+    <string name="turn_off">Desligar</string>
+    <string name="sticker_added_0_5">Autocolante adicionado (0/5)</string>
+    <string name="back">Voltar</string>
+    <string name="customize_now">Personalizar agora</string>
+    <string name="decorate_status_bar">Decorar a barra de estado</string>
+    <string name="customize_your_top">Personaliza a tua barra superior com autocolantes e fotos giras.</string>
+    <string name="please_select_a_language">Por favor, selecione um idioma</string>
+    <string name="already_added">Já adicionado</string>
+    <string name="limit_reached">Limite atingido</string>
+    <string name="add_stickers">Adicionar autocolantes</string>
+    <string name="trendy">Na moda</string>
+    <string name="toy">Brinquedo</string>
+    <string name="emoji_face">Cara emoji</string>
+    <string name="pet">Animal de estimação</string>
+    <string name="cute">Fofo</string>
 </resources>

@@ -208,4 +208,25 @@
     <string name="takes_15_30_seconds">Tarda 15–30 segundos</string>
     <string name="go_premium_unlimited_access">Hazte Premium – Acceso ilimitado</string>
     <string name="support_the">Apoya la app para eliminar anuncios\ny desbloquear generación más rápida.</string>
+
+    <string name="size">Tamaño</string>
+    <string name="rotation">Rotación</string>
+    <string name="sticker_added_5">Pegatina añadida (%1$d/5)</string>
+    <string name="turn_on">Encender</string>
+    <string name="turn_off">Apagar</string>
+    <string name="sticker_added_0_5">Pegatina añadida (0/5)</string>
+    <string name="back">Atrás</string>
+    <string name="customize_now">Personalizar ahora</string>
+    <string name="decorate_status_bar">Decorar barra de estado</string>
+    <string name="customize_your_top">Personaliza tu barra superior con stickers y fotos lindas.</string>
+    <string name="please_select_a_language">Por favor selecciona un idioma</string>
+    <string name="already_added">Ya añadido</string>
+    <string name="limit_reached">Límite alcanzado</string>
+    <string name="add_stickers">Agregar stickers</string>
+    <string name="trendy">Elegante</string>
+    <string name="toy">Juguete</string>
+    <string name="emoji_face">Cara emoji</string>
+    <string name="pet">Mascota</string>
+    <string name="cute">Lindo</string>
+
   </resources>
