@@ -33,6 +33,9 @@ class BatteryWidgetForegroundService : Service() {
 
     private lateinit var preferences: AppPreferences
     private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private var lastUpdateTime = 0L
+    private var lastBatteryPercentage = -1
+
 
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -47,9 +50,9 @@ class BatteryWidgetForegroundService : Service() {
     override fun onCreate() {
         super.onCreate()
         preferences = AppPreferences.getInstance(this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundWithNotification()
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            startForegroundWithNotification()
+//        }
 
         registerBatteryReceiver()
         updateWidgets()
@@ -72,11 +75,8 @@ class BatteryWidgetForegroundService : Service() {
             ACTION_START_SERVICE -> {
                 updateWidgets()
             }
-            null -> {
-                updateWidgets()
-            }
             else -> {
-                updateWidgets()
+
             }
         }
         return START_STICKY
@@ -130,6 +130,9 @@ class BatteryWidgetForegroundService : Service() {
     }
 
     private fun updateWidgets() {
+        val now = System.currentTimeMillis()
+        if (now - lastUpdateTime < 2000) return  // Skip if called too soon
+        lastUpdateTime = now
         //  Thread {
         serviceScope.launch {
             val appWidgetManager = AppWidgetManager.getInstance(this@BatteryWidgetForegroundService)
@@ -141,29 +144,44 @@ class BatteryWidgetForegroundService : Service() {
 
             val batteryIntent = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
             val level = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: return@launch
-            val scale = batteryIntent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: 100
-            val percentage = (level * 100 / scale.toFloat()).toInt()
+            val scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
 
+            val percentage = (level * 100 / scale.toFloat()).toInt()
+            if (percentage == lastBatteryPercentage) return@launch
+            lastBatteryPercentage = percentage
+            val startIntent = Intent(
+                this@BatteryWidgetForegroundService,
+                BatteryWidgetForegroundService::class.java
+            ).apply {
+                action = ACTION_START_SERVICE
+            }
+            val startPendingIntent = PendingIntent.getService(
+                this@BatteryWidgetForegroundService,
+                1,
+                startIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
             widgetIds.forEach { widgetId ->
 
 
                 val iconName = preferences.getWidgetIcon(widgetId)
                 val resId = resources.getIdentifier(iconName, "drawable", packageName)
                 Log.e("widgetTracking", "loading bitmap for $iconName / $widgetId")
-                val bitmap = try {
-                    if (resId != 0) Picasso.get().load(resId).get()
-                    else Picasso.get().load(R.drawable.emoji_1).get()
-                } catch (e: Exception) {
-                    Log.e("widgetTracking", "Error loading bitmap for $iconName", e)
-                    Picasso.get().load(R.drawable.emoji_1).get()
-                }
+//                val bitmap = try {
+//                    if (resId != 0) Picasso.get().load(resId).fetch()
+//                    else Picasso.get().load(R.drawable.emoji_1).fetch()
+//                } catch (e: Exception) {
+//                    Log.e("widgetTracking", "Error loading bitmap for $iconName", e)
+//                    Picasso.get().load(R.drawable.emoji_1).fetch()
+//                }
 
                 val views = RemoteViews(packageName, R.layout.widget_battery).apply {
                     setTextViewText(R.id.batteryLevelBottom, "$percentage %")
                     setViewVisibility(R.id.batteryLevelBottom, View.VISIBLE)
                     setViewVisibility(R.id.batteryLevelTop, View.GONE)
                     setViewVisibility(R.id.batteryLevelCenter, View.GONE)
-                    setImageViewBitmap(R.id.battery_icon, bitmap)
+                    setImageViewResource(R.id.battery_icon, if (resId != 0) resId else R.drawable.emoji_1)
+                   // setImageViewBitmap(R.id.battery_icon, bitmap)
 
                     val intentClick = Intent(
                         this@BatteryWidgetForegroundService, SplashActivity::class.java
@@ -181,18 +199,6 @@ class BatteryWidgetForegroundService : Service() {
                     )
                     setOnClickPendingIntent(R.id.widget_root, clickPendingIntent)
 
-                    val startIntent = Intent(
-                        this@BatteryWidgetForegroundService,
-                        BatteryWidgetForegroundService::class.java
-                    ).apply {
-                        action = BatteryWidgetForegroundService.ACTION_START_SERVICE
-                    }
-                    val startPendingIntent = PendingIntent.getService(
-                        this@BatteryWidgetForegroundService,
-                        1,
-                        startIntent,
-                        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-                    )
                     setViewVisibility(
                         R.id.widget_start_button,
                         if (isServiceRunning) View.GONE else View.VISIBLE
