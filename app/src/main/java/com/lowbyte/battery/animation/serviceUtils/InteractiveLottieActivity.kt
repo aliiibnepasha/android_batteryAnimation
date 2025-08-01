@@ -28,6 +28,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenStatusEnab
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.AppPreferences.Companion.KEY_SHOW_LOTTIE_TOP_VIEW
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
+import com.lowbyte.battery.animation.utils.ServiceUtils.isEditing
 
 class InteractiveLottieActivity : AppCompatActivity() {
 
@@ -287,13 +288,12 @@ class InteractiveLottieActivity : AppCompatActivity() {
         savedItems.forEach { interactiveLottieView.addLottieItemFromData(it) }
     }
 
-    fun isEditing(isEditing: Boolean){
-        val intent = Intent(BROADCAST_ACTION).apply {
-            putExtra("isEditing", isEditing)
-
-        }
-        sendBroadcast(intent)
-    }
+//    fun isEditing(isEditing: Boolean){
+//        val intent = Intent(BROADCAST_ACTION).apply {
+//            putExtra("isEditing", isEditing)
+//        }
+//        sendBroadcast(intent)
+//    }
 
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {

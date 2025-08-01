@@ -89,12 +89,13 @@
     <string name="widget_applied_successfully">Widget Applied Successfully.</string>
     <string name="emoji_applied_successfully">Emoji Applied Successfully.</string>
     <string name="all">All</string>
+
     <string name="cat_1">Popular</string>
     <string name="cat_2">Cartoon</string>
     <string name="cat_3">Comic</string>
     <string name="cat_4">Hot</string>
     <string name="cat_5">New</string>
-    <string name="cat_6">Cute</string>
+    <string name="cat_6">Fenky</string>
     <string name="gesture_action">Gesture Action</string>
     <string name="terms_of_service_url" translatable="false">https://sites.google.com/view/theswiftvision-termsofservice/home</string>
     <string name="privacy_policy_url" translatable="false">https://sites.google.com/view/theswiftvision-privacypolicy/home</string>
@@ -221,6 +222,8 @@
     <string name="takes_15_30_seconds">Takes 15–30 Seconds</string>
     <string name="go_premium_unlimited_access">Go Premium – Unlimited Access</string>
     <string name="support_the">Support The App To Remove Ads And\nUnlock Faster Generation.</string>
+
+
     <string name="size">Size</string>
     <string name="rotation">Rotation</string>
     <string name="sticker_added_5">Sticker Added (%1$d/5)</string>
@@ -235,6 +238,12 @@
     <string name="already_added">Already added</string>
     <string name="limit_reached">Limit reached</string>
     <string name="add_stickers">Add Stickers</string>
+    <string name="trendy">Trendy</string>
+    <string name="toy">Toy</string>
+    <string name="emoji_face">Emoji Face</string>
+    <string name="pet">Pet</string>
+    <string name="cute">Cute</string>
+
 
 
 </resources>

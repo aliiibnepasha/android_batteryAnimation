@@ -18,6 +18,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isValid
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
+import com.lowbyte.battery.animation.utils.ServiceUtils.isEditing
 import java.util.concurrent.atomic.AtomicBoolean
 
 object AdManager {
@@ -158,6 +159,8 @@ object AdManager {
             Log.d(TAG, "Interstitial ad not ready — fallback and reload")
             onDismiss()
             loadInterstitialAd(activity, getFullscreenId(), remoteConfig)
+            activity.isEditing(false)
+
             return
         }
 
@@ -169,6 +172,8 @@ object AdManager {
                 interstitialAd = null
                 AdStateController.isInterstitialShowing = false
                 if (isFromActivity) onDismiss()
+
+                activity.isEditing(false)
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
@@ -177,6 +182,8 @@ object AdManager {
                 interstitialAd = null
                 AdStateController.isInterstitialShowing = false
                 onDismiss()
+                activity.isEditing(false)
+
             }
 
             override fun onAdImpression() {
@@ -192,6 +199,7 @@ object AdManager {
         try {
             Log.d(TAG, "Showing interstitial ad")
             if (activity.isValid()){
+                activity.isEditing(true)
                 interstitialAd?.show(activity)
             }
         } catch (e: Exception) {

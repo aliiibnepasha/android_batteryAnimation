@@ -60,7 +60,7 @@ object AnimationUtils {
 
 // TODO Update Native Id
 fun getRewardedId(): String {
-        return if (BuildConfig.DEBUG) {
+        return if (!BuildConfig.DEBUG) {
             "ca-app-pub-3940256099942544/5224354917"
         } else {
             "ca-app-pub-9844943887550892/8218608589"
@@ -225,58 +225,109 @@ fun getRewardedId(): String {
     )
 
 
-    val emojiListCartoon = listOf(
-        "emoji_1","emoji_15", "emoji_16","emoji_14",
-        "emoji_12", "emoji_9", "emoji_3",
-        "emoji_4", "emoji_6", "emoji_7", "emoji_5",
-        "emoji_8", "emoji_10", "emoji_11", "emoji_13","emoji_2"
+    //0
+    val emojiFashionListFantasy = listOf(
+        "emoji_65", "emoji_78", "emoji_74",
+        "emoji_75", "emoji_76", "emoji_71",
+        "emoji_70", "emoji_69", "emoji_72",
+        "emoji_73", "emoji_77", "emoji_79",
+        "emoji_66", "emoji_67", "emoji_68", "emoji_80"
     )
 
+    //1
     val emojiAnimListFantasy = listOf(
+
         "emoji_21", "emoji_24", "emoji_17", "emoji_18",
         "emoji_19", "emoji_20", "emoji_22", "emoji_23",
         "emoji_28", "emoji_29", "emoji_30", "emoji_31",
         "emoji_32","emoji_25", "emoji_26", "emoji_27"
     )
 
+    //2
     val emojiBasicListFantasy = listOf(
         "emoji_33", "emoji_34", "emoji_35", "emoji_36",
         "emoji_37", "emoji_38", "emoji_39", "emoji_40",
         "emoji_41", "emoji_42", "emoji_43", "emoji_44",
-        "emoji_45", "emoji_46", "emoji_47", "emoji_48"
-    )
+        "emoji_45", "emoji_46", "emoji_47", "emoji_48")
 
+
+
+    //3
     val emojiCuteListFantasy = listOf(
+
         "emoji_61",  "emoji_59","emoji_58", "emoji_63",
         "emoji_64", "emoji_60" , "emoji_57","emoji_49", "emoji_50",
         "emoji_51", "emoji_52", "emoji_53", "emoji_54",
-        "emoji_55", "emoji_56", "emoji_62"
-    )
+        "emoji_55", "emoji_56", "emoji_62")
 
-    val emojiFashionListFantasy = listOf(
-        "emoji_101", "emoji_102", "emoji_103",
-        "emoji_104", "emoji_105", "emoji_106",
-        "emoji_107", "emoji_108", "emoji_109",
-        "emoji_110", "emoji_111", "emoji_112",
 
-        "emoji_65", "emoji_78",   "emoji_74",
-        "emoji_75","emoji_76", "emoji_71",
-        "emoji_70", "emoji_69", "emoji_72",
-        "emoji_73", "emoji_77",  "emoji_79",
-        "emoji_66","emoji_67", "emoji_68","emoji_80"
-    )
 
+    //4
+    val emojiListCartoon = listOf(
+        "emoji_1", "emoji_15", "emoji_16", "emoji_14",
+        "emoji_12", "emoji_9", "emoji_3",
+        "emoji_4", "emoji_6", "emoji_7", "emoji_5",
+        "emoji_8", "emoji_10", "emoji_11", "emoji_13", "emoji_2")
+
+
+    //5
     val emojiComicListFantasy = listOf(
         "emoji_81", "emoji_82", "emoji_83", "emoji_84",
         "emoji_85", "emoji_86", "emoji_87", "emoji_88",
-        "emoji_89", "emoji_90", "emoji_91", "emoji_92"
+        "emoji_89", "emoji_90", "emoji_91", "emoji_92")
+
+
+    val trendy = listOf(
+        "trendy_1", "trendy_2", "trendy_3",
+        "trendy_4", "trendy_5", "trendy_6",
+        "trendy_7", "trendy_8", "trendy_9",
+        "trendy_10", "trendy_11", "trendy_12",
+        "trendy_13", "trendy_14", "trendy_15", "trendy_16",)
+
+
+    val toy = listOf(
+        "toy_1", "toy_2", "toy_3",
+        "toy_4", "toy_5", "toy_6",
+        "toy_7", "toy_8", "toy_9",
+        "toy_10", "toy_11", "toy_12",
+        "toy_13", "toy_14", "toy_15",
+        "toy_16", "toy_17", "toy_18", "toy_19",)
+
+    val emojiFace = listOf(
+        "emoji_face_1", "emoji_face_2", "emoji_face_3",
+        "emoji_face_4", "emoji_face_5", "emoji_face_6",
+        "emoji_face_7", "emoji_face_8", "emoji_face_9",
+        "emoji_face_10", "emoji_face_11", "emoji_face_12",
+        "emoji_face_13", "emoji_face_14", "emoji_face_15",
+        "emoji_face_16", "emoji_face_17", "emoji_face_18", "emoji_face_19",
+    )
+    val pet = listOf(
+        "cat_1", "cat_2", "cat_3",
+        "cat_4", "cat_5", "cat_6",
+        "cat_7", "cat_8", "cat_9",
+        "cat_10", "cat_11",
+        "pet_1", "pet_2", "pet_3",
+        "pet_4", "pet_5", "pet_6",
+        "pet_7", "pet_8", "pet_9",
+        "pet_10", "pet_11", "pet_12",)
+
+    val cute = listOf(
+
+        "cute_1", "cute_2", "cute_3",
+        "cute_4", "cute_5", "cute_6", "cute_7",
+        "cute_8", "cute_9", "cute_10", "cute_11",
+        "cute_12", "cute_13", "cute_14", "cute_15",
     )
 
 
     fun getTabTitlesEmoji(context: Context): List<String> {
         return listOf(
-            // context.getString(R.string.all),
-            context.getString(R.string.cat_6),
+            context.getString(R.string.trendy),
+            context.getString(R.string.toy),
+            context.getString(R.string.emoji_face),
+            context.getString(R.string.pet),
+            context.getString(R.string.cute),
+
             context.getString(R.string.cat_3),
             context.getString(R.string.cat_4),
             context.getString(R.string.cat_5),

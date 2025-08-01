@@ -28,6 +28,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.getOpenAppId
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
 import com.lowbyte.battery.animation.utils.LocaleHelper
+import com.lowbyte.battery.animation.utils.ServiceUtils.isEditing
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -225,6 +226,7 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
 
                             appOpenAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                                 override fun onAdDismissedFullScreenContent() {
+                                    activity.isEditing(false)
                                     appOpenAd = null
                                     isShowingAd = false
                                     AdStateController.isOpenAdShowing = false
@@ -233,6 +235,8 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
                                 }
 
                                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                                    activity.isEditing(false)
+
                                     Log.e("LOG_TAG", "Open ad failed: ${adError.message}")
                                     appOpenAd = null
                                     isShowingAd = false
@@ -246,9 +250,10 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
                                     AdStateController.isOpenAdShowing = true
                                 }
                             }
-
+                            activity.isEditing(true)
                             appOpenAd?.show(activity)
                         } catch (e: Exception) {
+                            activity.isEditing(false)
                             Log.e("LOG_TAG", "Error showing ad: ${e.localizedMessage}")
                             isShowingAd = false
                             AdStateController.isOpenAdShowing = false

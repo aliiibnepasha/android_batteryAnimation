@@ -84,7 +84,7 @@ class InteractiveLottieView @JvmOverloads constructor(
 
             // ✅ Correct usage: use saved or default
             lottie.translationX = if (finalX== 0.0.toFloat()) defaultCenterX else finalX
-            lottie.translationY = if (finalY== 0.0.toFloat()) defaultCenterX else finalY
+            lottie.translationY = if (finalY== 0.0.toFloat()) defaultCenterY else finalY
 
             Log.d("LottiePlacement", "Placed Lottie ID: $animationRes at X: $finalX, Y: $finalY")
 

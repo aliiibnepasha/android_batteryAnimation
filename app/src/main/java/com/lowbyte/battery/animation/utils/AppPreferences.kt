@@ -135,7 +135,7 @@ class AppPreferences private constructor(context: Context) {
         set(value) = sharedPreferences.edit { putInt(KEY_STATUS_MARGIN_RIGHT, value) }
 
     var statusBarBgColor: Int
-        get() = sharedPreferences.getInt(KEY_STATUS_BG_COLOR, Color.LTGRAY)
+        get() = sharedPreferences.getInt(KEY_STATUS_BG_COLOR, Color.WHITE)
         set(value) = sharedPreferences.edit { putInt(KEY_STATUS_BG_COLOR, value) }
 
     // For booleans (show/hide)

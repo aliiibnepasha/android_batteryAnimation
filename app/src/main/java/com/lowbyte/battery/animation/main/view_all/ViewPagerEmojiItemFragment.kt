@@ -19,13 +19,18 @@ import com.lowbyte.battery.animation.databinding.DialogGoProBinding
 import com.lowbyte.battery.animation.databinding.ItemViewPagerBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
+import com.lowbyte.battery.animation.utils.AnimationUtils.cute
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiAnimListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiBasicListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiComicListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
+import com.lowbyte.battery.animation.utils.AnimationUtils.emojiFace
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiFashionListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiListCartoon
 import com.lowbyte.battery.animation.utils.AnimationUtils.isRewardedEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.pet
+import com.lowbyte.battery.animation.utils.AnimationUtils.toy
+import com.lowbyte.battery.animation.utils.AnimationUtils.trendy
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -80,7 +85,7 @@ class ViewPagerEmojiItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-        RewardedAdManager.loadAd(requireActivity())
+       // RewardedAdManager.loadAd(requireActivity())
     }
 
     private fun setupRecyclerView() {
@@ -144,12 +149,18 @@ class ViewPagerEmojiItemFragment : Fragment() {
         }
 
         val emojiList = when (currentPos) {
-            0 -> emojiFashionListFantasy
-            1 -> emojiAnimListFantasy
-            2 -> emojiBasicListFantasy
-            3 -> emojiCuteListFantasy
-            4 -> emojiListCartoon
-            5 -> emojiComicListFantasy
+            0 -> trendy
+            1 -> toy
+            2 -> emojiFace
+            3 -> pet
+            4 -> cute
+
+            5 -> emojiFashionListFantasy
+            6 -> emojiAnimListFantasy
+            7 -> emojiBasicListFantasy
+            8 -> emojiCuteListFantasy
+            9 -> emojiListCartoon
+            10 -> emojiComicListFantasy
             else -> emptyList()
         }
 

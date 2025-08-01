@@ -16,12 +16,12 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.getRewardedId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isRewardedEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isValid
 import com.lowbyte.battery.animation.utils.AppPreferences
+import com.lowbyte.battery.animation.utils.ServiceUtils.isEditing
 
 object RewardedAdManager {
 
     private var rewardedAd: RewardedAd? = null
     private var isLoading = false
-    private var isRewardEarned = false
     private const val TAG = "RewardedAdManager"
 
     fun loadAd(context: Activity) {
@@ -62,7 +62,12 @@ object RewardedAdManager {
         if (!isInternetAvailable(activity)) return
 
         val isAdReady = rewardedAd != null
-        val dialogDuration = if (isAdReady) 1000L else 3000L
+        val dialogDuration = if (isAdReady){
+            1000L
+        } else{
+            loadAd(activity)
+            8000L
+        }
         if (activity.isValid()){
             AdLoadingDialogManager.show(activity, dialogDuration) {
                 if (rewardedAd != null && activity.isValid())  {
@@ -70,29 +75,29 @@ object RewardedAdManager {
                         override fun onAdShowedFullScreenContent() {
                             Log.d(TAG, "Ad shown")
                             AdStateController.isInterstitialShowing = true
-
                             onAdShown()
                         }
 
                         override fun onAdDismissedFullScreenContent() {
                             Log.d(TAG, "Ad dismissed")
                             AdStateController.isInterstitialShowing = false
-
                             rewardedAd = null
                             onAdDismissed()
-                            loadAd(activity) // preload next
+                          //  loadAd(activity) // preload next
+                            activity.isEditing(false)
                         }
 
                         override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                             Log.e(TAG, "Failed to show ad: ${adError.message}")
                             AdStateController.isInterstitialShowing = false
-
                             rewardedAd = null
                             loadAd(activity)
+                            activity.isEditing(false)
                         }
                     }
 
                     if (activity.isValid()){
+                        activity.isEditing(true)
                         rewardedAd?.show(activity) { rewardItem: RewardItem ->
                             Log.d(TAG, "User earned reward: ${rewardItem.amount} ${rewardItem.type}")
                             onRewardEarned()
@@ -100,9 +105,9 @@ object RewardedAdManager {
                     }
                 } else {
                     Log.w(TAG, "Rewarded ad not ready")
-                    if (activity.isValid()){
-                        loadAd(activity)
-                    }
+//                    if (activity.isValid()){
+//                        loadAd(activity)
+//                    }
                     AdStateController.isInterstitialShowing = false
 
                 }

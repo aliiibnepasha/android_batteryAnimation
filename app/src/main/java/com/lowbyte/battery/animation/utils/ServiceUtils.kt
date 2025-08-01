@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.content.Context.VIBRATOR_SERVICE
 import android.content.Context.WIFI_SERVICE
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Build
@@ -27,6 +28,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -169,6 +171,14 @@ object ServiceUtils {
 
      fun Context.dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density).toInt()
+    }
+
+
+    fun Context.isEditing(isEditing: Boolean){
+        val intent = Intent(BROADCAST_ACTION).apply {
+            putExtra("isEditing", isEditing)
+        }
+        sendBroadcast(intent)
     }
 
 }
