@@ -20,7 +20,7 @@
     <string name="intro_description_3">Personalize your screens with unique battery emojis, widgets and animations</string>
     <string name="menu_customize">Customization</string>
     <string name="menu_dynamic_island">Dynamic Island</string>
-    <string name="view_all">See All</string>
+    <string name="view_all"><u>See All</u></string>
     <string name="cat_emojis">Emojis</string>
     <string name="emoji">Emoji</string>
     <string name="cat_widgets">Widgets</string>

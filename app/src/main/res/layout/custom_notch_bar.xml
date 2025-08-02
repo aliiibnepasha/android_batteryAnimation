@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:minHeight="25dp"
     android:maxHeight="100dp"
+    android:elevation="3dp"
     android:background="@drawable/black_rounded_notch"
     android:paddingHorizontal="5dp">
 

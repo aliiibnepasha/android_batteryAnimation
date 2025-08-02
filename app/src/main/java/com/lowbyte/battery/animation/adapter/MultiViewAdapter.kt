@@ -1,9 +1,15 @@
 package com.lowbyte.battery.animation.adapter
 
+import android.graphics.Color
+import android.text.Html
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.MainItemRvBinding
 import com.lowbyte.battery.animation.databinding.MainItemTitleBinding
 import com.lowbyte.battery.animation.model.MultiViewItem
@@ -63,9 +69,15 @@ class MultiViewAdapter(
     inner class TitleViewHolder(private val binding: MainItemTitleBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: MultiViewItem.TitleItem, position: Int) {
             binding.textLeft.text = item.title
+          //  binding.textRight.text = Html.fromHtml(binding.root.context.getString(R.string.view_all))
             binding.textRight.setOnClickListener {
                 onChildViewAllClick.invoke(position)
             }
+            val whiteUnderlineText = SpannableString("See All").apply {
+                setSpan(UnderlineSpan(), 0, length, 0)
+                setSpan(ForegroundColorSpan(Color.WHITE), 0, length, 0)
+            }
+            binding.textRight.text = whiteUnderlineText
         }
     }
 

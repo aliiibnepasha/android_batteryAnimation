@@ -172,7 +172,6 @@ object AdManager {
                 interstitialAd = null
                 AdStateController.isInterstitialShowing = false
                 if (isFromActivity) onDismiss()
-
                 activity.isEditing(false)
             }
 

@@ -127,7 +127,7 @@ class NotchAccessibilityService : AccessibilityService() {
 
 
                         "android.net.wifi.WIFI_AP_STATE_CHANGED" -> {
-                            updateStatusBarAppearance("updateStatusBarAppearance Wifi AP Enabled",false)
+                            updateStatusBarAppearance("updateStatusBarA Wifi AP Enabled",false)
                         }
 
 
@@ -137,7 +137,6 @@ class NotchAccessibilityService : AccessibilityService() {
                             updateStatusBarAppearance("updateStatusBarAppearance Airplane Mode: $isAirplaneModeOn",false)
                             Log.d("Receiver", "Airplane Mode: ${if (isAirplaneModeOn) "ON" else "OFF"}")
                         }
-
 
                         /*.........*/
                         BROADCAST_ACTION -> {
@@ -149,9 +148,11 @@ class NotchAccessibilityService : AccessibilityService() {
                             val scale = intent.getFloatExtra("${resId}_scale", 1.0f)
                             val rotation = intent.getFloatExtra("${resId}_rotation", 0f)
                             val isEditing = intent.getBooleanExtra("isEditing", false)
-
                             updateStatusBarAppearance("updateStatusBarAppearance Custom UI update action",isEditing)
-                            updateNotificationNotch("updateStatusBarAppearance Custom UI update action")
+                            updateNotificationNotch(
+                                "updateStatusBarAppearance Custom UI update action",
+                                isEditing
+                            )
 
                             updateLottieOverlayVisibility(isEditing)
                             Log.d(
@@ -201,9 +202,6 @@ class NotchAccessibilityService : AccessibilityService() {
                                 }
                             }
                         }
-
-
-
 
                         Intent.ACTION_BATTERY_CHANGED -> {
                             updateStatusBarAppearance("updateStatusBarAppearance Charging",false)
@@ -352,7 +350,10 @@ class NotchAccessibilityService : AccessibilityService() {
                                         🎯 $launchIntentUri
                                          """.trimIndent()
                                     )
-                                    updateNotificationNotch("updateStatusBarAppearance Custom UI update action 2")
+                                    updateNotificationNotch(
+                                        "updateStatusBarAppearance Custom UI",
+                                        false
+                                    )
                                     updateNotchIcons(
                                         showNotification = "showNotification",
                                         label = "",
@@ -545,7 +546,7 @@ class NotchAccessibilityService : AccessibilityService() {
         binding.notchLabel.text = ""
 
         // Reset to default size and position
-        updateNotificationNotch("updateStatusBarAppearance Custom UI update action gg")
+        updateNotificationNotch("updateStatusBarAppearance Custom UI update action gg", false)
     }
 
     private fun createCustomStatusBar() {
@@ -566,7 +567,7 @@ class NotchAccessibilityService : AccessibilityService() {
         notificationNotchBinding = CustomNotchBarBinding.inflate(LayoutInflater.from(this))
 
         updateStatusBarAppearance("updateStatusBarAppearance Custom UI update action nn",false)
-        updateNotificationNotch("updateStatusBarAppearance Custom UI update action b")
+        updateNotificationNotch("updateStatusBarAppearance Custom UI update action b", false)
         setupGestures()
 
 
@@ -685,7 +686,7 @@ class NotchAccessibilityService : AccessibilityService() {
         resetNotchView(handeRunnable)
     }
 
-    private fun updateNotificationNotch(logi: String) {
+    private fun updateNotificationNotch(logi: String, isEditing: Boolean) {
         Log.d("servicesListenerCalling", "updateNotificationNotch: $logi")
 
         val binding = notificationNotchBinding ?: return
@@ -714,17 +715,20 @@ class NotchAccessibilityService : AccessibilityService() {
             x = notchX
             y = notchY
         }
+        val shouldAddView = preferences.isDynamicEnabled && !isEditing
 
-        if (!preferences.isDynamicEnabled && ::preferences.isInitialized) {
+        if (!shouldAddView && ::preferences.isInitialized) {
             if (binding.root.parent != null) {
                 windowManager?.removeView(binding.root)
             }
             return
         } else {
+
             if (binding.root.parent == null) {
                 windowManager?.addView(binding.root, notchParams)
-                Log.d("servicesListener", "Notch addView via broadcast")
+                Log.d("servicesListenerCalling", "Notch addView via broadcast $isEditing")
             }
+
         }
 
         windowManager?.let { wm ->
@@ -732,20 +736,18 @@ class NotchAccessibilityService : AccessibilityService() {
                 if (view.isAttachedToWindow) {
                     wm.updateViewLayout(view, notchParams)
                 } else {
-                    Log.w("animateStatusBarHeight", "View not attached to window.")
+                    Log.w("servicesListenerCalling", "View not attached to window.")
                 }
-            } ?: Log.e("animateStatusBarHeight", "statusBarBinding.root is null")
+            } ?: Log.e("servicesListenerCalling", "statusBarBinding.root is null")
         }
 
        // windowManager?.updateViewLayout(binding.root, notchParams)
 
-
-
-        Log.d("servicesListener", "Notch updateViewLayout via broadcast")
+        Log.d("servicesListenerCalling", "Notch updateViewLayout via broadcast")
     }
 
     private fun updateStatusBarAppearance(logi: String, isEditing: Boolean) {
-        Log.d("NotchServiceStatus", "updateStatusBarAppearance: $logi")
+        Log.d("servicesListenerCalling", "updateStatusBarAppearance: $logi")
 
         val binding = statusBarBinding ?: return
 
@@ -760,9 +762,12 @@ class NotchAccessibilityService : AccessibilityService() {
             if (isViewAttached) {
                 try {
                     windowManager?.removeView(binding.root)
-                    Log.d("NotchServiceStatus", "Status bar view removed. isEditing=$isEditing, isStatusBarEnabled=${preferences.isStatusBarEnabled}")
+                    Log.d(
+                        "servicesListenerCalling",
+                        "Status bar view removed. isEditing=$isEditing, isStatusBarEnabled=${preferences.isStatusBarEnabled}"
+                    )
                 } catch (e: Exception) {
-                    Log.e("NotchServiceStatus", "Failed to remove view", e)
+                    Log.e("servicesListenerCalling", "Failed to remove view", e)
                 }
             }
             return
@@ -770,16 +775,20 @@ class NotchAccessibilityService : AccessibilityService() {
             if (!isViewAttached) {
                 try {
                     windowManager?.addView(binding.root, layoutParams)
-                    Log.d("NotchServiceStatus", "Status bar view added")
+                    Log.d("servicesListenerCalling", "Status bar view added")
                 } catch (e: WindowManager.BadTokenException) {
-                    Log.e("NotchService", "WindowManager token invalid, can't add view", e)
+                    Log.e(
+                        "servicesListenerCalling",
+                        "WindowManager token invalid, can't add view",
+                        e
+                    )
                     return
                 } catch (e: Exception) {
-                    Log.e("NotchService", "Unexpected error while adding view", e)
+                    Log.e("servicesListenerCalling", "Unexpected error while adding view", e)
                     return
                 }
             } else {
-                Log.d("NotchServiceStatus", "Status bar view already attached")
+                Log.d("servicesListenerCalling", "Status bar view already attached")
             }
         }
 
@@ -876,7 +885,7 @@ class NotchAccessibilityService : AccessibilityService() {
             try {
                 windowManager?.removeView(notchBinding.root)
             } catch (e: Exception) {
-                Log.w("NotchView", "Already removed or not attached")
+                Log.w("servicesListenerCalling", "Already removed or not attached")
             }
         }
         Log.d("servicesListenerCalling", "bringNotchViewToFront: $logi")
@@ -903,7 +912,7 @@ class NotchAccessibilityService : AccessibilityService() {
         }
 
         windowManager?.addView(notchBinding.root, notchParams)
-        Log.d("NotchView", "NotchView brought to front")
+        Log.d("servicesListenerCalling", "NotchView brought to front")
     }
 
     @SuppressLint("ClickableViewAccessibility")
