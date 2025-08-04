@@ -25,6 +25,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyWidge
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyAnimEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
+import com.lowbyte.battery.animation.utils.ServiceUtils.isEditing
 
 class BatteryAnimationEditApplyActivity : BaseActivity() {
 
