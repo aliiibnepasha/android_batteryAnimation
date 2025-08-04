@@ -98,10 +98,12 @@ class NotchAccessibilityService : AccessibilityService() {
             updateReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
                     val action = intent?.action
-                    Log.d("servicesListener", "Received broadcast: $action")
+                    Log.d("servicesListener", "Receiver broadcast: $action")
                     when (action) {
                         BROADCAST_ACTION_DYNAMIC -> {
                             if (preferences.isDynamicEnabled && preferences.isStatusBarEnabled) {
+                                Log.d("servicesListener", "Receiver bringNotchViewToFront")
+
                                 bringNotchViewToFront("BROADCAST_ACTION_DYNAMIC bringNotchViewToFront")
                             }
                         }
@@ -140,7 +142,7 @@ class NotchAccessibilityService : AccessibilityService() {
 
                         /*.........*/
                         BROADCAST_ACTION -> {
-                            Log.d("servicesListener", "Custom UI update action")
+                            Log.d("servicesListener", "Receiver BROADCAST_ACTION")
 
                             val resId = intent.getIntExtra("resId", -1)
                             val x = intent.getFloatExtra("${resId}_x", -1f)
@@ -150,21 +152,17 @@ class NotchAccessibilityService : AccessibilityService() {
                             val isEditing = intent.getBooleanExtra("isEditing", false)
                             updateStatusBarAppearance("updateStatusBarAppearance Custom UI update action",isEditing)
                             updateNotificationNotch(
-                                "updateStatusBarAppearance Custom UI update action",
+                                "updateNotificationNotch with Editing b : $isEditing",
                                 isEditing
                             )
 
                             updateLottieOverlayVisibility(isEditing)
-                            Log.d(
-                                "positionWidget",
-                                " BROADCAST_ACTION /  $x    /  $y"
-                            )
+
                             overlayLottieCanvas?.let { canvas ->
                                 if (resId != -1) {
                                     if (!canvas.containsItem(resId)) {
                                         canvas.addLottieItem(resId)
                                     }
-
                                     // Get existing item position if x/y are invalid
                                     val existingItem = canvas.getItemByResId(resId)
                                     val currentX = existingItem?.view?.translationX ?: 0f
@@ -172,10 +170,8 @@ class NotchAccessibilityService : AccessibilityService() {
 
                                     val safeX = if (x.isNaN()) currentX else x
                                     val safeY = if (y.isNaN()) currentY else y
-                                    Log.d(
-                                        "positionWidget",
-                                        " updateLottieOverlayVisibility /  $safeX    /  $safeY"
-                                    )
+
+                                    Log.d("servicesListener", "Receiver overlayLottieCanvas")
 
                                     canvas.updateItemTransform(resId, safeX, safeY, scale, rotation)
                                 }
@@ -186,17 +182,21 @@ class NotchAccessibilityService : AccessibilityService() {
                                     if (!canvas.containsItem(resId)) {
                                         canvas.addLottieItem(resId)
                                     }
-                                    Log.d("positionWidget", " updateItemTransform /  $x    /  $y")
+                                    Log.d("servicesListener", "Receiver updateItemTransform")
                                     canvas.updateItemTransform(resId, x, y, scale, rotation)
                                 }
                             }
 
                         }
                         BROADCAST_ACTION_REMOVE->{
+                            Log.d("servicesListener", "Receiver BROADCAST_ACTION_REMOVE")
+
                             val resId = intent.getIntExtra("resId", -1)
                             overlayLottieCanvas?.let { canvas ->
                                 if (resId != -1) {
                                     if (canvas.containsItem(resId)) {
+                                        Log.d("servicesListener", "Receiver removeItemByResId")
+
                                         canvas.removeItemByResId(resId)
                                     }
                                 }
@@ -412,7 +412,7 @@ class NotchAccessibilityService : AccessibilityService() {
                     Log.d("servicesListener", "Registered receiver for pre-API 33")
                 }
             } catch (e: Exception) {
-                Log.e("servicesdd", "Failed to register receiver: ${e.message}")
+                Log.e("servicesListener", "Failed to register receiver: ${e.message}")
             }
         }
     }
@@ -425,10 +425,8 @@ class NotchAccessibilityService : AccessibilityService() {
         onActionClick: (isClickAllow: Boolean) -> Unit
     ) {
 
-        Log.d(
-            "servicesListener",
-            "action to be calling label: $label , showNotification: $showNotification"
-        )
+        Log.d("servicesListener", "updateNotchIcons")
+
 
         val binding = notificationNotchBinding ?: return
         // Enlarge notch
@@ -529,7 +527,7 @@ class NotchAccessibilityService : AccessibilityService() {
                 handlerNotification.postDelayed(resetNotchRunnable, 3800)
             }
         } catch (e: Exception) {
-            Log.e("NotchService", "View update failed: ${e.message}")
+            Log.d("servicesListener", "View update failed: ${e.message}")
         }
 
         // Schedule reset after 5 seconds
@@ -546,7 +544,7 @@ class NotchAccessibilityService : AccessibilityService() {
         binding.notchLabel.text = ""
 
         // Reset to default size and position
-        updateNotificationNotch("updateStatusBarAppearance Custom UI update action gg", false)
+        updateNotificationNotch("resetNotchView  $isFromNotification ", false)
     }
 
     private fun createCustomStatusBar() {
@@ -566,8 +564,8 @@ class NotchAccessibilityService : AccessibilityService() {
         notificationViewBinding = CustomNotificationBarBinding.inflate(LayoutInflater.from(this))
         notificationNotchBinding = CustomNotchBarBinding.inflate(LayoutInflater.from(this))
 
-        updateStatusBarAppearance("updateStatusBarAppearance Custom UI update action nn",false)
-        updateNotificationNotch("updateStatusBarAppearance Custom UI update action b", false)
+        updateStatusBarAppearance("updateStatusBarAppearance editing false direct createCustomStatusBar",false)
+        updateNotificationNotch("updateNotificationNotch editing false direct createCustomStatusBar", false)
         setupGestures()
 
 
@@ -577,16 +575,18 @@ class NotchAccessibilityService : AccessibilityService() {
             if (view?.parent == null) {
                 try {
                     windowManager?.addView(view, layoutParams)
-                    Log.d("NotchService", "Notch notch added")
+
+                    Log.d("servicesListener", "addView statusBarBinding")
+
                 } catch (e: WindowManager.BadTokenException) {
-                    Log.e("NotchService", "BadTokenException: ${e.message}")
+                    Log.e("servicesListener", "BadTokenException: ${e.message}")
                 } catch (e: IllegalStateException) {
-                    Log.e("NotchService", "IllegalStateException: ${e.message}")
+                    Log.e("servicesListener", "IllegalStateException: ${e.message}")
                 } catch (e: Exception) {
-                    Log.e("NotchService", "Unexpected error adding notification notch", e)
+                    Log.e("servicesListener", "Unexpected error adding notification notch", e)
                 }
             } else {
-                Log.w("StatusBar", "View already added. Skipping re-add.")
+                Log.w("servicesListener", "View already added. Skipping re-add.")
             }
 
         }
@@ -596,7 +596,7 @@ class NotchAccessibilityService : AccessibilityService() {
 
     private fun addLottieOverlayView() {
         if (overlayLottieCanvas != null && overlayLottieCanvas?.isAttachedToWindow == true) {
-            Log.d("LottieOverlay", "Already added, skipping...")
+            Log.d("servicesListener", "addLottieOverlayView Already added, skipping...")
             return
         }
 
@@ -619,9 +619,9 @@ class NotchAccessibilityService : AccessibilityService() {
 
         try {
             windowManager?.addView(overlayLottieCanvas, params)
-            Log.d("LottieOverlay", "Added to WindowManager")
+            Log.d("servicesListener", "Added to overlayLottieCanvas")
         } catch (e: Exception) {
-            Log.e("LottieOverlay", "Error adding view: ${e.message}")
+            Log.e("servicesListener", "Error adding view: ${e.message}")
         }
     }
     private fun removeLottieOverlayView() {
@@ -629,9 +629,9 @@ class NotchAccessibilityService : AccessibilityService() {
             if (view.isAttachedToWindow) {
                 try {
                     windowManager?.removeView(view)
-                    Log.d("LottieOverlay", "Removed from WindowManager")
+                    Log.d("servicesListener", "Removed from removeLottieOverlayView")
                 } catch (e: Exception) {
-                    Log.e("LottieOverlay", "Error removing view: ${e.message}")
+                    Log.e("servicesListener", "Error removing view: ${e.message}")
                 }
             }
         }
@@ -641,8 +641,7 @@ class NotchAccessibilityService : AccessibilityService() {
 
     private fun updateLottieOverlayVisibility(isEditing: Boolean) {
         val show = preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)?:false
-
-        Log.d("LottieOverlay", "Pref: $show | isEditing: $isEditing")
+        Log.d("servicesListener", "Pref: $show | isEditing: $isEditing")
 
         if (show && !isEditing) {
             addLottieOverlayView()
@@ -677,6 +676,7 @@ class NotchAccessibilityService : AccessibilityService() {
         }
 
         if (preferences.isDynamicEnabled) {
+            Log.d("servicesListener", "isDynamicEnabled addView notchParams")
 
             windowManager?.addView(view, notchParams)
         }
@@ -687,7 +687,7 @@ class NotchAccessibilityService : AccessibilityService() {
     }
 
     private fun updateNotificationNotch(logi: String, isEditing: Boolean) {
-        Log.d("servicesListenerCalling", "updateNotificationNotch: $logi")
+        Log.d("servicesListener", "updateNotificationNotch notchParams $logi / $isEditing")
 
         val binding = notificationNotchBinding ?: return
         val screenWidth = Resources.getSystem().displayMetrics.widthPixels
@@ -719,6 +719,8 @@ class NotchAccessibilityService : AccessibilityService() {
 
         if (!shouldAddView && ::preferences.isInitialized) {
             if (binding.root.parent != null) {
+                Log.d("servicesListener", "updateNotificationNotch Remove View notchParams $logi / $isEditing")
+
                 windowManager?.removeView(binding.root)
             }
             return
@@ -726,7 +728,7 @@ class NotchAccessibilityService : AccessibilityService() {
 
             if (binding.root.parent == null) {
                 windowManager?.addView(binding.root, notchParams)
-                Log.d("servicesListenerCalling", "Notch addView via broadcast $isEditing")
+                Log.d("servicesListener", "Notch addView via notchParams $logi /  $isEditing")
             }
 
         }
@@ -735,10 +737,12 @@ class NotchAccessibilityService : AccessibilityService() {
             binding?.root?.let { view ->
                 if (view.isAttachedToWindow) {
                     wm.updateViewLayout(view, notchParams)
+                    Log.w("servicesListener", "View updateViewLayout.")
+
                 } else {
-                    Log.w("servicesListenerCalling", "View not attached to window.")
+                    Log.w("servicesListener", "View not attached to window.")
                 }
-            } ?: Log.e("servicesListenerCalling", "statusBarBinding.root is null")
+            } ?: Log.e("servicesListener", "statusBarBinding.root is null")
         }
 
        // windowManager?.updateViewLayout(binding.root, notchParams)

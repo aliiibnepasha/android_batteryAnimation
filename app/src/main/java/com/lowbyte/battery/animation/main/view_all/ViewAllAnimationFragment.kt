@@ -47,7 +47,7 @@ class ViewAllAnimationFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
             }
-            preferences.statusLottieName = if (isChecked) "a_1" else ""
+            preferences.statusLottieName = if (isChecked) preferences.statusLottieName else ""
             requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
 
             // Log toggle event

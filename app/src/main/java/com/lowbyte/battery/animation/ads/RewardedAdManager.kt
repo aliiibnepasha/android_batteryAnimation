@@ -74,7 +74,7 @@ object RewardedAdManager {
                     showAdInternal(activity, onRewardEarned, onAdShown, onAdDismissed)
                 } else {
                     AdStateController.isInterstitialShowing = false
-                    activity.isEditing(false)
+                    activity.isEditing(isEditing = false, isAdShowing = false)
                 }
             }
 
@@ -91,7 +91,7 @@ object RewardedAdManager {
                     if (pendingShowRequest && activity.isValid()) {
                         AdLoadingDialogManager.dismiss()
                         AdStateController.isInterstitialShowing = false
-                        activity.isEditing(false)
+                        activity.isEditing(isEditing = false, isAdShowing = false)
                     }
                 }
             )
@@ -109,14 +109,14 @@ object RewardedAdManager {
                 Log.d(TAG, "Ad shown")
                 AdStateController.isInterstitialShowing = true
                 onAdShown()
-                activity.isEditing(true)
+                activity.isEditing(isEditing = true, isAdShowing = true)
             }
 
             override fun onAdDismissedFullScreenContent() {
                 Log.d(TAG, "Ad dismissed")
                 AdStateController.isInterstitialShowing = false
                 rewardedAd = null
-                activity.isEditing(false)
+                activity.isEditing(isEditing = false, isAdShowing = false)
                 onAdDismissed()
             }
 
@@ -125,18 +125,18 @@ object RewardedAdManager {
                 AdStateController.isInterstitialShowing = false
                 rewardedAd = null
                 loadAd(activity) // optional preload
-                activity.isEditing(false)
+                activity.isEditing(isEditing = false, isAdShowing = false)
             }
 
             override fun onAdImpression() {
-                activity.isEditing(true)
+                activity.isEditing(true, isAdShowing = true)
                 super.onAdImpression()
             }
         }
 
-        activity.isEditing(true)
+        activity.isEditing(true, isAdShowing = true)
         rewardedAd?.show(activity) { rewardItem: RewardItem ->
-            activity.isEditing(true)
+            activity.isEditing(isEditing = true, isAdShowing = true)
             Log.d(TAG, "User earned reward: ${rewardItem.amount} ${rewardItem.type}")
             onRewardEarned()
         }

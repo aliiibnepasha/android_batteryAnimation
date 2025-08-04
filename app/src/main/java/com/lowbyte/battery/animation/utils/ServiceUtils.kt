@@ -175,8 +175,9 @@ object ServiceUtils {
     }
 
 
-    fun Context.isEditing(isEditing: Boolean) {
+    fun Context.isEditing(isEditing: Boolean, isAdShowing: Boolean = false) {
 
+        if (isAdShowing) return
         val isEmojiEnabled = AppPreferences.getInstance(this).getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false) ?: false
         val isStatusEnabled = AppPreferences.getInstance(this).isStatusBarEnabled
         val isDynamicEnabled = AppPreferences.getInstance(this).isDynamicEnabled

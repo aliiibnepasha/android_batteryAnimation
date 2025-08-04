@@ -171,7 +171,7 @@ object AdManager {
             Log.d(TAG, "Interstitial ad not ready — fallback and reload")
             onDismiss()
             loadInterstitialAd(activity, getFullscreenId(), remoteConfig)
-            activity.isEditing(false)
+            activity.isEditing(isEditing = false, isAdShowing = false,)
 
             return
         }
@@ -184,7 +184,7 @@ object AdManager {
                 interstitialAd = null
                 AdStateController.isInterstitialShowing = false
                 if (isFromActivity) onDismiss()
-                activity.isEditing(false)
+                activity.isEditing(isEditing = false, isAdShowing = false)
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
@@ -193,18 +193,18 @@ object AdManager {
                 interstitialAd = null
                 AdStateController.isInterstitialShowing = false
                 onDismiss()
-                activity.isEditing(false)
+                activity.isEditing(false,false)
 
             }
 
             override fun onAdImpression() {
-                activity.isEditing(true)
+                activity.isEditing(isEditing = true, isAdShowing = true)
                 Log.d(TAG, "Interstitial ad impression recorded")
                 if (!isFromActivity) onDismiss()
             }
 
             override fun onAdShowedFullScreenContent() {
-                activity.isEditing(true)
+                activity.isEditing(isEditing = true, isAdShowing = true)
                 Log.d(TAG, "Interstitial ad is now visible")
             }
         }
@@ -212,7 +212,7 @@ object AdManager {
         try {
             Log.d(TAG, "Showing interstitial ad")
             if (activity.isValid()){
-                activity.isEditing(true)
+                activity.isEditing(isEditing = true, isAdShowing = true)
                 interstitialAd?.show(activity)
             }
         } catch (e: Exception) {

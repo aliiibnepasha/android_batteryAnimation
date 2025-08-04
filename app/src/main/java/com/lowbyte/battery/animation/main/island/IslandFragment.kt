@@ -31,6 +31,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenDynamicDon
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeDynamicEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
+import com.lowbyte.battery.animation.utils.ServiceUtils.isEditing
 
 class IslandFragment : Fragment() {
 
@@ -394,7 +395,9 @@ class IslandFragment : Fragment() {
                     false
                 ) {
                     binding.switchEnableDynamic.isChecked = preferences.isDynamicEnabled
-                    requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+
+                    requireContext().isEditing(true)
+                  //  requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
                     Log.e("Ads", "FullScreenTobeShoe")
                 }
                 dialogNotch.dismiss()
