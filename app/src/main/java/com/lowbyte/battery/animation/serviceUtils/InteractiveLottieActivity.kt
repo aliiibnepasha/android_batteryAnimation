@@ -54,17 +54,9 @@ class InteractiveLottieActivity : BaseActivity() {
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                         or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 )
-        AdManager.loadInterstitialAd(this, getFullscreenHome2Id(), isFullscreenStatusEnabled)
-
 
         binding.ibBackButton.setOnClickListener {
-            AdManager.showInterstitialAd(
-                this@InteractiveLottieActivity,
-                isFullscreenStatusEnabled,
-                true
-            ) {
-                finish()
-            }
+            finish()
         }
 
 
@@ -94,13 +86,8 @@ class InteractiveLottieActivity : BaseActivity() {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AdManager.showInterstitialAd(
-                    this@InteractiveLottieActivity,
-                    isFullscreenStatusEnabled,
-                    true
-                ) {
-                    finish()
-                }
+                finish()
+
             }
         }
         onBackPressedDispatcher.addCallback(this, callback)

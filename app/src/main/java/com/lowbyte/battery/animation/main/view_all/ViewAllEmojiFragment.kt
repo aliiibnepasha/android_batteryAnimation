@@ -16,12 +16,15 @@ import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
 import com.lowbyte.battery.animation.activity.StatusBarIconSettingsActivity
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.FragmentViewAllEmojiBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.ui.InteractiveLottieActivity
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
+import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenHome2Id
 import com.lowbyte.battery.animation.utils.AnimationUtils.getTabTitlesEmoji
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenStatusEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -36,6 +39,8 @@ class ViewAllEmojiFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentViewAllEmojiBinding.inflate(inflater, container, false)
+        AdManager.loadInterstitialAd(requireActivity(),getFullscreenHome2Id(),isFullscreenStatusEnabled)
+
         preferences = AppPreferences.getInstance(requireContext())
         sheet = AccessibilityPermissionBottomSheet(
             onAllowClicked = {
@@ -79,7 +84,14 @@ class ViewAllEmojiFragment : Fragment() {
                 requireActivity(),
                 "InteractiveLottieAct"
             )
-            startActivity(Intent(requireContext(), InteractiveLottieActivity::class.java))
+            AdManager.showInterstitialAd(
+                requireActivity(),
+                isFullscreenStatusEnabled,
+                true
+            ) {
+                startActivity(Intent(requireContext(), InteractiveLottieActivity::class.java))
+
+            }
         }
 
 

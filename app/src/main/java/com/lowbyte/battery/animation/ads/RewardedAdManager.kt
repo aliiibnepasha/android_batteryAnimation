@@ -127,10 +127,16 @@ object RewardedAdManager {
                 loadAd(activity) // optional preload
                 activity.isEditing(false)
             }
+
+            override fun onAdImpression() {
+                activity.isEditing(true)
+                super.onAdImpression()
+            }
         }
 
         activity.isEditing(true)
         rewardedAd?.show(activity) { rewardItem: RewardItem ->
+            activity.isEditing(true)
             Log.d(TAG, "User earned reward: ${rewardItem.amount} ${rewardItem.type}")
             onRewardEarned()
         }

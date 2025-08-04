@@ -13,14 +13,14 @@ plugins {
 
 android {
     namespace = "com.lowbyte.battery.animation"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "emojibattery.widget.statusbar"
         minSdk = 24
         targetSdk = 35
-        versionCode = 20
-        versionName = "3.0"
+        versionCode = 21
+        versionName = "3.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

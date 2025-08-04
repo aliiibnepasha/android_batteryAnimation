@@ -29,6 +29,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
+import com.lowbyte.battery.animation.utils.AppPreferences.Companion.KEY_SHOW_LOTTIE_TOP_VIEW
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -174,11 +175,15 @@ object ServiceUtils {
     }
 
 
-    fun Context.isEditing(isEditing: Boolean){
-        val intent = Intent(BROADCAST_ACTION).apply {
-            putExtra("isEditing", isEditing)
+    fun Context.isEditing(isEditing: Boolean) {
+
+
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.VANILLA_ICE_CREAM ) { // Android 15
+            val intent = Intent(BROADCAST_ACTION).apply {
+                putExtra("isEditing", isEditing)
+            }
+            sendBroadcast(intent)
         }
-        sendBroadcast(intent)
     }
 
 }
