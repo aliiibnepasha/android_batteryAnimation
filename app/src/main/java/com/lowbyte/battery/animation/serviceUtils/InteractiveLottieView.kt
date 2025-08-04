@@ -17,6 +17,7 @@ import com.lowbyte.battery.animation.serviceUtils.OnItemInteractionListener
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_REMOVE
 import com.lowbyte.battery.animation.utils.AppPreferences
+import kotlin.math.max
 
 class InteractiveLottieView @JvmOverloads constructor(
     context: Context,
@@ -376,8 +377,8 @@ class InteractiveLottieView @JvmOverloads constructor(
                     val scaledWidth = view.width * view.scaleX
                     val scaledHeight = view.height * view.scaleY
 
-                    val newX = (view.translationX + dx).coerceIn(0f, width - scaledWidth)
-                    val newY = (view.translationY + dy).coerceIn(0f, height - scaledHeight)
+                    val newX = (view.translationX + dx).coerceIn(0f, max(0f, width - scaledWidth))
+                    val newY = (view.translationY + dy).coerceIn(0f, max(0f, height - scaledHeight))
 
                     Log.d("onTouchEvent", " if view translate  $newX / $newY")
 
