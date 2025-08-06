@@ -31,7 +31,8 @@ class AllLottieAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(rawResId: Int) {
-            binding.lottieView.setAnimation(rawResId)
+          //  binding.lottieView.setAnimation(rawResId)
+            binding.lottieView.setAnimationFromUrl("https://abcwebservices.com/uploads/lottie_1.json")
             binding.lottieView.repeatCount = LottieDrawable.INFINITE
             binding.lottieView.playAnimation()
             binding.root.setOnClickListener {

@@ -16,8 +16,6 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.lowbyte.battery.animation.utils.AdLoadingDialogManager
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenHome2Id
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
-import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenSplashId
-import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenSplashEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isValid
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
