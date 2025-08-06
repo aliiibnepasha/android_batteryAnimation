@@ -217,9 +217,12 @@ object AdManager {
             Log.e(TAG, "Exception while showing interstitial ad: ${e.localizedMessage}")
             interstitialAd = null
             AdStateController.isInterstitialShowing = false
+
             onDismiss()
         }
     }
+
+
 
     private fun isInternetAvailable(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -227,4 +230,9 @@ object AdManager {
         val capabilities = cm.getNetworkCapabilities(network) ?: return false
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
+
+
+
+
+
 }
