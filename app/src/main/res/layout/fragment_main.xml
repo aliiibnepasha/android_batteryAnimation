@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@drawable/bg_home_screen"
     tools:context=".main.MainFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,7 +21,6 @@
             android:id="@+id/ibBackButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/black"
             android:contentDescription="@string/app_name"
             android:padding="18dp"
             android:visibility="visible"
@@ -35,7 +34,6 @@
             android:id="@+id/ibHowToUseButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/black"
             android:contentDescription="@string/app_name"
             android:padding="20dp"
             android:src="@drawable/ic_info"
@@ -53,7 +51,7 @@
             android:contentDescription="@string/app_name"
             android:gravity="center"
             android:text="@string/title_home"
-            android:textColor="@color/white"
+            android:textColor="@color/titleColor"
             android:textSize="17sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -114,26 +112,170 @@
         app:layout_constraintRight_toRightOf="parent"
         app:navGraph="@navigation/nav_graph" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+    <!--        android:id="@+id/bottom_navigation"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:itemIconSize="20dp"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/nav_host_fragment"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/bannerAdHome"-->
+    <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--        app:layout_constraintRight_toRightOf="parent"-->
+    <!--        app:menu="@menu/bottom_nav_menu"-->
+    <!--        app:itemIconTint="@color/bottom_nav_item_color"-->
+    <!--        app:itemTextColor="@color/bottom_nav_item_color"-->
+    <!--        app:itemBackground="@android:color/transparent" />-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/black"
+        android:layout_height="70dp"
+        android:layout_marginBottom="10dp"
+        android:elevation="3dp"
+        android:background="@drawable/bg_bottom_menu"
         app:layout_constraintTop_toBottomOf="@+id/nav_host_fragment"
         app:layout_constraintBottom_toTopOf="@+id/bannerAdHome"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_nav_menu"
-        app:itemIconTint="@color/bottom_nav_item_color"
-        app:itemTextColor="@color/bottom_nav_item_color"
-        app:itemBackground="@android:color/transparent" />
+        app:layout_constraintWidth_percent="0.95">
+
+        <!-- Home -->
+        <LinearLayout
+            android:id="@+id/menuHome"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/menuCustomization"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.20">
+
+            <ImageView
+                android:id="@+id/iconHome"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/action_home_action"
+                android:src="@drawable/ic_home_unselected" />
+
+            <TextView
+                android:id="@+id/textHome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/title_home"
+                android:textColor="@color/bottom_nav_unselected"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Customization -->
+        <LinearLayout
+            android:id="@+id/menuCustomization"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/menuIsland"
+            app:layout_constraintStart_toEndOf="@id/menuHome"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.25">
+
+            <ImageView
+                android:id="@+id/iconCustomization"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_customization_unselected" />
+
+            <TextView
+                android:id="@+id/textCustomization"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/menu_customize"
+                android:textColor="@color/bottom_nav_unselected"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Dynamic Island -->
+        <LinearLayout
+            android:id="@+id/menuIsland"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/menuTemplates"
+            app:layout_constraintStart_toEndOf="@id/menuCustomization"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.30">
+
+            <ImageView
+                android:id="@+id/iconIsland"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_island_unselected" />
+
+            <TextView
+                android:id="@+id/textIsland"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/menu_dynamic_island"
+                android:textColor="@color/bottom_nav_unselected"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Templates -->
+        <LinearLayout
+            android:id="@+id/menuTemplates"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingHorizontal="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/menuIsland"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.25">
+
+            <ImageView
+                android:id="@+id/iconTemplates"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_templates_unselected" />
+
+            <TextView
+                android:id="@+id/textTemplates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Templates"
+                android:textColor="@color/bottom_nav_unselected"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <LinearLayout
         android:id="@+id/bannerAdHome"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:orientation="vertical"
-        android:background="@color/bg_statusbar_menu"
         android:visibility="visible"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"

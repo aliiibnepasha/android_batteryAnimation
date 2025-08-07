@@ -17,8 +17,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
 import com.lowbyte.battery.animation.MyApplication
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.HowToUseActivity
@@ -27,18 +27,22 @@ import com.lowbyte.battery.animation.activity.SettingsActivity
 import com.lowbyte.battery.animation.ads.BannerAdHelper
 import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.FragmentMainBinding
+import com.lowbyte.battery.animation.model.NavItem
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeHomeId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeHomeEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
+import kotlin.collections.contains
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
     private lateinit var binding: FragmentMainBinding
     private var doubleBackPressedOnce = false
     private lateinit var preferences: AppPreferences
+    private lateinit var navController: NavController
+    private lateinit var navHostFragment: NavHostFragment
 
     private var nativeHelper: NativeBannerSizeHelper? = null
 
@@ -51,75 +55,77 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         FirebaseAnalyticsUtils.logScreenView(this, "main_screen")
         MyApplication.enableOpenAd(true)
 
-        val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-        binding.bottomNavigation.setupWithNavController(navController)
+         navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+         navController = navHostFragment.navController
+        setupCustomBottomNav()
 
-        binding.bottomNavigation.setOnItemSelectedListener {
-            Log.d("navCustom", "Selected: ${it.itemId}")
-            when (it.itemId) {
-                R.id.navigation_customize -> {
-                    Log.d("navCustom", "Customize Reselected")
-                    val current = navController.currentDestination?.id
-                    if (current in listOf(R.id.navigation_view_all_emoji, R.id.navigation_view_all_widget, R.id.navigation_view_all_animation)) {
-                        navController.navigateUp()
-                        Log.d("navCustom", "Customize Reselected")
-                        FirebaseAnalyticsUtils.logClickEvent(requireContext(), "main_to_customize", null)
+        //  binding.bottomNavigation.setupWithNavController(navController)
 
-                        navHostFragment.navController.navigate(R.id.navigation_customize)
-
-                    } else {
-                        FirebaseAnalyticsUtils.logClickEvent(requireContext(), "main_to_customize", null)
-
-                        Log.d("navCustom", "Customize Reselected r")
-                        navHostFragment.navController.navigate(R.id.navigation_customize)
-
-                    }
-                }
-
-                R.id.navigation_home -> {
-                    Log.d("navCustom", "Customize Reselected")
-                    val current = navController.currentDestination?.id
-                    if (current in listOf(
-                            R.id.navigation_view_all_emoji,
-                            R.id.navigation_view_all_widget,
-                            R.id.navigation_view_all_animation
-                        )
-                    ) {
-                        navController.navigateUp()
-                        Log.d("navCustom", "Customize Reselected")
-                        navHostFragment.navController.navigate(R.id.navigation_home)
-
-                    } else {
-                        Log.d("navCustom", "Customize Reselected r")
-                        navHostFragment.navController.navigate(R.id.navigation_home)
-
-                    }
-                }
-                 R.id.navigation_island -> {
-                     Log.d("navCustom", "Customize Reselected")
-                     val current = navController.currentDestination?.id
-                     if (current in listOf(R.id.navigation_view_all_emoji, R.id.navigation_view_all_widget, R.id.navigation_view_all_animation)) {
-                         navController.navigateUp()
-                         Log.d("navCustom", "Customize Reselected")
-                         navHostFragment.navController.navigate(R.id.navigation_island)
-
-                     } else {
-                         Log.d("navCustom", "Customize Reselected r")
-                         navHostFragment.navController.navigate(R.id.navigation_island)
-
-                     }
-                }
-
-
-
-
-
-
-
-            }
-            false // let navController handle navigation
-        }
+//        binding.bottomNavigation.setOnItemSelectedListener {
+//            Log.d("navCustom", "Selected: ${it.itemId}")
+//            when (it.itemId) {
+//                R.id.navigation_customize -> {
+//                    Log.d("navCustom", "Customize Reselected")
+//                    val current = navController.currentDestination?.id
+//                    if (current in listOf(R.id.navigation_view_all_emoji, R.id.navigation_view_all_widget, R.id.navigation_view_all_animation)) {
+//                        navController.navigateUp()
+//                        Log.d("navCustom", "Customize Reselected")
+//                        FirebaseAnalyticsUtils.logClickEvent(requireContext(), "main_to_customize", null)
+//
+//                        navHostFragment.navController.navigate(R.id.navigation_customize)
+//
+//                    } else {
+//                        FirebaseAnalyticsUtils.logClickEvent(requireContext(), "main_to_customize", null)
+//
+//                        Log.d("navCustom", "Customize Reselected r")
+//                        navHostFragment.navController.navigate(R.id.navigation_customize)
+//
+//                    }
+//                }
+//
+//                R.id.navigation_home -> {
+//                    Log.d("navCustom", "Customize Reselected")
+//                    val current = navController.currentDestination?.id
+//                    if (current in listOf(
+//                            R.id.navigation_view_all_emoji,
+//                            R.id.navigation_view_all_widget,
+//                            R.id.navigation_view_all_animation
+//                        )
+//                    ) {
+//                        navController.navigateUp()
+//                        Log.d("navCustom", "Customize Reselected")
+//                        navHostFragment.navController.navigate(R.id.navigation_home)
+//
+//                    } else {
+//                        Log.d("navCustom", "Customize Reselected r")
+//                        navHostFragment.navController.navigate(R.id.navigation_home)
+//
+//                    }
+//                }
+//                 R.id.navigation_island -> {
+//                     Log.d("navCustom", "Customize Reselected")
+//                     val current = navController.currentDestination?.id
+//                     if (current in listOf(R.id.navigation_view_all_emoji, R.id.navigation_view_all_widget, R.id.navigation_view_all_animation)) {
+//                         navController.navigateUp()
+//                         Log.d("navCustom", "Customize Reselected")
+//                         navHostFragment.navController.navigate(R.id.navigation_island)
+//
+//                     } else {
+//                         Log.d("navCustom", "Customize Reselected r")
+//                         navHostFragment.navController.navigate(R.id.navigation_island)
+//
+//                     }
+//                }
+//
+//
+//
+//
+//
+//
+//
+//            }
+//            false // let navController handle navigation
+//        }
 
         loadBannerAd()
 
@@ -185,6 +191,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val screenName = when (destination.id) {
                 R.id.navigation_home -> {
+                    setupCustomBottomNav(0,true)
                     binding.tvTitle.text = getString(R.string.title_home)
                     binding.ibBackButton.visibility = View.INVISIBLE
                     binding.ibHowToUseButton.visibility = View.VISIBLE
@@ -193,50 +200,48 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     "home_screen"
                 }
                 R.id.navigation_customize -> {
+                    setupCustomBottomNav(1,true)
                     binding.tvTitle.text = getString(R.string.menu_customize)
                     binding.ibBackButton.visibility = View.INVISIBLE
                     binding.ibHowToUseButton.visibility = View.INVISIBLE
                     binding.ifvPro.visibility = View.INVISIBLE
                     binding.ifvInfoRight.visibility = View.INVISIBLE
-
                     "customize_screen"
                 }
                 R.id.navigation_island -> {
+                    setupCustomBottomNav(2,true)
                     binding.tvTitle.text = getString(R.string.menu_dynamic_island)
                     binding.ibBackButton.visibility = View.INVISIBLE
                     binding.ibHowToUseButton.visibility = View.INVISIBLE
                     binding.ifvPro.visibility = View.INVISIBLE
                     binding.ifvInfoRight.visibility = View.VISIBLE
-
                     "island_screen"
                 }
                 R.id.navigation_view_all_emoji -> {
+                    setupCustomBottomNav(0,true)
                     binding.tvTitle.text = getString(R.string.view_all_battery_emoji)
                     binding.ibBackButton.visibility = View.VISIBLE
                     binding.ibHowToUseButton.visibility = View.INVISIBLE
                     binding.ifvPro.visibility = View.INVISIBLE
                     binding.ifvInfoRight.visibility = View.INVISIBLE
-
                     "view_all_emoji_screen"
                 }
                 R.id.navigation_view_all_widget -> {
+                    setupCustomBottomNav(0,true)
                     binding.tvTitle.text = getString(R.string.view_all_battery_widget)
                     binding.ibBackButton.visibility = View.VISIBLE
                     binding.ibHowToUseButton.visibility = View.INVISIBLE
                     binding.ifvPro.visibility = View.INVISIBLE
                     binding.ifvInfoRight.visibility = View.INVISIBLE
-
-
                     "view_all_widget_screen"
                 }
                 R.id.navigation_view_all_animation -> {
+                    setupCustomBottomNav(0,true)
                     binding.tvTitle.text = getString(R.string.view_all_battery_animation)
                     binding.ibBackButton.visibility = View.VISIBLE
                     binding.ibHowToUseButton.visibility = View.INVISIBLE
                     binding.ifvPro.visibility = View.INVISIBLE
                     binding.ifvInfoRight.visibility = View.INVISIBLE
-
-
                     "view_all_animation_screen"
                 }
                 else -> null
@@ -356,6 +361,138 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             binding.bannerAdHome.visibility = View.GONE
         }
 
+    }
+
+    private fun setupCustomBottomNav(index: Int = 0, isForSelection: Boolean = false) {
+        val items = listOf(
+            NavItem(
+                binding.iconHome,
+                binding.textHome,
+                R.drawable.ic_home_selected,
+                R.drawable.ic_home_unselected
+            ),
+            NavItem(
+                binding.iconCustomization,
+                binding.textCustomization,
+                R.drawable.ic_customization_selected,
+                R.drawable.ic_customization_unselected
+            ),
+            NavItem(
+                binding.iconIsland,
+                binding.textIsland,
+                R.drawable.ic_island_selected,
+                R.drawable.ic_island_unselected
+            ),
+            NavItem(
+                binding.iconTemplates,
+                binding.textTemplates,
+                R.drawable.ic_templates_selected,
+                R.drawable.ic_templates_unselected
+            )
+        )
+
+        val containerIds = listOf(
+            binding.menuHome,
+            binding.menuCustomization,
+            binding.menuIsland,
+            binding.menuTemplates
+        )
+
+        fun setSelected(index: Int) {
+            for (i in items.indices) {
+                val item = items[i]
+                if (i == index) {
+                    item.icon.setImageResource(item.selectedIcon)
+                    item.text.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.bottom_nav_selected
+                        )
+                    )
+                } else {
+                    item.icon.setImageResource(item.unselectedIcon)
+                    item.text.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.bottom_nav_unselected
+                        )
+                    )
+                }
+            }
+        }
+
+        if (!isForSelection){
+            containerIds.forEachIndexed { index, container ->
+                container.setOnClickListener {
+                    setSelected(index)
+                    when (index) {
+                        0 -> navigateTo("home")
+                        1 -> navigateTo("customization")
+                        2 -> navigateTo("island")
+                        3 -> navigateTo("templates")
+                    }
+                }
+            }
+
+            // Set initial selection
+            setSelected(0)
+        }else{
+            setSelected(index)
+        }
+    }
+
+    private fun navigateTo(page: String) {
+        when (page) {
+            "customization" -> {
+                Log.d("navCustom", "Customize Reselected")
+                val current = navController.currentDestination?.id
+                if (current in listOf(R.id.navigation_view_all_emoji, R.id.navigation_view_all_widget, R.id.navigation_view_all_animation)) {
+                    navController.navigateUp()
+                    Log.d("navCustom", "Customize Reselected")
+                    FirebaseAnalyticsUtils.logClickEvent(requireContext(), "main_to_customize", null)
+                    navHostFragment.navController.navigate(R.id.navigation_customize)
+
+                } else {
+                    FirebaseAnalyticsUtils.logClickEvent(requireContext(), "main_to_customize", null)
+                    Log.d("navCustom", "Customize Reselected r")
+                    navHostFragment.navController.navigate(R.id.navigation_customize)
+                }
+            }
+
+            "home" -> {
+                Log.d("navCustom", "Customize Reselected")
+                val current = navController.currentDestination?.id
+                if (current in listOf(
+                        R.id.navigation_view_all_emoji,
+                        R.id.navigation_view_all_widget,
+                        R.id.navigation_view_all_animation
+                    )
+                ) {
+                    navController.navigateUp()
+                    Log.d("navCustom", "Customize Reselected")
+                    navHostFragment.navController.navigate(R.id.navigation_home)
+
+                } else {
+                    Log.d("navCustom", "Customize Reselected r")
+                    navHostFragment.navController.navigate(R.id.navigation_home)
+
+                }
+            }
+            "island" -> {
+                Log.d("navCustom", "Customize Reselected")
+                val current = navController.currentDestination?.id
+                if (current in listOf(R.id.navigation_view_all_emoji, R.id.navigation_view_all_widget, R.id.navigation_view_all_animation)) {
+                    navController.navigateUp()
+                    Log.d("navCustom", "Customize Reselected")
+                    navHostFragment.navController.navigate(R.id.navigation_island)
+
+                } else {
+                    Log.d("navCustom", "Customize Reselected r")
+                    navHostFragment.navController.navigate(R.id.navigation_island)
+
+                }
+            }
+        }
     }
 
     override fun onResume() {

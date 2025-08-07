@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@drawable/bg_other_screen"
     tools:context=".activity.EmojiEditApplyActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +22,6 @@
             android:id="@+id/ibBackButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/black"
             android:contentDescription="@string/app_name"
             android:padding="18dp"
             android:src="@drawable/ic_arrow_left"

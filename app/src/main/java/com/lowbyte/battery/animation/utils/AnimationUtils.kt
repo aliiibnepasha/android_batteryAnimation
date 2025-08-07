@@ -16,33 +16,33 @@ import com.lowbyte.battery.animation.model.Language
 object AnimationUtils {
 
     var finishingLang = false
-    var remoteJsonKey = "ads_config_v17"
+    var remoteJsonKey = "ads_config_v17_ui"
 
 
 
-    var  isNativeSplashEnabled = true //
-    var  isBannerHomeEnabled = true //
+    var  isNativeSplashEnabled = false //
+    var  isBannerHomeEnabled = false //
 
-    var  isBannerPermissionSettings = true //
-    var  isNativeHomeEnabled = true //
-    var  isFullscreenSplashEnabled = true //
-    var  isRewardedEnabled = true //
-    var  isFullscreenStatusEnabled = true //
-    var  isFullscreenDynamicDoneEnabled = true //
-    var  isFullscreenGestureEnabled = true //
-    var  isFullscreenApplyEmojiEnabled = true //
-    var  isFullscreenApplyWidgetEnabled = true//
-    var  isFullscreenApplyAnimEnabled = true//
-    var  isNativeLangFirstEnabled = true  //
-    var  isNativeLangSecondEnabled = true //
-    var  isNativeIntroEnabled = true //
-    var  isNativeApplyEmojiEnabled = true //
-    var  isNativeApplyWidgetEnabled = true//
-    var  isNativeApplyAnimEnabled = true//
-    var  isNativeStatusEnabled = true //
+    var  isBannerPermissionSettings = false //
+    var  isNativeHomeEnabled = false //
+    var  isFullscreenSplashEnabled = false //
+    var  isRewardedEnabled = false //
+    var  isFullscreenStatusEnabled = false //
+    var  isFullscreenDynamicDoneEnabled = false //
+    var  isFullscreenGestureEnabled = false //
+    var  isFullscreenApplyEmojiEnabled = false //
+    var  isFullscreenApplyWidgetEnabled = false//
+    var  isFullscreenApplyAnimEnabled = false//
+    var  isNativeLangFirstEnabled = false  //
+    var  isNativeLangSecondEnabled = false //
+    var  isNativeIntroEnabled = false //
+    var  isNativeApplyEmojiEnabled = false //
+    var  isNativeApplyWidgetEnabled = false//
+    var  isNativeApplyAnimEnabled = false//
+    var  isNativeStatusEnabled = false //
 
-    var  isNativeDynamicEnabled = true //
-    var  isNativeGestureEnabled = true
+    var  isNativeDynamicEnabled = false //
+    var  isNativeGestureEnabled = false
 
 
 

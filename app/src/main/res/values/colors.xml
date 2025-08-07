@@ -13,4 +13,13 @@
     <color name="bg_statusbar_menu">#101010</color>
     <color name="bg_blue_pro">#28B6F4</color>
     <color name="text_color_pro">#FFCC29</color>
+    <color name="bottom_nav_selected">#B54CF4</color> <!-- your selected color -->
+    <color name="bottom_nav_unselected">#6B6B6B</color> <!-- your unselected color -->
+
+    <color name="titleColor">#1F1F1F</color>
+
+
+
+
+
 </resources>

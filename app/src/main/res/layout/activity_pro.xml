@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:background="@color/bg_blue_pro"
+    android:background="@drawable/bg_other_screen"
     android:fitsSystemWindows="false">
 
     <androidx.constraintlayout.utils.widget.ImageFilterView
@@ -184,7 +184,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/rounded_top_corners"
         android:paddingVertical="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -242,8 +242,7 @@
     <string name="emoji_face">Emoji Face</string>
     <string name="pet">Pet</string>
     <string name="cute">Cute</string>
-
-
+    <string name="menu_template">Template</string>
 
 
 </resources>

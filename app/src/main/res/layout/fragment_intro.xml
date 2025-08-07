@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/black">
+    android:background="@drawable/bg_home_screen"
+    >
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"

@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <defaultsMap>
     <entry>
-        <key>ads_config_v17</key>
+        <key>ads_config_v17_ui</key>
         <value>
             {
-            "Rewarded_enabled": true,
-            "FullscreenSplash_enabled": true,
+            "Rewarded_enabled": false,
+            "FullscreenSplash_enabled": false,
             "FullscreenLang_enabled": false,
-            "FullscreenGestureBack_enabled": true,
-            "FullscreenStatusBack_enabled": true,
-            "FullscreenDynamicDone_enabled": true,
-            "FullscreenApplyEmoji_enabled": true,
-            "FullscreenApplyWidget_enabled": true,
-            "FullscreenApplyAnim_enabled": true,
-            "BannerAdHome_enabled": true,
-            "BannerAdSettings_enabled": true,
-            "NativeAdSplash_enabled": true,
-            "NativeAdHome_enabled": true,
+            "FullscreenGestureBack_enabled": false,
+            "FullscreenStatusBack_enabled": false,
+            "FullscreenDynamicDone_enabled": false,
+            "FullscreenApplyEmoji_enabled": false,
+            "FullscreenApplyWidget_enabled": false,
+            "FullscreenApplyAnim_enabled": false,
+            "BannerAdHome_enabled": false,
+            "BannerAdSettings_enabled": false,
+            "NativeAdSplash_enabled": false,
+            "NativeAdHome_enabled": false,
             "NativeLanguageFirst_enabled": false,
-            "NativeLanguageSecond_enabled": true,
-            "NativeApplyEmoji_enabled": true,
-            "NativeApplyWidget_enabled": true,
-            "NativeApplyAnimation_enabled": true,
-            "NativeSmallStatusBar_enabled": true,
-            "NativeDynamic_enabled": true,
-            "NativeSmallGesture_enabled": true
+            "NativeLanguageSecond_enabled": false,
+            "NativeApplyEmoji_enabled": false,
+            "NativeApplyWidget_enabled": false,
+            "NativeApplyAnimation_enabled": false,
+            "NativeSmallStatusBar_enabled": false,
+            "NativeDynamic_enabled": false,
+            "NativeSmallGesture_enabled": false
             }
         </value>
     </entry>

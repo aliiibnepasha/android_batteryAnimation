@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@drawable/bg_other_screen"
     tools:context=".activity.HowToUseActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/titlebarHowToUse"
