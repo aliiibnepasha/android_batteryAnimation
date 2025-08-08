@@ -3,6 +3,7 @@ package com.lowbyte.battery.animation.activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
@@ -10,9 +11,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
+import com.lowbyte.battery.animation.BuildConfig
+import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ActivityEmojiEditApplayBinding
+import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
+import com.lowbyte.battery.animation.utils.AllowAccessibilityDialogFragment
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
@@ -30,14 +35,36 @@ class EmojiEditApplyActivity : BaseActivity() {
     private lateinit var preferences: AppPreferences
     private lateinit var drawable: String
 
+    private lateinit var sheet: AccessibilityPermissionBottomSheet // Declare the sheet
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-     //   enableEdgeToEdge()
-
         binding = ActivityEmojiEditApplayBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
         AdManager.loadInterstitialAd(this, getFullscreenId(),isFullscreenApplyEmojiEnabled)
+
+
+        sheet = AccessibilityPermissionBottomSheet(
+            onAllowClicked = {
+                FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
+               // AllowAccessibilityDialogFragment().show(supportFragmentManager, "AllowAccessibilityDialog")
+
+                startActivity(Intent(this, AllowAccessibilityActivity::class.java))
+                //  startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            },
+            onCancelClicked = {
+                FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_denied", null)
+                preferences.isStatusBarEnabled = false
+            }, onDismissListener = {
+//                if (!isAccessibilityServiceEnabled()) {
+//                    preferences.isStatusBarEnabled = false
+//                }
+
+            }
+        )
+
 
         FirebaseAnalyticsUtils.logScreenView(this, "EmojiEditApplyScreen")
         FirebaseAnalyticsUtils.startScreenTimer("EmojiEditApplyScreen")
@@ -140,23 +167,10 @@ class EmojiEditApplyActivity : BaseActivity() {
         }
 
         binding.btnNext.setOnClickListener {
-
-            if (!preferences.isStatusBarEnabled) {
-                Toast.makeText(
-                    this,
-                    getString(R.string.please_enable_battery_emoji_service),
-                    Toast.LENGTH_LONG
-                ).show()
-
-            }else{
-            FirebaseAnalyticsUtils.logClickEvent(this, "click_apply_emoji", mapOf("drawable" to drawable))
+            preferences.isStatusBarEnabled = true
             preferences.batteryIconName = drawable
-            sendBroadcast(Intent(BROADCAST_ACTION))
-            startActivity(Intent(this, ApplySuccessfullyActivity::class.java))
-            finish()
+            checkAccessibilityPermission()
 
-
-            }
         }
     }
 
@@ -169,6 +183,39 @@ class EmojiEditApplyActivity : BaseActivity() {
         }
         preferences.setInt("percentageColor", envelope.color)
         sendBroadcast(Intent(BROADCAST_ACTION))
+    }
+    private fun checkAccessibilityPermission() {
+        FirebaseAnalyticsUtils.logClickEvent(this, "click_apply_emoji", mapOf("drawable" to drawable))
+        if (!isAccessibilityServiceEnabled()) {
+            FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_prompt_shown", null)
+//            if (BuildConfig.DEBUG){
+//                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+//            }else{
+            val existing = supportFragmentManager.findFragmentByTag("AccessibilityPermission")
+            if (existing == null || !existing.isAdded) {
+                sheet.show(supportFragmentManager, "AccessibilityPermission")
+            } else {
+                Log.d("Accessibility", "AccessibilityPermissionBottomSheet already shown")
+            }
+           //    }
+        } else {
+            sendBroadcast(Intent(BROADCAST_ACTION))
+            startActivity(Intent(this, ApplySuccessfullyActivity::class.java))
+            finish()
+            FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
+        }
+    }
+
+    private fun isAccessibilityServiceEnabled(): Boolean {
+        val expectedComponentName = "${packageName}/${NotchAccessibilityService::class.java.canonicalName}"
+        val enabledServices = Settings.Secure.getString(contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES) ?: return false
+        return enabledServices.split(':').any { it.equals(expectedComponentName, ignoreCase = true) }
+    }
+
+
+    override fun onResume() {
+
+        super.onResume()
     }
 
     override fun onPause() {

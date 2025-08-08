@@ -166,17 +166,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <FrameLayout
-        android:id="@+id/nativeAdContainer"
-        android:layout_width="0dp"
-        android:layout_marginVertical="20dp"
-        android:layout_height="90dp"
-        app:layout_constraintWidth_percent="0.95"
-        android:background="@drawable/bg_rectangle_gradient"
-        android:minHeight="85dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vibrateFeedbackEnable" />
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/viewSingleTap"
         android:layout_width="0dp"
@@ -186,7 +175,7 @@
         android:padding="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nativeAdContainer"
+        app:layout_constraintTop_toBottomOf="@+id/vibrateFeedbackEnable"
         app:layout_constraintWidth_percent="0.95">
 
         <TextView
@@ -324,4 +313,60 @@
             app:layout_constraintWidth_percent="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/nativeAdContainer"
+        android:layout_width="0dp"
+        android:layout_height="65dp"
+        app:layout_constraintWidth_percent="1"
+        android:background="@drawable/bg_rectangle_gradient"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" >
+
+        <!-- Shimmer Loading with AD tag -->
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerBanner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:visibility="visible"
+            app:shimmer_auto_start="true"
+            app:shimmer_duration="1500">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ad"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_ad_tag"
+                    android:padding="4dp"
+                    android:textColor="@android:color/white"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/loading_ad"
+                    android:textSize="13sp"
+                    android:textColor="@color/blue_app_color"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <!-- Actual Ad container -->
+        <FrameLayout
+            android:id="@+id/bannerAdContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

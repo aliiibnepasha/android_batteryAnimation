@@ -133,7 +133,7 @@ object AdManager {
                 getFullscreenHome2Id(),
                 remoteConfig
             )
-            4500L
+            5000L
         }
 
         if (activity.isValid()){

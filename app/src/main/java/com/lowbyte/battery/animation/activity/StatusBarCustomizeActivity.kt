@@ -17,18 +17,22 @@ import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.CustomIconGridAdapter
 import com.lowbyte.battery.animation.ads.AdManager
+import com.lowbyte.battery.animation.ads.BannerAdHelper
 import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarCustommizeBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.model.CustomIconGridItem
+import com.lowbyte.battery.animation.utils.AllowAccessibilityDialogFragment
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
+import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerCustomizeId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenHome2Id
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeCustomizeId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenStatusEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeGestureEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeStatusEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
@@ -55,7 +59,9 @@ class StatusBarCustomizeActivity : BaseActivity() {
         sheet = AccessibilityPermissionBottomSheet(
             onAllowClicked = {
                 FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
-                startActivity(Intent(this, AllowAccessibilityActivity::class.java))
+              //  AllowAccessibilityDialogFragment().show(supportFragmentManager, "AllowAccessibilityDialog")
+
+                  startActivity(Intent(this, AllowAccessibilityActivity::class.java))
                 //  startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             },
             onCancelClicked = {
@@ -63,33 +69,43 @@ class StatusBarCustomizeActivity : BaseActivity() {
                 preferences.isStatusBarEnabled = false
                 binding.switchEnableBatteryEmojiCustom.isChecked = false
             }, onDismissListener = {
-                if (!isAccessibilityServiceEnabled()) {
-                    preferences.isStatusBarEnabled = false
-                    binding.switchEnableBatteryEmojiCustom.isChecked = false
-                }
+//                if (!isAccessibilityServiceEnabled()) {
+//                    preferences.isStatusBarEnabled = false
+//                    binding.switchEnableBatteryEmojiCustom.isChecked = false
+//                }
 
             }
         )
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AdManager.showInterstitialAd(this@StatusBarCustomizeActivity, isFullscreenStatusEnabled,true) {
+             //   AdManager.showInterstitialAd(this@StatusBarCustomizeActivity, isFullscreenStatusEnabled,true) {
                     finish()
-                }
+             //   }
             }
         }
         onBackPressedDispatcher.addCallback(this, callback)
 
 
-        nativeHelper = NativeBannerSizeHelper(
+        BannerAdHelper.loadBannerAd(
             context = this,
-            adId = getNativeCustomizeId(), // Replace with your real AdMob ID
-            showAdRemoteFlag = isNativeStatusEnabled, // Or get from remote config
-            isProUser = preferences.isProUser,       // Or from preferences
-            adContainer = binding.nativeAdContainer,
-            onAdLoaded = { Log.d("AD", "Banner Ad loaded!") },
-            onAdFailed = { Log.d("AD", "Banner Ad failed!") }
+            container = binding.nativeAdContainer,
+            bannerAdId = getBannerCustomizeId(true),
+            isCollapsable = true,
+            isProUser = preferences.isProUser,
+            remoteConfig = isNativeStatusEnabled
         )
+
+
+//        nativeHelper = NativeBannerSizeHelper(
+//            context = this,
+//            adId = getNativeCstomizeId(), // Replace with your real AdMob ID
+//            showAdRemoteFlag = isNativeStatusEnabled, // Or get from remote config
+//            isProUser = preferences.isProUser,       // Or from preferences
+//            adContainer = binding.nativeAdContainer,
+//            onAdLoaded = { Log.d("AD", "Banner Ad loaded!") },
+//            onAdFailed = { Log.d("AD", "Banner Ad failed!") }
+//        )
 
 
         FirebaseAnalyticsUtils.logScreenView(this, "StatusBarCustomizeScreen")
@@ -103,9 +119,9 @@ class StatusBarCustomizeActivity : BaseActivity() {
 
         binding.ibBackButton.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_back_button", null)
-            AdManager.showInterstitialAd(this@StatusBarCustomizeActivity, isFullscreenStatusEnabled,true) {
+          //  AdManager.showInterstitialAd(this@StatusBarCustomizeActivity, isFullscreenStatusEnabled,true) {
                 finish()
-            }
+          //  }
         }
 
         binding.restoreSetting.setOnClickListener {

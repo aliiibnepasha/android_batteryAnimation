@@ -21,6 +21,7 @@ class NativeFullscreenHelper(
     private val isProUser: Boolean,
     private val onAdLoaded: (() -> Unit)? = null,
     private val onAdFailed: (() -> Unit)? = null,
+    private val onAdClicked: (() -> Unit)? = null,
     private val adContainer: LinearLayout? = null // Optional: null = just preload
 )
 {
@@ -66,6 +67,11 @@ class NativeFullscreenHelper(
                         hideAdView()
                         onAdFailed?.invoke()
                     }
+                }
+
+                override fun onAdClicked() {
+                    onAdClicked?.invoke()
+                    super.onAdClicked()
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder()

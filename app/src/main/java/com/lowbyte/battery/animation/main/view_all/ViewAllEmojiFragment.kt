@@ -20,6 +20,7 @@ import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.FragmentViewAllEmojiBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.ui.InteractiveLottieActivity
+import com.lowbyte.battery.animation.utils.AllowAccessibilityDialogFragment
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenHome2Id
@@ -48,7 +49,7 @@ class ViewAllEmojiFragment : Fragment() {
                     requireActivity(),
                     "allow_accessibility_click"
                 )
-                startActivity(Intent(requireActivity(), AllowAccessibilityActivity::class.java))
+                  startActivity(Intent(requireActivity(), AllowAccessibilityActivity::class.java))
                 // startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             },
             onCancelClicked = {
@@ -59,10 +60,10 @@ class ViewAllEmojiFragment : Fragment() {
                 preferences.isStatusBarEnabled = false
                 binding.switchEnableBatteryEmojiViewAll.isChecked = false
             }, onDismissListener = {
-                if (!isAccessibilityServiceEnabled()) {
-                    preferences.isStatusBarEnabled = false
-                    binding.switchEnableBatteryEmojiViewAll.isChecked = false
-                }
+//                if (!isAccessibilityServiceEnabled()) {
+//                    preferences.isStatusBarEnabled = false
+//                    binding.switchEnableBatteryEmojiViewAll.isChecked = false
+//                }
 
             }
         )

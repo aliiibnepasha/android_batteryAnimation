@@ -13,10 +13,14 @@ import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.ActionScrollItem
 import com.lowbyte.battery.animation.ads.AdManager
+import com.lowbyte.battery.animation.ads.BannerAdHelper
 import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarGestureBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerCustomizeId
+import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenHome2Id
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeCustomizeId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenGestureEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeGestureEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
@@ -32,7 +36,6 @@ class StatusBarGestureActivity : BaseActivity() {
     private lateinit var longTapActionText: TextView
     private lateinit var swipeLeftToRightActionText: TextView
     private lateinit var swipeRightToLeftActionText: TextView
-    private var nativeHelper: NativeBannerSizeHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,9 +46,9 @@ class StatusBarGestureActivity : BaseActivity() {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                AdManager.showInterstitialAd(this@StatusBarGestureActivity, isFullscreenGestureEnabled,true) {
+             //   AdManager.showInterstitialAd(this@StatusBarGestureActivity, isFullscreenGestureEnabled,true) {
                     finish()
-                }
+              //  }
             }
         }
         onBackPressedDispatcher.addCallback(this, callback)
@@ -58,15 +61,26 @@ class StatusBarGestureActivity : BaseActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        nativeHelper = NativeBannerSizeHelper(
+
+        BannerAdHelper.loadBannerAd(
             context = this,
-            adId = getNativeCustomizeId(), // Replace with your real AdMob ID
-            showAdRemoteFlag = isNativeGestureEnabled, // Or get from remote config
-            isProUser = preferences.isProUser,       // Or from preferences
-            adContainer = binding.nativeAdContainer,
-            onAdLoaded = { Log.d("AD", "Banner Ad loaded!") },
-            onAdFailed = { Log.d("AD", "Banner Ad failed!") }
+            container = binding.nativeAdContainer,
+            bannerAdId = getBannerCustomizeId(true),
+            isCollapsable = true,
+            isProUser = preferences.isProUser,
+            remoteConfig = isNativeGestureEnabled
         )
+
+
+//        nativeHelper = NativeBannerSizeHelper(
+//            context = this,
+//            adId = getNativeustomizeId(), // Replace with your real AdMob ID
+//            showAdRemoteFlag = isNativeGestureEnabled, // Or get from remote config
+//            isProUser = preferences.isProUser,       // Or from preferences
+//            adContainer = binding.nativeAdContainer,
+//            onAdLoaded = { Log.d("AD", "Banner Ad loaded!") },
+//            onAdFailed = { Log.d("AD", "Banner Ad failed!") }
+//        )
 
 
 
@@ -77,9 +91,9 @@ class StatusBarGestureActivity : BaseActivity() {
 
         binding.ibBackButton.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_back_button", null)
-            AdManager.showInterstitialAd(this@StatusBarGestureActivity, isFullscreenGestureEnabled,true) {
+          //  AdManager.showInterstitialAd(this@StatusBarGestureActivity, isFullscreenGestureEnabled,true) {
                 finish()
-            }
+           // }
         }
 
         // Load saved actions

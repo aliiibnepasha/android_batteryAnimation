@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.lowbyte.battery.animation.activity.StatusBarCustomizeActivity
 import com.lowbyte.battery.animation.activity.StatusBarGestureActivity
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.FragmentCustomizeBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenGestureEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeStatusEnabled
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class CustomizeFragment : Fragment() {
@@ -30,13 +33,17 @@ class CustomizeFragment : Fragment() {
         // Status bar customization click
         binding.menuStatusBar.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_status_customize")
-            startActivity(Intent(requireContext(), StatusBarCustomizeActivity::class.java))
+            AdManager.showInterstitialAd(requireActivity(), isNativeStatusEnabled,true) {
+                startActivity(Intent(requireContext(), StatusBarCustomizeActivity::class.java))
+            }
         }
 
         // Gesture customization click
         binding.menuGesture.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_gesture_customize")
-            startActivity(Intent(requireContext(), StatusBarGestureActivity::class.java))
+            AdManager.showInterstitialAd(requireActivity(), isFullscreenGestureEnabled,true) {
+                startActivity(Intent(requireContext(), StatusBarGestureActivity::class.java))
+            }
         }
 
         return root

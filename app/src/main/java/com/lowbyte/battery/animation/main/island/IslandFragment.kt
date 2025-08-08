@@ -24,6 +24,7 @@ import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.DialogSetNotchBinding
 import com.lowbyte.battery.animation.databinding.FragmentIslandBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
+import com.lowbyte.battery.animation.utils.AllowAccessibilityDialogFragment
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeCustomizeId
@@ -303,7 +304,9 @@ class IslandFragment : Fragment() {
                     requireActivity(),
                     "accessibility_allow_clicked"
                 )
-                startActivity(Intent(requireActivity(), AllowAccessibilityActivity::class.java))
+              //  AllowAccessibilityDialogFragment().show(childFragmentManager, "AllowAccessibilityDialog")
+
+                  startActivity(Intent(requireActivity(), AllowAccessibilityActivity::class.java))
             },
             onCancelClicked = {
                 FirebaseAnalyticsUtils.logClickEvent(
@@ -314,10 +317,10 @@ class IslandFragment : Fragment() {
                 binding.switchEnableDynamic.isChecked = false
             },
             onDismissListener = {
-                if (!isAccessibilityServiceEnabled()) {
-                    preferences.isDynamicEnabled = false
-                    binding.switchEnableDynamic.isChecked = false
-                }
+//                if (!isAccessibilityServiceEnabled()) {
+//                    preferences.isDynamicEnabled = false
+//                    binding.switchEnableDynamic.isChecked = false
+//                }
             }
         )
     }

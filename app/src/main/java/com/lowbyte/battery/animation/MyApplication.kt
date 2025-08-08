@@ -20,7 +20,6 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
-import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.AdStateController
 import com.lowbyte.battery.animation.ads.GoogleMobileAdsConsentManager
 import com.lowbyte.battery.animation.utils.AdLoadingDialogManager
@@ -33,6 +32,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Date
+
 
 class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallbacks, DefaultLifecycleObserver {
 
@@ -52,8 +52,12 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
     override fun onCreate() {
         super<MultiDexApplication>.onCreate()
         preferences =  AppPreferences.getInstance(this)
-
-        AdManager.initializeAds(this)
+//        AdManager.initializeAds(this)
+//        val appToken = "{YourAppToken}"
+//        val environment = AdjustConfig.ENVIRONMENT_SANDBOX // or ENVIRONMENT_PRODUCTION
+//        val config = AdjustConfig(this, appToken, environment)
+//        config.setLogLevel(LogLevel.VERBOSE)
+//        Adjust.initSdk(config)
 
         val lang = LocaleHelper.getLanguage(this)
         LocaleHelper.setLocale(this, lang.ifBlank { "" })

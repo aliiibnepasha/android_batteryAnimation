@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.ads.BannerAdHelper
 import com.lowbyte.battery.animation.databinding.ActivityAllowAccecibilityBinding
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerPermissionId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerPermissionSettings
 import com.lowbyte.battery.animation.utils.AppPreferences

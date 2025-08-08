@@ -63,6 +63,9 @@ class NativeAdFragment : Fragment(R.layout.fragment_fullscreen_native_ad) {
             onAdFailed = {
                 Log.d("Ad", "Failed to load native ad")
             },
+            onAdClicked = {
+                sharedViewModel.childEvent.value = "ClickedClose"
+            },
             adContainer = binding.nativeFullscreen   // Optional: Pass only if you want to show immediately
         )
     }

@@ -70,7 +70,7 @@ class SplashFragment : Fragment() {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             if (moveNextIfGetStartedAllow) {
-                moveNext()
+                moveNext(preferences.isFirstRun)
             } else {
                 Log.d("backPress", "closedonSplash")
             }
@@ -81,7 +81,7 @@ class SplashFragment : Fragment() {
 
 
         binding.buttonStartApp.setOnClickListener {
-            moveNext()
+            moveNext(preferences.isFirstRun)
         }
         Log.d("ADNativeFunc", "Native ad shown call Splash")
 
@@ -172,18 +172,18 @@ class SplashFragment : Fragment() {
 
     }
 
-    fun moveNext() {
+    fun moveNext(isUserFirstTime: Boolean) {
         if (isAdded && findNavController().currentDestination?.id == R.id.splashFragment) {
             preferences = AppPreferences.getInstance(requireContext())
             val destination = if (preferences.isFirstRun) {
                 preferences.serviceRunningFlag = false
-              //  R.id.action_splash_to_main
-                R.id.action_splash_to_pro
+                R.id.action_splash_to_main
+              //  R.id.action_splash_to_pro
             } else {
-               // R.id.action_splash_to_main
-                R.id.action_splash_to_pro
+                R.id.action_splash_to_main
+              //  R.id.action_splash_to_pro
             }
-            if (isAdded && findNavController().currentDestination?.id == R.id.splashFragment) {
+            if (isAdded && findNavController().currentDestination?.id == R.id.splashFragment && isUserFirstTime) {
                 AdManager.showInterstitialAd(
                     requireActivity(),
                     isFullscreenSplashEnabled,
@@ -193,12 +193,17 @@ class SplashFragment : Fragment() {
                         findNavController().navigate(R.id.action_splash_to_main)
                     } else {
                         FirebaseAnalyticsUtils.logClickEvent(requireContext(), "splash_to_language", null)
-
                         findNavController().navigate(destination)
                     }
                 }
 
             } else {
+                if (preferences.isProUser) {
+                    findNavController().navigate(R.id.action_splash_to_main)
+                } else {
+                    FirebaseAnalyticsUtils.logClickEvent(requireContext(), "splash_to_language", null)
+                    findNavController().navigate(destination)
+                }
                 Log.w("Navigation", "Attempted to navigate from incorrect fragment")
             }
 
@@ -268,6 +273,15 @@ class SplashFragment : Fragment() {
             animator.start()
             handler.postDelayed({
                 if (isAdded && findNavController().currentDestination?.id == R.id.splashFragment) {
+                    if (!preferences.isFirstRun){
+                        AdManager.showInterstitialAd(
+                            requireActivity(),
+                            isFullscreenSplashEnabled,
+                            false
+                        ) {
+
+                        }
+                    }
                     binding.buttonStartApp.visibility = View.VISIBLE
                     binding.progressBar.visibility = View.INVISIBLE
                     moveNextIfGetStartedAllow = true

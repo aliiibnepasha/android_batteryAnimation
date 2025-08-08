@@ -129,6 +129,17 @@ fun getRewardedId(): String {
         }
     }
 
+      fun getBannerCustomizeId(isCollapsable: Boolean= false): String {
+        return if (BuildConfig.DEBUG) {
+           if (!isCollapsable) "ca-app-pub-3940256099942544/9214589741" else "ca-app-pub-3940256099942544/2014213617"
+        } else {
+            "ca-app-pub-9844943887550892/70232216"
+        }
+    }
+
+
+
+
 
 
 

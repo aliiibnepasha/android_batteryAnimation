@@ -23,6 +23,7 @@ import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.serviceUtils.AllLottieAdapter
 import com.lowbyte.battery.animation.serviceUtils.LottieItem
 import com.lowbyte.battery.animation.serviceUtils.OnItemInteractionListener
+import com.lowbyte.battery.animation.utils.AllowAccessibilityDialogFragment
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenHome2Id
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenStatusEnabled
@@ -63,7 +64,9 @@ class InteractiveLottieActivity : BaseActivity() {
         sheet = AccessibilityPermissionBottomSheet(
             onAllowClicked = {
                 FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_lotti", null)
-                startActivity(Intent(this, AllowAccessibilityActivity::class.java))
+             //   AllowAccessibilityDialogFragment().show(supportFragmentManager, "AllowAccessibilityDialog")
+
+                 startActivity(Intent(this, AllowAccessibilityActivity::class.java))
                 FirebaseAnalyticsUtils.logClickEvent(
                     this,
                     "AllowAccessibilityAct"
@@ -75,11 +78,11 @@ class InteractiveLottieActivity : BaseActivity() {
                 FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_lotti", null)
 
             }, onDismissListener = {
-                if (!isAccessibilityServiceEnabled()) {
-                    preferences.setBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)
-                    binding.btnActivateSelected.text = getString( R.string.turn_off)
-
-                }
+//                if (!isAccessibilityServiceEnabled()) {
+//                    preferences.setBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)
+//                    binding.btnActivateSelected.text = getString( R.string.turn_off)
+//
+//                }
 
             }
         )

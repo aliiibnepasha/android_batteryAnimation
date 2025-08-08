@@ -24,6 +24,7 @@ import com.lowbyte.battery.animation.adapter.MultiViewAdapter
 import com.lowbyte.battery.animation.databinding.FragmentHomeBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.model.MultiViewItem
+import com.lowbyte.battery.animation.utils.AllowAccessibilityDialogFragment
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
@@ -71,6 +72,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     requireActivity(),
                     "accessibility_allow_clicked"
                 )
+              //  AllowAccessibilityDialogFragment().show(childFragmentManager, "AllowAccessibilityDialog")
+
                 startActivity(Intent(requireActivity(), AllowAccessibilityActivity::class.java))
             },
             onCancelClicked = {
@@ -82,10 +85,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 binding.switchEnableBatteryEmoji.isChecked = false
             },
             onDismissListener = {
-                if (!isAccessibilityServiceEnabled()) {
-                    preferences.isStatusBarEnabled = false
-                    binding.switchEnableBatteryEmoji.isChecked = false
-                }
+//                if (!isAccessibilityServiceEnabled()) {
+//                    preferences.isStatusBarEnabled = false
+//                    binding.switchEnableBatteryEmoji.isChecked = false
+//                }
 
             }
 
@@ -188,16 +191,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "accessibility_prompt_shown")
-            if (BuildConfig.DEBUG){
-                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-            }else{
+//            if (BuildConfig.DEBUG){
+//                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+//            }else{
                 val existing = childFragmentManager.findFragmentByTag("AccessibilityPermission")
                 if (existing == null || !existing.isAdded) {
                     sheet.show(childFragmentManager, "AccessibilityPermission")
                 } else {
                     Log.d("Accessibility", "AccessibilityPermissionBottomSheet already shown")
                 }
-            }
+        //    }
         } else {
             binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled
             requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))

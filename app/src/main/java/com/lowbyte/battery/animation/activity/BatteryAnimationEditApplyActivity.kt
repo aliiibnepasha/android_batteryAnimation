@@ -2,30 +2,29 @@ package com.lowbyte.battery.animation.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
+import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.NativeAnimationHelper
-import com.lowbyte.battery.animation.ads.NativeWidgetHelper
 import com.lowbyte.battery.animation.databinding.ActivityBatteryAnimationEditApplyBinding
+import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
+import com.lowbyte.battery.animation.utils.AllowAccessibilityDialogFragment
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeInsideId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyAnimEnabled
-import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyEmojiEnabled
-import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyWidgetEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyAnimEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
-import com.lowbyte.battery.animation.utils.ServiceUtils.isEditing
 
 class BatteryAnimationEditApplyActivity : BaseActivity() {
 
@@ -34,9 +33,10 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
     private var position: Int = -1
     private lateinit var label: String
     private var isUserActionPerformed: Boolean = false
+    private lateinit var accessibilityPermissionBottomSheet: AccessibilityPermissionBottomSheet // Declare the sheet
 
     private var nativeAdHelper: NativeAnimationHelper? = null
-
+   // val accessibilityDialogFragment = AllowAccessibilityDialogFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +44,18 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
         AdManager.loadInterstitialAd(this, getFullscreenId(),isFullscreenApplyAnimEnabled)
+        accessibilityPermissionBottomSheet = AccessibilityPermissionBottomSheet(onAllowClicked = {
+            FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
+
+            startActivity(Intent(this, AllowAccessibilityActivity::class.java))
+        }, onCancelClicked = {
+            FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_denied", null)
+            preferences.isStatusBarEnabled = false
+        }, onDismissListener = {
+//            if (!isAccessibilityServiceEnabled()) {
+//                preferences.isStatusBarEnabled = false
+//            }
+        })
 
         // Track screen view & time
         FirebaseAnalyticsUtils.logScreenView(this, "BatteryAnimationEditApplyScreen")
@@ -120,39 +132,14 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
 
         binding.buttonForAnimApply.setOnClickListener {
             isUserActionPerformed = true
-//            if (preferences.statusLottieName==""){
-//                Toast.makeText(
-//                    this,
-//                    getString(R.string.please_enable_animation),
-//                    Toast.LENGTH_LONG
-//                ).show()
-//                return@setOnClickListener
-//            }
+            preferences.isStatusBarEnabled = true
+
             FirebaseAnalyticsUtils.logClickEvent(this, "click_apply_animation", mapOf("label" to label))
-
-            if (!preferences.isStatusBarEnabled) {
-                Toast.makeText(
-                    this,
-                    getString(R.string.please_enable_battery_emoji_service),
-                    Toast.LENGTH_LONG
-                ).show()
-                return@setOnClickListener
-            }
-
             preferences.statusLottieName = label
-            sendBroadcast(Intent(BROADCAST_ACTION))
-
-            Toast.makeText(
-                this,
-                getString(R.string.animation_applied_successfully),
-                Toast.LENGTH_SHORT
-            ).show()
-
-//                AdManager.showInterstitialAd(this, isFullscreenApplyAnimEnabled,true) {
-//                    Log.e("Ads", "FullScreenTobeShoe")
-//                }
-
-
+            //  if (!preferences.isStatusBarEnabled) {
+            checkAccessibilityPermission()
+            //    return@setOnClickListener
+            //  }
 
         }
 
@@ -167,6 +154,48 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
             }
         }
     }
+
+    private fun checkAccessibilityPermission() {
+        if (!isAccessibilityServiceEnabled()) {
+            FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_prompt_shown", null)
+//            if (BuildConfig.DEBUG) {
+//                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+//            } else {
+                val existing = supportFragmentManager.findFragmentByTag("AccessibilityPermission")
+                if (existing == null || !existing.isAdded) {
+                    accessibilityPermissionBottomSheet.show(supportFragmentManager, "AccessibilityPermission")
+                } else {
+                    Log.d("Accessibility", "AccessibilityPermissionBottomSheet already shown")
+          //      }
+            }
+        } else {
+            FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
+            sendBroadcast(Intent(BROADCAST_ACTION))
+            Toast.makeText(
+                this,
+                getString(R.string.animation_applied_successfully),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun isAccessibilityServiceEnabled(): Boolean {
+        val expectedComponentName =
+            "${packageName}/${NotchAccessibilityService::class.java.canonicalName}"
+        val enabledServices = Settings.Secure.getString(
+            contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        ) ?: return false
+        return enabledServices.split(':')
+            .any { it.equals(expectedComponentName, ignoreCase = true) }
+    }
+
+
+
+//    private val accessibilityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+//
+//       // dialog.
+//    }
+
 
     override fun onPause() {
         super.onPause()

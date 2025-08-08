@@ -50,16 +50,18 @@
         <TextView
             android:id="@+id/ibNextButton"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="35dp"
             android:contentDescription="@string/app_name"
             android:gravity="center"
             android:text="@string/done"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:visibility="invisible"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/large_button_bg"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1.5:1"
+            app:layout_constraintDimensionRatio="2:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
