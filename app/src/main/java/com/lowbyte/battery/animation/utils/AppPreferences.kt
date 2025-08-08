@@ -333,6 +333,14 @@ class AppPreferences private constructor(context: Context) {
         return gson.fromJson(json, type)
     }
 
+    fun setLong(key: String, value: Long) {
+        sharedPreferences.edit { putLong(key, value) }
+    }
+
+    fun getLong(key: String, defaultValue: Long = 0L): Long {
+        return sharedPreferences.getLong(key, defaultValue)
+    }
+
 }
 
 

@@ -1,6 +1,7 @@
 package com.lowbyte.battery.animation.ads
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -30,8 +31,11 @@ object AdManager {
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)
     private lateinit var preferences: AppPreferences
 
+    private const val LAST_AD_TIME_KEY = "last_interstitial_ad_time"
+    private const val COOLDOWN_MS = 30_000L
+    private const val RELOAD_DELAY_MS = 10_000L
+
     fun initializeAds(context: Context) {
-        Log.d(TAG, "Initializing Mobile Ads SDK")
         preferences = AppPreferences.getInstance(context)
 
         if (isMobileAdsInitializeCalled.getAndSet(true)) {
@@ -40,33 +44,26 @@ object AdManager {
         }
 
         if (preferences.isProUser) {
-            Log.d(TAG, "User is pro — skipping ads initialization")
+            Log.d(TAG, "Pro user — skipping ad initialization")
             return
         }
 
+        Log.d(TAG, "Initializing Mobile Ads SDK")
         MobileAds.setRequestConfiguration(
             RequestConfiguration.Builder()
                 .setTestDeviceIds(listOf("ABCDEF012345"))
                 .build()
         )
-
-
     }
 
     fun loadInterstitialAd(context: Activity, fullscreenAdId: String, remoteConfig: Boolean) {
         preferences = AppPreferences.getInstance(context)
-        if (preferences.isProUser || !remoteConfig) {
-            Log.d(TAG, "Pro user — skipping interstitial ad load ${preferences.isProUser} or $remoteConfig")
-            return
-        }
 
-        if (adIsLoading) {
-            Log.d(TAG, "Interstitial ad is already loading")
-            return
-        }
-
-        if (interstitialAd != null) {
-            Log.d(TAG, "Interstitial ad already loaded")
+        if (preferences.isProUser || !remoteConfig || adIsLoading || interstitialAd != null) {
+            Log.d(
+                TAG,
+                "Skipping interstitial load: proUser=${preferences.isProUser}, remoteConfig=$remoteConfig, loading=$adIsLoading, alreadyLoaded=${interstitialAd != null}"
+            )
             return
         }
 
@@ -80,22 +77,19 @@ object AdManager {
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
                     adIsLoading = false
-                    if (context.isValid()){
+                    if (context.isValid()) {
                         interstitialAd = ad
-                        interstitialAd?.setImmersiveMode(true)
+                        ad.setImmersiveMode(true)
                         Log.d(TAG, "Interstitial Ad successfully loaded")
-                        interstitialAd?.setOnPaidEventListener { adValue ->
-                            logPaidEvent(context,adValue, "interstitialAd", ad.adUnitId)
-
-
+                        ad.setOnPaidEventListener { adValue ->
+                            logPaidEvent(context, adValue, "interstitialAd", ad.adUnitId)
                         }
                     }
-
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    interstitialAd = null
                     adIsLoading = false
+                    interstitialAd = null
                     Log.e(TAG, "Interstitial Ad failed to load: ${adError.message}")
                 }
             }
@@ -108,37 +102,38 @@ object AdManager {
         isFromActivity: Boolean,
         onDismiss: () -> Unit
     ) {
-        Log.d(TAG, "Attempting to show interstitial ad")
-        AppPreferences.getInstance(activity)
+        preferences = AppPreferences.getInstance(activity)
+
         if (preferences.isProUser || !remoteConfig || !activity.isValid()) {
-            Log.d(TAG, "Pro user or remote config disabled — skipping ad and dialog")
+            Log.d(TAG, "Skipping ad: Pro user or remote config off")
             onDismiss()
             return
         }
 
         if (!isInternetAvailable(activity)) {
-            Log.d(TAG, "No internet connection — skipping ad and dialog")
+            Log.d(TAG, "Skipping ad: No internet")
             onDismiss()
             return
         }
 
-        if (activity.isFinishing || activity.isDestroyed){
+        if (!hasCooldownPassed()) {
+            Log.d(TAG, "Ad cooldown active — skipping ad")
+            onDismiss()
             return
         }
-        val dialogDuration = if (interstitialAd != null) {
-            1000L
-        } else {
-            loadInterstitialAd(
-                activity,
-                getFullscreenHome2Id(),
-                remoteConfig
-            )
+
+        if (activity.isFinishing || activity.isDestroyed) {
+            return
+        }
+
+        val delay = if (interstitialAd != null) 1000L else {
+            loadInterstitialAd(activity, getFullscreenHome2Id(), remoteConfig)
             5000L
         }
 
-        if (activity.isValid()){
-            AdLoadingDialogManager.show(activity, dialogDuration) {
-                if (activity.isValid()){
+        if (activity.isValid()) {
+            AdLoadingDialogManager.show(activity, delay) {
+                if (activity.isValid()) {
                     continueWithInterstitialAd(activity, remoteConfig, isFromActivity, onDismiss)
                 }
             }
@@ -158,7 +153,7 @@ object AdManager {
         }
 
         if (activity.isFinishing || activity.isDestroyed) {
-            Log.w(TAG, "Activity is not in a valid state — skip showing ad")
+            Log.w(TAG, "Activity not valid — skip showing ad")
             interstitialAd = null
             AdStateController.isInterstitialShowing = false
             onDismiss()
@@ -166,65 +161,92 @@ object AdManager {
         }
 
         if (interstitialAd == null && activity.isValid()) {
-            Log.d(TAG, "Interstitial ad not ready — fallback and reload")
+            Log.d(TAG, "Ad not ready — fallback and reload")
             onDismiss()
             loadInterstitialAd(activity, getFullscreenId(), remoteConfig)
-            activity.isEditing(isEditing = false, isAdShowing = false,)
-
+            activity.isEditing(isEditing = false, isAdShowing = false)
             return
         }
 
         AdStateController.isInterstitialShowing = true
+
         interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+            override fun onAdShowedFullScreenContent() {
+                activity.isEditing(isEditing = true, isAdShowing = true)
+                Log.d(TAG, "Ad is now showing")
+                updateLastAdShownTime()
+
+                // Auto-preload new ad after 10s if app is in foreground
+                activity.window.decorView.postDelayed({
+                    try {
+                        if (activity.isValid() && isAppInForeground(activity) && !preferences.isProUser) {
+                            loadInterstitialAd(activity, getFullscreenHome2Id(), true)
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error auto-loading ad: ${e.localizedMessage}")
+                    }
+                }, RELOAD_DELAY_MS)
+            }
+
             override fun onAdDismissedFullScreenContent() {
                 adIsLoading = false
-                Log.d(TAG, "Interstitial ad dismissed")
                 interstitialAd = null
                 AdStateController.isInterstitialShowing = false
-                if (isFromActivity) onDismiss()
                 activity.isEditing(isEditing = false, isAdShowing = false)
+                if (isFromActivity) onDismiss()
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                 adIsLoading = false
-                Log.e(TAG, "Interstitial failed to show: ${adError.message}")
                 interstitialAd = null
                 AdStateController.isInterstitialShowing = false
+                Log.e(TAG, "Failed to show interstitial: ${adError.message}")
                 onDismiss()
-                activity.isEditing(false,false)
-
+                activity.isEditing(isEditing = false, isAdShowing = false)
             }
 
             override fun onAdImpression() {
-                activity.isEditing(isEditing = true, isAdShowing = true)
-                Log.d(TAG, "Interstitial ad impression recorded")
+                Log.d(TAG, "Interstitial impression recorded")
                 if (!isFromActivity) onDismiss()
-            }
-
-            override fun onAdShowedFullScreenContent() {
-                activity.isEditing(isEditing = true, isAdShowing = true)
-                Log.d(TAG, "Interstitial ad is now visible")
             }
         }
 
         try {
-            Log.d(TAG, "Showing interstitial ad")
-            if (activity.isValid()){
-                activity.isEditing(isEditing = true, isAdShowing = true)
+            if (activity.isValid()) {
                 interstitialAd?.show(activity)
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Exception while showing interstitial ad: ${e.localizedMessage}")
+            Log.e(TAG, "Exception showing interstitial: ${e.localizedMessage}")
             interstitialAd = null
             AdStateController.isInterstitialShowing = false
             onDismiss()
         }
     }
 
+    // Cooldown helpers
+    private fun updateLastAdShownTime() {
+        preferences.setLong(LAST_AD_TIME_KEY, System.currentTimeMillis())
+    }
+
+    private fun hasCooldownPassed(): Boolean {
+        val lastTime = preferences.getLong(LAST_AD_TIME_KEY, 0L)
+        return System.currentTimeMillis() - lastTime >= COOLDOWN_MS
+    }
+
+    // Network check
     private fun isInternetAvailable(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = cm.activeNetwork ?: return false
         val capabilities = cm.getNetworkCapabilities(network) ?: return false
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    // App foreground check
+    private fun isAppInForeground(context: Context): Boolean {
+        val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
+        val packageName = context.packageName
+        return manager?.runningAppProcesses?.any {
+            it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && it.processName == packageName
+        } ?: false
     }
 }
