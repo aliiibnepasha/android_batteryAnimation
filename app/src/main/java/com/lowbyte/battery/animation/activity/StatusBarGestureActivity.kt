@@ -2,7 +2,9 @@ package com.lowbyte.battery.animation.activity
 
 import GestureBottomSheetFragment
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
@@ -10,12 +12,15 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.lowbyte.battery.animation.BaseActivity
+import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.ActionScrollItem
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.BannerAdHelper
 import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarGestureBinding
+import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
+import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerCustomizeId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenHome2Id
@@ -36,6 +41,7 @@ class StatusBarGestureActivity : BaseActivity() {
     private lateinit var longTapActionText: TextView
     private lateinit var swipeLeftToRightActionText: TextView
     private lateinit var swipeRightToLeftActionText: TextView
+    private lateinit var permissionBottomSheet: AccessibilityPermissionBottomSheet // Declare the sheet
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +49,27 @@ class StatusBarGestureActivity : BaseActivity() {
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
         AdManager.loadInterstitialAd(this, getFullscreenHome2Id(),isFullscreenGestureEnabled)
+
+
+        permissionBottomSheet = AccessibilityPermissionBottomSheet(
+            onAllowClicked = {
+                FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
+                startActivity(Intent(this, AllowAccessibilityActivity::class.java))
+                //  startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            },
+            onCancelClicked = {
+                FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_denied", null)
+                preferences.isStatusBarEnabled = false
+                binding.gestureSwitchEnable.isChecked = false
+            }, onDismissListener = {
+//                if (!isAccessibilityServiceEnabled()) {
+//                    preferences.isStatusBarEnabled = false
+//                    binding.switchEnableBatteryEmojiCustom.isChecked = false
+//                }
+
+            }
+        )
+
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -113,11 +140,19 @@ class StatusBarGestureActivity : BaseActivity() {
 
         binding.gestureSwitchEnable.isChecked = preferences.isGestureMode
         binding.gestureSwitchEnable.setOnCheckedChangeListener { _, isChecked ->
-            preferences.isGestureMode = isChecked
-            FirebaseAnalyticsUtils.logClickEvent(this, "toggle_gesture_mode", mapOf("enabled" to isChecked.toString()))
-            if (!preferences.isStatusBarEnabled && isChecked) {
-                Toast.makeText(this, getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+
+            if (isChecked){
+                checkAccessibilityPermission()
+
+            }else{
+                sendBroadcast(Intent(BROADCAST_ACTION))
             }
+            FirebaseAnalyticsUtils.logClickEvent(this, "toggle_gesture_mode", mapOf("enabled" to isChecked.toString()))
+
+//            if (!preferences.isStatusBarEnabled && isChecked) {
+//                Toast.makeText(this, getString(R.string.please_enable_battery_emoji_service), Toast.LENGTH_LONG).show()
+//            }
+
         }
 
         binding.viewSingleTap.setOnClickListener {
@@ -202,6 +237,40 @@ class StatusBarGestureActivity : BaseActivity() {
     override fun onPause() {
         super.onPause()
         FirebaseAnalyticsUtils.stopScreenTimer(this, "StatusBarGestureScreen")
+    }
+
+
+
+    private fun checkAccessibilityPermission() {
+        preferences.isGestureMode = true
+        preferences.isStatusBarEnabled = true
+        if (!isAccessibilityServiceEnabled()) {
+            FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_prompt_shown", null)
+//            if (BuildConfig.DEBUG){
+//                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+//            }else{
+            val existing = supportFragmentManager.findFragmentByTag("AccessibilityPermission")
+            if (existing == null || !existing.isAdded) {
+                permissionBottomSheet.show(supportFragmentManager, "AccessibilityPermission")
+            } else {
+                Log.d("Accessibility", "AccessibilityPermissionBottomSheet already shown")
+            }
+            //   }
+        } else {
+            FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
+            sendBroadcast(Intent(BROADCAST_ACTION))
+        }
+    }
+
+    private fun isAccessibilityServiceEnabled(): Boolean {
+        val expectedComponentName = "${packageName}/${NotchAccessibilityService::class.java.canonicalName}"
+        val enabledServices = Settings.Secure.getString(contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES) ?: return false
+        return enabledServices.split(':').any { it.equals(expectedComponentName, ignoreCase = true) }
+    }
+
+    override fun onResume() {
+        binding.gestureSwitchEnable.isChecked = preferences.isGestureMode && isAccessibilityServiceEnabled()
+        super.onResume()
     }
 
     override fun onDestroy() {

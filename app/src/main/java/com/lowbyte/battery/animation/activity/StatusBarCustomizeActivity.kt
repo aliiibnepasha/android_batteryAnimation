@@ -12,27 +12,21 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.BaseActivity
-import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.CustomIconGridAdapter
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.BannerAdHelper
-import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
 import com.lowbyte.battery.animation.databinding.ActivityStatusBarCustommizeBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.model.CustomIconGridItem
-import com.lowbyte.battery.animation.utils.AllowAccessibilityDialogFragment
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerCustomizeId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenHome2Id
-import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
-import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeCustomizeId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenStatusEnabled
-import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeGestureEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeStatusEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
@@ -43,10 +37,9 @@ class StatusBarCustomizeActivity : BaseActivity() {
 
     private var _binding: ActivityStatusBarCustommizeBinding? = null
     private val binding get() = _binding!!
-    private var nativeHelper: NativeBannerSizeHelper? = null
 
     private lateinit var preferences: AppPreferences
-    private lateinit var sheet: AccessibilityPermissionBottomSheet // Declare the sheet
+    private lateinit var permissionBottomSheet: AccessibilityPermissionBottomSheet // Declare the sheet
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +49,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
         preferences = AppPreferences.getInstance(this)
         AdManager.loadInterstitialAd(this,getFullscreenHome2Id(),isFullscreenStatusEnabled)
 
-        sheet = AccessibilityPermissionBottomSheet(
+        permissionBottomSheet = AccessibilityPermissionBottomSheet(
             onAllowClicked = {
                 FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
               //  AllowAccessibilityDialogFragment().show(supportFragmentManager, "AllowAccessibilityDialog")
@@ -146,7 +139,6 @@ class StatusBarCustomizeActivity : BaseActivity() {
             sendBroadcast(Intent(BROADCAST_ACTION))
         }
 
-        binding.switchEnableBatteryEmojiCustom.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
         binding.switchEnableBatteryEmojiCustom.setOnCheckedChangeListener { _, isChecked ->
             preferences.isStatusBarEnabled = isChecked
             FirebaseAnalyticsUtils.logClickEvent(this, "toggle_battery_emoji", mapOf("enabled" to isChecked.toString()))
@@ -259,7 +251,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
 //            }else{
                 val existing = supportFragmentManager.findFragmentByTag("AccessibilityPermission")
                 if (existing == null || !existing.isAdded) {
-                    sheet.show(supportFragmentManager, "AccessibilityPermission")
+                    permissionBottomSheet.show(supportFragmentManager, "AccessibilityPermission")
                 } else {
                     Log.d("Accessibility", "AccessibilityPermissionBottomSheet already shown")
                 }
@@ -277,6 +269,10 @@ class StatusBarCustomizeActivity : BaseActivity() {
     }
 
 
+    override fun onResume() {
+        binding.switchEnableBatteryEmojiCustom.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
+        super.onResume()
+    }
     override fun onPause() {
         super.onPause()
         FirebaseAnalyticsUtils.stopScreenTimer(this, "StatusBarCustomizeScreen")
