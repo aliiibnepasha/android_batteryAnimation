@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.R
@@ -75,7 +74,9 @@ class ViewPagerEmojiItemFragment : Fragment() {
         dialogRewarded.setContentView(bindingReward?.root!!)
         dialogRewarded.setCancelable(false)
         dialogRewarded.window?.attributes?.windowAnimations = R.style.DialogAnimation
-        dialogRewarded.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialogRewarded.window?.setLayout(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT)
         dialogRewarded.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
 
@@ -99,20 +100,24 @@ class ViewPagerEmojiItemFragment : Fragment() {
                     "emoji_position" to position.toString()
                 )
             )
-            if (isRewarded && !preferences.isProUser) {
-
+            if (isRewarded || !preferences.isProUser && preferences.getBoolean(
+                    "RewardEarned",
+                    false
+                ) == false
+            ) {
                 bindingReward?.ivClose?.setOnClickListener { dialogRewarded.dismiss() }
                 if (!isRewardedEnabled){
                     bindingReward?.btnWatchAd?.visibility = View.GONE
-                    bindingReward?.btnPremium?.visibility = View.VISIBLE
+                  //  bindingReward?.btnPremium?.visibility = View.VISIBLE
                 }else{
                     bindingReward?.btnWatchAd?.visibility = View.VISIBLE
-                    bindingReward?.btnPremium?.visibility = View.VISIBLE
+                  //  bindingReward?.btnPremium?.visibility = View.VISIBLE
                     bindingReward?.btnWatchAd?.setOnClickListener {
                         dialogRewarded.dismiss()
                         RewardedAdManager.showRewardedAd(
                             activity = requireActivity(),
                             onRewardEarned = {
+                                preferences.setBoolean("RewardEarned", true)
 
                             },
                             onAdShown = {

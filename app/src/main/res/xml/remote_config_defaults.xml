@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <defaultsMap>
     <entry>
-        <key>ads_config_v17</key>
+        <key>ads_config_v18</key>
         <value>
             {
             "Rewarded_enabled": true,
@@ -24,7 +24,9 @@
             "NativeApplyAnimation_enabled": true,
             "NativeSmallStatusBar_enabled": true,
             "NativeDynamic_enabled": true,
-            "NativeSmallGesture_enabled": true
+            "NativeSmallGesture_enabled": true,
+            "FullscreenHome_enabled": true,
+            "CoolDownLoadAd_time": 300000
             }
         </value>
     </entry>

@@ -8,10 +8,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ItemAllEmojiBinding
+import com.lowbyte.battery.animation.utils.AppPreferences
 
 class AllEmojiAdapter(
     private val onItemClick: (position: Int, label: String,isRewardAd:Boolean) -> Unit
 ) : ListAdapter<String, AllEmojiAdapter.ViewHolder>(DiffCallback()) {
+    private lateinit var preferences: AppPreferences
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemAllEmojiBinding.inflate(
@@ -19,6 +21,7 @@ class AllEmojiAdapter(
             parent,
             false
         )
+        preferences = AppPreferences.getInstance(parent.context)
         return ViewHolder(binding)
     }
 
@@ -42,14 +45,19 @@ class AllEmojiAdapter(
 
             binding.root.setOnClickListener {
                 if ((position + 1) % 4 == 0) {
-                    onItemClick(position, getItem(position),true)
+                    if (preferences.getBoolean("RewardEarned",false) == false){
+                        onItemClick(position, getItem(position),true)
+                    }else{
+                        onItemClick(position, getItem(position),false)
+                    }
+
                 } else {
                     onItemClick(position, getItem(position),false)
                 }
 
             }
 
-            if ((position + 1) % 4 == 0) {
+            if ((position + 1) % 4 == 0 && preferences.getBoolean("RewardEarned",false) == false) {
                 binding.watchAdItem.visibility = View.VISIBLE
             } else {
                 binding.watchAdItem.visibility = View.INVISIBLE

@@ -13,6 +13,8 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDexApplication
+import com.facebook.FacebookSdk
+import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -52,12 +54,14 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
     override fun onCreate() {
         super<MultiDexApplication>.onCreate()
         preferences =  AppPreferences.getInstance(this)
-//        AdManager.initializeAds(this)
-//        val appToken = "{YourAppToken}"
-//        val environment = AdjustConfig.ENVIRONMENT_SANDBOX // or ENVIRONMENT_PRODUCTION
-//        val config = AdjustConfig(this, appToken, environment)
-//        config.setLogLevel(LogLevel.VERBOSE)
-//        Adjust.initSdk(config)
+
+        FacebookSdk.setApplicationId(getString(R.string.facebook_app_id))
+        FacebookSdk.sdkInitialize(applicationContext)
+        FacebookSdk.setAutoInitEnabled(true)
+        FacebookSdk.setAutoLogAppEventsEnabled(true)
+        FacebookSdk.setAdvertiserIDCollectionEnabled(true)
+        FacebookSdk.sdkInitialize(applicationContext)
+
 
         val lang = LocaleHelper.getLanguage(this)
         LocaleHelper.setLocale(this, lang.ifBlank { "" })

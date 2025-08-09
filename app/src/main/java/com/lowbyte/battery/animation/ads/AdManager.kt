@@ -12,6 +12,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.lowbyte.battery.animation.utils.*
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenHome2Id
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
+import com.lowbyte.battery.animation.utils.AnimationUtils.isCoolDownShowTime
 import com.lowbyte.battery.animation.utils.AnimationUtils.isValid
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
 import com.lowbyte.battery.animation.utils.ServiceUtils.isEditing
@@ -27,7 +28,6 @@ object AdManager {
     private lateinit var preferences: AppPreferences
 
     private const val LAST_AD_TIME_KEY = "last_interstitial_ad_time"
-    private const val COOLDOWN_MS = 30_000L
     private const val RELOAD_DELAY_MS = 10_000L
 
     // Cooldown control flags
@@ -236,7 +236,7 @@ object AdManager {
 
     private fun hasCooldownPassed(): Boolean {
         val lastTime = preferences.getLong(LAST_AD_TIME_KEY, 0L)
-        return System.currentTimeMillis() - lastTime >= COOLDOWN_MS
+        return System.currentTimeMillis() - lastTime >= isCoolDownShowTime
     }
 
     // Internet check

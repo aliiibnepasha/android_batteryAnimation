@@ -29,6 +29,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAM
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.combinedAnimationList
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenSplashEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.trendy
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListFantasy
@@ -146,10 +147,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                 AdManager.showInterstitialAd(
                     requireActivity(),
-                    isFullscreenSplashEnabled,
+                    isFullscreenHomeEnabled,
                     true
                 ) {
-
+                    AdManager.setCooldownEnabledForShow(true)
+                    AdManager.setCooldownEnabledForLoad(true)
                     intent?.apply {
                         putExtra(EXTRA_POSITION, parentPosition)
                         putExtra(EXTRA_LABEL, label)
@@ -171,10 +173,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_emojis", eventMap)
                             AdManager.showInterstitialAd(
                                 requireActivity(),
-                                isFullscreenSplashEnabled,
+                                isFullscreenHomeEnabled,
                                 true
                             ) {
                                 findNavController().navigate(R.id.action_home_to_viewAllEmoji)
+                                AdManager.setCooldownEnabledForShow(true)
+                                AdManager.setCooldownEnabledForLoad(true)
                             }
 
 
@@ -189,10 +193,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                             AdManager.showInterstitialAd(
                                 requireActivity(),
-                                isFullscreenSplashEnabled,
+                                isFullscreenHomeEnabled,
                                 true
                             ) {
                                 findNavController().navigate(R.id.action_home_to_viewAllWidget)
+                                AdManager.setCooldownEnabledForShow(true)
+                                AdManager.setCooldownEnabledForLoad(true)
                             }
 
 
@@ -206,10 +212,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_animations", eventMap)
                             AdManager.showInterstitialAd(
                                 requireActivity(),
-                                isFullscreenSplashEnabled,
+                                isFullscreenHomeEnabled,
                                 true
                             ) {
                                 findNavController().navigate(R.id.action_home_to_viewAllAnim)
+                                AdManager.setCooldownEnabledForShow(true)
+                                AdManager.setCooldownEnabledForLoad(true)
                             }
 
 
@@ -263,8 +271,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     override fun onDestroy() {
-        AdManager.setCooldownEnabledForLoad(true)
-        AdManager.setCooldownEnabledForShow(true)
+
         super.onDestroy()
     }
 

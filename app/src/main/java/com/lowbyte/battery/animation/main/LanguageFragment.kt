@@ -17,6 +17,7 @@ import com.lowbyte.battery.animation.MyApplication
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.SplashActivity
 import com.lowbyte.battery.animation.adapter.LanguageAdapter
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.FragmentLanguageBinding
 import com.lowbyte.battery.animation.model.Language

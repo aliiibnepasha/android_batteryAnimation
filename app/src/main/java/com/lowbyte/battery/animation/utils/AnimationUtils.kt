@@ -16,7 +16,7 @@ import com.lowbyte.battery.animation.model.Language
 object AnimationUtils {
 
     var finishingLang = false
-    var remoteJsonKey = "ads_config_v17"
+    var remoteJsonKey = "ads_config_v18"
 
 
 
@@ -26,6 +26,9 @@ object AnimationUtils {
     var  isBannerPermissionSettings = true //
     var  isNativeHomeEnabled = true //
     var  isFullscreenSplashEnabled = true //
+    var  isFullscreenHomeEnabled = true //
+
+    var  isCoolDownShowTime = 30000 //
     var  isRewardedEnabled = true //
     var  isFullscreenStatusEnabled = true //
     var  isFullscreenDynamicDoneEnabled = true //
@@ -60,7 +63,7 @@ object AnimationUtils {
 
 // TODO Update Native Id
 fun getRewardedId(): String {
-        return if (BuildConfig.DEBUG) {
+        return if (!BuildConfig.DEBUG) {
             "ca-app-pub-3940256099942544/5224354917"
         } else {
             "ca-app-pub-9844943887550892/8218608589"

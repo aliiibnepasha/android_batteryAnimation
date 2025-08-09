@@ -95,7 +95,7 @@
     <string name="cat_3">Comic</string>
     <string name="cat_4">Hot</string>
     <string name="cat_5">New</string>
-    <string name="cat_6">Fenky</string>
+    <string name="cat_6">Funky</string>
     <string name="gesture_action">Gesture Action</string>
     <string name="terms_of_service_url" translatable="false">https://sites.google.com/view/theswiftvision-termsofservice/home</string>
     <string name="privacy_policy_url" translatable="false">https://sites.google.com/view/theswiftvision-privacypolicy/home</string>
@@ -217,7 +217,7 @@
     <string name="enable_notification_access">Enable Notification Access</string>
     <string name="allow_notification_access_so_we_can_show_notifications_in_your_custom_notch">Allow notification access so we can show notifications in your custom notch.</string>
     <string name="go_pro">Go PRO!</string>
-    <string name="experience_high_quality_nchoose_your_access_method_below">Experience high-quality.\nchoose your access method below!</string>
+    <string name="experience_high_quality_nchoose_your_access_method_below">Experience high-quality.\nBattery Emoji Watch Reward Ad and Unlock All EMoji !</string>
     <string name="watch_an_ad_to_continue">Watch An Ad To Continue</string>
     <string name="takes_15_30_seconds">Takes 15–30 Seconds</string>
     <string name="go_premium_unlimited_access">Go Premium – Unlimited Access</string>
@@ -243,7 +243,9 @@
     <string name="pet">Pet</string>
     <string name="cute">Cute</string>
 
-
+    <!-- res/values/strings.xml -->
+    <string name="facebook_app_id" translatable="false">1310274443992412</string>
+    <string name="facebook_clint" translatable="false">038ff89fc02c774c0fe42563b892f5e5</string>
 
 
 </resources>

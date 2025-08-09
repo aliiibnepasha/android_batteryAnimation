@@ -17,11 +17,13 @@ import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.ActivitySplashBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerPermissionSettings
+import com.lowbyte.battery.animation.utils.AnimationUtils.isCoolDownShowTime
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyAnimEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyEmojiEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyWidgetEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenDynamicDoneEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenGestureEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenSplashEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenStatusEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyAnimEnabled
@@ -99,6 +101,7 @@ class SplashActivity : BaseActivity() {
         val adConfigJson = remoteConfig.getString(remoteJsonKey)
         try {
             val jsonObject = JSONObject(adConfigJson)
+            isFullscreenHomeEnabled = jsonObject.optBoolean("FullscreenHome_enabled", true)
             isFullscreenSplashEnabled = jsonObject.optBoolean("FullscreenSplash_enabled", true)
             isRewardedEnabled = jsonObject.optBoolean("Rewarded_enabled", true)
             isFullscreenStatusEnabled = jsonObject.optBoolean("FullscreenStatusBack_enabled", true)
@@ -120,6 +123,7 @@ class SplashActivity : BaseActivity() {
             isNativeStatusEnabled = jsonObject.optBoolean("NativeSmallStatusBar_enabled", true)
             isNativeDynamicEnabled = jsonObject.optBoolean("NativeDynamic_enabled", true)
             isNativeGestureEnabled = jsonObject.optBoolean("NativeSmallGesture_enabled", true)
+            isCoolDownShowTime = jsonObject.optInt("CoolDownShowAd_time", 30000)
 
             Log.d("RemoteConfig", "Remote config loaded: $adConfigJson")
         } catch (e: JSONException) {

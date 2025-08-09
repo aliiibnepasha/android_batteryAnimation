@@ -140,9 +140,10 @@ dependencies {
     implementation(libs.localization)
     implementation(libs.json)
     implementation(libs.gson)
-    implementation("com.adjust.sdk:adjust-android:5.4.2")
-    implementation("com.android.installreferrer:installreferrer:2.2")
-    implementation("com.adjust.sdk:adjust-android-webbridge:5.4.2")
+    implementation("com.facebook.android:facebook-android-sdk:18.1.3")
+//    implementation("com.adjust.sdk:adjust-android:5.4.2")
+//    implementation("com.android.installreferrer:installreferrer:2.2")
+//    implementation("com.adjust.sdk:adjust-android-webbridge:5.4.2")
 
 
 
