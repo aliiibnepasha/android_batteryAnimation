@@ -13,7 +13,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
@@ -21,16 +20,16 @@ import com.lowbyte.battery.animation.activity.BatteryAnimationEditApplyActivity
 import com.lowbyte.battery.animation.activity.BatteryWidgetEditApplyActivity
 import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
 import com.lowbyte.battery.animation.adapter.MultiViewAdapter
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.FragmentHomeBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.model.MultiViewItem
-import com.lowbyte.battery.animation.utils.AllowAccessibilityDialogFragment
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.combinedAnimationList
-import com.lowbyte.battery.animation.utils.AnimationUtils.emojiFashionListFantasy
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenSplashEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.trendy
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListFantasy
 import com.lowbyte.battery.animation.utils.AppPreferences
@@ -144,11 +143,24 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     5 -> Intent(requireActivity(), BatteryAnimationEditApplyActivity::class.java)
                     else -> null
                 }
-                intent?.apply {
-                    putExtra(EXTRA_POSITION, parentPosition)
-                    putExtra(EXTRA_LABEL, label)
-                    startActivity(this)
+
+                AdManager.showInterstitialAd(
+                    requireActivity(),
+                    isFullscreenSplashEnabled,
+                    true
+                ) {
+
+                    intent?.apply {
+                        putExtra(EXTRA_POSITION, parentPosition)
+                        putExtra(EXTRA_LABEL, label)
+                        startActivity(this)
+                    }
                 }
+
+
+
+
+
             },
             onChildViewAllClick = { titlePosition ->
                 val eventMap = mapOf("section_index" to "$titlePosition")
@@ -157,7 +169,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         if (isAdded && findNavController().currentDestination?.id == R.id.navigation_home) {
 
                             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_emojis", eventMap)
-                            findNavController().navigate(R.id.action_home_to_viewAllEmoji)
+                            AdManager.showInterstitialAd(
+                                requireActivity(),
+                                isFullscreenSplashEnabled,
+                                true
+                            ) {
+                                findNavController().navigate(R.id.action_home_to_viewAllEmoji)
+                            }
+
+
                             FirebaseAnalyticsUtils.logClickEvent(requireContext(), "home_to_view_all", null)
 
                         }
@@ -166,7 +186,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     2 -> {
                         if (isAdded && findNavController().currentDestination?.id == R.id.navigation_home) {
                             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_widgets", eventMap)
-                            findNavController().navigate(R.id.action_home_to_viewAllWidget)
+
+                            AdManager.showInterstitialAd(
+                                requireActivity(),
+                                isFullscreenSplashEnabled,
+                                true
+                            ) {
+                                findNavController().navigate(R.id.action_home_to_viewAllWidget)
+                            }
+
+
+
                         }
 
 
@@ -174,7 +204,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     4 -> {
                         if (isAdded && findNavController().currentDestination?.id == R.id.navigation_home) {
                             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_animations", eventMap)
-                            findNavController().navigate(R.id.action_home_to_viewAllAnim)
+                            AdManager.showInterstitialAd(
+                                requireActivity(),
+                                isFullscreenSplashEnabled,
+                                true
+                            ) {
+                                findNavController().navigate(R.id.action_home_to_viewAllAnim)
+                            }
+
 
                         }
 
@@ -223,6 +260,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
            return false
        }
 
+    }
+
+    override fun onDestroy() {
+        AdManager.setCooldownEnabledForLoad(true)
+        AdManager.setCooldownEnabledForShow(true)
+        super.onDestroy()
     }
 
     override fun onResume() {

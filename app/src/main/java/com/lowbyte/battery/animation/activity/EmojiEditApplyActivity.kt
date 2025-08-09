@@ -7,6 +7,7 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -86,8 +87,19 @@ class EmojiEditApplyActivity : BaseActivity() {
 
         binding.ibBackButton.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_back_button", mapOf("screen" to "EmojiEditApplyScreen"))
-            finish()
+            AdManager.showInterstitialAd(this,isFullscreenApplyEmojiEnabled,true) {
+                finish()
+                Log.e("Ads", "FullScreenTobeShoe")
+            }
         }
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                AdManager.showInterstitialAd(this@EmojiEditApplyActivity, isFullscreenApplyEmojiEnabled,true) {
+                    finish()
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
 
         binding.ibNextButton.setOnClickListener {
             preferences.setInt("percentageColor", Color.BLACK)

@@ -58,7 +58,6 @@ class SplashActivity : BaseActivity() {
             binding = ActivitySplashBinding.inflate(layoutInflater)
             setContentView(binding.root)
 
-
             preferences = AppPreferences.getInstance(this)
             Log.d("SplashActivityLog", "Preferences initialized: isProUser=${preferences.isProUser}")
             if (!preferences.isProUser){
@@ -200,7 +199,6 @@ class SplashActivity : BaseActivity() {
 
     override fun onDestroy() {
         nativeHelper = null
-
         AdManager.interstitialAd = null
         super.onDestroy()
     }

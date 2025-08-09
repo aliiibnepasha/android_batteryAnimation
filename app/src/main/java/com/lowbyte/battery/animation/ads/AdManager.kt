@@ -6,24 +6,19 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
-import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.FullScreenContentCallback
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.RequestConfiguration
+import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.lowbyte.battery.animation.utils.AdLoadingDialogManager
+import com.lowbyte.battery.animation.utils.*
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenHome2Id
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isValid
-import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils.logPaidEvent
 import com.lowbyte.battery.animation.utils.ServiceUtils.isEditing
 import java.util.concurrent.atomic.AtomicBoolean
 
 object AdManager {
+
     private const val TAG = "AdManager"
 
      var interstitialAd: InterstitialAd? = null
@@ -34,6 +29,18 @@ object AdManager {
     private const val LAST_AD_TIME_KEY = "last_interstitial_ad_time"
     private const val COOLDOWN_MS = 30_000L
     private const val RELOAD_DELAY_MS = 10_000L
+
+    // Cooldown control flags
+    private var isCooldownEnabledForLoad = false
+    private var isCooldownEnabledForShow = false
+
+    fun setCooldownEnabledForLoad(enabled: Boolean) {
+        isCooldownEnabledForLoad = enabled
+    }
+
+    fun setCooldownEnabledForShow(enabled: Boolean) {
+        isCooldownEnabledForShow = enabled
+    }
 
     fun initializeAds(context: Context) {
         preferences = AppPreferences.getInstance(context)
@@ -64,6 +71,11 @@ object AdManager {
                 TAG,
                 "Skipping interstitial load: proUser=${preferences.isProUser}, remoteConfig=$remoteConfig, loading=$adIsLoading, alreadyLoaded=${interstitialAd != null}"
             )
+            return
+        }
+
+        if (isCooldownEnabledForLoad && !hasCooldownPassed()) {
+            Log.d(TAG, "Cooldown active — skipping ad load")
             return
         }
 
@@ -116,26 +128,22 @@ object AdManager {
             return
         }
 
-        if (!hasCooldownPassed()) {
+        if (isCooldownEnabledForShow && !hasCooldownPassed()) {
             Log.d(TAG, "Ad cooldown active — skipping ad")
             onDismiss()
             return
         }
 
-        if (activity.isFinishing || activity.isDestroyed) {
-            return
-        }
+        if (activity.isFinishing || activity.isDestroyed) return
 
         val delay = if (interstitialAd != null) 1000L else {
             loadInterstitialAd(activity, getFullscreenHome2Id(), remoteConfig)
-            5000L
+            3000L
         }
 
-        if (activity.isValid()) {
-            AdLoadingDialogManager.show(activity, delay) {
-                if (activity.isValid()) {
-                    continueWithInterstitialAd(activity, remoteConfig, isFromActivity, onDismiss)
-                }
+        AdLoadingDialogManager.show(activity, delay) {
+            if (activity.isValid()) {
+                continueWithInterstitialAd(activity, remoteConfig, isFromActivity, onDismiss)
             }
         }
     }
@@ -160,7 +168,7 @@ object AdManager {
             return
         }
 
-        if (interstitialAd == null && activity.isValid()) {
+        if (interstitialAd == null) {
             Log.d(TAG, "Ad not ready — fallback and reload")
             onDismiss()
             loadInterstitialAd(activity, getFullscreenId(), remoteConfig)
@@ -176,7 +184,7 @@ object AdManager {
                 Log.d(TAG, "Ad is now showing")
                 updateLastAdShownTime()
 
-                // Auto-preload new ad after 10s if app is in foreground
+                // Auto-preload new ad after 10 seconds if app is still foreground
                 activity.window.decorView.postDelayed({
                     try {
                         if (activity.isValid() && isAppInForeground(activity) && !preferences.isProUser) {
@@ -212,9 +220,7 @@ object AdManager {
         }
 
         try {
-            if (activity.isValid()) {
-                interstitialAd?.show(activity)
-            }
+            interstitialAd?.show(activity)
         } catch (e: Exception) {
             Log.e(TAG, "Exception showing interstitial: ${e.localizedMessage}")
             interstitialAd = null
@@ -233,7 +239,7 @@ object AdManager {
         return System.currentTimeMillis() - lastTime >= COOLDOWN_MS
     }
 
-    // Network check
+    // Internet check
     private fun isInternetAvailable(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = cm.activeNetwork ?: return false
@@ -241,12 +247,13 @@ object AdManager {
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
-    // App foreground check
+    // Foreground check
     private fun isAppInForeground(context: Context): Boolean {
         val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
         val packageName = context.packageName
         return manager?.runningAppProcesses?.any {
-            it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && it.processName == packageName
+            it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND &&
+                    it.processName == packageName
         } ?: false
     }
 }
