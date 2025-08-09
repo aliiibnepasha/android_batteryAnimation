@@ -44,17 +44,15 @@ class AllEmojiAdapter(
             val resId = context.resources.getIdentifier(item, "drawable", context.packageName)
 
             binding.root.setOnClickListener {
-                if ((position + 1) % 4 == 0) {
-                    if (preferences.getBoolean("RewardEarned",false) == false){
+                if (preferences.getBoolean("RewardEarned", false) == false) {
+                    if ((position + 1) % 4 == 0) {
                         onItemClick(position, getItem(position),true)
-                    }else{
+                    } else {
                         onItemClick(position, getItem(position),false)
                     }
-
                 } else {
                     onItemClick(position, getItem(position),false)
                 }
-
             }
 
             if ((position + 1) % 4 == 0 && preferences.getBoolean("RewardEarned",false) == false) {

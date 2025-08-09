@@ -31,6 +31,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.combinedAnimationList
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenSplashEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.toy
 import com.lowbyte.battery.animation.utils.AnimationUtils.trendy
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListFantasy
 import com.lowbyte.battery.animation.utils.AppPreferences
@@ -121,7 +122,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val data = listOf(
             MultiViewItem.TitleItem(getString(R.string.cat_emojis)),
-            MultiViewItem.ListEmojiOrWidgetItem(trendy),
+            MultiViewItem.ListEmojiOrWidgetItem(toy),
             MultiViewItem.TitleItem(getString(R.string.cat_widgets)),
             MultiViewItem.ListEmojiOrWidgetItem(widgetListFantasy),
             MultiViewItem.TitleItem(getString(R.string.cat_animations)),

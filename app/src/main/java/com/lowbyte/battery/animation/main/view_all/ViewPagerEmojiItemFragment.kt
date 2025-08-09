@@ -38,11 +38,9 @@ class ViewPagerEmojiItemFragment : Fragment() {
     private lateinit var binding: ItemViewPagerBinding
     private lateinit var adapter: AllEmojiAdapter
     private var currentPos: Int = 0
-    private lateinit var dialogRewarded: Dialog
 
     private lateinit var preferences: AppPreferences
 
-    private var bindingReward: DialogGoProBinding? = null
     companion object {
         private const val ARG_POSITION = "arg_position"
 
@@ -69,15 +67,6 @@ class ViewPagerEmojiItemFragment : Fragment() {
         // Log screen view for emoji tab
         FirebaseAnalyticsUtils.logScreenView(this, "EmojiTab_$currentPos")
 
-        dialogRewarded = Dialog(requireContext())
-        bindingReward = DialogGoProBinding.inflate(LayoutInflater.from(requireContext()))
-        dialogRewarded.setContentView(bindingReward?.root!!)
-        dialogRewarded.setCancelable(false)
-        dialogRewarded.window?.attributes?.windowAnimations = R.style.DialogAnimation
-        dialogRewarded.window?.setLayout(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT)
-        dialogRewarded.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
 
         return binding.root
@@ -100,64 +89,18 @@ class ViewPagerEmojiItemFragment : Fragment() {
                     "emoji_position" to position.toString()
                 )
             )
-            if (isRewarded || !preferences.isProUser && preferences.getBoolean(
-                    "RewardEarned",
-                    false
-                ) == false
-            ) {
-                bindingReward?.ivClose?.setOnClickListener { dialogRewarded.dismiss() }
-                if (!isRewardedEnabled){
-                    bindingReward?.btnWatchAd?.visibility = View.GONE
-                  //  bindingReward?.btnPremium?.visibility = View.VISIBLE
-                }else{
-                    bindingReward?.btnWatchAd?.visibility = View.VISIBLE
-                  //  bindingReward?.btnPremium?.visibility = View.VISIBLE
-                    bindingReward?.btnWatchAd?.setOnClickListener {
-                        dialogRewarded.dismiss()
-                        RewardedAdManager.showRewardedAd(
-                            activity = requireActivity(),
-                            onRewardEarned = {
-                                preferences.setBoolean("RewardEarned", true)
 
-                            },
-                            onAdShown = {
-                                // Log analytics or UI update
-                            },
-                            onAdDismissed = {
-                                val intent = Intent(
-                                    requireActivity(), EmojiEditApplyActivity::class.java
-                                ).apply {
-                                    putExtra(EXTRA_POSITION, position)
-                                    putExtra(EXTRA_LABEL, label)
-                                }
-                                startActivity(intent)
-                                FirebaseAnalyticsUtils.logClickEvent(
-                                    requireActivity(),
-                                    "EmojiEditApplyAct"
-                                )
-                            })
-                    }
-                }
-                bindingReward?.btnPremium?.setOnClickListener {
-                    dialogRewarded.dismiss()
-                    startActivity(Intent(requireActivity(), ProActivity::class.java))
-                    FirebaseAnalyticsUtils.logClickEvent(
-                        requireActivity(),
-                        "ProActivity"
-                    )
-                }
-                dialogRewarded.show()
-            } else {
-                val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java).apply {
+            val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java).apply {
                     putExtra(EXTRA_POSITION, position)
                     putExtra(EXTRA_LABEL, label)
+                    putExtra("RewardEarned", isRewarded)
                 }
                 startActivity(intent)
                 FirebaseAnalyticsUtils.logClickEvent(
                     requireActivity(),
                     "EmojiEditApplyAct"
                 )
-            }
+
         }
 
         binding.recyclerView.apply {
@@ -166,8 +109,8 @@ class ViewPagerEmojiItemFragment : Fragment() {
         }
 
         val emojiList = when (currentPos) {
-            0 -> trendy
-            1 -> toy
+            0 -> toy
+            1 -> trendy
             2 -> emojiFace
             3 -> pet
             4 -> cute
@@ -186,9 +129,7 @@ class ViewPagerEmojiItemFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        if (dialogRewarded.isShowing){
-            dialogRewarded.dismiss()
-        }
+
         super.onDestroyView()
     }
 }

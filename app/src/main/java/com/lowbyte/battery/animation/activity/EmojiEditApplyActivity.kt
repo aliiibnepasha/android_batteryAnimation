@@ -1,10 +1,14 @@
 package com.lowbyte.battery.animation.activity
 
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -14,13 +18,16 @@ import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.AdManager
+import com.lowbyte.battery.animation.ads.RewardedAdManager
 import com.lowbyte.battery.animation.databinding.ActivityEmojiEditApplayBinding
+import com.lowbyte.battery.animation.databinding.DialogGoProBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyEmojiEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isRewardedEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.skydoves.colorpickerview.ColorEnvelope
@@ -34,6 +41,9 @@ class EmojiEditApplyActivity : BaseActivity() {
     private lateinit var drawable: String
 
     private lateinit var sheet: AccessibilityPermissionBottomSheet // Declare the sheet
+    private var bindingReward: DialogGoProBinding? = null
+    private lateinit var dialogRewarded: Dialog
+    private  var isRewarded: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +52,16 @@ class EmojiEditApplyActivity : BaseActivity() {
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
         AdManager.loadInterstitialAd(this, getFullscreenId(),isFullscreenApplyEmojiEnabled)
+
+        dialogRewarded = Dialog(this)
+        bindingReward = DialogGoProBinding.inflate(LayoutInflater.from(this))
+        dialogRewarded.setContentView(bindingReward?.root!!)
+        dialogRewarded.setCancelable(false)
+        dialogRewarded.window?.attributes?.windowAnimations = R.style.DialogAnimation
+        dialogRewarded.window?.setLayout(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialogRewarded.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
 
         sheet = AccessibilityPermissionBottomSheet(
@@ -68,6 +88,7 @@ class EmojiEditApplyActivity : BaseActivity() {
         FirebaseAnalyticsUtils.startScreenTimer("EmojiEditApplyScreen")
 
         val position = intent.getIntExtra(EXTRA_POSITION, -1)
+        isRewarded = intent.getBooleanExtra("RewardEarned", false)
         drawable = intent.getStringExtra(EXTRA_LABEL) ?: getString(R.string.wifi)
 
         Log.i("ITEMCLICK", "$position $drawable")
@@ -208,10 +229,50 @@ class EmojiEditApplyActivity : BaseActivity() {
             }
            //    }
         } else {
-            sendBroadcast(Intent(BROADCAST_ACTION))
-            startActivity(Intent(this, ApplySuccessfullyActivity::class.java))
-            finish()
-            FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
+            if (isRewarded && !preferences.isProUser && preferences.getBoolean("RewardEarned", false) == false) {
+                Log.d("RewardedCheck","Rewarded $isRewarded")
+                bindingReward?.ivClose?.setOnClickListener { dialogRewarded.dismiss() }
+                if (!isRewardedEnabled){
+                    bindingReward?.btnWatchAd?.visibility = View.GONE
+                    //  bindingReward?.btnPremium?.visibility = View.VISIBLE
+                }else
+                {
+                    bindingReward?.btnWatchAd?.visibility = View.VISIBLE
+                    //  bindingReward?.btnPremium?.visibility = View.VISIBLE
+                    bindingReward?.btnWatchAd?.setOnClickListener {
+                        dialogRewarded.dismiss()
+                        RewardedAdManager.showRewardedAd(
+                            activity = this,
+                            onRewardEarned = {
+                                preferences.setBoolean("RewardEarned", true)
+
+                            },
+                            onAdShown = {
+                                // Log analytics or UI update
+                            },
+                            onAdDismissed = {
+                                sendBroadcast(Intent(BROADCAST_ACTION))
+                                startActivity(Intent(this, ApplySuccessfullyActivity::class.java))
+                                finish()
+                                FirebaseAnalyticsUtils.logClickEvent(
+                                    this,
+                                    "EmojiEditApplyAct"
+                                )
+                            })
+                    }
+                }
+
+                dialogRewarded.show()
+            }else{
+                sendBroadcast(Intent(BROADCAST_ACTION))
+                startActivity(Intent(this, ApplySuccessfullyActivity::class.java))
+                finish()
+                FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
+
+            }
+
+
+
         }
     }
 
@@ -227,6 +288,12 @@ class EmojiEditApplyActivity : BaseActivity() {
         super.onResume()
     }
 
+    override fun onDestroy() {
+        if (dialogRewarded.isShowing){
+            dialogRewarded.dismiss()
+        }
+        super.onDestroy()
+    }
     override fun onPause() {
         super.onPause()
         FirebaseAnalyticsUtils.stopScreenTimer(this, "EmojiEditApplyScreen")

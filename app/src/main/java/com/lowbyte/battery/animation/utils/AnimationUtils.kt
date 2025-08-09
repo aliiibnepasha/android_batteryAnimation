@@ -336,8 +336,8 @@ fun getRewardedId(): String {
 
     fun getTabTitlesEmoji(context: Context): List<String> {
         return listOf(
-            context.getString(R.string.trendy),
             context.getString(R.string.toy),
+            context.getString(R.string.trendy),
             context.getString(R.string.emoji_face),
             context.getString(R.string.pet),
             context.getString(R.string.cute),
