@@ -80,20 +80,20 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
 
         val languages = listOf(
             Language("العربية", "ar"),
-            Language("Español", "es-rES"),
+            Language("Español", "es"),
             Language("English", "en"),
-            Language("Français", "fr-rFR"),
+            Language("Français", "fr"),
             Language("हिंदी", "hi"),
-            Language("Italiano", "it-rIT"),
+            Language("Italiano", "it"),
             Language("日本語", "ja"),
             Language("한국어", "ko"),
-            Language("Bahasa Melayu", "ms-rMY"),
-            Language("Filipino", "phi"),
+            Language("Bahasa Melayu", "ms"),
+            Language("Filipino", "fil"),
             Language("ไทย", "th"),
-            Language("Türkçe", "tr-rTR"),
+            Language("Türkçe", "tr"),
             Language("Tiếng Việt", "vi"),
-            Language("Português", "pt-rPT"),
-            Language("Bahasa Indonesia", "in")
+            Language("Português", "pt"),
+            Language("Bahasa Indonesia", "id")
         )
 
         val currentLanguageCode = LocaleHelper.getLanguage(requireContext())
@@ -117,7 +117,7 @@ class LanguageFragment : Fragment(R.layout.fragment_language) {
                     View.LAYOUT_DIRECTION_LTR
                 }
 
-            requireActivity().window.decorView.layoutDirection = layoutDirection
+         //   requireActivity().window.decorView.layoutDirection = layoutDirection
             // Log language selection event
             FirebaseAnalyticsUtils.logClickEvent(
                 requireActivity(),
