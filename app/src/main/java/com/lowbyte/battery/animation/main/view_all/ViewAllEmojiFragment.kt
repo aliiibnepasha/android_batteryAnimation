@@ -78,21 +78,21 @@ class ViewAllEmojiFragment : Fragment() {
 
         binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
 
-
-        binding.tvCustomize.setOnClickListener {
-            FirebaseAnalyticsUtils.logClickEvent(
-                requireActivity(),
-                "InteractiveLottieAct"
-            )
-            AdManager.showInterstitialAd(
-                requireActivity(),
-                isFullscreenStatusEnabled,
-                true
-            ) {
-                startActivity(Intent(requireContext(), InteractiveLottieActivity::class.java))
-
-            }
-        }
+//
+//        binding.tvCustomize.setOnClickListener {
+//            FirebaseAnalyticsUtils.logClickEvent(
+//                requireActivity(),
+//                "InteractiveLottieAct"
+//            )
+//            AdManager.showInterstitialAd(
+//                requireActivity(),
+//                isFullscreenStatusEnabled,
+//                true
+//            ) {
+//                startActivity(Intent(requireContext(), InteractiveLottieActivity::class.java))
+//
+//            }
+//        }
 
 
         binding.switchEnableBatteryEmojiViewAll.setOnCheckedChangeListener { _, isChecked ->
