@@ -204,7 +204,7 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
                     val successCallback = PendingIntent.getBroadcast(this, 0, successIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                     appWidgetManager.requestPinAppWidget(widgetProvider, options, successCallback)
                     Log.e("BatteryWidgetProvider", "Activity ------------- Loading image for label 2: $label")
-                    val serviceIntent = Intent(this, BatteryWidgetForegroundService::class.java)
+                    val serviceIntent = Intent(this, BatteryWidgetForegroundService::class.java).setAction(BatteryWidgetForegroundService.ACTION_START_SERVICE)
                     ContextCompat.startForegroundService(this, serviceIntent)
                     Toast.makeText(
                         this,

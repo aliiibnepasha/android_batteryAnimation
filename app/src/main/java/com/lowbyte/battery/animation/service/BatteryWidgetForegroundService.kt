@@ -39,14 +39,11 @@ class BatteryWidgetForegroundService : Service() {
 
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val action = intent.action
-            if (action == Intent.ACTION_BATTERY_CHANGED /*|| action == Intent.ACTION_POWER_CONNECTED || action == Intent.ACTION_POWER_DISCONNECTED*/) {
-                Log.d("widgetTracking", "iconName - $action / widgetId - Receiver")
-                updateWidgets()
+            if (intent.action == Intent.ACTION_BATTERY_CHANGED) {
+                updateWidgets() // keep as-is; force not needed here
             }
         }
     }
-
     override fun onCreate() {
         super.onCreate()
         preferences = AppPreferences.getInstance(this)
@@ -59,24 +56,24 @@ class BatteryWidgetForegroundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundWithNotification()
         }
-
         preferences.serviceRunningFlag = true
 
         when (intent?.action) {
             ACTION_STOP_SERVICE -> {
                 preferences.serviceRunningFlag = false
+                // Update widgets NOW to reveal the restart button on all widgets
+                updateWidgets(force = true)
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf()
             }
             ACTION_START_SERVICE -> {
-                updateWidgets()
+                updateWidgets(force = true) // optional, ensures UI sync immediately
             }
             else -> {
-
+                updateWidgets()
             }
         }
         return START_STICKY
@@ -87,7 +84,8 @@ class BatteryWidgetForegroundService : Service() {
         serviceScope.cancel()
         preferences.serviceRunningFlag = false
         unregisterReceiver(batteryReceiver)
-        updateWidgets()
+        // Force a final UI refresh so every widget shows the Start button
+        updateWidgets(force = true)
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -133,89 +131,71 @@ class BatteryWidgetForegroundService : Service() {
         startForeground(NOTIFICATION_ID, notification)
     }
 
-    private fun updateWidgets() {
+    private fun updateWidgets(force: Boolean = false) {
         val now = System.currentTimeMillis()
-        if (now - lastUpdateTime < 2000) return  // Skip if called too soon
+        if (!force && now - lastUpdateTime < 2000) return
         lastUpdateTime = now
-        //  Thread {
+
         serviceScope.launch {
             val appWidgetManager = AppWidgetManager.getInstance(this@BatteryWidgetForegroundService)
-            val component = ComponentName(
-                this@BatteryWidgetForegroundService, BatteryWidgetProvider::class.java
-            )
+            val component = ComponentName(this@BatteryWidgetForegroundService, BatteryWidgetProvider::class.java)
             val widgetIds = appWidgetManager.getAppWidgetIds(component)
             val isServiceRunning = preferences.serviceRunningFlag
 
-            val batteryIntent = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-            val level = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: return@launch
-            val scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+            // Only read battery if needed (skip if force and not needed for UI)
+            val batteryIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED), RECEIVER_NOT_EXPORTED)
+            } else {
+                registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            }
 
-            val percentage = (level * 100 / scale.toFloat()).toInt()
-            if (percentage == lastBatteryPercentage) return@launch
-            lastBatteryPercentage = percentage
-            val startIntent = Intent(
-                this@BatteryWidgetForegroundService,
-                BatteryWidgetForegroundService::class.java
-            ).apply {
+            val level = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+            val scale = batteryIntent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+            val percentage = if (level >= 0 && scale > 0) (level * 100 / scale.toFloat()).toInt() else lastBatteryPercentage
+
+            // Don’t exit on same percentage when we’re forcing a UI change
+            if (!force && percentage == lastBatteryPercentage) return@launch
+            if (percentage >= 0) lastBatteryPercentage = percentage
+
+            val startIntent = Intent(this@BatteryWidgetForegroundService, BatteryWidgetForegroundService::class.java).apply {
                 action = ACTION_START_SERVICE
             }
             val startPendingIntent = PendingIntent.getService(
-                this@BatteryWidgetForegroundService,
-                1,
-                startIntent,
+                this@BatteryWidgetForegroundService, 1, startIntent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
+
             widgetIds.forEach { widgetId ->
-
-
-                val iconName = preferences.getWidgetIcon(widgetId)
+                val iconName = preferences.getWidgetIcon(widgetId) ?: ""
                 val resId = resources.getIdentifier(iconName, "drawable", packageName)
-                Log.e("widgetTracking", "loading bitmap for $iconName / $widgetId")
-//                val bitmap = try {
-//                    if (resId != 0) Picasso.get().load(resId).fetch()
-//                    else Picasso.get().load(R.drawable.emoji_1).fetch()
-//                } catch (e: Exception) {
-//                    Log.e("widgetTracking", "Error loading bitmap for $iconName", e)
-//                    Picasso.get().load(R.drawable.emoji_1).fetch()
-//                }
 
                 val views = RemoteViews(packageName, R.layout.widget_battery).apply {
-                    setTextViewText(R.id.batteryLevelBottom, "$percentage %")
+                    if (percentage >= 0) setTextViewText(R.id.batteryLevelBottom, "$percentage %")
                     setViewVisibility(R.id.batteryLevelBottom, View.VISIBLE)
                     setViewVisibility(R.id.batteryLevelTop, View.GONE)
                     setViewVisibility(R.id.batteryLevelCenter, View.GONE)
                     setImageViewResource(R.id.battery_icon, if (resId != 0) resId else R.drawable.emoji_1)
-                   // setImageViewBitmap(R.id.battery_icon, bitmap)
 
-                    val intentClick = Intent(
-                        this@BatteryWidgetForegroundService, SplashActivity::class.java
-                    ).apply {
+                    val intentClick = Intent(this@BatteryWidgetForegroundService, SplashActivity::class.java).apply {
                         putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
                         putExtra(AnimationUtils.EXTRA_LABEL, iconName)
                         putExtra(AnimationUtils.EXTRA_POSITION, -1)
                     }
-
                     val clickPendingIntent = PendingIntent.getActivity(
-                        this@BatteryWidgetForegroundService,
-                        widgetId,
-                        intentClick,
+                        this@BatteryWidgetForegroundService, widgetId, intentClick,
                         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                     )
                     setOnClickPendingIntent(R.id.widget_root, clickPendingIntent)
 
-                    setViewVisibility(
-                        R.id.widget_start_button,
-                        if (isServiceRunning) View.GONE else View.VISIBLE
-                    )
+                    // This is the key visibility flip that must run even if % didn’t change
+                    setViewVisibility(R.id.widget_start_button, if (isServiceRunning) View.GONE else View.VISIBLE)
                     setOnClickPendingIntent(R.id.widget_start_button, startPendingIntent)
                 }
 
                 appWidgetManager.updateAppWidget(widgetId, views)
             }
         }
-        //  }.start()
     }
-
     companion object {
         private const val NOTIFICATION_CHANNEL_ID = "battery_widget_channel"
         private const val NOTIFICATION_ID = 101

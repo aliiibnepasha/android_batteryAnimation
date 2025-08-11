@@ -196,7 +196,6 @@ class NotchAccessibilityService : AccessibilityService() {
                                 if (resId != -1) {
                                     if (canvas.containsItem(resId)) {
                                         Log.d("servicesListener", "Receiver removeItemByResId")
-
                                         canvas.removeItemByResId(resId)
                                     }
                                 }
