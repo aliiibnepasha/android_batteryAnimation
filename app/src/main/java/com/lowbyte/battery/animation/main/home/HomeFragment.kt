@@ -272,7 +272,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     override fun onDestroy() {
-
         super.onDestroy()
     }
 
@@ -280,6 +279,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         if (!isAccessibilityServiceEnabled()){
             binding.switchEnableBatteryEmoji.isChecked = false
             preferences.isStatusBarEnabled = false
+        }else{
+            binding.switchEnableBatteryEmoji.isChecked = preferences.isStatusBarEnabled
         }
         super.onResume()
     }

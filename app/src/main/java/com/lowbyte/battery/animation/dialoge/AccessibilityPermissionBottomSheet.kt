@@ -1,6 +1,5 @@
 package com.lowbyte.battery.animation.dialoge
 
-import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.BulletAdapter
@@ -77,9 +74,11 @@ class AccessibilityPermissionBottomSheet(
                 onAllowClicked.invoke()
                 dismiss()
             } else {
+                isTermsAccepted = true
+                updateToggleUI()
                 Toast.makeText(
                     requireContext(),
-                    getString(R.string.please_accept_terms_of_service),
+                    "Terms and conditions accepted",
                     Toast.LENGTH_SHORT
                 ).show()
             }

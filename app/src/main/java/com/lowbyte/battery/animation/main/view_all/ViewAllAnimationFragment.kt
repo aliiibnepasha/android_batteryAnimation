@@ -12,11 +12,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.BatteryAnimationEditApplyActivity
 import com.lowbyte.battery.animation.adapter.AnimationAdapter
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.FragmentViewAllAnimationBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.combinedAnimationList
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenHomeEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -108,11 +110,19 @@ class ViewAllAnimationFragment : Fragment() {
                 mapOf("animation_name" to name, "position" to position.toString())
             )
 
-            val intent = Intent(requireActivity(), BatteryAnimationEditApplyActivity::class.java).apply {
-                putExtra(EXTRA_POSITION, position)
-                putExtra(EXTRA_LABEL, name)
+            AdManager.showInterstitialAd(
+                requireActivity(),
+                isFullscreenHomeEnabled,
+                true
+            ) {
+                val intent =
+                    Intent(requireActivity(), BatteryAnimationEditApplyActivity::class.java).apply {
+                        putExtra(EXTRA_POSITION, position)
+                        putExtra(EXTRA_LABEL, name)
+                    }
+                startActivity(intent)
             }
-            startActivity(intent)
+
         }
 
         binding.recyclerView.apply {

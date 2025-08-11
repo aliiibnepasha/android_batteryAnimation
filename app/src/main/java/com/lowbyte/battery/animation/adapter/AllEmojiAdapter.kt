@@ -45,17 +45,16 @@ class AllEmojiAdapter(
 
             binding.root.setOnClickListener {
                 if (preferences.getBoolean("RewardEarned", false) == false) {
-                    if ((position + 1) % 4 == 0) {
-                        onItemClick(position, getItem(position),true)
-                    } else {
-                        onItemClick(position, getItem(position),false)
-                    }
+                    val cycleIndex = position % 6 // total cycle length = 2 false + 4 true
+                    val isTrue = cycleIndex >= 2  // index 0,1 → false; 2,3,4,5 → true
+                    onItemClick(position, getItem(position), isTrue)
                 } else {
                     onItemClick(position, getItem(position),false)
                 }
             }
-
-            if ((position + 1) % 4 == 0 && preferences.getBoolean("RewardEarned",false) == false) {
+            val cycleIndex = position % 6 // total cycle length = 2 false + 4 true
+            val isTrue = cycleIndex >= 2  // index 0,1 → false; 2,3,4,5 → true
+            if (isTrue && preferences.getBoolean("RewardEarned",false) == false) {
                 binding.watchAdItem.visibility = View.VISIBLE
             } else {
                 binding.watchAdItem.visibility = View.INVISIBLE

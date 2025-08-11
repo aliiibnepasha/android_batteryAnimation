@@ -39,7 +39,7 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
     private lateinit var label: String
     private var appWidgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
     private var isNewWidget: Boolean = false
-    private var isUserActionPerformedWidget: Boolean = false
+  //  private var isUserActionPerformedWidget: Boolean = false
     private var isScreenFirstOpen: Boolean = true
     private var nativeAdHelper: NativeWidgetHelper? = null
 
@@ -53,15 +53,15 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (isUserActionPerformedWidget) {
+               // if (isUserActionPerformedWidget) {
                     Log.d("onBackPredd","onBackPredd with Ad")
                     AdManager.showInterstitialAd(this@BatteryWidgetEditApplyActivity, isFullscreenApplyWidgetEnabled, true) {
                         finish()
                     }
-                } else {
-                    Log.d("onBackPredd","onBackPredd with  no Ad")
-                    finish()
-                }
+//                } else {
+//                    Log.d("onBackPredd","onBackPredd with  no Ad")
+//                    finish()
+//                }
             }
         }
         onBackPressedDispatcher.addCallback(this, callback)
@@ -133,17 +133,17 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
             if (isNewWidget) {
                 setResult(RESULT_CANCELED)
             }
-            if (isUserActionPerformedWidget) {
+          //  if (isUserActionPerformedWidget) {
                 AdManager.showInterstitialAd(this, isFullscreenApplyWidgetEnabled, true) {
                     finish()
                 }
-            } else {
-                finish()
-            }
+//            } else {
+//                finish()
+//            }
         }
 
         binding.buttonForApply.setOnClickListener {
-            isUserActionPerformedWidget = true
+          //  isUserActionPerformedWidget = true
             if (preferences.widgetCount>=10){
                 Toast.makeText(this, getString(R.string.widget_limit_reached), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -224,13 +224,13 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
 
         binding.buttonSetAsEmoji.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_set_as_emoji", mapOf("label" to label))
-            if (isUserActionPerformedWidget) {
+           // if (isUserActionPerformedWidget) {
                 AdManager.showInterstitialAd(this, isFullscreenApplyWidgetEnabled, true) {
                     finish()
                 }
-            } else {
-                finish()
-            }
+//            } else {
+//                finish()
+//            }
 
         }
     }

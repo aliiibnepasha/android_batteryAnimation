@@ -1,6 +1,5 @@
 package com.lowbyte.battery.animation.main.view_all
 
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,12 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
-import com.lowbyte.battery.animation.activity.ProActivity
 import com.lowbyte.battery.animation.adapter.AllEmojiAdapter
-import com.lowbyte.battery.animation.ads.RewardedAdManager
-import com.lowbyte.battery.animation.databinding.DialogGoProBinding
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ItemViewPagerBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
@@ -26,7 +22,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiFace
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiFashionListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiListCartoon
-import com.lowbyte.battery.animation.utils.AnimationUtils.isRewardedEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.pet
 import com.lowbyte.battery.animation.utils.AnimationUtils.toy
 import com.lowbyte.battery.animation.utils.AnimationUtils.trendy
@@ -90,7 +86,14 @@ class ViewPagerEmojiItemFragment : Fragment() {
                 )
             )
 
-            val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java).apply {
+            AdManager.showInterstitialAd(
+                requireActivity(),
+                isFullscreenHomeEnabled,
+                true
+            ) {
+                AdManager.setCooldownEnabledForShow(true)
+                AdManager.setCooldownEnabledForLoad(true)
+                val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java).apply {
                     putExtra(EXTRA_POSITION, position)
                     putExtra(EXTRA_LABEL, label)
                     putExtra("RewardEarned", isRewarded)
@@ -100,6 +103,8 @@ class ViewPagerEmojiItemFragment : Fragment() {
                     requireActivity(),
                     "EmojiEditApplyAct"
                 )
+            }
+
 
         }
 
@@ -110,8 +115,8 @@ class ViewPagerEmojiItemFragment : Fragment() {
 
         val emojiList = when (currentPos) {
             0 -> toy
-            1 -> trendy
-            2 -> emojiFace
+            1 -> emojiFace
+            2 -> trendy
             3 -> pet
             4 -> cute
 

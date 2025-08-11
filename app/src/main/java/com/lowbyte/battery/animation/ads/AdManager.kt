@@ -189,6 +189,8 @@ object AdManager {
                     try {
                         if (activity.isValid() && isAppInForeground(activity) && !preferences.isProUser) {
                             loadInterstitialAd(activity, getFullscreenHome2Id(), true)
+                            Log.e(TAG, "auto-loading ad")
+
                         }
                     } catch (e: Exception) {
                         Log.e(TAG, "Error auto-loading ad: ${e.localizedMessage}")

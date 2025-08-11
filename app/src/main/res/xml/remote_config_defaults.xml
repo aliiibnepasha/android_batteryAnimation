@@ -6,7 +6,7 @@
             {
             "Rewarded_enabled": true,
             "FullscreenSplash_enabled": true,
-            "FullscreenLang_enabled": false,
+            "FullscreenLang_enabled": true,
             "FullscreenGestureBack_enabled": true,
             "FullscreenStatusBack_enabled": true,
             "FullscreenDynamicDone_enabled": true,
@@ -17,7 +17,7 @@
             "BannerAdSettings_enabled": true,
             "NativeAdSplash_enabled": true,
             "NativeAdHome_enabled": true,
-            "NativeLanguageFirst_enabled": false,
+            "NativeLanguageFirst_enabled": true,
             "NativeLanguageSecond_enabled": true,
             "NativeApplyEmoji_enabled": true,
             "NativeApplyWidget_enabled": true,

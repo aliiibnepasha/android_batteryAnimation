@@ -140,7 +140,8 @@ class StatusBarGestureActivity : BaseActivity() {
 
         binding.gestureSwitchEnable.isChecked = preferences.isGestureMode
         binding.gestureSwitchEnable.setOnCheckedChangeListener { _, isChecked ->
-
+            preferences.isGestureMode = isChecked
+            preferences.isStatusBarEnabled = true
             if (isChecked){
                 checkAccessibilityPermission()
 
@@ -242,8 +243,7 @@ class StatusBarGestureActivity : BaseActivity() {
 
 
     private fun checkAccessibilityPermission() {
-        preferences.isGestureMode = true
-        preferences.isStatusBarEnabled = true
+
         if (!isAccessibilityServiceEnabled()) {
             FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_prompt_shown", null)
 //            if (BuildConfig.DEBUG){

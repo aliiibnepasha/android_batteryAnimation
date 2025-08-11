@@ -63,7 +63,7 @@ object AnimationUtils {
 
 // TODO Update Native Id
 fun getRewardedId(): String {
-        return if (!BuildConfig.DEBUG) {
+        return if (BuildConfig.DEBUG) {
             "ca-app-pub-3940256099942544/5224354917"
         } else {
             "ca-app-pub-9844943887550892/8218608589"
@@ -337,8 +337,8 @@ fun getRewardedId(): String {
     fun getTabTitlesEmoji(context: Context): List<String> {
         return listOf(
             context.getString(R.string.toy),
-            context.getString(R.string.trendy),
             context.getString(R.string.emoji_face),
+            context.getString(R.string.trendy),
             context.getString(R.string.pet),
             context.getString(R.string.cute),
 

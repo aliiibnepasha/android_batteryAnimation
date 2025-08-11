@@ -10,9 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.activity.BatteryWidgetEditApplyActivity
 import com.lowbyte.battery.animation.adapter.AllWidgetAdapter
+import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ItemViewPagerBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
+import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListAction
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListBasic
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListCute
@@ -72,15 +74,23 @@ class ViewPagerWidgetItemFragment : Fragment() {
                 )
             )
 
-            val intent = Intent(requireActivity(), BatteryWidgetEditApplyActivity::class.java).apply {
-                putExtra(EXTRA_POSITION, position)
-                putExtra(EXTRA_LABEL, label)
-            }
-            startActivity(intent)
-            FirebaseAnalyticsUtils.logClickEvent(
+            AdManager.showInterstitialAd(
                 requireActivity(),
-                "BatteryWidgetEdit"
-            )
+                isFullscreenHomeEnabled,
+                true
+            ) {
+                val intent = Intent(requireActivity(), BatteryWidgetEditApplyActivity::class.java).apply {
+                    putExtra(EXTRA_POSITION, position)
+                    putExtra(EXTRA_LABEL, label)
+                }
+                startActivity(intent)
+                FirebaseAnalyticsUtils.logClickEvent(
+                    requireActivity(),
+                    "BatteryWidgetEdit"
+                )
+            }
+
+
 
         }
 
