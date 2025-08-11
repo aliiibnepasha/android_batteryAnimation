@@ -197,8 +197,6 @@ class EmojiEditApplyActivity : BaseActivity() {
         }
 
         binding.btnNext.setOnClickListener {
-            preferences.isStatusBarEnabled = true
-            preferences.batteryIconName = drawable
             checkAccessibilityPermission()
 
         }
@@ -218,16 +216,13 @@ class EmojiEditApplyActivity : BaseActivity() {
         FirebaseAnalyticsUtils.logClickEvent(this, "click_apply_emoji", mapOf("drawable" to drawable))
         if (!isAccessibilityServiceEnabled()) {
             FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_prompt_shown", null)
-//            if (BuildConfig.DEBUG){
-//                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-//            }else{
+
             val existing = supportFragmentManager.findFragmentByTag("AccessibilityPermission")
             if (existing == null || !existing.isAdded) {
                 sheet.show(supportFragmentManager, "AccessibilityPermission")
             } else {
                 Log.d("Accessibility", "AccessibilityPermissionBottomSheet already shown")
             }
-           //    }
         } else {
             if (isRewarded && !preferences.isProUser && preferences.getBoolean("RewardEarned", false) == false) {
                 Log.d("RewardedCheck","Rewarded $isRewarded")
@@ -251,7 +246,9 @@ class EmojiEditApplyActivity : BaseActivity() {
                                 // Log analytics or UI update
                             },
                             onAdDismissed = {
-                                sendBroadcast(Intent(BROADCAST_ACTION))
+                                preferences.isStatusBarEnabled = true
+                                preferences.batteryIconName = drawable
+                              //  sendBroadcast(Intent(BROADCAST_ACTION))
                                 startActivity(Intent(this, ApplySuccessfullyActivity::class.java))
                                 finish()
                                 FirebaseAnalyticsUtils.logClickEvent(
@@ -264,6 +261,8 @@ class EmojiEditApplyActivity : BaseActivity() {
 
                 dialogRewarded.show()
             }else{
+                preferences.isStatusBarEnabled = true
+                preferences.batteryIconName = drawable
                 sendBroadcast(Intent(BROADCAST_ACTION))
                 startActivity(Intent(this, ApplySuccessfullyActivity::class.java))
                 finish()

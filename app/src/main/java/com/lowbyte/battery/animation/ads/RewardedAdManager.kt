@@ -55,8 +55,12 @@ object RewardedAdManager {
     fun showRewardedAd(
         activity: Activity,
         onRewardEarned: () -> Unit,
-        onAdShown: () -> Unit = {},
-        onAdDismissed: () -> Unit = {}
+        onAdShown: () -> Unit = {
+
+        },
+        onAdDismissed: () -> Unit = {
+
+        }
     ) {
         val prefs = AppPreferences.getInstance(activity)
 
@@ -107,25 +111,28 @@ object RewardedAdManager {
         rewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdShowedFullScreenContent() {
                 Log.d(TAG, "Ad shown")
+                activity.isEditing(isEditing = true, isAdShowing = true)
                 AdStateController.isInterstitialShowing = true
                 onAdShown()
-                activity.isEditing(isEditing = true, isAdShowing = true)
             }
 
             override fun onAdDismissedFullScreenContent() {
                 Log.d(TAG, "Ad dismissed")
+                activity.isEditing(isEditing = false, isAdShowing = false)
                 AdStateController.isInterstitialShowing = false
                 rewardedAd = null
-                activity.isEditing(isEditing = false, isAdShowing = false)
                 onAdDismissed()
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                 Log.e(TAG, "Failed to show ad: ${adError.message}")
+                if (adError.message == "The ad has already been shown."){
+                    return
+                }
                 AdStateController.isInterstitialShowing = false
                 rewardedAd = null
                 loadAd(activity) // optional preload
-                activity.isEditing(isEditing = false, isAdShowing = false)
+             //   activity.isEditing(isEditing = false, isAdShowing = false)
             }
 
             override fun onAdImpression() {

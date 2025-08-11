@@ -73,7 +73,11 @@ class NotchAccessibilityService : AccessibilityService() {
 
     private var overlayLottieCanvas: InteractiveLottieView? = null
 
-
+    // at top (fields)
+    private val overlayLock = Any()
+    @Volatile private var overlayAttached = false
+    private val mainHandler by lazy { Handler(mainLooper) }
+    private var lastOverlayAddMs = 0L
 
     override fun onServiceConnected() {
         super.onServiceConnected()
@@ -171,7 +175,7 @@ class NotchAccessibilityService : AccessibilityService() {
                                     val safeX = if (x.isNaN()) currentX else x
                                     val safeY = if (y.isNaN()) currentY else y
 
-                                    Log.d("servicesListener", "Receiver overlayLottieCanvas")
+                                    Log.d("RewardedAdManager", "Receiver overlayLottieCanvas")
 
                                     canvas.updateItemTransform(resId, safeX, safeY, scale, rotation)
                                 }
@@ -182,7 +186,7 @@ class NotchAccessibilityService : AccessibilityService() {
                                     if (!canvas.containsItem(resId)) {
                                         canvas.addLottieItem(resId)
                                     }
-                                    Log.d("servicesListener", "Receiver updateItemTransform")
+                                    Log.d("RewardedAdManager", "Receiver updateItemTransform")
                                     canvas.updateItemTransform(resId, x, y, scale, rotation)
                                 }
                             }
@@ -195,7 +199,7 @@ class NotchAccessibilityService : AccessibilityService() {
                             overlayLottieCanvas?.let { canvas ->
                                 if (resId != -1) {
                                     if (canvas.containsItem(resId)) {
-                                        Log.d("servicesListener", "Receiver removeItemByResId")
+                                        Log.d("RewardedAdManager", "Receiver removeItemByResId")
                                         canvas.removeItemByResId(resId)
                                     }
                                 }
@@ -593,62 +597,79 @@ class NotchAccessibilityService : AccessibilityService() {
     }
 
 
-    private fun addLottieOverlayView() {
-        if (overlayLottieCanvas != null && overlayLottieCanvas?.isAttachedToWindow == true) {
-            Log.d("servicesListener", "addLottieOverlayView Already added, skipping...")
-            return
-        }
-
-        overlayLottieCanvas = InteractiveLottieView(this).apply {
-            loadLottieItemsFromPrefs() // ⬅️ optional: load saved items
-        }
-        val params = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            dpToPx(180),
-            WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS  or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-            PixelFormat.TRANSLUCENT
-        ).apply {
-            gravity = Gravity.TOP
-        }
-
-        try {
-            windowManager?.addView(overlayLottieCanvas, params)
-            Log.d("servicesListener", "Added to overlayLottieCanvas")
-        } catch (e: Exception) {
-            Log.e("servicesListener", "Error adding view: ${e.message}")
-        }
+    private fun runOnUi(op: () -> Unit) {
+        if (Looper.myLooper() == Looper.getMainLooper()) op() else mainHandler.post(op)
     }
-    private fun removeLottieOverlayView() {
-        overlayLottieCanvas?.let { view ->
-            if (view.isAttachedToWindow) {
+
+    private fun addLottieOverlayView(force: Boolean = false) {
+        runOnUi {
+            synchronized(overlayLock) {
+                val now = System.currentTimeMillis()
+                if (!force && overlayAttached && (now - lastOverlayAddMs) < 150) return@synchronized
+
+                // Always remove first to prevent dupes
+                overlayLottieCanvas?.let {
+                    if (overlayAttached && it.isAttachedToWindow) {
+                        runCatching { windowManager?.removeViewImmediate(it) }
+                    }
+                }
+                overlayAttached = false
+                overlayLottieCanvas = null
+
+                overlayLottieCanvas = InteractiveLottieView(this).apply {
+                    loadLottieItemsFromPrefs()
+                }
+
+                val params = WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    dpToPx(180),
+                    WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    PixelFormat.TRANSLUCENT
+                ).apply { gravity = Gravity.TOP }
+
                 try {
-                    windowManager?.removeView(view)
-                    Log.d("servicesListener", "Removed from removeLottieOverlayView")
+                    windowManager?.addView(overlayLottieCanvas, params)
+                    overlayAttached = true
+                    lastOverlayAddMs = now
+                    Log.d("servicesListener", "Overlay added")
                 } catch (e: Exception) {
-                    Log.e("servicesListener", "Error removing view: ${e.message}")
+                    overlayAttached = false
+                    overlayLottieCanvas = null
+                    Log.e("servicesListener", "add overlay failed: ${e.message}")
                 }
             }
         }
-        overlayLottieCanvas = null
+    }
+
+    private fun removeLottieOverlayView() {
+        runOnUi {
+            synchronized(overlayLock) {
+                overlayLottieCanvas?.let {
+                    if (it.isAttachedToWindow) {
+                        runCatching { windowManager?.removeViewImmediate(it) }
+                            .onFailure { Log.e("servicesListener", "remove overlay failed: ${it.message}") }
+                    }
+                }
+                overlayAttached = false
+                overlayLottieCanvas = null
+            }
+        }
     }
 
 
     private fun updateLottieOverlayVisibility(isEditing: Boolean) {
-        val show = preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)?:false
+        val show = preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false) ?: false
         Log.d("servicesListener", "Pref: $show | isEditing: $isEditing")
-
         if (show && !isEditing) {
-            addLottieOverlayView()
+            addLottieOverlayView(force = true)   // force ensures a clean re-add
         } else {
             removeLottieOverlayView()
         }
     }
-
 
     private fun createNotificationNotch() {
         if (notificationNotchBinding != null && notificationNotchBinding?.root?.parent != null) return
@@ -1044,6 +1065,7 @@ class NotchAccessibilityService : AccessibilityService() {
 
     override fun onDestroy() {
         super.onDestroy()
+        removeLottieOverlayView()
         handler.removeCallbacksAndMessages(null)
         statusBarBinding?.root?.let {
             if (it.isAttachedToWindow) windowManager?.removeView(it)

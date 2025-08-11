@@ -185,10 +185,10 @@ object ServiceUtils {
                 putExtra("isEditing", if (isAdShowing) true else isEditing)
             }
             sendBroadcast(intent)
-            Log.d("isEditing", "isEditing allow editing $isEditing")
+            Log.d("RewardedAdManager", "isEditing allow editing $isEditing")
 
         }else{
-            Log.d("isEditing", "no need editing isEditing $isEditing")
+            Log.d("RewardedAdManager", "no need editing isEditing $isEditing")
         }
     }
 
