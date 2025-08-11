@@ -47,7 +47,8 @@ class StatusBarCustomizeActivity : BaseActivity() {
         _binding = ActivityStatusBarCustommizeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
-        AdManager.loadInterstitialAd(this,getFullscreenHome2Id(),isFullscreenStatusEnabled)
+
+    //    AdManager.loadInterstitialAd(this,getFullscreenHome2Id(),isFullscreenStatusEnabled)
 
         permissionBottomSheet = AccessibilityPermissionBottomSheet(
             onAllowClicked = {
@@ -72,9 +73,9 @@ class StatusBarCustomizeActivity : BaseActivity() {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-             //   AdManager.showInterstitialAd(this@StatusBarCustomizeActivity, isFullscreenStatusEnabled,true) {
+            //    AdManager.showInterstitialAd(this@StatusBarCustomizeActivity, isFullscreenStatusEnabled,true) {
                     finish()
-             //   }
+            //    }
             }
         }
         onBackPressedDispatcher.addCallback(this, callback)
@@ -112,9 +113,9 @@ class StatusBarCustomizeActivity : BaseActivity() {
 
         binding.ibBackButton.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_back_button", null)
-          //  AdManager.showInterstitialAd(this@StatusBarCustomizeActivity, isFullscreenStatusEnabled,true) {
+      //      AdManager.showInterstitialAd(this@StatusBarCustomizeActivity, isFullscreenStatusEnabled,true) {
                 finish()
-          //  }
+       //     }
         }
 
         binding.restoreSetting.setOnClickListener {
@@ -279,6 +280,8 @@ class StatusBarCustomizeActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
+        AdManager.setCooldownEnabledForLoad(true)
+        AdManager.setCooldownEnabledForShow(true)
         super.onDestroy()
 
     }

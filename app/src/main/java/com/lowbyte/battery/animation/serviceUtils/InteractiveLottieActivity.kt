@@ -291,6 +291,8 @@ class InteractiveLottieActivity : BaseActivity() {
 //    }
 
     private fun checkAccessibilityPermission() {
+        preferences = AppPreferences.getInstance(this)
+
         if (!isAccessibilityServiceEnabled()) {
             FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_lotte_shown", null)
 //            if (BuildConfig.DEBUG){
@@ -306,12 +308,12 @@ class InteractiveLottieActivity : BaseActivity() {
         } else {
             FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_lotti", null)
             val currentState = preferences.getBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, false)
-            val newState = !(currentState ?: true)
+            val newState = !(currentState ?: false)
             preferences.setBoolean(KEY_SHOW_LOTTIE_TOP_VIEW, newState)
             binding.btnActivateSelected.text = getString(
                 if (newState) R.string.turn_off else R.string.turn_on
             )
-            isEditing(true)
+            isEditing(isEditing = true, isAdShowing = false)
         }
     }
 

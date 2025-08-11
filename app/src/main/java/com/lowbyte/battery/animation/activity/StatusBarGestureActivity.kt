@@ -48,7 +48,7 @@ class StatusBarGestureActivity : BaseActivity() {
         _binding = ActivityStatusBarGestureBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
-        AdManager.loadInterstitialAd(this, getFullscreenHome2Id(),isFullscreenGestureEnabled)
+     //   AdManager.loadInterstitialAd(this, getFullscreenHome2Id(),isFullscreenGestureEnabled)
 
 
         permissionBottomSheet = AccessibilityPermissionBottomSheet(
@@ -73,9 +73,9 @@ class StatusBarGestureActivity : BaseActivity() {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-             //   AdManager.showInterstitialAd(this@StatusBarGestureActivity, isFullscreenGestureEnabled,true) {
+            //   AdManager.showInterstitialAd(this@StatusBarGestureActivity, isFullscreenGestureEnabled,true) {
                     finish()
-              //  }
+            //    }
             }
         }
         onBackPressedDispatcher.addCallback(this, callback)
@@ -118,9 +118,9 @@ class StatusBarGestureActivity : BaseActivity() {
 
         binding.ibBackButton.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_back_button", null)
-          //  AdManager.showInterstitialAd(this@StatusBarGestureActivity, isFullscreenGestureEnabled,true) {
+      //      AdManager.showInterstitialAd(this@StatusBarGestureActivity, isFullscreenGestureEnabled,true) {
                 finish()
-           // }
+      //      }
         }
 
         // Load saved actions
@@ -274,6 +274,8 @@ class StatusBarGestureActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
+        AdManager.setCooldownEnabledForLoad(true)
+        AdManager.setCooldownEnabledForShow(true)
         super.onDestroy()
     }
 }
