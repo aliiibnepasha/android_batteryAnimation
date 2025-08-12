@@ -10,66 +10,114 @@ import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ItemAllEmojiBinding
 
 class AllEmojiAdapter(
-    private val onItemClick: (position: Int, label: String,isRewardAd:Boolean) -> Unit
-) : ListAdapter<String, AllEmojiAdapter.ViewHolder>(DiffCallback()) {
+    private val onItemClick: (position: Int, label: String, isRewardAd: Boolean) -> Unit,
+    private val headerHeightPx: Int = 0 ,// optional: set from Fragment
+    private val footerHeightPx: Int = 0 // optional: set from Fragment
+) : ListAdapter<String, RecyclerView.ViewHolder>(DiffCallback())
+{
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemAllEmojiBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-        return ViewHolder(binding)
+    private enum class VT { HEADER, ITEM, FOOTER }
+    override fun getItemCount(): Int = super.getItemCount() + 2 // header + footer
+
+    override fun getItemViewType(position: Int): Int = when (position) {
+        0 -> VT.HEADER.ordinal
+        itemCount - 1 -> VT.FOOTER.ordinal
+        else -> VT.ITEM.ordinal
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), position)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+
+            VT.HEADER.ordinal -> {
+                val v = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_spacer, parent, false)
+
+                if (headerHeightPx > 0) {
+                    val lp = v.layoutParams
+                    if (lp == null) {
+                        v.layoutParams = RecyclerView.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            headerHeightPx
+                        )
+                    } else {
+                        lp.height = headerHeightPx
+                        v.layoutParams = lp
+                    }
+                }
+                SpacerVH(v) // you can also make a dedicated HeaderVH
+            }
+
+            VT.FOOTER.ordinal -> {
+                val v = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_spacer, parent, false)
+
+                if (headerHeightPx > 0) {
+                    val lp = v.layoutParams
+                    if (lp == null) {
+                        v.layoutParams = RecyclerView.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            footerHeightPx
+                        )
+                    } else {
+                        lp.height = footerHeightPx
+                        v.layoutParams = lp
+                    }
+                }
+                SpacerVH(v) // or FooterVH if different handling
+            }
+
+            else -> {
+                val binding = ItemAllEmojiBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                ItemVH(binding)
+            }
+        }
     }
 
-    inner class ViewHolder(
-        private val binding: ItemAllEmojiBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is ItemVH -> {
+                // shift by 1 because of header
+                val dataIndex = position - 1
+                holder.bind(getItem(dataIndex), dataIndex)
+            }
 
-        /*  init {
-              binding.root.setOnClickListener {
-                  onItemClick(adapterPosition, getItem(adapterPosition))
-              }
-          }*/
+            is SpacerVH -> { /* nothing */
+            }
+        }
+    }
 
-        fun bind(item: String, position: Int) {
+    inner class ItemVH(private val binding: ItemAllEmojiBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: String, dataIndex: Int) {
             val context = binding.root.context
             val resId = context.resources.getIdentifier(item, "drawable", context.packageName)
 
+            // Reward every 4th actual item (unchanged logic)
+            val isReward = ((dataIndex + 1) % 4 == 0)
+
             binding.root.setOnClickListener {
-                if ((position + 1) % 4 == 0) {
-                    onItemClick(position, getItem(position),true)
-                } else {
-                    onItemClick(position, getItem(position),false)
-                }
-
+                onItemClick(dataIndex, item, isReward)
             }
 
-            if ((position + 1) % 4 == 0) {
-                binding.watchAdItem.visibility = View.VISIBLE
-            } else {
-                binding.watchAdItem.visibility = View.INVISIBLE
-            }
+            binding.watchAdItem.visibility = if (isReward) View.VISIBLE else View.INVISIBLE
 
             if (resId != 0) {
                 binding.widgetPreview.setImageResource(resId)
             } else {
-                binding.widgetPreview.setImageResource(R.drawable.emoji_2) // fallback image
+                binding.widgetPreview.setImageResource(R.drawable.emoji_2)
             }
         }
     }
 
-    private class DiffCallback : DiffUtil.ItemCallback<String>() {
-        override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
-            return oldItem == newItem
-        }
+    class SpacerVH(view: View) : RecyclerView.ViewHolder(view)
 
-        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
-            return oldItem == newItem
-        }
+    private class DiffCallback : DiffUtil.ItemCallback<String>() {
+        override fun areItemsTheSame(oldItem: String, newItem: String) = oldItem == newItem
+        override fun areContentsTheSame(oldItem: String, newItem: String) = oldItem == newItem
     }
-} 
+}

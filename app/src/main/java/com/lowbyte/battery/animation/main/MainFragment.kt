@@ -204,7 +204,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     binding.tvTitle.text = getString(R.string.menu_customize)
                     binding.ibBackButton.visibility = View.INVISIBLE
                     binding.ibHowToUseButton.visibility = View.INVISIBLE
-                    binding.ifvPro.visibility = View.INVISIBLE
+                    binding.ifvPro.visibility = View.VISIBLE
                     binding.ifvInfoRight.visibility = View.INVISIBLE
                     "customize_screen"
                 }
@@ -213,7 +213,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     binding.tvTitle.text = getString(R.string.menu_dynamic_island)
                     binding.ibBackButton.visibility = View.INVISIBLE
                     binding.ibHowToUseButton.visibility = View.INVISIBLE
-                    binding.ifvPro.visibility = View.INVISIBLE
+                    binding.ifvPro.visibility = View.VISIBLE
                     binding.ifvInfoRight.visibility = View.VISIBLE
                     "island_screen"
                 }
@@ -222,7 +222,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     binding.tvTitle.text = getString(R.string.view_all_battery_emoji)
                     binding.ibBackButton.visibility = View.VISIBLE
                     binding.ibHowToUseButton.visibility = View.INVISIBLE
-                    binding.ifvPro.visibility = View.INVISIBLE
+                    binding.ifvPro.visibility = View.VISIBLE
                     binding.ifvInfoRight.visibility = View.INVISIBLE
                     "view_all_emoji_screen"
                 }
@@ -231,7 +231,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     binding.tvTitle.text = getString(R.string.view_all_battery_widget)
                     binding.ibBackButton.visibility = View.VISIBLE
                     binding.ibHowToUseButton.visibility = View.INVISIBLE
-                    binding.ifvPro.visibility = View.INVISIBLE
+                    binding.ifvPro.visibility = View.VISIBLE
                     binding.ifvInfoRight.visibility = View.INVISIBLE
                     "view_all_widget_screen"
                 }
@@ -240,7 +240,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                     binding.tvTitle.text = getString(R.string.view_all_battery_animation)
                     binding.ibBackButton.visibility = View.VISIBLE
                     binding.ibHowToUseButton.visibility = View.INVISIBLE
-                    binding.ifvPro.visibility = View.INVISIBLE
+                    binding.ifvPro.visibility = View.VISIBLE
                     binding.ifvInfoRight.visibility = View.INVISIBLE
                     "view_all_animation_screen"
                 }

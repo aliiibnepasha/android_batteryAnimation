@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.R
@@ -87,9 +86,13 @@ class ViewPagerEmojiItemFragment : Fragment() {
         setupRecyclerView()
        // RewardedAdManager.loadAd(requireActivity())
     }
-
+    private fun Int.dp(context: android.content.Context) =
+        (this * context.resources.displayMetrics.density).toInt()
     private fun setupRecyclerView() {
-        adapter = AllEmojiAdapter { position, label, isRewarded ->
+        val spaceHPx = 40.dp(requireContext()) // top & bottom spacer height
+        val spacePPx = 60.dp(requireContext()) // top & bottom spacer height
+
+        adapter = AllEmojiAdapter ({ position, label, isRewarded ->
             FirebaseAnalyticsUtils.logClickEvent(
                 requireActivity(),
                 "emoji_selected",
@@ -153,10 +156,24 @@ class ViewPagerEmojiItemFragment : Fragment() {
                     "EmojiEditApplyAct"
                 )
             }
+        },
+            headerHeightPx = spaceHPx,
+            footerHeightPx = spacePPx,
+        )
+        val glm = GridLayoutManager(requireContext(), 3).apply {
+            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (position == 0 || position == adapter.itemCount - 1) {
+                        3
+                    } else {
+                        1
+                    }
+                }
+            }
         }
 
         binding.recyclerView.apply {
-            layoutManager = GridLayoutManager(context, 3)
+            layoutManager = glm
             adapter = this@ViewPagerEmojiItemFragment.adapter
         }
 

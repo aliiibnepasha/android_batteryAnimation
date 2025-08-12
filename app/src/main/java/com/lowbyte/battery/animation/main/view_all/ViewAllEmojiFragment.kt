@@ -11,15 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
-import com.lowbyte.battery.animation.activity.StatusBarIconSettingsActivity
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.FragmentViewAllEmojiBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
-import com.lowbyte.battery.animation.ui.InteractiveLottieActivity
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenHome2Id
@@ -42,6 +40,8 @@ class ViewAllEmojiFragment : Fragment() {
         AdManager.loadInterstitialAd(requireActivity(),getFullscreenHome2Id(),isFullscreenStatusEnabled)
 
         preferences = AppPreferences.getInstance(requireContext())
+        applyTabMargins(binding.tabLayout, 8, 8)
+
         sheet = AccessibilityPermissionBottomSheet(
             onAllowClicked = {
                 FirebaseAnalyticsUtils.logClickEvent(
@@ -77,23 +77,6 @@ class ViewAllEmojiFragment : Fragment() {
         setupViewPager()
 
         binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
-
-//
-//        binding.tvCustomize.setOnClickListener {
-//            FirebaseAnalyticsUtils.logClickEvent(
-//                requireActivity(),
-//                "InteractiveLottieAct"
-//            )
-//            AdManager.showInterstitialAd(
-//                requireActivity(),
-//                isFullscreenStatusEnabled,
-//                true
-//            ) {
-//                startActivity(Intent(requireContext(), InteractiveLottieActivity::class.java))
-//
-//            }
-//        }
-
 
         binding.switchEnableBatteryEmojiViewAll.setOnCheckedChangeListener { _, isChecked ->
             Handler(Looper.getMainLooper()).postDelayed({
@@ -149,6 +132,26 @@ class ViewAllEmojiFragment : Fragment() {
         } else {
             binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled
             requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+        }
+    }
+
+
+    private fun applyTabMargins(tabLayout: TabLayout, startDp: Int, endDp: Int) {
+        tabLayout.tabSelectedIndicator.alpha = 0
+        tabLayout.post {
+            val tabStrip = tabLayout.getChildAt(0) as? ViewGroup ?: return@post
+            val density = tabLayout.resources.displayMetrics.density
+            val startPx = (startDp * density).toInt()
+            val endPx = (endDp * density).toInt()
+
+            for (i in 0 until tabStrip.childCount) {
+                val tabView = tabStrip.getChildAt(i)
+                val lp = tabView.layoutParams as ViewGroup.MarginLayoutParams
+                lp.marginStart = startPx
+                lp.marginEnd = endPx
+                tabView.layoutParams = lp
+            }
+            tabLayout.requestLayout()
         }
     }
 

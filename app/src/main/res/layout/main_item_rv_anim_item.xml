@@ -3,21 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="6dp">
+    android:layout_marginVertical="6dp">
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationPreview"
-        android:layout_width="133dp"
-        android:layout_height="87dp"
-        android:padding="40dp"
+        android:layout_width="120dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_emoji_item"
+        android:padding="20dp"
+        android:src="@drawable/toy_1"
+        app:layout_constraintDimensionRatio="1:1"
         app:lottie_autoPlay="true"
         app:lottie_repeatCount="10"
         android:scaleType="centerCrop"
         app:lottie_repeatMode="restart"
-        android:background="@drawable/bg_rv_item"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintDimensionRatio="133:87"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

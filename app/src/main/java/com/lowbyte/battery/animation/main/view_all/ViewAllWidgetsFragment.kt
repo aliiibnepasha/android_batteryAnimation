@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.FragmentViewAllWidgetsBinding
@@ -96,8 +97,30 @@ class ViewAllWidgetsFragment : Fragment() {
                 )
             }
         }.attach()
+
+        applyTabMargins(binding.tabLayout, 8, 8)
+
     }
 
+
+    private fun applyTabMargins(tabLayout: TabLayout, startDp: Int, endDp: Int) {
+        tabLayout.tabSelectedIndicator.alpha = 0
+        tabLayout.post {
+            val tabStrip = tabLayout.getChildAt(0) as? ViewGroup ?: return@post
+            val density = tabLayout.resources.displayMetrics.density
+            val startPx = (startDp * density).toInt()
+            val endPx = (endDp * density).toInt()
+
+            for (i in 0 until tabStrip.childCount) {
+                val tabView = tabStrip.getChildAt(i)
+                val lp = tabView.layoutParams as ViewGroup.MarginLayoutParams
+                lp.marginStart = startPx
+                lp.marginEnd = endPx
+                tabView.layoutParams = lp
+            }
+            tabLayout.requestLayout()
+        }
+    }
     override fun onResume() {
         super.onResume()
         binding.switchEnableWidgetService.isChecked = preferences.serviceRunningFlag

@@ -116,7 +116,7 @@ class ViewAllAnimationFragment : Fragment() {
         }
 
         binding.recyclerView.apply {
-            layoutManager = GridLayoutManager(context, 2)
+            layoutManager = GridLayoutManager(context, 3)
             adapter = this@ViewAllAnimationFragment.adapter
         }
 
