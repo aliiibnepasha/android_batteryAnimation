@@ -58,9 +58,13 @@ class ViewPagerWidgetItemFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
     }
-
+    private fun Int.dp(context: android.content.Context) =
+        (this * context.resources.displayMetrics.density).toInt()
     private fun setupRecyclerView() {
-        adapter = AllWidgetAdapter { position, label ->
+        val spaceHPx = 40.dp(requireContext()) // top & bottom spacer height
+        val spacePPx = 60.dp(requireContext()) // top & bottom spacer height
+
+        adapter = AllWidgetAdapter ({ position, label ->
             // Log widget click event
             FirebaseAnalyticsUtils.logClickEvent(
                 requireActivity(),
@@ -82,10 +86,25 @@ class ViewPagerWidgetItemFragment : Fragment() {
                 "BatteryWidgetEdit"
             )
 
+        },
+            headerHeightPx = spaceHPx,
+            footerHeightPx = spacePPx,
+        )
+
+        val glm = GridLayoutManager(requireContext(), 3).apply {
+            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (position == 0 || position == adapter.itemCount - 1) {
+                        3
+                    } else {
+                        1
+                    }
+                }
+            }
         }
 
         binding.recyclerView.apply {
-            layoutManager = GridLayoutManager(context, 3)
+            layoutManager = glm
             adapter = this@ViewPagerWidgetItemFragment.adapter
         }
 

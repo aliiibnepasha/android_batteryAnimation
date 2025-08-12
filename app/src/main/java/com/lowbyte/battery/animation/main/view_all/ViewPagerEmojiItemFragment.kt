@@ -92,7 +92,8 @@ class ViewPagerEmojiItemFragment : Fragment() {
         val spaceHPx = 40.dp(requireContext()) // top & bottom spacer height
         val spacePPx = 60.dp(requireContext()) // top & bottom spacer height
 
-        adapter = AllEmojiAdapter ({ position, label, isRewarded ->
+        adapter = AllEmojiAdapter (
+            { position, label, isRewarded ->
             FirebaseAnalyticsUtils.logClickEvent(
                 requireActivity(),
                 "emoji_selected",
