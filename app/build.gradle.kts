@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.implementation
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -140,6 +141,18 @@ dependencies {
     implementation(libs.localization)
     implementation(libs.json)
     implementation(libs.gson)
+    implementation (platform("com.squareup.okhttp3:okhttp-bom:5.1.0"))
+    implementation ("com.squareup.okhttp3:okhttp")
+    implementation ("com.squareup.okhttp3:logging-interceptor")
+    implementation ("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation ("com.squareup.retrofit2:converter-moshi:3.0.0")
+    implementation ("com.squareup.moshi:moshi:1.15.2")
+    //ksp ("com.squareup.moshi:moshi-kotlin-codegen:1.15.2")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.9.2")
 
 
 

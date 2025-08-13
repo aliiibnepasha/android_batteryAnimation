@@ -6,14 +6,17 @@ import android.content.Intent
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import com.google.android.material.tabs.TabLayout
 import com.lowbyte.battery.animation.BuildConfig
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.model.Language
 
 object AnimationUtils {
+     val dataUrl = "https://theswiftvision.com/battery_emoji.php/"
 
     var finishingLang = false
     var remoteJsonKey = "ads_config_v17_ui"
@@ -415,6 +418,25 @@ fun Activity?.isValid(): Boolean {
 fun Activity?.is15SDK(): Boolean {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
 }
+
+     fun applyTabMargins(tabLayout: TabLayout, startDp: Int, endDp: Int) {
+        tabLayout.tabSelectedIndicator.alpha = 0
+        tabLayout.post {
+            val tabStrip = tabLayout.getChildAt(0) as? ViewGroup ?: return@post
+            val density = tabLayout.resources.displayMetrics.density
+            val startPx = (startDp * density).toInt()
+            val endPx = (endDp * density).toInt()
+
+            for (i in 0 until tabStrip.childCount) {
+                val tabView = tabStrip.getChildAt(i)
+                val lp = tabView.layoutParams as ViewGroup.MarginLayoutParams
+                lp.marginStart = startPx
+                lp.marginEnd = endPx
+                tabView.layoutParams = lp
+            }
+            tabLayout.requestLayout()
+        }
+    }
 
 
 }

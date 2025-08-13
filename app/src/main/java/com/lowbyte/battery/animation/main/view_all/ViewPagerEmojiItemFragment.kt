@@ -1,5 +1,7 @@
 package com.lowbyte.battery.animation.main.view_all
 
+import Category
+import FileItem
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +10,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
@@ -16,9 +22,13 @@ import com.lowbyte.battery.animation.adapter.AllEmojiAdapter
 import com.lowbyte.battery.animation.ads.RewardedAdManager
 import com.lowbyte.battery.animation.databinding.DialogGoProBinding
 import com.lowbyte.battery.animation.databinding.ItemViewPagerBinding
+import com.lowbyte.battery.animation.server.EmojiViewModel
+import com.lowbyte.battery.animation.server.EmojiViewModelFactory
+import com.lowbyte.battery.animation.server.Resource
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.cute
+import com.lowbyte.battery.animation.utils.AnimationUtils.dataUrl
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiAnimListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiBasicListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.emojiComicListFantasy
@@ -32,6 +42,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.toy
 import com.lowbyte.battery.animation.utils.AnimationUtils.trendy
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
+import kotlinx.coroutines.launch
 
 class ViewPagerEmojiItemFragment : Fragment() {
 
@@ -43,6 +54,9 @@ class ViewPagerEmojiItemFragment : Fragment() {
     private lateinit var preferences: AppPreferences
 
     private var bindingReward: DialogGoProBinding? = null
+
+    private val vm: EmojiViewModel by viewModels { EmojiViewModelFactory(requireContext()) }
+
     companion object {
         private const val ARG_POSITION = "arg_position"
 
@@ -83,8 +97,38 @@ class ViewPagerEmojiItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { vm.categories.collect { renderCategories(it) } }
+                launch { vm.singleCategory.collect { renderSingle(it) } }
+                launch { vm.pngs.collect { renderPngs(it) } }
+            }
+        }
+
+        vm.loadCategoryNames(dataUrl)
+        vm.loadCategory(dataUrl, name = "cat_3")
+        vm.loadFolderPngs(dataUrl, categoryName = "cat_3", folderName = "emoji_battery")
+
         setupRecyclerView()
-       // RewardedAdManager.loadAd(requireActivity())
+    }
+
+
+    private fun renderCategories(state: Resource<List<String>>) { /* update list / chips */
+
+        Log.d("APIData", "Data renderCategories : ${state}")
+
+
+    }
+
+    private fun renderSingle(state: Resource<Category>) { /* show details */
+        Log.d("APIData", "Data renderSingle : ${state}")
+
+    }
+
+    private fun renderPngs(state: Resource<List<FileItem>>) { /* submit to adapter */
+        Log.d("APIData", "Data renderPngs : ${state}")
+
     }
     private fun Int.dp(context: android.content.Context) =
         (this * context.resources.displayMetrics.density).toInt()

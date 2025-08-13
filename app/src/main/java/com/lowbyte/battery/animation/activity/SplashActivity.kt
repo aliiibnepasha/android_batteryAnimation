@@ -1,8 +1,16 @@
 package com.lowbyte.battery.animation.activity
 
+import ApiResponse
+import Category
+import FileItem
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingResult
@@ -15,6 +23,10 @@ import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.NativeLanguageHelper
 import com.lowbyte.battery.animation.databinding.ActivitySplashBinding
+import com.lowbyte.battery.animation.server.EmojiViewModel
+import com.lowbyte.battery.animation.server.EmojiViewModelFactory
+import com.lowbyte.battery.animation.server.Resource
+import com.lowbyte.battery.animation.utils.AnimationUtils.dataUrl
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerPermissionSettings
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyAnimEnabled
@@ -38,8 +50,11 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeStatusEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isRewardedEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.remoteJsonKey
 import com.lowbyte.battery.animation.utils.AppPreferences
+import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
+import kotlin.getValue
+
 
 
 class SplashActivity : BaseActivity() {
@@ -47,6 +62,8 @@ class SplashActivity : BaseActivity() {
     private lateinit var binding: ActivitySplashBinding
     private lateinit var preferences: AppPreferences
     private lateinit var billingClient: BillingClient
+
+    private val vm: EmojiViewModel by viewModels { EmojiViewModelFactory(this) }
 
     private var nativeHelper: NativeLanguageHelper? = null
 
@@ -57,6 +74,19 @@ class SplashActivity : BaseActivity() {
             Log.d("SplashActivityLog", "onCreate called")
             binding = ActivitySplashBinding.inflate(layoutInflater)
             setContentView(binding.root)
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                    launch { vm.allData.collect { renderAll(it) } }
+//                    launch { vm.categories.collect { renderCategories(it) } }
+//                    launch { vm.singleCategory.collect { renderSingle(it) } }
+//                    launch { vm.pngs.collect { renderPngs(it) } }
+                }
+            }
+            vm.loadAll(dataUrl)
+//            vm.loadCategoryNames(dataUrl)
+//            vm.loadCategory(dataUrl, name = "cat_3")
+//            vm.loadFolderPngs(dataUrl, categoryName = "cat_3", folderName = "emoji_battery")
+
 
 
             preferences = AppPreferences.getInstance(this)
@@ -96,6 +126,8 @@ class SplashActivity : BaseActivity() {
         }
 
     }
+
+
 
     fun fetchAdSettingsAndLoad() {
         val remoteConfig = FirebaseRemoteConfig.getInstance()

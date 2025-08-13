@@ -4,33 +4,42 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.FragmentViewAllEmojiBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
+import com.lowbyte.battery.animation.server.EmojiViewModel
+import com.lowbyte.battery.animation.server.EmojiViewModelFactory
+import com.lowbyte.battery.animation.server.Resource
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
-import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
+import com.lowbyte.battery.animation.utils.AnimationUtils.applyTabMargins
+import com.lowbyte.battery.animation.utils.AnimationUtils.dataUrl
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenHome2Id
-import com.lowbyte.battery.animation.utils.AnimationUtils.getTabTitlesEmoji
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenStatusEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
+import com.lowbyte.battery.animation.utils.PermissionUtils.checkAccessibilityPermission
+import com.lowbyte.battery.animation.utils.PermissionUtils.isAccessibilityServiceEnabled
+import kotlinx.coroutines.launch
 
 class ViewAllEmojiFragment : Fragment() {
 
     private lateinit var binding: FragmentViewAllEmojiBinding
     private lateinit var preferences: AppPreferences
     private lateinit var sheet: AccessibilityPermissionBottomSheet // Declare the sheet
+    private val vm: EmojiViewModel by viewModels { EmojiViewModelFactory(requireContext()) }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +49,20 @@ class ViewAllEmojiFragment : Fragment() {
         AdManager.loadInterstitialAd(requireActivity(),getFullscreenHome2Id(),isFullscreenStatusEnabled)
 
         preferences = AppPreferences.getInstance(requireContext())
-        applyTabMargins(binding.tabLayout, 8, 8)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    vm.categories.collect { state ->
+                        if (state is Resource.Success) {
+                            val categoriesList = state.data
+                            Log.d("APIData", "Categories List: $categoriesList")
+                            setupViewPager(categoriesList)
+                        }
+                    }
+                }
+            }
+        }
+        vm.loadCategoryNames(dataUrl)
 
         sheet = AccessibilityPermissionBottomSheet(
             onAllowClicked = {
@@ -59,7 +81,7 @@ class ViewAllEmojiFragment : Fragment() {
                 preferences.isStatusBarEnabled = false
                 binding.switchEnableBatteryEmojiViewAll.isChecked = false
             }, onDismissListener = {
-                if (!isAccessibilityServiceEnabled()) {
+                if (!requireActivity().isAccessibilityServiceEnabled()) {
                     preferences.isStatusBarEnabled = false
                     binding.switchEnableBatteryEmojiViewAll.isChecked = false
                 }
@@ -74,13 +96,12 @@ class ViewAllEmojiFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViewPager()
 
-        binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
+        binding.switchEnableBatteryEmojiViewAll.isChecked =
+            preferences.isStatusBarEnabled && requireActivity().isAccessibilityServiceEnabled()
 
         binding.switchEnableBatteryEmojiViewAll.setOnCheckedChangeListener { _, isChecked ->
             Handler(Looper.getMainLooper()).postDelayed({
-
                 if (isAdded){
                     preferences.isStatusBarEnabled = isChecked
                     // Log toggle
@@ -90,11 +111,35 @@ class ViewAllEmojiFragment : Fragment() {
                         mapOf("enabled" to isChecked.toString())
                     )
                     if (preferences.isStatusBarEnabled && isChecked) {
-                        checkAccessibilityPermission()
+                        requireActivity().checkAccessibilityPermission(false) {
+                            when (it) {
+                                "OpenBottomSheet" -> {
+                                    sheet.show(childFragmentManager, "AccessibilityPermission")
+                                }
+
+                                "Allowed" -> {
+                                    binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled
+                                    requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+                                }
+
+                                else -> {
+                                    val existing =
+                                        childFragmentManager.findFragmentByTag("AccessibilityPermission")
+                                    if (existing == null || !existing.isAdded) {
+                                        sheet.show(childFragmentManager, "AccessibilityPermission")
+                                    } else {
+                                        Log.d(
+                                            "Accessibility",
+                                            "AccessibilityPermissionBottomSheet already shown"
+                                        )
+                                    }
+                                }
+                            }
+
+                        }
                     } else {
                         requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
                     }
-                    requireActivity().sendBroadcast(Intent(BROADCAST_ACTION_DYNAMIC))
 
                 }
 
@@ -102,69 +147,21 @@ class ViewAllEmojiFragment : Fragment() {
         }
     }
 
-    private fun setupViewPager() {
-        val tabTitles = getTabTitlesEmoji(requireContext())
-
+    private fun setupViewPager(tabsList: List<String>) {
         binding.viewPager.adapter = object : FragmentStateAdapter(this) {
-            override fun getItemCount(): Int = tabTitles.size
+            override fun getItemCount(): Int = tabsList.size
             override fun createFragment(position: Int): Fragment {
                 return ViewPagerEmojiItemFragment.newInstance(position)
             }
         }
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = tabTitles[position]
+            tab.text = tabsList[position]
         }.attach()
-    }
 
-    private fun checkAccessibilityPermission() {
-        if (!isAccessibilityServiceEnabled()) {
-//            if (BuildConfig.DEBUG){
-//                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-//            }else{
-                val existing = childFragmentManager.findFragmentByTag("AccessibilityPermission")
-                if (existing == null || !existing.isAdded) {
-                    sheet.show(childFragmentManager, "AccessibilityPermission")
-                } else {
-                    Log.d("Accessibility", "AccessibilityPermissionBottomSheet already shown")
-                }
-         //   }
-        } else {
-            binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled
-            requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
-        }
+        applyTabMargins(binding.tabLayout, 8, 8)
+
     }
 
 
-    private fun applyTabMargins(tabLayout: TabLayout, startDp: Int, endDp: Int) {
-        tabLayout.tabSelectedIndicator.alpha = 0
-        tabLayout.post {
-            val tabStrip = tabLayout.getChildAt(0) as? ViewGroup ?: return@post
-            val density = tabLayout.resources.displayMetrics.density
-            val startPx = (startDp * density).toInt()
-            val endPx = (endDp * density).toInt()
-
-            for (i in 0 until tabStrip.childCount) {
-                val tabView = tabStrip.getChildAt(i)
-                val lp = tabView.layoutParams as ViewGroup.MarginLayoutParams
-                lp.marginStart = startPx
-                lp.marginEnd = endPx
-                tabView.layoutParams = lp
-            }
-            tabLayout.requestLayout()
-        }
-    }
-
-    private fun isAccessibilityServiceEnabled(): Boolean {
-        val expectedComponentName =
-            "${requireContext().packageName}/${NotchAccessibilityService::class.java.canonicalName}"
-        val enabledServices = Settings.Secure.getString(
-            requireContext().contentResolver,
-            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
-        ) ?: return false
-
-        return enabledServices.split(':').any {
-            it.equals(expectedComponentName, ignoreCase = true)
-        }
-    }
 }
