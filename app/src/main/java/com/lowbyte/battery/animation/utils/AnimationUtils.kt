@@ -437,6 +437,7 @@ fun Activity?.is15SDK(): Boolean {
             tabLayout.requestLayout()
         }
     }
-
+     fun Int.dp(context: Context) =
+        (this * context.resources.displayMetrics.density).toInt()
 
 }

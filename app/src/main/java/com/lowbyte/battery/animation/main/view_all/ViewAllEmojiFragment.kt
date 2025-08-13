@@ -71,7 +71,6 @@ class ViewAllEmojiFragment : Fragment() {
                     "allow_accessibility_click"
                 )
                 startActivity(Intent(requireActivity(), AllowAccessibilityActivity::class.java))
-                // startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             },
             onCancelClicked = {
                 FirebaseAnalyticsUtils.logClickEvent(
@@ -151,7 +150,7 @@ class ViewAllEmojiFragment : Fragment() {
         binding.viewPager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = tabsList.size
             override fun createFragment(position: Int): Fragment {
-                return ViewPagerEmojiItemFragment.newInstance(position)
+                return ViewPagerEmojiItemFragment.newInstance(position, tabsList[position])
             }
         }
 

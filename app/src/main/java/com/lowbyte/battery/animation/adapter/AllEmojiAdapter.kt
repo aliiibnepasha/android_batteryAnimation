@@ -1,19 +1,21 @@
 package com.lowbyte.battery.animation.adapter
 
+import FileItem
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ItemAllEmojiBinding
 
 class AllEmojiAdapter(
-    private val onItemClick: (position: Int, label: String, isRewardAd: Boolean) -> Unit,
+    private val onItemClick: (position: Int, fileItem: FileItem, isRewardAd: Boolean) -> Unit,
     private val headerHeightPx: Int = 0 ,// optional: set from Fragment
     private val footerHeightPx: Int = 0 // optional: set from Fragment
-) : ListAdapter<String, RecyclerView.ViewHolder>(DiffCallback())
+) : ListAdapter<FileItem, RecyclerView.ViewHolder>(DiffCallback())
 {
 
     private enum class VT { HEADER, ITEM, FOOTER }
@@ -93,31 +95,26 @@ class AllEmojiAdapter(
     inner class ItemVH(private val binding: ItemAllEmojiBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: String, dataIndex: Int) {
+        fun bind(item: FileItem, dataIndex: Int) {
             val context = binding.root.context
-            val resId = context.resources.getIdentifier(item, "drawable", context.packageName)
-
-            // Reward every 4th actual item (unchanged logic)
             val isReward = ((dataIndex + 1) % 4 == 0)
-
             binding.root.setOnClickListener {
                 onItemClick(dataIndex, item, isReward)
             }
 
             binding.watchAdItem.visibility = if (isReward) View.VISIBLE else View.INVISIBLE
+            val makeUrl = "https://theswiftvision.com/batteryEmoji/"
+//https://theswiftvision.com/batteryEmoji/cat_3/emoji_battery/emoji_battery_preview_7.png
+            Glide.with(context).load(item.url)
+                .placeholder(R.drawable.ic_launcher_foreground).into(binding.widgetPreview)
 
-            if (resId != 0) {
-                binding.widgetPreview.setImageResource(resId)
-            } else {
-                binding.widgetPreview.setImageResource(R.drawable.emoji_preview_default)
-            }
         }
     }
 
     class SpacerVH(view: View) : RecyclerView.ViewHolder(view)
 
-    private class DiffCallback : DiffUtil.ItemCallback<String>() {
-        override fun areItemsTheSame(oldItem: String, newItem: String) = oldItem == newItem
-        override fun areContentsTheSame(oldItem: String, newItem: String) = oldItem == newItem
+    private class DiffCallback : DiffUtil.ItemCallback<FileItem>() {
+        override fun areItemsTheSame(oldItem: FileItem, newItem: FileItem) = oldItem == newItem
+        override fun areContentsTheSame(oldItem: FileItem, newItem: FileItem) = oldItem == newItem
     }
 }

@@ -27,19 +27,9 @@ import com.lowbyte.battery.animation.server.EmojiViewModelFactory
 import com.lowbyte.battery.animation.server.Resource
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
-import com.lowbyte.battery.animation.utils.AnimationUtils.cute
 import com.lowbyte.battery.animation.utils.AnimationUtils.dataUrl
-import com.lowbyte.battery.animation.utils.AnimationUtils.emojiAnimListFantasy
-import com.lowbyte.battery.animation.utils.AnimationUtils.emojiBasicListFantasy
-import com.lowbyte.battery.animation.utils.AnimationUtils.emojiComicListFantasy
-import com.lowbyte.battery.animation.utils.AnimationUtils.emojiCuteListFantasy
-import com.lowbyte.battery.animation.utils.AnimationUtils.emojiFace
-import com.lowbyte.battery.animation.utils.AnimationUtils.emojiFashionListFantasy
-import com.lowbyte.battery.animation.utils.AnimationUtils.emojiListCartoon
+import com.lowbyte.battery.animation.utils.AnimationUtils.dp
 import com.lowbyte.battery.animation.utils.AnimationUtils.isRewardedEnabled
-import com.lowbyte.battery.animation.utils.AnimationUtils.pet
-import com.lowbyte.battery.animation.utils.AnimationUtils.toy
-import com.lowbyte.battery.animation.utils.AnimationUtils.trendy
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import kotlinx.coroutines.launch
@@ -49,6 +39,7 @@ class ViewPagerEmojiItemFragment : Fragment() {
     private lateinit var binding: ItemViewPagerBinding
     private lateinit var adapter: AllEmojiAdapter
     private var currentPos: Int = 0
+    private var categoryTitle: String = ""
     private lateinit var dialogRewarded: Dialog
 
     private lateinit var preferences: AppPreferences
@@ -60,8 +51,9 @@ class ViewPagerEmojiItemFragment : Fragment() {
     companion object {
         private const val ARG_POSITION = "arg_position"
 
-        fun newInstance(position: Int) = ViewPagerEmojiItemFragment().apply {
+        fun newInstance(position: Int, category: String) = ViewPagerEmojiItemFragment().apply {
             arguments = Bundle().apply {
+                putString("category", category)
                 putInt(ARG_POSITION, position)
             }
         }
@@ -70,6 +62,7 @@ class ViewPagerEmojiItemFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         currentPos = arguments?.getInt(ARG_POSITION) ?: 0
+        categoryTitle = arguments?.getString("category") ?: "0"
     }
 
     override fun onCreateView(
@@ -79,10 +72,7 @@ class ViewPagerEmojiItemFragment : Fragment() {
     ): View {
         binding = ItemViewPagerBinding.inflate(inflater, container, false)
         preferences = AppPreferences.getInstance(requireContext())
-
-        // Log screen view for emoji tab
         FirebaseAnalyticsUtils.logScreenView(this, "EmojiTab_$currentPos")
-
         dialogRewarded = Dialog(requireContext())
         bindingReward = DialogGoProBinding.inflate(LayoutInflater.from(requireContext()))
         dialogRewarded.setContentView(bindingReward?.root!!)
@@ -90,7 +80,6 @@ class ViewPagerEmojiItemFragment : Fragment() {
         dialogRewarded.window?.attributes?.windowAnimations = R.style.DialogAnimation
         dialogRewarded.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialogRewarded.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
 
         return binding.root
     }
@@ -100,26 +89,23 @@ class ViewPagerEmojiItemFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { vm.categories.collect { renderCategories(it) } }
-                launch { vm.singleCategory.collect { renderSingle(it) } }
-                launch { vm.pngs.collect { renderPngs(it) } }
+                launch {
+                    vm.singleCategory.collect {
+                        renderSingle(it)
+                    }
+                }
+                launch {
+                    vm.pngs.collect {
+                        renderPngs(it)
+                    }
+                }
             }
         }
-
-        vm.loadCategoryNames(dataUrl)
-        vm.loadCategory(dataUrl, name = "cat_3")
-        vm.loadFolderPngs(dataUrl, categoryName = "cat_3", folderName = "emoji_battery")
-
+        vm.loadCategory(dataUrl, name = categoryTitle)
+        vm.loadFolderPngs(dataUrl, categoryName = categoryTitle, folderName = "emoji_preview")
         setupRecyclerView()
     }
 
-
-    private fun renderCategories(state: Resource<List<String>>) { /* update list / chips */
-
-        Log.d("APIData", "Data renderCategories : ${state}")
-
-
-    }
 
     private fun renderSingle(state: Resource<Category>) { /* show details */
         Log.d("APIData", "Data renderSingle : ${state}")
@@ -127,23 +113,25 @@ class ViewPagerEmojiItemFragment : Fragment() {
     }
 
     private fun renderPngs(state: Resource<List<FileItem>>) { /* submit to adapter */
-        Log.d("APIData", "Data renderPngs : ${state}")
+        if (state is Resource.Success) {
+            Log.d("EmojiTab", "Tab $currentPos loaded with ${state.data.size} items.")
+            adapter.submitList(state.data)
+        }
 
     }
-    private fun Int.dp(context: android.content.Context) =
-        (this * context.resources.displayMetrics.density).toInt()
+
     private fun setupRecyclerView() {
         val spaceHPx = 40.dp(requireContext()) // top & bottom spacer height
         val spacePPx = 60.dp(requireContext()) // top & bottom spacer height
 
         adapter = AllEmojiAdapter (
-            { position, label, isRewarded ->
+            { position, fileItem, isRewarded ->
             FirebaseAnalyticsUtils.logClickEvent(
                 requireActivity(),
                 "emoji_selected",
                 mapOf(
                     "tab_index" to currentPos.toString(),
-                    "emoji_label" to label,
+                    "emoji_label" to fileItem.name,
                     "emoji_position" to position.toString()
                 )
             )
@@ -171,7 +159,7 @@ class ViewPagerEmojiItemFragment : Fragment() {
                                     requireActivity(), EmojiEditApplyActivity::class.java
                                 ).apply {
                                     putExtra(EXTRA_POSITION, position)
-                                    putExtra(EXTRA_LABEL, label)
+                                    putExtra(EXTRA_LABEL, fileItem.name)
                                 }
                                 startActivity(intent)
                                 FirebaseAnalyticsUtils.logClickEvent(
@@ -193,7 +181,7 @@ class ViewPagerEmojiItemFragment : Fragment() {
             } else {
                 val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java).apply {
                     putExtra(EXTRA_POSITION, position)
-                    putExtra(EXTRA_LABEL, label)
+                    putExtra(EXTRA_LABEL, fileItem.name)
                 }
                 startActivity(intent)
                 FirebaseAnalyticsUtils.logClickEvent(
@@ -222,24 +210,8 @@ class ViewPagerEmojiItemFragment : Fragment() {
             adapter = this@ViewPagerEmojiItemFragment.adapter
         }
 
-        val emojiList = when (currentPos) {
-            0 -> trendy
-            1 -> toy
-            2 -> emojiFace
-            3 -> pet
-            4 -> cute
 
-            5 -> emojiFashionListFantasy
-            6 -> emojiAnimListFantasy
-            7 -> emojiBasicListFantasy
-            8 -> emojiCuteListFantasy
-            9 -> emojiListCartoon
-            10 -> emojiComicListFantasy
-            else -> emptyList()
-        }
 
-        Log.d("EmojiTab", "Tab $currentPos loaded with ${emojiList.size} items.")
-        adapter.submitList(emojiList)
     }
 
     override fun onDestroyView() {
