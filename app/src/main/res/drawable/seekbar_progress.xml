@@ -3,8 +3,8 @@
     <!-- Background track -->
     <item android:id="@android:id/background">
         <shape android:shape="rectangle">
-            <size android:height="3dp"/>
-            <solid android:color="@color/blue_progress_non_fill"/>
+            <size android:height="5dp"/>
+            <solid android:color="@color/seekBarLightPink"/>
             <corners android:radius="20dp"/>
         </shape>
     </item>
@@ -13,8 +13,14 @@
     <item android:id="@android:id/progress">
         <clip>
             <shape android:shape="rectangle">
-                <size android:height="3dp"/>
-                <solid android:color="@color/blue_app_color"/>
+                <size android:height="5dp"/>
+                <gradient
+                    android:type="linear"
+                    android:angle="45"
+                    android:centerColor="@color/gradientCenter"
+                    android:startColor="@color/gradientStart"
+                    android:endColor="@color/gradientEnd" />
+<!--                <solid android:color="@color/bottom_nav_selected"/>-->
                 <corners android:radius="20dp"/>
             </shape>
         </clip>

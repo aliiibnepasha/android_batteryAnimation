@@ -8,7 +8,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_other_screen"
     tools:context=".activity.EmojiEditApplyActivity">
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/titlebarEditEmoji"
         android:layout_width="0dp"
@@ -23,8 +22,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:contentDescription="@string/app_name"
-            android:padding="18dp"
-            android:src="@drawable/ic_arrow_left"
+            android:padding="8dp"
+            android:src="@drawable/icon_back_round"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
@@ -39,211 +38,351 @@
             android:contentDescription="@string/edit"
             android:gravity="center"
             android:text="@string/edit"
-            android:textColor="@color/white"
+            android:textColor="@color/titleColor"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/ibNextButton"
+            app:layout_constraintEnd_toStartOf="@+id/shimmerShimmerPro"
             app:layout_constraintStart_toEndOf="@+id/ibBackButton"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-        <ImageView
-            android:id="@+id/ibNextButton"
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerShimmerPro"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/app_name"
-            android:gravity="center"
-            android:visibility="visible"
-            android:src="@drawable/ic_restore"
-            android:padding="20dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1.1"
+            app:layout_constraintDimensionRatio="1.2:1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:shimmer_auto_start="true"
+            app:shimmer_base_color="@android:color/transparent"
+            app:shimmer_duration="3500"
+            app:shimmer_highlight_color="#80FFFFFF">
+
+            <androidx.constraintlayout.utils.widget.ImageFilterView
+                android:id="@+id/ifvPro"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="4dp"
+                android:padding="6dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1.2:1"
+                app:layout_constraintEnd_toStartOf="@+id/ifvSetting"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/icon_pro" />
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.utils.widget.ImageFilterView
-        android:id="@+id/previewEditEmoji"
-        android:layout_width="0dp"
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginVertical="30dp"
-        app:layout_constraintDimensionRatio="1:0.5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titlebarEditEmoji"
-        app:layout_constraintWidth_percent="0.3"
-        app:srcCompat="@drawable/emoji_battery_preview_1" />
+        app:layout_constraintBottom_toTopOf="@+id/btnNext"
+        app:layout_constraintTop_toBottomOf="@+id/titlebarEditEmoji">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/viewBatteryEmojiSize"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
-        android:background="@drawable/bg_item_rectangle_101010"
-        android:padding="14dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/previewEditEmoji"
-        app:layout_constraintWidth_percent="0.95">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/batteryEmojiLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="start|center_vertical"
-            android:text="@string/battery_emoji_12_dp"
-            android:textColor="@color/white"
-            android:textStyle="normal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/designEnableEmoji"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/bg_horizontal_switch"
+                android:paddingHorizontal="15dp"
+                app:layout_constraintDimensionRatio="1:0.16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.93">
 
-        <androidx.appcompat.widget.AppCompatSeekBar
-            android:id="@+id/batteryEmojiSeekbarSize"
-            android:layout_width="0dp"
-            android:layout_marginTop="5dp"
-            android:layout_height="15dp"
-            android:paddingVertical="5dp"
-            android:progressDrawable="@drawable/seekbar_progress"
-            android:thumb="@drawable/seekbar_thumb"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/batteryEmojiLabel"
-            app:layout_constraintWidth_percent="1" />
+                <TextView
+                    android:id="@+id/enableBatteryEmoji"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/enable_battery_emoji"
+                    android:textColor="@color/titleColor"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/switchEnableBatteryEmojiViewAll"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchEnableBatteryEmojiViewAll"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:checked="false"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
+                    android:text=""
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/enableBatteryEmoji"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.3"
+                    app:showText="false"
+                    app:thumbTint="@color/switch_thumb_tint"
+                    app:trackTint="@color/switch_track_tint" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/viewBatteryPercentage"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginVertical="20dp"
-        android:background="@drawable/bg_item_rectangle_101010"
-        android:paddingHorizontal="14dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewBatteryEmojiSize"
-        app:layout_constraintWidth_percent="0.95">
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/titleShowBatPercentage"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:gravity="start|center_vertical"
-            android:text="@string/show_battery_percentage"
-            android:textColor="@color/white"
-            android:textStyle="normal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/enableShowBatteryPercentage"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/emojiPreview"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_menus"
+                app:layout_constraintEnd_toEndOf="@id/designEnableEmoji"
+                app:layout_constraintStart_toStartOf="@id/designEnableEmoji"
+                app:layout_constraintTop_toBottomOf="@+id/designEnableEmoji">
+
+                <androidx.constraintlayout.utils.widget.ImageFilterView
+                    android:id="@+id/previewEditEmoji"
+                    android:layout_width="120dp"
+                    android:layout_height="0dp"
+                    android:layout_marginHorizontal="30dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/emoji_battery_preview_1" />
+
+                <androidx.constraintlayout.utils.widget.ImageFilterView
+                    android:id="@+id/previewEditBattery"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/previewEditEmoji"
+                    app:layout_constraintEnd_toEndOf="@+id/previewEditEmoji"
+                    app:layout_constraintStart_toStartOf="@+id/previewEditEmoji"
+                    app:layout_constraintTop_toTopOf="@+id/previewEditEmoji"
+                    app:srcCompat="@drawable/emoji_cartone_preview_1" />
+
+                <TextView
+                    android:id="@+id/batteryPercentagePreview"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center_vertical|end"
+                    android:text="50%"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.25" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/moreMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_menus"
+                app:layout_constraintEnd_toEndOf="@+id/emojiPreview"
+                app:layout_constraintStart_toStartOf="@+id/emojiPreview"
+                app:layout_constraintTop_toBottomOf="@+id/emojiPreview">
+
+                <TextView
+                    android:id="@+id/titleEmoji"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/edit"
+                    android:gravity="center"
+                    android:text="@string/edit"
+                    android:textColor="@color/titleColor"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/cartoonList"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/titleEmoji" />
+
+                <TextView
+                    android:id="@+id/titleBattery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/edit"
+                    android:gravity="center"
+                    android:text="@string/edit"
+                    android:textColor="@color/titleColor"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cartoonList" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/batteryListList"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/titleBattery" />
 
 
-        <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/enableShowBatteryPercentage"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:checked="false"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
-            android:text=""
-            app:showText="false"
-            app:thumbTint="@color/switch_thumb_tint"
-            app:trackTint="@color/switch_track_tint"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/titleShowBatPercentage"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.3" />
+                <TextView
+                    android:id="@+id/titleShowBatPercentage"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/show_battery_percentage"
+                    android:textColor="@color/titleColor"
+                    android:textStyle="normal"
+                    app:layout_constraintBottom_toBottomOf="@+id/enableShowBatteryPercentage"
+                    app:layout_constraintEnd_toStartOf="@+id/enableShowBatteryPercentage"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/batteryListList"
+                    app:layout_constraintTop_toTopOf="@+id/enableShowBatteryPercentage" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/enableShowBatteryPercentage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
+                    android:text=""
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/titleShowBatPercentage"
+                    app:layout_constraintTop_toBottomOf="@+id/batteryListList"
+                    app:layout_constraintWidth_percent="0.3"
+                    app:showText="false"
+                    app:thumbTint="@color/switch_thumb_tint"
+                    app:trackTint="@color/switch_track_tint" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/viewPercentageColor"
-        android:layout_width="0dp"
-        android:layout_height="?actionBarSize"
-        android:layout_marginVertical="20dp"
-        android:background="@drawable/bg_item_rectangle_101010"
-        android:paddingHorizontal="14dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewBatteryPercentage"
-        app:layout_constraintWidth_percent="0.95">
 
-        <TextView
-            android:id="@+id/selectBgColor"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:gravity="start|center_vertical"
-            android:text="@string/percentage_colour"
-            android:textColor="@color/white"
-            android:textStyle="normal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/openColorPalate"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/batteryPercentageEmojiLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/percentage_size_16_dp"
+                    android:textColor="@color/titleColor"
+                    android:textStyle="normal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/enableShowBatteryPercentage" />
 
-        <androidx.constraintlayout.utils.widget.ImageFilterView
-            android:id="@+id/openColorPalate"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:padding="14dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/selectBgColor"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.3"
-            app:srcCompat="@drawable/ic_color_picker" />
+                <androidx.appcompat.widget.AppCompatSeekBar
+                    android:id="@+id/batteryEmojiPercentageSeekbarSize"
+                    android:layout_width="0dp"
+                    android:layout_height="18dp"
+                    android:layout_marginTop="5dp"
+                    android:paddingVertical="5dp"
+                    android:progressDrawable="@drawable/seekbar_progress"
+                    android:thumb="@drawable/seekbar_thumb"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/batteryPercentageEmojiLabel"
+                    app:layout_constraintWidth_percent="1" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/viewPercentageEmojiSize"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
-        android:background="@drawable/bg_item_rectangle_101010"
-        android:padding="14dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewPercentageColor"
-        app:layout_constraintWidth_percent="0.95">
+                <TextView
+                    android:id="@+id/titleShowBatEmoji"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/show_battery_percentage"
+                    android:textColor="@color/titleColor"
+                    android:textStyle="normal"
+                    app:layout_constraintBottom_toBottomOf="@+id/enableShowBatteryEmoji"
+                    app:layout_constraintEnd_toStartOf="@+id/enableShowBatteryEmoji"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/batteryListList"
+                    app:layout_constraintTop_toTopOf="@+id/enableShowBatteryEmoji" />
 
-        <TextView
-            android:id="@+id/batteryPercentageEmojiLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="start|center_vertical"
-            android:text="@string/percentage_size_16_dp"
-            android:textColor="@color/white"
-            android:textStyle="normal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatSeekBar
-            android:id="@+id/batteryEmojiPercentageSeekbarSize"
-            android:layout_width="0dp"
-            android:layout_marginTop="5dp"
-            android:layout_height="15dp"
-            android:paddingVertical="5dp"
-            android:progressDrawable="@drawable/seekbar_progress"
-            android:thumb="@drawable/seekbar_thumb"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/batteryPercentageEmojiLabel"
-            app:layout_constraintWidth_percent="1" />
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/enableShowBatteryEmoji"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
+                    android:text=""
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/titleShowBatPercentage"
+                    app:layout_constraintTop_toBottomOf="@+id/batteryPercentageEmojiLabel"
+                    app:layout_constraintWidth_percent="0.3"
+                    app:showText="false"
+                    app:thumbTint="@color/switch_thumb_tint"
+                    app:trackTint="@color/switch_track_tint" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/batteryEmojiLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center_vertical"
+                    android:text="@string/battery_emoji_12_dp"
+                    android:textColor="@color/titleColor"
+                    android:textStyle="normal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/enableShowBatteryEmoji" />
 
+                <androidx.appcompat.widget.AppCompatSeekBar
+                    android:id="@+id/batteryEmojiSeekbarSize"
+                    android:layout_width="0dp"
+                    android:layout_height="18dp"
+                    android:layout_marginTop="5dp"
+                    android:paddingVertical="5dp"
+                    android:progressDrawable="@drawable/seekbar_progress"
+                    android:thumb="@drawable/seekbar_thumb"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/batteryEmojiLabel"
+                    app:layout_constraintWidth_percent="1" />
+
+                <TextView
+                    android:id="@+id/titleColorPalate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/edit"
+                    android:gravity="center"
+                    android:text="@string/edit"
+                    android:textColor="@color/titleColor"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/batteryEmojiSeekbarSize" />
+
+                <androidx.constraintlayout.utils.widget.ImageFilterView
+                    android:id="@+id/openColorPalate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/titleColorPalate"
+                    app:srcCompat="@drawable/ic_color_picker" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/colorsList"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/openColorPalate"
+                    app:layout_constraintTop_toBottomOf="@+id/titleColorPalate" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
     <TextView
         android:id="@+id/btnNext"
         android:layout_width="0dp"
         android:layout_height="45dp"
-        android:layout_marginVertical="?actionBarSize"
+        android:layout_marginVertical="20dp"
         android:background="@drawable/bg_next_button"
         android:gravity="center"
         android:text="@string/apply"

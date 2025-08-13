@@ -14,9 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
-import com.lowbyte.battery.animation.activity.ProActivity
 import com.lowbyte.battery.animation.adapter.AllEmojiAdapter
-import com.lowbyte.battery.animation.ads.RewardedAdManager
 import com.lowbyte.battery.animation.databinding.ItemViewPagerBinding
 import com.lowbyte.battery.animation.server.EmojiViewModel
 import com.lowbyte.battery.animation.server.EmojiViewModelFactory
@@ -136,49 +134,17 @@ class ViewPagerEmojiItemFragment : Fragment() {
                     "emoji_position" to position.toString()
                 )
             )
-//            if (isRewarded && !preferences.isProUser) {
-//
-//                rewardedDialog.init(
-//                    onWatchAd = {
-//                        RewardedAdManager.showRewardedAd(
-//                            activity = requireActivity(),
-//                            onRewardEarned = { /* optional */ },
-//                            onAdShown = { /* optional */ },
-//                            onAdDismissed = {
-//                                val intent = Intent(
-//                                    requireActivity(), EmojiEditApplyActivity::class.java
-//                                ).apply {
-//                                    putExtra(EXTRA_POSITION, position)
-//                                    putExtra(EXTRA_LABEL, fileItem.name)
-//                                }
-//                                startActivity(intent)
-//                                FirebaseAnalyticsUtils.logClickEvent(
-//                                    requireActivity(),
-//                                    "EmojiEditApplyAct"
-//                                )
-//                            }
-//                        )
-//                    },
-//                    onGoPremium = {
-//                        startActivity(Intent(requireActivity(), ProActivity::class.java))
-//                        FirebaseAnalyticsUtils.logClickEvent(
-//                            requireActivity(),
-//                            "ProActivity"
-//                        )
-//                    }
-//                )
-//                rewardedDialog.show()
-//            } else {
+
                 val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java).apply {
                     putExtra(EXTRA_POSITION, position)
                     putExtra(EXTRA_LABEL, fileItem.name)
+                    putExtra("categoryTitle", categoryTitle)
                 }
                 startActivity(intent)
                 FirebaseAnalyticsUtils.logClickEvent(
                     requireActivity(),
                     "EmojiEditApplyAct"
                 )
-         //   }
         },
             headerHeightPx = spaceHPx,
             footerHeightPx = spacePPx,

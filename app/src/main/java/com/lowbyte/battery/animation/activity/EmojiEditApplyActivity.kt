@@ -1,51 +1,169 @@
 package com.lowbyte.battery.animation.activity
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ActivityEmojiEditApplayBinding
+import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
+import com.lowbyte.battery.animation.server.EmojiViewModel
+import com.lowbyte.battery.animation.server.EmojiViewModelFactory
+import com.lowbyte.battery.animation.server.Resource
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
+import com.lowbyte.battery.animation.utils.AnimationUtils.dataUrl
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyEmojiEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
+import com.lowbyte.battery.animation.utils.PermissionUtils.checkAccessibilityPermission
+import com.lowbyte.battery.animation.utils.PermissionUtils.isAccessibilityServiceEnabled
 import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
+import kotlinx.coroutines.launch
+import kotlin.getValue
 
 class EmojiEditApplyActivity : BaseActivity() {
 
     private lateinit var binding: ActivityEmojiEditApplayBinding
     private lateinit var preferences: AppPreferences
     private lateinit var drawable: String
+    private lateinit var sheet: AccessibilityPermissionBottomSheet // Declare the sheet
+
+
+    private val vm: EmojiViewModel by viewModels { EmojiViewModelFactory(this) }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-     //   enableEdgeToEdge()
-
         binding = ActivityEmojiEditApplayBinding.inflate(layoutInflater)
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
         AdManager.loadInterstitialAd(this, getFullscreenId(),isFullscreenApplyEmojiEnabled)
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                launch {
+                    vm.categories.collect { state ->
+                        if (state is Resource.Success) {
+                            val categoriesList = state.data
+                            Log.d("APIData", "Categories List: $categoriesList")
+
+                        }
+                    }
+                }
+            }
+        }
+        vm.loadFolderPngs(dataUrl, categoryName = categoryTitle, folderName = "emoji_battery")
+        vm.loadFolderPngs(dataUrl, categoryName = categoryTitle, folderName = "emoji_sticker")
+
+
+        sheet = AccessibilityPermissionBottomSheet(
+            onAllowClicked = {
+                FirebaseAnalyticsUtils.logClickEvent(
+                    this,
+                    "allow_accessibility_click"
+                )
+                startActivity(Intent(this, AllowAccessibilityActivity::class.java))
+            },
+            onCancelClicked = {
+                FirebaseAnalyticsUtils.logClickEvent(
+                    this,
+                    "cancel_accessibility_permission"
+                )
+                preferences.isStatusBarEnabled = false
+                binding.switchEnableBatteryEmojiViewAll.isChecked = false
+            }, onDismissListener = {
+                if (!isAccessibilityServiceEnabled()) {
+                    preferences.isStatusBarEnabled = false
+                    binding.switchEnableBatteryEmojiViewAll.isChecked = false
+                }
+
+            }
+        )
+
+
+        binding.switchEnableBatteryEmojiViewAll.isChecked =
+            preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
+
+        binding.switchEnableBatteryEmojiViewAll.setOnCheckedChangeListener { _, isChecked ->
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (!isDestroyed && !isFinishing){
+                    preferences.isStatusBarEnabled = isChecked
+                    // Log toggle
+                    FirebaseAnalyticsUtils.logClickEvent(
+                        this,
+                        "toggle_statusbar_emoji_from_emoji_screen",
+                        mapOf("enabled" to isChecked.toString())
+                    )
+                    if (preferences.isStatusBarEnabled && isChecked) {
+                        checkAccessibilityPermission(false) {
+                            when (it) {
+                                "OpenBottomSheet" -> {
+                                    sheet.show(supportFragmentManager, "AccessibilityPermission")
+                                }
+
+                                "Allowed" -> {
+                                    binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled
+                                    sendBroadcast(Intent(BROADCAST_ACTION))
+                                }
+
+                                else -> {
+                                    val existing =
+                                        supportFragmentManager.findFragmentByTag("AccessibilityPermission")
+                                    if (existing == null || !existing.isAdded) {
+                                        sheet.show(supportFragmentManager, "AccessibilityPermission")
+                                    } else {
+                                        Log.d(
+                                            "Accessibility",
+                                            "AccessibilityPermissionBottomSheet already shown"
+                                        )
+                                    }
+                                }
+                            }
+
+                        }
+                    } else {
+                        sendBroadcast(Intent(BROADCAST_ACTION))
+                    }
+
+                }
+
+            }, 500)
+        }
+
+
+
+
+
+
+
+
+
+
+
+
         FirebaseAnalyticsUtils.logScreenView(this, "EmojiEditApplyScreen")
         FirebaseAnalyticsUtils.startScreenTimer("EmojiEditApplyScreen")
-
         val position = intent.getIntExtra(EXTRA_POSITION, -1)
+
         drawable = intent.getStringExtra(EXTRA_LABEL) ?: getString(R.string.wifi)
 
-        Log.i("ITEMCLICK", "$position $drawable")
         val resId = resources.getIdentifier(drawable, "drawable", packageName)
         binding.previewEditEmoji.setImageResource(if (resId != 0) resId else R.drawable.emoji_battery_preview_1)
 
@@ -62,13 +180,8 @@ class EmojiEditApplyActivity : BaseActivity() {
             finish()
         }
 
-        binding.ibNextButton.setOnClickListener {
-            preferences.setInt("percentageColor", Color.BLACK)
-            binding.batteryEmojiPercentageSeekbarSize.progress = 12
-            binding.batteryEmojiSeekbarSize.progress = 24
-            FirebaseAnalyticsUtils.logClickEvent(this, "click_reset_sizes", null)
-            Toast.makeText(this, getString(R.string.restore_successfully), Toast.LENGTH_SHORT).show()
-            sendBroadcast(Intent(BROADCAST_ACTION))
+        binding.ifvPro.setOnClickListener {
+            startActivity(Intent(this, ProActivity::class.java))
         }
 
         binding.enableShowBatteryPercentage.isChecked = preferences.showBatteryPercent
@@ -84,7 +197,6 @@ class EmojiEditApplyActivity : BaseActivity() {
                     getString(R.string.view_all_battery_emoji),
                     progress
                 )
-              //  FirebaseAnalyticsUtils.logClickEvent(this@EmojiEditApplyActivity, "change_battery_icon_size", mapOf("size" to progress.toString()))
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -118,7 +230,7 @@ class EmojiEditApplyActivity : BaseActivity() {
             }
         })
 
-        binding.viewPercentageColor.setOnClickListener {
+        binding.openColorPalate.setOnClickListener {
             ColorPickerDialog.Builder(this)
                 .setTitle(getString(R.string.percentage_color))
                 .setPreferenceName("MyColorPickerDialog")

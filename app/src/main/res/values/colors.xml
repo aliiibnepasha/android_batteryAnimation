@@ -15,6 +15,12 @@
     <color name="text_color_pro">#FFCC29</color>
     <color name="bottom_nav_selected">#B54CF4</color> <!-- your selected color -->
     <color name="bottom_nav_unselected">#6B6B6B</color> <!-- your unselected color -->
+    <color name="seekBarLightPink">#F8D9FF</color> <!-- your unselected color -->
+
+
+    <color name="gradientStart">#FF11F1</color> <!-- your unselected color -->
+    <color name="gradientCenter">#B54CF4</color> <!-- your unselected color -->
+    <color name="gradientEnd">#7236FD</color> <!-- your unselected color -->
 
     <color name="titleColor">#1F1F1F</color>
 

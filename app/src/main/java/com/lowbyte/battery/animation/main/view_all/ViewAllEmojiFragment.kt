@@ -144,6 +144,8 @@ class ViewAllEmojiFragment : Fragment() {
 
             }, 500)
         }
+
+
     }
 
     private fun setupViewPager(tabsList: List<String>) {
