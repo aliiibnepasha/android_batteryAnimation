@@ -50,7 +50,7 @@ class ViewAllEmojiFragment : Fragment() {
 
         preferences = AppPreferences.getInstance(requireContext())
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
                     vm.categories.collect { state ->
                         if (state is Resource.Success) {

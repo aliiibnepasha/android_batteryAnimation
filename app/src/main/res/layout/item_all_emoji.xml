@@ -20,16 +20,27 @@
         app:layout_constraintStart_toStartOf="parent"
     />
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/emoji_battery_preview_1"
+        app:layout_constraintBottom_toBottomOf="@+id/widgetPreview"
+        app:layout_constraintEnd_toEndOf="@+id/widgetPreview"
+        app:layout_constraintStart_toStartOf="@+id/widgetPreview"
+        app:layout_constraintTop_toTopOf="@+id/widgetPreview"
+        app:shimmer_auto_start="true" />
+
     <ImageView
-    android:id="@+id/watchAdItem"
-    android:layout_width="18dp"
-    android:layout_height="18dp"
-    android:visibility="invisible"
-    android:src="@drawable/ic_reward_ad"
-    android:layout_marginHorizontal="5dp"
-    android:contentDescription="@string/app_name"
-    app:layout_constraintTop_toTopOf="@+id/widgetPreview"
-    app:layout_constraintEnd_toEndOf="@+id/widgetPreview"/>
+        android:id="@+id/watchAdItem"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_reward_ad"
+        android:layout_marginHorizontal="5dp"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintTop_toTopOf="@+id/widgetPreview"
+        app:layout_constraintEnd_toEndOf="@+id/widgetPreview"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

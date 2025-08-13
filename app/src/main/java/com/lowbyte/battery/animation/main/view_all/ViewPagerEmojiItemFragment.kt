@@ -1,6 +1,5 @@
 package com.lowbyte.battery.animation.main.view_all
 
-import Category
 import FileItem
 import android.app.Dialog
 import android.content.Intent
@@ -39,9 +38,9 @@ class ViewPagerEmojiItemFragment : Fragment() {
     private lateinit var binding: ItemViewPagerBinding
     private lateinit var adapter: AllEmojiAdapter
     private var currentPos: Int = 0
+    private lateinit var glm: GridLayoutManager
     private var categoryTitle: String = ""
     private lateinit var dialogRewarded: Dialog
-
     private lateinit var preferences: AppPreferences
 
     private var bindingReward: DialogGoProBinding? = null
@@ -88,12 +87,7 @@ class ViewPagerEmojiItemFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    vm.singleCategory.collect {
-                        renderSingle(it)
-                    }
-                }
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
                     vm.pngs.collect {
                         renderPngs(it)
@@ -107,16 +101,28 @@ class ViewPagerEmojiItemFragment : Fragment() {
     }
 
 
-    private fun renderSingle(state: Resource<Category>) { /* show details */
-        Log.d("APIData", "Data renderSingle : ${state}")
+    private fun renderPngs(state: Resource<List<FileItem>>) {
+        when (state) {
+            is Resource.Loading -> {
+                binding.progressBar.visibility = View.VISIBLE
+            }
 
-    }
+            is Resource.Error -> {
+                binding.progressBar.visibility = View.GONE
+            }
 
-    private fun renderPngs(state: Resource<List<FileItem>>) { /* submit to adapter */
-        if (state is Resource.Success) {
-            Log.d("EmojiTab", "Tab $currentPos loaded with ${state.data.size} items.")
-            adapter.submitList(state.data)
+            is Resource.Success -> {
+                binding.progressBar.visibility = View.GONE
+                Log.d("EmojiTab", "Tab $currentPos loaded with ${state.data.size} items.")
+                val firstVisible = glm.findFirstVisibleItemPosition()
+                val offset = binding.recyclerView.getChildAt(0)?.top ?: 0
+                adapter.submitList(state.data) {
+                    glm.scrollToPositionWithOffset(firstVisible, offset)
+                }
+            }
+
         }
+
 
     }
 
@@ -195,7 +201,7 @@ class ViewPagerEmojiItemFragment : Fragment() {
             categoryName = categoryTitle,
             folderName = "emoji_preview"
         )
-        val glm = GridLayoutManager(requireContext(), 3).apply {
+        glm = GridLayoutManager(requireContext(), 3).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     return if (position == 0 || position == adapter.itemCount - 1) {
