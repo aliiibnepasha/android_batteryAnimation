@@ -1,7 +1,6 @@
 package com.lowbyte.battery.animation.main.view_all
 
 import FileItem
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -14,12 +13,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
-import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
 import com.lowbyte.battery.animation.activity.ProActivity
 import com.lowbyte.battery.animation.adapter.AllEmojiAdapter
 import com.lowbyte.battery.animation.ads.RewardedAdManager
-import com.lowbyte.battery.animation.databinding.DialogGoProBinding
 import com.lowbyte.battery.animation.databinding.ItemViewPagerBinding
 import com.lowbyte.battery.animation.server.EmojiViewModel
 import com.lowbyte.battery.animation.server.EmojiViewModelFactory
@@ -31,6 +28,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.dp
 import com.lowbyte.battery.animation.utils.AnimationUtils.isRewardedEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
+import com.lowbyte.battery.animation.utils.RewardedDialogUtils
 import kotlinx.coroutines.launch
 
 class ViewPagerEmojiItemFragment : Fragment() {
@@ -40,10 +38,9 @@ class ViewPagerEmojiItemFragment : Fragment() {
     private var currentPos: Int = 0
     private lateinit var glm: GridLayoutManager
     private var categoryTitle: String = ""
-    private lateinit var dialogRewarded: Dialog
+    private lateinit var rewardedDialog: RewardedDialogUtils
     private lateinit var preferences: AppPreferences
 
-    private var bindingReward: DialogGoProBinding? = null
 
     private val vm: EmojiViewModel by viewModels { EmojiViewModelFactory(requireContext()) }
 
@@ -72,13 +69,11 @@ class ViewPagerEmojiItemFragment : Fragment() {
         binding = ItemViewPagerBinding.inflate(inflater, container, false)
         preferences = AppPreferences.getInstance(requireContext())
         FirebaseAnalyticsUtils.logScreenView(this, "EmojiTab_$currentPos")
-        dialogRewarded = Dialog(requireContext())
-        bindingReward = DialogGoProBinding.inflate(LayoutInflater.from(requireContext()))
-        dialogRewarded.setContentView(bindingReward?.root!!)
-        dialogRewarded.setCancelable(false)
-        dialogRewarded.window?.attributes?.windowAnimations = R.style.DialogAnimation
-        dialogRewarded.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        dialogRewarded.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        rewardedDialog = RewardedDialogUtils(
+            activity = requireActivity(),
+            isProUser = preferences.isProUser,
+            isRewardedEnabled = isRewardedEnabled
+        )
 
         return binding.root
     }
@@ -141,50 +136,39 @@ class ViewPagerEmojiItemFragment : Fragment() {
                     "emoji_position" to position.toString()
                 )
             )
-            if (isRewarded && !preferences.isProUser) {
-
-                bindingReward?.ivClose?.setOnClickListener { dialogRewarded.dismiss() }
-                if (!isRewardedEnabled){
-                    bindingReward?.btnWatchAd?.visibility = View.GONE
-                    bindingReward?.btnPremium?.visibility = View.VISIBLE
-                }else{
-                    bindingReward?.btnWatchAd?.visibility = View.VISIBLE
-                    bindingReward?.btnPremium?.visibility = View.VISIBLE
-                    bindingReward?.btnWatchAd?.setOnClickListener {
-                        dialogRewarded.dismiss()
-                        RewardedAdManager.showRewardedAd(
-                            activity = requireActivity(),
-                            onRewardEarned = {
-
-                            },
-                            onAdShown = {
-                                // Log analytics or UI update
-                            },
-                            onAdDismissed = {
-                                val intent = Intent(
-                                    requireActivity(), EmojiEditApplyActivity::class.java
-                                ).apply {
-                                    putExtra(EXTRA_POSITION, position)
-                                    putExtra(EXTRA_LABEL, fileItem.name)
-                                }
-                                startActivity(intent)
-                                FirebaseAnalyticsUtils.logClickEvent(
-                                    requireActivity(),
-                                    "EmojiEditApplyAct"
-                                )
-                            })
-                    }
-                }
-                bindingReward?.btnPremium?.setOnClickListener {
-                    dialogRewarded.dismiss()
-                    startActivity(Intent(requireActivity(), ProActivity::class.java))
-                    FirebaseAnalyticsUtils.logClickEvent(
-                        requireActivity(),
-                        "ProActivity"
-                    )
-                }
-                dialogRewarded.show()
-            } else {
+//            if (isRewarded && !preferences.isProUser) {
+//
+//                rewardedDialog.init(
+//                    onWatchAd = {
+//                        RewardedAdManager.showRewardedAd(
+//                            activity = requireActivity(),
+//                            onRewardEarned = { /* optional */ },
+//                            onAdShown = { /* optional */ },
+//                            onAdDismissed = {
+//                                val intent = Intent(
+//                                    requireActivity(), EmojiEditApplyActivity::class.java
+//                                ).apply {
+//                                    putExtra(EXTRA_POSITION, position)
+//                                    putExtra(EXTRA_LABEL, fileItem.name)
+//                                }
+//                                startActivity(intent)
+//                                FirebaseAnalyticsUtils.logClickEvent(
+//                                    requireActivity(),
+//                                    "EmojiEditApplyAct"
+//                                )
+//                            }
+//                        )
+//                    },
+//                    onGoPremium = {
+//                        startActivity(Intent(requireActivity(), ProActivity::class.java))
+//                        FirebaseAnalyticsUtils.logClickEvent(
+//                            requireActivity(),
+//                            "ProActivity"
+//                        )
+//                    }
+//                )
+//                rewardedDialog.show()
+//            } else {
                 val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java).apply {
                     putExtra(EXTRA_POSITION, position)
                     putExtra(EXTRA_LABEL, fileItem.name)
@@ -194,7 +178,7 @@ class ViewPagerEmojiItemFragment : Fragment() {
                     requireActivity(),
                     "EmojiEditApplyAct"
                 )
-            }
+         //   }
         },
             headerHeightPx = spaceHPx,
             footerHeightPx = spacePPx,
@@ -221,9 +205,7 @@ class ViewPagerEmojiItemFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        if (dialogRewarded.isShowing){
-            dialogRewarded.dismiss()
-        }
+        rewardedDialog.dismiss()
         super.onDestroyView()
     }
 }
