@@ -13,8 +13,10 @@ import com.lowbyte.battery.animation.databinding.ItemAllEmojiBinding
 
 class AllEmojiAdapter(
     private val onItemClick: (position: Int, fileItem: FileItem, isRewardAd: Boolean) -> Unit,
-    private val headerHeightPx: Int = 0 ,// optional: set from Fragment
-    private val footerHeightPx: Int = 0 // optional: set from Fragment
+    private val headerHeightPx: Int = 0 ,
+    private val footerHeightPx: Int = 0 ,
+    private val categoryName: String ,
+    private val folderName: String ,
 ) : ListAdapter<FileItem, RecyclerView.ViewHolder>(DiffCallback())
 {
 
@@ -103,9 +105,8 @@ class AllEmojiAdapter(
             }
 
             binding.watchAdItem.visibility = if (isReward) View.VISIBLE else View.INVISIBLE
-            val makeUrl = "https://theswiftvision.com/batteryEmoji/"
-//https://theswiftvision.com/batteryEmoji/cat_3/emoji_battery/emoji_battery_preview_7.png
-            Glide.with(context).load(item.url)
+            val makeUrl = "https://theswiftvision.com/batteryEmoji/$categoryName/$folderName/${item.name}"
+            Glide.with(context).load(makeUrl)
                 .placeholder(R.drawable.ic_launcher_foreground).into(binding.widgetPreview)
 
         }

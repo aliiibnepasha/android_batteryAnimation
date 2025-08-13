@@ -192,6 +192,8 @@ class ViewPagerEmojiItemFragment : Fragment() {
         },
             headerHeightPx = spaceHPx,
             footerHeightPx = spacePPx,
+            categoryName = categoryTitle,
+            folderName = "emoji_preview"
         )
         val glm = GridLayoutManager(requireContext(), 3).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -209,8 +211,6 @@ class ViewPagerEmojiItemFragment : Fragment() {
             layoutManager = glm
             adapter = this@ViewPagerEmojiItemFragment.adapter
         }
-
-
 
     }
 
