@@ -109,7 +109,7 @@ class AllEmojiAdapter(
             if (resId != 0) {
                 binding.widgetPreview.setImageResource(resId)
             } else {
-                binding.widgetPreview.setImageResource(R.drawable.emoji_2)
+                binding.widgetPreview.setImageResource(R.drawable.emoji_preview_default)
             }
         }
     }

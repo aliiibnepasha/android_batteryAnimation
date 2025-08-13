@@ -272,52 +272,40 @@ fun getRewardedId(): String {
 
     //5
     val emojiComicListFantasy = listOf(
-        "emoji_81", "emoji_82", "emoji_83", "emoji_84",
-        "emoji_85", "emoji_86", "emoji_87", "emoji_88",
-        "emoji_89", "emoji_90", "emoji_91", "emoji_92")
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1",
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1",
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1")
 
 
     val trendy = listOf(
-        "trendy_1", "trendy_2", "trendy_3",
-        "trendy_4", "trendy_5", "trendy_6",
-        "trendy_7", "trendy_8", "trendy_9",
-        "trendy_10", "trendy_11", "trendy_12",
-        "trendy_13", "trendy_14", "trendy_15", "trendy_16",)
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1",
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1",
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1")
+
 
 
     val toy = listOf(
-        "toy_1", "toy_2", "toy_3",
-        "toy_4", "toy_5", "toy_6",
-        "toy_7", "toy_8", "toy_9",
-        "toy_10", "toy_11", "toy_12",
-        "toy_13", "toy_14", "toy_15",
-        "toy_16", "toy_17", "toy_18", "toy_19",)
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1",
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1",
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1")
+
 
     val emojiFace = listOf(
-        "emoji_face_1", "emoji_face_2", "emoji_face_3",
-        "emoji_face_4", "emoji_face_5", "emoji_face_6",
-        "emoji_face_7", "emoji_face_8", "emoji_face_9",
-        "emoji_face_10", "emoji_face_11", "emoji_face_12",
-        "emoji_face_13", "emoji_face_14", "emoji_face_15",
-        "emoji_face_16", "emoji_face_17", "emoji_face_18", "emoji_face_19",
-    )
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1",
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1",
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1")
+
     val pet = listOf(
-        "cat_1", "cat_2", "cat_3",
-        "cat_4", "cat_5", "cat_6",
-        "cat_7", "cat_8", "cat_9",
-        "cat_10", "cat_11",
-        "pet_1", "pet_2", "pet_3",
-        "pet_4", "pet_5", "pet_6",
-        "pet_7", "pet_8", "pet_9",
-        "pet_10", "pet_11", "pet_12",)
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1",
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1",
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1")
+
 
     val cute = listOf(
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1",
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1",
+        "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1", "emoji_battery_preview_1")
 
-        "cute_1", "cute_2", "cute_3",
-        "cute_4", "cute_5", "cute_6", "cute_7",
-        "cute_8", "cute_9", "cute_10", "cute_11",
-        "cute_12", "cute_13", "cute_14", "cute_15",
-    )
 
 
     fun getTabTitlesEmoji(context: Context): List<String> {

@@ -75,7 +75,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titlebarEditEmoji"
         app:layout_constraintWidth_percent="0.3"
-        app:srcCompat="@drawable/emoji_3" />
+        app:srcCompat="@drawable/emoji_battery_preview_1" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/viewBatteryEmojiSize"

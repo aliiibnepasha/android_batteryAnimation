@@ -29,7 +29,6 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAM
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.combinedAnimationList
-import com.lowbyte.battery.animation.utils.AnimationUtils.emojiFashionListFantasy
 import com.lowbyte.battery.animation.utils.AnimationUtils.trendy
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListFantasy
 import com.lowbyte.battery.animation.utils.AppPreferences

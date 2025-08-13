@@ -22,7 +22,7 @@ class ChildEmojiWidgetItemAdapter(
             if (resId != 0) {
                 binding.widgetPreview.setImageResource(resId)
             } else {
-                binding.widgetPreview.setImageResource(R.drawable.emoji_4)
+                binding.widgetPreview.setImageResource(R.drawable.emoji_battery_preview_1)
             }
 
 

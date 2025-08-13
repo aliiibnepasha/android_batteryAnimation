@@ -128,7 +128,7 @@ class BatteryWidgetProvider : AppWidgetProvider() {
                     val resId =
                         context.resources.getIdentifier(iconName, "drawable", context.packageName)
                     if (resId != 0) setImageViewResource(R.id.battery_icon, resId)
-                    else setImageViewResource(R.id.battery_icon, R.drawable.emoji_1)
+                    else setImageViewResource(R.id.battery_icon, R.drawable.emoji_battery_preview_1)
 
                     val intentClick = Intent(context, SplashActivity::class.java).apply {
                         putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)

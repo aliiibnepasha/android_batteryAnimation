@@ -47,7 +47,7 @@ class EmojiEditApplyActivity : BaseActivity() {
 
         Log.i("ITEMCLICK", "$position $drawable")
         val resId = resources.getIdentifier(drawable, "drawable", packageName)
-        binding.previewEditEmoji.setImageResource(if (resId != 0) resId else R.drawable.emoji_1)
+        binding.previewEditEmoji.setImageResource(if (resId != 0) resId else R.drawable.emoji_battery_preview_1)
 
         FirebaseAnalyticsUtils.logClickEvent(this, "emoji_selected", mapOf("drawable" to drawable, "position" to position.toString()))
 

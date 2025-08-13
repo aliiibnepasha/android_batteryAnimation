@@ -118,7 +118,7 @@ class AllWidgetAdapter(
             if (resId != 0) {
                 binding.widgetPreview.setImageResource(resId)
             } else {
-                binding.widgetPreview.setImageResource(R.drawable.emoji_3) // fallback
+                binding.widgetPreview.setImageResource(R.drawable.emoji_battery_preview_1) // fallback
             }
         }
     }

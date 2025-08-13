@@ -124,7 +124,7 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
         if (resId == 0) {
             Log.e("BatteryWidgetEditApplyActivity", "Failed to find drawable resource for label: $label")
         }
-        binding.previewWidgetView.setImageResource(if (resId != 0) resId else R.drawable.emoji_4)
+        binding.previewWidgetView.setImageResource(if (resId != 0) resId else R.drawable.emoji_battery_preview_1)
     }
 
     private fun setupClickListeners() {

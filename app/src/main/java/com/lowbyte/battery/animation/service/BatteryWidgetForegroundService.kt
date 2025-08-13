@@ -184,7 +184,7 @@ class BatteryWidgetForegroundService : Service() {
                     setViewVisibility(R.id.batteryLevelBottom, View.VISIBLE)
                     setViewVisibility(R.id.batteryLevelTop, View.GONE)
                     setViewVisibility(R.id.batteryLevelCenter, View.GONE)
-                    setImageViewResource(R.id.battery_icon, if (resId != 0) resId else R.drawable.emoji_1)
+                    setImageViewResource(R.id.battery_icon, if (resId != 0) resId else R.drawable.emoji_battery_preview_1)
                    // setImageViewBitmap(R.id.battery_icon, bitmap)
 
                     val intentClick = Intent(
