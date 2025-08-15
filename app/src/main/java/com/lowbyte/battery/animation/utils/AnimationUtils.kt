@@ -440,4 +440,41 @@ fun Activity?.is15SDK(): Boolean {
      fun Int.dp(context: Context) =
         (this * context.resources.displayMetrics.density).toInt()
 
+
+
+    // Solid dark colors list (hex)
+    val solidColors = listOf(
+        // 🔴 Reds
+        0xFFB71C1C.toInt(), // Dark Red
+        // 🟢 Greens
+        0xFF1B5E20.toInt(), // Dark Green
+        // 🔵 Blues
+        0xFF0D47A1.toInt(), // Dark Blue
+        // 🟡 Yellows (deep golden to keep contrast)
+        0xFFF57F17.toInt(), // Dark Amber
+        // 🟣 Purples
+        0xFF4A148C.toInt(), // Deep Purple
+        // 🟠 Oranges
+        0xFFE65100.toInt(), // Burnt Orange
+        // 🟤 Browns
+        0xFF3E2723.toInt(), // Dark Brown
+        // 🌸 Pinks
+        0xFF880E4F.toInt(), // Dark Magenta Pink
+
+        // Additional deep tones for variety
+        0xFF263238.toInt(), // Blue Grey
+        0xFF1B1B1B.toInt(), // Pure Dark Grey
+        0xFF2C2C2C.toInt(), // Charcoal
+        0xFF222831.toInt(), // Gunmetal
+        0xFF393E46.toInt(), // Slate Grey
+        0xFF1F1F1F.toInt(), // Near Black
+        0xFF2A2A2A.toInt(), // Deep Graphite
+        0xFF242526.toInt(), // Smoky Black
+        0xFF151515.toInt(), // Almost Black
+        0xFF292929.toInt(), // Iron Grey
+        0xFF1E1E1E.toInt(), // Onyx
+        0xFF262626.toInt()  // Jet Black
+    )
+
+
 }

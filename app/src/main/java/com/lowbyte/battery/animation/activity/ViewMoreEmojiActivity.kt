@@ -1,13 +1,15 @@
-package com.lowbyte.battery.animation.main.view_all
+package com.lowbyte.battery.animation.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -15,10 +17,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
-import com.lowbyte.battery.animation.activity.AllowAccessibilityActivity
 import com.lowbyte.battery.animation.ads.AdManager
-import com.lowbyte.battery.animation.databinding.FragmentViewAllEmojiBinding
+import com.lowbyte.battery.animation.databinding.ActivityViewMoreEmojiBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
+import com.lowbyte.battery.animation.main.view_all.ViewPagerEmojiItemFragment
 import com.lowbyte.battery.animation.server.EmojiViewModel
 import com.lowbyte.battery.animation.server.EmojiViewModelFactory
 import com.lowbyte.battery.animation.server.Resource
@@ -32,31 +34,34 @@ import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.lowbyte.battery.animation.utils.PermissionUtils.checkAccessibilityPermission
 import com.lowbyte.battery.animation.utils.PermissionUtils.isAccessibilityServiceEnabled
 import kotlinx.coroutines.launch
+import kotlin.getValue
 
-class ViewAllEmojiFragment : Fragment() {
+class ViewMoreEmojiActivity : AppCompatActivity() {
 
-    private lateinit var binding: FragmentViewAllEmojiBinding
+    private lateinit var binding: ActivityViewMoreEmojiBinding
+
     private lateinit var preferences: AppPreferences
     private lateinit var sheet: AccessibilityPermissionBottomSheet // Declare the sheet
-    private val vm: EmojiViewModel by viewModels { EmojiViewModelFactory(requireContext()) }
+    private val vm: EmojiViewModel by viewModels { EmojiViewModelFactory(this) }
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentViewAllEmojiBinding.inflate(inflater, container, false)
-        AdManager.loadInterstitialAd(requireActivity(),getFullscreenHome2Id(),isFullscreenStatusEnabled)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-        preferences = AppPreferences.getInstance(requireContext())
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+        // Inflate layout using binding
+        binding = ActivityViewMoreEmojiBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        AdManager.loadInterstitialAd(this,getFullscreenHome2Id(),isFullscreenStatusEnabled)
+
+        preferences = AppPreferences.getInstance(this)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
                     vm.categories.collect { state ->
                         if (state is Resource.Success) {
                             val categoriesList = state.data
                             Log.d("APIData", "Categories List: $categoriesList")
-                            setupViewPager(categoriesList,false)
+                            setupViewPager(categoriesList,true)
                         }
                     }
                 }
@@ -67,20 +72,20 @@ class ViewAllEmojiFragment : Fragment() {
         sheet = AccessibilityPermissionBottomSheet(
             onAllowClicked = {
                 FirebaseAnalyticsUtils.logClickEvent(
-                    requireActivity(),
+                    this,
                     "allow_accessibility_click"
                 )
-                startActivity(Intent(requireActivity(), AllowAccessibilityActivity::class.java))
+                startActivity(Intent(this, AllowAccessibilityActivity::class.java))
             },
             onCancelClicked = {
                 FirebaseAnalyticsUtils.logClickEvent(
-                    requireActivity(),
+                    this,
                     "cancel_accessibility_permission"
                 )
                 preferences.isStatusBarEnabled = false
                 binding.switchEnableBatteryEmojiViewAll.isChecked = false
             }, onDismissListener = {
-                if (!requireActivity().isAccessibilityServiceEnabled()) {
+                if (!isAccessibilityServiceEnabled()) {
                     preferences.isStatusBarEnabled = false
                     binding.switchEnableBatteryEmojiViewAll.isChecked = false
                 }
@@ -89,43 +94,43 @@ class ViewAllEmojiFragment : Fragment() {
         )
         // Log screen view
         FirebaseAnalyticsUtils.logScreenView(this, "ViewAllEmojiFragment")
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        // Apply system bar padding
+//        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+//            insets
+//        }
 
         binding.switchEnableBatteryEmojiViewAll.isChecked =
-            preferences.isStatusBarEnabled && requireActivity().isAccessibilityServiceEnabled()
+            preferences.isStatusBarEnabled &&isAccessibilityServiceEnabled()
 
         binding.switchEnableBatteryEmojiViewAll.setOnCheckedChangeListener { _, isChecked ->
             Handler(Looper.getMainLooper()).postDelayed({
-                if (isAdded){
+                if (!isFinishing && !isDestroyed){
                     preferences.isStatusBarEnabled = isChecked
                     // Log toggle
                     FirebaseAnalyticsUtils.logClickEvent(
-                        requireActivity(),
+                        this,
                         "toggle_statusbar_emoji_from_emoji_screen",
                         mapOf("enabled" to isChecked.toString())
                     )
                     if (preferences.isStatusBarEnabled && isChecked) {
-                        requireActivity().checkAccessibilityPermission(false) {
+                        checkAccessibilityPermission(false) {
                             when (it) {
                                 "OpenBottomSheet" -> {
-                                    sheet.show(childFragmentManager, "AccessibilityPermission")
+                                    sheet.show(supportFragmentManager, "AccessibilityPermission")
                                 }
 
                                 "Allowed" -> {
                                     binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled
-                                    requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+                                    sendBroadcast(Intent(BROADCAST_ACTION))
                                 }
 
                                 else -> {
                                     val existing =
-                                        childFragmentManager.findFragmentByTag("AccessibilityPermission")
+                                        supportFragmentManager.findFragmentByTag("AccessibilityPermission")
                                     if (existing == null || !existing.isAdded) {
-                                        sheet.show(childFragmentManager, "AccessibilityPermission")
+                                        sheet.show(supportFragmentManager, "AccessibilityPermission")
                                     } else {
                                         Log.d(
                                             "Accessibility",
@@ -137,14 +142,13 @@ class ViewAllEmojiFragment : Fragment() {
 
                         }
                     } else {
-                        requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+                        sendBroadcast(Intent(BROADCAST_ACTION))
                     }
 
                 }
 
             }, 500)
         }
-
 
     }
 
@@ -163,6 +167,5 @@ class ViewAllEmojiFragment : Fragment() {
         applyTabMargins(binding.tabLayout, 8, 8)
 
     }
-
 
 }

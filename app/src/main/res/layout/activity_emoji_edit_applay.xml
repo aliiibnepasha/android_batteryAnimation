@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="1">
+        app:layout_constraintWidth_percent="0.95">
 
         <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/ibBackButton"
@@ -181,7 +181,9 @@
                 android:id="@+id/moreMenu"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginVertical="20dp"
+                android:paddingVertical="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:background="@drawable/bg_menus"
                 app:layout_constraintEnd_toEndOf="@+id/emojiPreview"
                 app:layout_constraintStart_toStartOf="@+id/emojiPreview"
@@ -189,21 +191,41 @@
 
                 <TextView
                     android:id="@+id/titleEmoji"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/edit"
-                    android:gravity="center"
-                    android:text="@string/edit"
+                    android:layout_marginStart="13dp"
+                    android:contentDescription="@string/emoji"
+                    android:gravity="start"
                     android:textColor="@color/titleColor"
-                    android:textSize="20sp"
+                    android:text="@string/emoji"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toStartOf="@+id/emojiViewALl"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:id="@+id/emojiViewALl"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="13dp"
+                    android:contentDescription="@string/emoji"
+                    android:gravity="end"
+                    android:text="@string/view_more"
+                    android:textColor="@color/gradientStart"
+                    android:textSize="13sp"
+                    android:textStyle="normal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/titleEmoji"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/cartoonList"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginTop="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/titleEmoji" />
@@ -212,11 +234,13 @@
                     android:id="@+id/titleBattery"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/edit"
-                    android:gravity="center"
-                    android:text="@string/edit"
+                    android:layout_marginHorizontal="13dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="start"
+                    android:text="@string/battery"
+                    android:textSize="16sp"
                     android:textColor="@color/titleColor"
-                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cartoonList" />
@@ -224,7 +248,9 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/batteryListList"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginTop="5dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/titleBattery" />
@@ -236,7 +262,8 @@
                     android:layout_height="0dp"
                     android:gravity="start|center_vertical"
                     android:text="@string/show_battery_percentage"
-                    android:textColor="@color/titleColor"
+                    android:layout_marginStart="11dp"
+                    android:textColor="@color/titleSubColor"
                     android:textStyle="normal"
                     app:layout_constraintBottom_toBottomOf="@+id/enableShowBatteryPercentage"
                     app:layout_constraintEnd_toStartOf="@+id/enableShowBatteryPercentage"
@@ -268,8 +295,12 @@
                     android:layout_height="wrap_content"
                     android:gravity="start|center_vertical"
                     android:text="@string/percentage_size_16_dp"
-                    android:textColor="@color/titleColor"
+                    android:layout_marginHorizontal="13dp"
+                    android:layout_marginStart="11dp"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/titleSubColor"
                     android:textStyle="normal"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/enableShowBatteryPercentage" />
 
@@ -278,9 +309,11 @@
                     android:layout_width="0dp"
                     android:layout_height="18dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginHorizontal="14dp"
                     android:paddingVertical="5dp"
                     android:progressDrawable="@drawable/seekbar_progress"
                     android:thumb="@drawable/seekbar_thumb"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/batteryPercentageEmojiLabel"
                     app:layout_constraintWidth_percent="1" />
@@ -292,7 +325,8 @@
                     android:layout_height="0dp"
                     android:gravity="start|center_vertical"
                     android:text="@string/show_battery_percentage"
-                    android:textColor="@color/titleColor"
+                    android:layout_marginStart="13dp"
+                    android:textColor="@color/titleSubColor"
                     android:textStyle="normal"
                     app:layout_constraintBottom_toBottomOf="@+id/enableShowBatteryEmoji"
                     app:layout_constraintEnd_toStartOf="@+id/enableShowBatteryEmoji"
@@ -311,7 +345,7 @@
                     android:text=""
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/titleShowBatPercentage"
-                    app:layout_constraintTop_toBottomOf="@+id/batteryPercentageEmojiLabel"
+                    app:layout_constraintTop_toBottomOf="@+id/batteryEmojiPercentageSeekbarSize"
                     app:layout_constraintWidth_percent="0.3"
                     app:showText="false"
                     app:thumbTint="@color/switch_thumb_tint"
@@ -323,8 +357,11 @@
                     android:layout_height="wrap_content"
                     android:gravity="start|center_vertical"
                     android:text="@string/battery_emoji_12_dp"
-                    android:textColor="@color/titleColor"
+                    android:layout_marginHorizontal="13dp"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/titleSubColor"
                     android:textStyle="normal"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/enableShowBatteryEmoji" />
 
@@ -334,9 +371,10 @@
                     android:layout_height="18dp"
                     android:layout_marginTop="5dp"
                     android:paddingVertical="5dp"
+                    android:layout_marginHorizontal="14dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:progressDrawable="@drawable/seekbar_progress"
                     android:thumb="@drawable/seekbar_thumb"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/batteryEmojiLabel"
                     app:layout_constraintWidth_percent="1" />
@@ -345,20 +383,22 @@
                     android:id="@+id/titleColorPalate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/edit"
-                    android:gravity="center"
-                    android:text="@string/edit"
-                    android:textColor="@color/titleColor"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
+                    android:layout_marginHorizontal="13dp"
+                    android:layout_marginTop="10dp"
+                    android:contentDescription="@string/emoji"
+                    android:gravity="start"
+                    android:text="@string/percentage_color"
+                    android:textColor="@color/titleSubColor"
+                    android:textStyle="normal"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/batteryEmojiSeekbarSize" />
-
                 <androidx.constraintlayout.utils.widget.ImageFilterView
                     android:id="@+id/openColorPalate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:padding="14dp"
+                    android:padding="10dp"
+                    app:layout_constraintEnd_toStartOf="@+id/colorsList"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/titleColorPalate"
@@ -367,31 +407,34 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/colorsList"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="5dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/openColorPalate"
                     app:layout_constraintStart_toEndOf="@+id/openColorPalate"
-                    app:layout_constraintTop_toBottomOf="@+id/titleColorPalate" />
-
+                    app:layout_constraintTop_toTopOf="@+id/openColorPalate" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
     <TextView
         android:id="@+id/btnNext"
         android:layout_width="0dp"
-        android:layout_height="45dp"
+        android:layout_height="0dp"
         android:layout_marginVertical="20dp"
         android:background="@drawable/bg_next_button"
         android:gravity="center"
         android:text="@string/apply"
         android:textColor="@color/white"
         android:textSize="18sp"
+        android:elevation="3dp"
         android:textStyle="bold"
+        app:layout_constraintDimensionRatio="1:0.16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintWidth_percent="0.9" />
+        app:layout_constraintWidth_percent="0.93" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

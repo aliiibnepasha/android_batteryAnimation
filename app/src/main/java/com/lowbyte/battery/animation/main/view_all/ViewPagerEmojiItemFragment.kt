@@ -34,6 +34,7 @@ class ViewPagerEmojiItemFragment : Fragment() {
     private lateinit var binding: ItemViewPagerBinding
     private lateinit var adapter: AllEmojiAdapter
     private var currentPos: Int = 0
+    private var isFromAllEmoji: Boolean = false
     private lateinit var glm: GridLayoutManager
     private var categoryTitle: String = ""
     private lateinit var rewardedDialog: RewardedDialogUtils
@@ -45,10 +46,11 @@ class ViewPagerEmojiItemFragment : Fragment() {
     companion object {
         private const val ARG_POSITION = "arg_position"
 
-        fun newInstance(position: Int, category: String) = ViewPagerEmojiItemFragment().apply {
+        fun newInstance(position: Int, category: String,isFromAllEmoji: Boolean) = ViewPagerEmojiItemFragment().apply {
             arguments = Bundle().apply {
                 putString("category", category)
                 putInt(ARG_POSITION, position)
+                putBoolean("isFromAllEmoji", isFromAllEmoji)
             }
         }
     }
@@ -57,6 +59,7 @@ class ViewPagerEmojiItemFragment : Fragment() {
         super.onCreate(savedInstanceState)
         currentPos = arguments?.getInt(ARG_POSITION) ?: 0
         categoryTitle = arguments?.getString("category") ?: "0"
+        isFromAllEmoji = arguments?.getBoolean("isFromAllEmoji") ?: false
     }
 
     override fun onCreateView(
@@ -135,22 +138,30 @@ class ViewPagerEmojiItemFragment : Fragment() {
                 )
             )
 
-                val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java).apply {
-                    putExtra(EXTRA_POSITION, position)
-                    putExtra(EXTRA_LABEL, fileItem.name)
-                    putExtra("categoryTitle", categoryTitle)
+                if (isFromAllEmoji){
+
+//                    requireActivity().setResult()
+                }else{
+                    val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java).apply {
+                        putExtra(EXTRA_POSITION, position)
+                        putExtra(EXTRA_LABEL, fileItem.name)
+                        putExtra("categoryTitle", categoryTitle)
+                    }
+                    startActivity(intent)
+                    FirebaseAnalyticsUtils.logClickEvent(
+                        requireActivity(),
+                        "EmojiEditApplyAct"
+                    )
                 }
-                startActivity(intent)
-                FirebaseAnalyticsUtils.logClickEvent(
-                    requireActivity(),
-                    "EmojiEditApplyAct"
-                )
+
+
         },
             headerHeightPx = spaceHPx,
             footerHeightPx = spacePPx,
             categoryName = categoryTitle,
             folderName = "emoji_preview"
         )
+
         glm = GridLayoutManager(requireContext(), 3).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {

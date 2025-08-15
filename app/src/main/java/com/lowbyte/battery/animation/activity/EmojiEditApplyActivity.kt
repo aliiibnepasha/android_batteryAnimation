@@ -10,12 +10,15 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
+import com.lowbyte.battery.animation.adapter.AllColorsAdapter
+import com.lowbyte.battery.animation.adapter.AllEmojiBatteriesAdapter
+import com.lowbyte.battery.animation.adapter.AllEmojiStickersAdapter
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ActivityEmojiEditApplayBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
@@ -28,6 +31,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.dataUrl
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyEmojiEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.solidColors
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.lowbyte.battery.animation.utils.PermissionUtils.checkAccessibilityPermission
@@ -36,16 +40,14 @@ import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import kotlinx.coroutines.launch
-import kotlin.getValue
 
 class EmojiEditApplyActivity : BaseActivity() {
 
     private lateinit var binding: ActivityEmojiEditApplayBinding
     private lateinit var preferences: AppPreferences
     private lateinit var drawable: String
+    private lateinit var allColorsAdapter: AllColorsAdapter
     private lateinit var sheet: AccessibilityPermissionBottomSheet // Declare the sheet
-
-
     private val vm: EmojiViewModel by viewModels { EmojiViewModelFactory(this) }
 
 
@@ -55,23 +57,75 @@ class EmojiEditApplyActivity : BaseActivity() {
         setContentView(binding.root)
         preferences = AppPreferences.getInstance(this)
         AdManager.loadInterstitialAd(this, getFullscreenId(),isFullscreenApplyEmojiEnabled)
+        val categoryTitle = intent.getStringExtra("categoryTitle") ?: ""
+        Log.d("APIData", "Categories List: $categoryTitle")
+        binding.tvTitle.text = categoryTitle
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch {
-                    vm.categories.collect { state ->
+                    vm.singleCategory.collect { state ->
                         if (state is Resource.Success) {
-                            val categoriesList = state.data
-                            Log.d("APIData", "Categories List: $categoriesList")
+                            val singleCategory = state.data
+
+                            singleCategory.folders.forEach {
+                                when (it.name) {
+                                    "emoji_battery" -> {
+                                        Log.d("APIData", "files List: ${it.files}")
+                                        val adapter = AllEmojiBatteriesAdapter(
+                                            { position, fileItem, isRewarded ->
+
+                                            },
+                                            categoryName = categoryTitle,
+                                            folderName = "emoji_battery"
+                                        )
+                                        binding.batteryListList.layoutManager = LinearLayoutManager(
+                                            this@EmojiEditApplyActivity,
+                                            LinearLayoutManager.HORIZONTAL,
+                                            false
+                                        )
+                                        binding.batteryListList.adapter = adapter
+                                        adapter.submitList(it.files)
+                                    }
+
+                                    "emoji_sticker" -> {
+                                        val adapter = AllEmojiStickersAdapter(
+                                            { position, fileItem, isRewarded ->
+
+                                            },
+                                            categoryName = categoryTitle,
+                                            folderName = "emoji_sticker"
+                                        )
+                                        binding.cartoonList.layoutManager = LinearLayoutManager(
+                                            this@EmojiEditApplyActivity,
+                                            LinearLayoutManager.HORIZONTAL,
+                                            false
+                                        )
+                                        binding.cartoonList.adapter = adapter
+                                        adapter.submitList(it.files)
+                                        Log.d("APIData", "files List: ${it.files}")
+                                    }
+
+                                    else -> {
+                                        Log.d("APIData", "name List: ${it.name}")
+                                        Log.d("APIData", "files List: ${it.files}")
+                                    }
+                                }
+
+                            }
+
 
                         }
                     }
                 }
             }
         }
-        vm.loadFolderPngs(dataUrl, categoryName = categoryTitle, folderName = "emoji_battery")
-        vm.loadFolderPngs(dataUrl, categoryName = categoryTitle, folderName = "emoji_sticker")
 
+        binding.emojiViewALl.setOnClickListener {
+            startActivity(Intent(this ,ViewMoreEmojiActivity::class.java))
+        }
+
+        vm.loadCategory(dataUrl, name = categoryTitle)
 
         sheet = AccessibilityPermissionBottomSheet(
             onAllowClicked = {
@@ -146,17 +200,6 @@ class EmojiEditApplyActivity : BaseActivity() {
 
             }, 500)
         }
-
-
-
-
-
-
-
-
-
-
-
 
         FirebaseAnalyticsUtils.logScreenView(this, "EmojiEditApplyScreen")
         FirebaseAnalyticsUtils.startScreenTimer("EmojiEditApplyScreen")
@@ -244,6 +287,18 @@ class EmojiEditApplyActivity : BaseActivity() {
                 .setBottomSpace(12)
                 .show()
         }
+
+        binding.colorsList.layoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+
+        allColorsAdapter = AllColorsAdapter({ position, fileItem, isRewarded ->
+
+        })
+        binding.colorsList.adapter = allColorsAdapter
+        allColorsAdapter.submitList(solidColors)
 
         binding.enableShowBatteryPercentage.setOnCheckedChangeListener { _, isChecked ->
             preferences.showBatteryPercent = isChecked

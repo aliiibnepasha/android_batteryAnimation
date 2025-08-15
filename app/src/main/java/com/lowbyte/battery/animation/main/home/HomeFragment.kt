@@ -143,6 +143,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 intent?.apply {
                     putExtra(EXTRA_POSITION, parentPosition)
                     putExtra(EXTRA_LABEL, label)
+                    putExtra(EXTRA_LABEL, label)
                     startActivity(this)
                 }
             },
