@@ -131,33 +131,33 @@ class MyApplication : MultiDexApplication(), Application.ActivityLifecycleCallba
             if (preferences.isProUser) return
             if (isLoadingAd || isAdAvailable() || preferences.isProUser) return
 
-            isLoadingAd = true
-            val request = AdRequest.Builder().build()
-            AppOpenAd.load(
-                context,
-                getOpenAppId(),
-                request,
-                object : AppOpenAdLoadCallback() {
-                    override fun onAdLoaded(ad: AppOpenAd) {
-                        appOpenAd = ad
-                        appOpenAd?.setImmersiveMode(true)
-
-                        isLoadingAd = false
-
-                        appOpenAd?.setOnPaidEventListener { adValue ->
-                            logPaidEvent(context,adValue, "appOpenAd", ad.adUnitId)
-
-                        }
-                        loadTime = Date().time
-                        Log.d("LOG_TAG", "onAdLoaded.")
-                    }
-                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                        appOpenAd = null
-                        isLoadingAd = false
-                        Log.d("LOG_TAG", "onAdFailedToLoad: ${loadAdError.message}")
-                    }
-                }
-            )
+//            isLoadingAd = true
+//            val request = AdRequest.Builder().build()
+//            AppOpenAd.load(
+//                context,
+//                getOpenAppId(),
+//                request,
+//                object : AppOpenAdLoadCallback() {
+//                    override fun onAdLoaded(ad: AppOpenAd) {
+//                        appOpenAd = ad
+//                        appOpenAd?.setImmersiveMode(true)
+//
+//                        isLoadingAd = false
+//
+//                        appOpenAd?.setOnPaidEventListener { adValue ->
+//                            logPaidEvent(context,adValue, "appOpenAd", ad.adUnitId)
+//
+//                        }
+//                        loadTime = Date().time
+//                        Log.d("LOG_TAG", "onAdLoaded.")
+//                    }
+//                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+//                        appOpenAd = null
+//                        isLoadingAd = false
+//                        Log.d("LOG_TAG", "onAdFailedToLoad: ${loadAdError.message}")
+//                    }
+//                }
+//            )
         }
 
         private fun wasLoadTimeLessThanNHoursAgo(numHours: Long): Boolean {

@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
+import com.lowbyte.battery.animation.activity.ViewMoreEmojiActivity
 import com.lowbyte.battery.animation.adapter.AllEmojiAdapter
 import com.lowbyte.battery.animation.databinding.ItemViewPagerBinding
 import com.lowbyte.battery.animation.server.EmojiViewModel
@@ -139,8 +140,9 @@ class ViewPagerEmojiItemFragment : Fragment() {
             )
 
                 if (isFromAllEmoji){
+                    (requireActivity() as? ViewMoreEmojiActivity)
+                        ?.returnSelectedEmoji(fileItem.name , "Test",position)
 
-//                    requireActivity().setResult()
                 }else{
                     val intent = Intent(requireActivity(), EmojiEditApplyActivity::class.java).apply {
                         putExtra(EXTRA_POSITION, position)

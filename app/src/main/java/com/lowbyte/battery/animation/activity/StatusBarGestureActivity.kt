@@ -58,15 +58,15 @@ class StatusBarGestureActivity : BaseActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        nativeHelper = NativeBannerSizeHelper(
-            context = this,
-            adId = getNativeCustomizeId(), // Replace with your real AdMob ID
-            showAdRemoteFlag = isNativeGestureEnabled, // Or get from remote config
-            isProUser = preferences.isProUser,       // Or from preferences
-            adContainer = binding.nativeAdContainer,
-            onAdLoaded = { Log.d("AD", "Banner Ad loaded!") },
-            onAdFailed = { Log.d("AD", "Banner Ad failed!") }
-        )
+//        nativeHelper = NativeBannerSizeHelper(
+//            context = this,
+//            adId = getNativeCustomizeId(), // Replace with your real AdMob ID
+//            showAdRemoteFlag = isNativeGestureEnabled, // Or get from remote config
+//            isProUser = preferences.isProUser,       // Or from preferences
+//            adContainer = binding.nativeAdContainer,
+//            onAdLoaded = { Log.d("AD", "Banner Ad loaded!") },
+//            onAdFailed = { Log.d("AD", "Banner Ad failed!") }
+//        )
 
 
 

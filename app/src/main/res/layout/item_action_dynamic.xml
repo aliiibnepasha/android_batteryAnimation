@@ -25,7 +25,7 @@
             android:gravity="start|center_vertical"
             android:paddingHorizontal="10dp"
             android:text="@string/notification"
-            android:textColor="@color/white"
+            android:textColor="@color/titleColor"
             android:textStyle="normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/enableDynamicFeature"

@@ -15,15 +15,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="1">
+        app:layout_constraintWidth_percent="0.95">
 
         <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/ibBackButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:contentDescription="@string/app_name"
-            android:padding="18dp"
-            android:src="@drawable/ic_arrow_left"
+            android:padding="8dp"
+            android:src="@drawable/icon_back_round"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
@@ -36,28 +36,44 @@
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:contentDescription="@string/status_bar"
-            android:gravity="center"
             android:text="@string/gesture"
-            android:textColor="@color/white"
-            android:textSize="18sp"
+            android:gravity="center"
+            android:textColor="@color/titleColor"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/ifvPro"
+            app:layout_constraintEnd_toStartOf="@+id/shimmerShimmerPro"
             app:layout_constraintStart_toEndOf="@+id/ibBackButton"
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <androidx.constraintlayout.utils.widget.ImageFilterView
-            android:id="@+id/ifvPro"
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerShimmerPro"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="5dp"
-            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toStartOf="@+id/ifvSetting"
+            app:layout_constraintDimensionRatio="1.2:1"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_pro" />
+            app:shimmer_auto_start="true"
+            app:shimmer_base_color="@android:color/transparent"
+            app:shimmer_duration="3500"
+            app:shimmer_highlight_color="#80FFFFFF">
+
+            <androidx.constraintlayout.utils.widget.ImageFilterView
+                android:id="@+id/ifvPro"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="4dp"
+                android:padding="6dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1.2:1"
+                app:layout_constraintEnd_toStartOf="@+id/ifvSetting"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/icon_pro" />
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
 
         <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/ifvSetting"
@@ -78,23 +94,24 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/gestureView"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginVertical="20dp"
-        android:background="@drawable/bg_item_rectangle_101010"
-        android:paddingHorizontal="14dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_horizontal_switch"
+        android:paddingStart="18dp"
+        android:paddingEnd="1dp"
+        app:layout_constraintDimensionRatio="1:0.16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleBarStatus"
-        app:layout_constraintWidth_percent="0.95">
+        app:layout_constraintWidth_percent="0.93">
 
         <TextView
             android:id="@+id/gestureEnable"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="start|center_vertical"
-            android:text="@string/gesture"
-            android:textColor="@color/white"
-            android:textStyle="normal"
+            android:text="@string/use_gestures_for_custom_actions"
+            android:textColor="@color/titleSubColor"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/gestureSwitchEnable"
             app:layout_constraintStart_toStartOf="parent"
@@ -121,27 +138,182 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/vibrateFeedbackEnable"
+        android:id="@+id/viewSingleTap"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginVertical="20dp"
         android:background="@drawable/bg_item_rectangle_101010"
-        android:paddingHorizontal="14dp"
+        android:padding="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gestureView"
-        app:layout_constraintWidth_percent="0.95">
+        app:layout_constraintWidth_percent="0.93">
+
+        <TextView
+            android:id="@+id/status_bar_single_tap"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:text="@string/single_tap"
+            android:textColor="@color/titleColor"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/status_bar_single_tap_action"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/back_action"
+            android:textColor="@color/titleSubColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/status_bar_single_tap"
+            app:layout_constraintWidth_percent="1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/viewLongTap"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_item_rectangle_101010"
+        android:padding="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewSingleTap"
+        app:layout_constraintWidth_percent="0.93">
+
+        <TextView
+            android:id="@+id/status_bar_long_tap"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:text="@string/long_press"
+            android:textColor="@color/titleColor"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/status_bar_long_action"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/back_action"
+            android:textColor="@color/titleSubColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/status_bar_long_tap"
+            app:layout_constraintWidth_percent="1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/swipeLeftToRightView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_item_rectangle_101010"
+        android:padding="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewLongTap"
+        app:layout_constraintWidth_percent="0.93">
+
+        <TextView
+            android:id="@+id/swipe_left_to_right"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:text="@string/swipe_left_to_right"
+            android:textColor="@color/titleColor"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/swipe_left_to_right_action"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/back_action"
+            android:textColor="@color/titleSubColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swipe_left_to_right"
+            app:layout_constraintWidth_percent="1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/swipeRightToLeftView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_item_rectangle_101010"
+        android:padding="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/swipeLeftToRightView"
+        app:layout_constraintWidth_percent="0.93">
+
+        <TextView
+            android:id="@+id/swipeRightToLeftTapLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:text="@string/swipe_right_to_left"
+            android:textColor="@color/titleColor"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/actionOnSwipeRightToLeft"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/back_action"
+            android:textColor="@color/titleSubColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swipeRightToLeftTapLabel"
+            app:layout_constraintWidth_percent="1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vibrateFeedbackEnable"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_item_rectangle_101010"
+        android:paddingVertical="14dp"
+        android:paddingStart="14dp"
+        android:paddingEnd="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/swipeRightToLeftView"
+        app:layout_constraintWidth_percent="0.93">
 
         <TextView
             android:id="@+id/titleVibrateFeedback"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
             android:text="@string/vibrate_feedback"
-            android:textColor="@color/white"
-            android:textStyle="normal"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@color/titleColor"
+            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/switchVibrateFeedback"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -154,174 +326,26 @@
             android:scaleX="0.7"
             android:scaleY="0.7"
             android:text=""
-            app:showText="false"
-            app:thumbTint="@color/switch_thumb_tint"
-            app:trackTint="@color/switch_track_tint"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/titleVibrateFeedback"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.3" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <FrameLayout
-        android:id="@+id/nativeAdContainer"
-        android:layout_width="0dp"
-        android:layout_marginVertical="20dp"
-        android:layout_height="90dp"
-        app:layout_constraintWidth_percent="0.95"
-        android:background="@drawable/bg_rectangle_gradient"
-        android:minHeight="85dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vibrateFeedbackEnable" />
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/viewSingleTap"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
-        android:background="@drawable/bg_item_rectangle_101010"
-        android:padding="14dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nativeAdContainer"
-        app:layout_constraintWidth_percent="0.95">
+            app:layout_constraintWidth_percent="0.3"
+            app:showText="false"
+            app:thumbTint="@color/switch_thumb_tint"
+            app:trackTint="@color/switch_track_tint" />
 
         <TextView
-            android:id="@+id/status_bar_single_tap"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="start|center_vertical"
-            android:text="@string/single_tap"
-            android:textColor="@color/white"
-            android:textStyle="normal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/status_bar_single_tap_action"
+            android:id="@+id/sybTitleVibrateFeedback"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/back_action"
-            android:textColor="@color/gray_unselected"
+            android:textColor="@color/titleSubColor"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/switchVibrateFeedback"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/status_bar_single_tap"
-            app:layout_constraintWidth_percent="1" />
-
+            app:layout_constraintTop_toBottomOf="@+id/titleVibrateFeedback" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/viewLongTap"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
-        android:background="@drawable/bg_item_rectangle_101010"
-        android:padding="14dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewSingleTap"
-        app:layout_constraintWidth_percent="0.95">
-
-        <TextView
-            android:id="@+id/status_bar_long_tap"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="start|center_vertical"
-            android:text="@string/long_press"
-            android:textColor="@color/white"
-            android:textStyle="normal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/status_bar_long_action"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/back_action"
-            android:textColor="@color/gray_unselected"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/status_bar_long_tap"
-            app:layout_constraintWidth_percent="1" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/swipeLeftToRightView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
-        android:background="@drawable/bg_item_rectangle_101010"
-        android:padding="14dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewLongTap"
-        app:layout_constraintWidth_percent="0.95">
-
-        <TextView
-            android:id="@+id/swipe_left_to_right"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="start|center_vertical"
-            android:text="@string/swipe_left_to_right"
-            android:textColor="@color/white"
-            android:textStyle="normal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/swipe_left_to_right_action"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/back_action"
-            android:textColor="@color/gray_unselected"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swipe_left_to_right"
-            app:layout_constraintWidth_percent="1" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/swipeRightToLeftView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
-        android:background="@drawable/bg_item_rectangle_101010"
-        android:padding="14dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swipeLeftToRightView"
-        app:layout_constraintWidth_percent="0.95">
-
-        <TextView
-            android:id="@+id/swipeRightToLeftTapLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="start|center_vertical"
-            android:text="@string/swipe_right_to_left"
-            android:textColor="@color/white"
-            android:textStyle="normal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/actionOnSwipeRightToLeft"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/back_action"
-            android:textColor="@color/gray_unselected"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swipeRightToLeftTapLabel"
-            app:layout_constraintWidth_percent="1" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

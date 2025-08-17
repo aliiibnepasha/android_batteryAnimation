@@ -5,18 +5,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.databinding.ActivityViewMoreEmojiBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
@@ -34,9 +30,8 @@ import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 import com.lowbyte.battery.animation.utils.PermissionUtils.checkAccessibilityPermission
 import com.lowbyte.battery.animation.utils.PermissionUtils.isAccessibilityServiceEnabled
 import kotlinx.coroutines.launch
-import kotlin.getValue
 
-class ViewMoreEmojiActivity : AppCompatActivity() {
+class ViewMoreEmojiActivity : BaseActivity() {
 
     private lateinit var binding: ActivityViewMoreEmojiBinding
 
@@ -52,6 +47,19 @@ class ViewMoreEmojiActivity : AppCompatActivity() {
         binding = ActivityViewMoreEmojiBinding.inflate(layoutInflater)
         setContentView(binding.root)
         AdManager.loadInterstitialAd(this,getFullscreenHome2Id(),isFullscreenStatusEnabled)
+        binding.ibBackButton.setOnClickListener {
+            FirebaseAnalyticsUtils.logClickEvent(
+                this,
+                "click_back_button",
+                mapOf("screen" to "EmojiEditApplyScreen")
+            )
+            finish()
+        }
+
+        binding.ifvPro.setOnClickListener {
+            startActivity(Intent(this, ProActivity::class.java))
+        }
+
 
         preferences = AppPreferences.getInstance(this)
         lifecycleScope.launch {
@@ -151,6 +159,18 @@ class ViewMoreEmojiActivity : AppCompatActivity() {
         }
 
     }
+
+
+    fun returnSelectedEmoji(emojiName: String, batteryName: String, positon: Int) {
+        val resultIntent = Intent().apply {
+            putExtra("emojiName", emojiName)
+            putExtra("batteryName", batteryName)
+            putExtra("positon", positon)
+        }
+        setResult(RESULT_OK, resultIntent)
+        finish()
+    }
+
 
     private fun setupViewPager(tabsList: List<String>,isFromAllEmoji: Boolean) {
         binding.viewPager.adapter = object : FragmentStateAdapter(this) {

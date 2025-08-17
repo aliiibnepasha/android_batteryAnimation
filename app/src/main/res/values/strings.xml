@@ -244,6 +244,7 @@
     <string name="cute">Cute</string>
     <string name="menu_template">Template</string>
     <string name="view_more">View More</string>
+    <string name="use_gestures_for_custom_actions">Use gestures for custom actions</string>
 
 
 </resources>

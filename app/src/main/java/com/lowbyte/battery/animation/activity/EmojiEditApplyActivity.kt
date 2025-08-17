@@ -1,5 +1,6 @@
 package com.lowbyte.battery.animation.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -7,6 +8,7 @@ import android.os.Looper
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -122,7 +124,8 @@ class EmojiEditApplyActivity : BaseActivity() {
         }
 
         binding.emojiViewALl.setOnClickListener {
-            startActivity(Intent(this ,ViewMoreEmojiActivity::class.java))
+            val intent = Intent(this, ViewMoreEmojiActivity::class.java)
+            emojiPickerLauncher.launch(intent)
         }
 
         vm.loadCategory(dataUrl, name = categoryTitle)
@@ -326,6 +329,19 @@ class EmojiEditApplyActivity : BaseActivity() {
             }
         }
     }
+
+    private val emojiPickerLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.let { intent ->
+                    val emojiName = intent.getStringExtra("emojiName")
+                    val batteryName = intent.getStringExtra("batteryName")
+                    val positon = intent.getIntExtra("positon",0)
+                    Log.d("logData", "emojiName: $emojiName batteryName: $batteryName positon: $positon")
+
+                }
+            }
+        }
 
     private fun colorOfIcon(envelope: ColorEnvelope) {
         if (!binding.enableShowBatteryPercentage.isChecked) {
