@@ -116,7 +116,6 @@ class ViewMoreEmojiActivity : BaseActivity() {
             Handler(Looper.getMainLooper()).postDelayed({
                 if (!isFinishing && !isDestroyed){
                     preferences.isStatusBarEnabled = isChecked
-                    // Log toggle
                     FirebaseAnalyticsUtils.logClickEvent(
                         this,
                         "toggle_statusbar_emoji_from_emoji_screen",

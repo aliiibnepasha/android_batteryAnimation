@@ -22,8 +22,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:contentDescription="@string/app_name"
-            android:padding="18dp"
-            android:src="@drawable/ic_arrow_left"
+            android:padding="8dp"
+            android:src="@drawable/icon_back_round"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
@@ -38,26 +38,42 @@
             android:contentDescription="@string/status_bar"
             android:gravity="center"
             android:text="@string/wifi"
-            android:textColor="@color/white"
+            android:textColor="@color/titleColor"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/ifvPro"
+            app:layout_constraintEnd_toStartOf="@+id/shimmerShimmerPro"
             app:layout_constraintStart_toEndOf="@+id/ibBackButton"
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <androidx.constraintlayout.utils.widget.ImageFilterView
-            android:id="@+id/ifvPro"
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerShimmerPro"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="5dp"
-            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toStartOf="@+id/ifvSetting"
+            app:layout_constraintDimensionRatio="1.2:1"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_pro" />
+            app:shimmer_auto_start="true"
+            app:shimmer_base_color="@android:color/transparent"
+            app:shimmer_duration="3500"
+            app:shimmer_highlight_color="#80FFFFFF">
+
+            <androidx.constraintlayout.utils.widget.ImageFilterView
+                android:id="@+id/ifvPro"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="4dp"
+                android:padding="6dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1.2:1"
+                app:layout_constraintEnd_toStartOf="@+id/ifvSetting"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/icon_pro" />
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
 
         <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/ifvSetting"
@@ -74,7 +90,50 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/designEnableEmoji"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/bg_horizontal_switch"
+        android:paddingHorizontal="15dp"
+        app:layout_constraintDimensionRatio="1:0.16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleBarStatus"
+        app:layout_constraintWidth_percent="0.93">
 
+        <TextView
+            android:id="@+id/enableBatteryEmoji"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="start|center_vertical"
+            android:text="@string/enable_emoji_battery_to_begin"
+            android:textColor="@color/titleColor"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/switchEnableBatteryEmojiViewAll"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/switchEnableBatteryEmojiViewAll"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:checked="false"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/enableBatteryEmoji"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.3"
+            app:showText="false"
+            app:thumbTint="@color/switch_thumb_tint"
+            app:trackTint="@color/switch_track_tint" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/viewSingleTap"
@@ -85,8 +144,8 @@
         android:paddingVertical="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleBarStatus"
-        app:layout_constraintWidth_percent="0.95">
+        app:layout_constraintTop_toBottomOf="@+id/designEnableEmoji"
+        app:layout_constraintWidth_percent="0.93">
 
         <TextView
             android:id="@+id/labelIconSize"
@@ -95,7 +154,7 @@
             android:gravity="start|center_vertical"
             android:text="@string/height_12_dp"
             android:paddingHorizontal="14dp"
-            android:textColor="@color/white"
+            android:textColor="@color/titleSubColor"
             android:textStyle="normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -103,59 +162,80 @@
         <androidx.appcompat.widget.AppCompatSeekBar
             android:id="@+id/seekBarIconSize"
             android:layout_width="0dp"
-            android:layout_height="15dp"
+            android:layout_height="18sp"
             android:paddingVertical="5dp"
             android:layout_marginTop="15dp"
             android:progressDrawable="@drawable/seekbar_progress"
             android:thumb="@drawable/seekbar_thumb"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/labelIconSize"
             app:layout_constraintWidth_percent="1" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/customizeStatusBarBgColor"
-        android:layout_width="0dp"
-        android:layout_height="?actionBarSize"
-        android:layout_marginVertical="20dp"
-        android:background="@drawable/bg_item_rectangle_101010"
-        android:paddingHorizontal="14dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewSingleTap"
-        app:layout_constraintWidth_percent="0.95">
-
         <TextView
-            android:id="@+id/selectBgColor"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:gravity="start|center_vertical"
-            android:text="@string/icon_colour"
-            android:textColor="@color/white"
+            android:id="@+id/titleColorPalate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="13dp"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/emoji"
+            android:gravity="start"
+            android:text="@string/percentage_color"
+            android:textColor="@color/titleSubColor"
             android:textStyle="normal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/openColorPalate"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/seekBarIconSize" />
 
         <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/openColorPalate"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:padding="14dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/selectBgColor"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.3"
+            app:layout_constraintEnd_toStartOf="@+id/colorsList"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleColorPalate"
             app:srcCompat="@drawable/ic_color_picker" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/colorsList"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/openColorPalate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/openColorPalate"
+            app:layout_constraintTop_toTopOf="@+id/openColorPalate" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewSingleTap"
+        app:layout_constraintWidth_percent="0.93" />
 
+    <TextView
+        android:id="@+id/applyIcon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginVertical="20dp"
+        android:background="@drawable/bg_next_button"
+        android:elevation="3dp"
+        android:gravity="center"
+        android:text="@string/apply"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:0.16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.93" />
 </androidx.constraintlayout.widget.ConstraintLayout>

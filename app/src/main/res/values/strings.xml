@@ -96,7 +96,7 @@
     <string name="cat_4">Hot</string>
     <string name="cat_5">New</string>
     <string name="cat_6">Fenky</string>
-    <string name="gesture_action">Gesture Action</string>
+    <string name="gesture_action">Select Action</string>
     <string name="terms_of_service_url" translatable="false">https://sites.google.com/view/theswiftvision-termsofservice/home</string>
     <string name="privacy_policy_url" translatable="false">https://sites.google.com/view/theswiftvision-privacypolicy/home</string>
     <string name="restore_sub_url" translatable="false">https://play.google.com/store/account/subscriptions</string>
@@ -245,6 +245,7 @@
     <string name="menu_template">Template</string>
     <string name="view_more">View More</string>
     <string name="use_gestures_for_custom_actions">Use gestures for custom actions</string>
+    <string name="enable_emoji_battery_to_begin">Enable Emoji battery to begin</string>
 
 
 </resources>

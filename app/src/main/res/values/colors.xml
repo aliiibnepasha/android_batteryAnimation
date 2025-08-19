@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="blue_app_color">#64C7FF</color>
+    <color name="indicator_color">#CECECE</color>
     <color name="blur_dark">#000000</color>
-    <color name="blue_light">#03A9F4</color>
-    <color name="blue_progress_non_fill">#396680</color>
-    <color name="teal_700">#64C7FF</color>
+    <color name="blue_light">#7236FD</color>
+    <color name="blue_progress_non_fill">#B54CF4</color>
+    <color name="teal_700">#7236FD</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="white50">#50FFFFFF</color>

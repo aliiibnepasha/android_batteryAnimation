@@ -6,9 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.activity.StatusBarCustomizeActivity
 import com.lowbyte.battery.animation.activity.StatusBarGestureActivity
+import com.lowbyte.battery.animation.activity.StatusBarIconSettingsActivity
+import com.lowbyte.battery.animation.adapter.CustomIconGridAdapter
 import com.lowbyte.battery.animation.databinding.FragmentCustomizeBinding
+import com.lowbyte.battery.animation.model.CustomIconGridItem
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
+import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class CustomizeFragment : Fragment() {
@@ -38,6 +45,27 @@ class CustomizeFragment : Fragment() {
             FirebaseAnalyticsUtils.logClickEvent(requireContext(), "click_gesture_customize")
             startActivity(Intent(requireContext(), StatusBarGestureActivity::class.java))
         }
+
+        val items = arrayListOf(
+            CustomIconGridItem(R.drawable.action_single_tap, getString(R.string.wifi)),
+            CustomIconGridItem(R.drawable.action_single_tap, getString(R.string.data)),
+            CustomIconGridItem(R.drawable.action_single_tap, getString(R.string.signals)),
+            CustomIconGridItem(R.drawable.action_single_tap, getString(R.string.airplane)),
+            CustomIconGridItem(R.drawable.action_single_tap, getString(R.string.hotspot)),
+            CustomIconGridItem(R.drawable.action_single_tap, getString(R.string.time))
+        )
+
+        val adapter = CustomIconGridAdapter(items) { position, label ->
+            FirebaseAnalyticsUtils.logClickEvent(this, "click_icon_item", mapOf("position" to position.toString(), "label" to label))
+            FirebaseAnalyticsUtils.logClickEvent(this, "StatusBarIconSettingsActivity", mapOf("position" to position.toString(), "label" to label))
+            val intent = Intent(requireContext(), StatusBarIconSettingsActivity::class.java)
+            intent.putExtra(EXTRA_POSITION, position)
+            intent.putExtra(EXTRA_LABEL, label)
+            startActivity(intent)
+        }
+
+        binding.recyclerViewCustomIcon.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.recyclerViewCustomIcon.adapter = adapter
 
         return root
     }

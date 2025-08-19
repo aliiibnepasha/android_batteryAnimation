@@ -4,16 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/viewActionScroll"
     android:layout_width="match_parent"
-    android:layout_height="?actionBarSize"
-    android:layout_marginVertical="8dp"
-    android:background="@drawable/bg_item_rectangle_101010"
+    android:layout_height="40dp"
     android:paddingHorizontal="14dp">
 
     <RadioButton
         android:id="@+id/actionScrollLabel"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="start|center_vertical"
+        android:padding="8dp"
         android:text=""
         android:textColor="@color/titleColor"
         android:textStyle="normal"

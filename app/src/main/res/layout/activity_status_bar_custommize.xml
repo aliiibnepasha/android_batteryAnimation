@@ -22,8 +22,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:contentDescription="@string/app_name"
-            android:padding="18dp"
-            android:src="@drawable/ic_arrow_left"
+            android:padding="8dp"
+            android:src="@drawable/icon_back_round"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
@@ -327,16 +327,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewCustomIcon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/customizeStatusBarIconTitle"
-                app:layout_constraintWidth_percent="0.95" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -206,6 +206,7 @@ class EmojiEditApplyActivity : BaseActivity() {
 
         FirebaseAnalyticsUtils.logScreenView(this, "EmojiEditApplyScreen")
         FirebaseAnalyticsUtils.startScreenTimer("EmojiEditApplyScreen")
+
         val position = intent.getIntExtra(EXTRA_POSITION, -1)
 
         drawable = intent.getStringExtra(EXTRA_LABEL) ?: getString(R.string.wifi)
@@ -290,19 +291,16 @@ class EmojiEditApplyActivity : BaseActivity() {
                 .setBottomSpace(12)
                 .show()
         }
-
         binding.colorsList.layoutManager = LinearLayoutManager(
             this,
             LinearLayoutManager.HORIZONTAL,
             false
         )
-
         allColorsAdapter = AllColorsAdapter({ position, fileItem, isRewarded ->
 
         })
         binding.colorsList.adapter = allColorsAdapter
         allColorsAdapter.submitList(solidColors)
-
         binding.enableShowBatteryPercentage.setOnCheckedChangeListener { _, isChecked ->
             preferences.showBatteryPercent = isChecked
             sendBroadcast(Intent(BROADCAST_ACTION))
@@ -332,7 +330,7 @@ class EmojiEditApplyActivity : BaseActivity() {
 
     private val emojiPickerLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
+            if (result.resultCode == RESULT_OK) {
                 result.data?.let { intent ->
                     val emojiName = intent.getStringExtra("emojiName")
                     val batteryName = intent.getStringExtra("batteryName")

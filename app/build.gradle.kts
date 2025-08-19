@@ -154,10 +154,4 @@ dependencies {
 
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.9.2")
 
-
-
-
-    //Pamngel  , mentegral
-
-
 }

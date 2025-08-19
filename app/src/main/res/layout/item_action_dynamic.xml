@@ -4,18 +4,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/viewActionDynamic"
     android:layout_width="match_parent"
-    android:layout_height="?actionBarSize"
-    android:layout_marginVertical="8dp"
-    android:background="@drawable/bg_item_rectangle_101010"
-    android:paddingHorizontal="14dp">
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/actionDynamicLabel"
         android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:background="@drawable/bg_item_rectangle_101010"
+        android:layout_height="0dp"
+        android:paddingStart="18dp"
+        android:paddingEnd="1dp"
+        app:layout_constraintDimensionRatio="1:0.16"
+        app:layout_constraintWidth_percent="0.93"
+        android:background="@drawable/bg_horizontal_switch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -23,10 +26,10 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="start|center_vertical"
-            android:paddingHorizontal="10dp"
             android:text="@string/notification"
-            android:textColor="@color/titleColor"
-            android:textStyle="normal"
+            android:textColor="@color/titleSubColor"
+            android:textStyle="bold"
+            android:paddingHorizontal="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/enableDynamicFeature"
             app:layout_constraintStart_toStartOf="parent"

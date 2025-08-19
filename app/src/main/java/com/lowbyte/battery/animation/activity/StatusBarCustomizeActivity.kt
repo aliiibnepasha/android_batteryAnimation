@@ -213,26 +213,7 @@ class StatusBarCustomizeActivity : BaseActivity() {
                 .show()
         }
 
-        val items = arrayListOf(
-            CustomIconGridItem(R.drawable.ic_signal_wifi, getString(R.string.wifi)),
-            CustomIconGridItem(R.drawable.ic_signal_date, getString(R.string.data)),
-            CustomIconGridItem(R.drawable.ic_signal_mobile, getString(R.string.signals)),
-            CustomIconGridItem(R.drawable.ic_airplan_mod, getString(R.string.airplane)),
-            CustomIconGridItem(R.drawable.ic_signal_hotspot, getString(R.string.hotspot)),
-            CustomIconGridItem(R.drawable.ic_time_date, getString(R.string.time))
-        )
 
-        val adapter = CustomIconGridAdapter(items) { position, label ->
-            FirebaseAnalyticsUtils.logClickEvent(this, "click_icon_item", mapOf("position" to position.toString(), "label" to label))
-            FirebaseAnalyticsUtils.logClickEvent(this, "StatusBarIconSettingsActivity", mapOf("position" to position.toString(), "label" to label))
-            val intent = Intent(this, StatusBarIconSettingsActivity::class.java)
-            intent.putExtra(EXTRA_POSITION, position)
-            intent.putExtra(EXTRA_LABEL, label)
-            startActivity(intent)
-        }
-
-        binding.recyclerViewCustomIcon.layoutManager = GridLayoutManager(this, 3)
-        binding.recyclerViewCustomIcon.adapter = adapter
     }
 
     private fun checkAccessibilityPermission() {

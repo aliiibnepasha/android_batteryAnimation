@@ -62,15 +62,15 @@ class IslandFragment : Fragment() {
         dialogNotch.window?.attributes?.windowAnimations = R.style.DialogAnimation
         dialogNotch.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        NativeBannerSizeHelper(
-            context = requireActivity(),
-            adId = getNativeCustomizeId(),
-            showAdRemoteFlag = isNativeDynamicEnabled, // Or get from remote config
-            isProUser = preferences.isProUser,       // Or from preferences
-            adContainer = binding.nativeAdContainerDynamic,
-            onAdLoaded = { Log.d("AD", "Banner Ad loaded!") },
-            onAdFailed = { Log.d("AD", "Banner Ad failed!") }
-        )
+//        NativeBannerSizeHelper(
+//            context = requireActivity(),
+//            adId = getNativeCustomizeId(),
+//            showAdRemoteFlag = isNativeDynamicEnabled, // Or get from remote config
+//            isProUser = preferences.isProUser,       // Or from preferences
+//            adContainer = binding.nativeAdContainerDynamic,
+//            onAdLoaded = { Log.d("AD", "Banner Ad loaded!") },
+//            onAdFailed = { Log.d("AD", "Banner Ad failed!") }
+//        )
 
 
         if (preferences.getInt("widget_style_index", 0) == 0) {

@@ -152,15 +152,27 @@
         app:layout_constraintTop_toBottomOf="@+id/gestureView"
         app:layout_constraintWidth_percent="0.93">
 
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/imgSingleTap"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:srcCompat="@drawable/action_single_tap"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
         <TextView
             android:id="@+id/status_bar_single_tap"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
             android:text="@string/single_tap"
+            android:layout_marginHorizontal="10dp"
             android:textColor="@color/titleColor"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imgSingleTap"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -169,12 +181,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/back_action"
+            android:layout_marginHorizontal="10dp"
             android:textColor="@color/titleSubColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imgSingleTap"
             app:layout_constraintTop_toBottomOf="@+id/status_bar_single_tap"
-            app:layout_constraintWidth_percent="1" />
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -189,6 +202,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewSingleTap"
         app:layout_constraintWidth_percent="0.93">
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/imgLongTap"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:srcCompat="@drawable/action_long_press"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
 
         <TextView
             android:id="@+id/status_bar_long_tap"
@@ -196,9 +219,10 @@
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
             android:text="@string/long_press"
+            android:layout_marginHorizontal="10dp"
             android:textColor="@color/titleColor"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgLongTap"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -207,12 +231,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/back_action"
+            android:layout_marginHorizontal="10dp"
             android:textColor="@color/titleSubColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/status_bar_long_tap"
-            app:layout_constraintWidth_percent="1" />
+            app:layout_constraintStart_toEndOf="@+id/imgLongTap"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -227,16 +252,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewLongTap"
         app:layout_constraintWidth_percent="0.93">
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/imgSwipLTR"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:srcCompat="@drawable/action_swipe_left_to_right"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/swipe_left_to_right"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
+            android:layout_marginHorizontal="10dp"
             android:text="@string/swipe_left_to_right"
             android:textColor="@color/titleColor"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imgSwipLTR"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -245,12 +280,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/back_action"
+            android:layout_marginHorizontal="10dp"
             android:textColor="@color/titleSubColor"
+            app:layout_constraintStart_toEndOf="@id/imgSwipLTR"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/swipe_left_to_right"
-            app:layout_constraintWidth_percent="1" />
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -265,6 +301,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/swipeLeftToRightView"
         app:layout_constraintWidth_percent="0.93">
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/imgSwipRTL"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:srcCompat="@drawable/action_swipe_right_to_left"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/swipeRightToLeftTapLabel"
@@ -273,8 +318,9 @@
             android:gravity="start|center_vertical"
             android:text="@string/swipe_right_to_left"
             android:textColor="@color/titleColor"
+            android:layout_marginHorizontal="10dp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgSwipRTL"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -283,12 +329,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@string/back_action"
+            app:layout_constraintStart_toEndOf="@+id/imgSwipRTL"
+            android:layout_marginHorizontal="10dp"
             android:textColor="@color/titleSubColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swipeRightToLeftTapLabel"
-            app:layout_constraintWidth_percent="1" />
+            app:layout_constraintTop_toBottomOf="@+id/swipeRightToLeftTapLabel" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -305,6 +351,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/swipeRightToLeftView"
         app:layout_constraintWidth_percent="0.93">
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/imgVibrate"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:srcCompat="@drawable/ic_vibration_feedback"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/titleVibrateFeedback"
@@ -313,9 +368,10 @@
             android:gravity="start|center_vertical"
             android:text="@string/vibrate_feedback"
             android:textColor="@color/titleColor"
+            android:layout_marginHorizontal="10dp"
             android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/imgVibrate"
             app:layout_constraintEnd_toStartOf="@+id/switchVibrateFeedback"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
@@ -340,11 +396,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="10dp"
             android:text="@string/back_action"
+            app:layout_constraintStart_toEndOf="@id/imgVibrate"
             android:textColor="@color/titleSubColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/switchVibrateFeedback"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleVibrateFeedback" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
