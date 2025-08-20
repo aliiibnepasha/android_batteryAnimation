@@ -317,9 +317,9 @@
     <FrameLayout
         android:id="@+id/nativeAdContainer"
         android:layout_width="0dp"
-        android:layout_height="65dp"
+        android:layout_height="70dp"
         app:layout_constraintWidth_percent="1"
-        android:background="@drawable/bg_rectangle_gradient"
+        android:background="@color/bg_ads"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" >
@@ -329,7 +329,7 @@
             android:id="@+id/shimmerBanner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="8dp"
+            android:padding="4dp"
             android:visibility="visible"
             app:shimmer_auto_start="true"
             app:shimmer_duration="1500">
@@ -367,6 +367,6 @@
         <FrameLayout
             android:id="@+id/bannerAdContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="70dp" />
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

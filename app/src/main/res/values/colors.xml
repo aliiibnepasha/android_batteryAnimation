@@ -11,6 +11,8 @@
     <color name="gray_unselected">#999999</color>
     <color name="bg_color_enable">#111011</color>
     <color name="bg_statusbar_menu">#101010</color>
+    <color name="bg_ads">#232A34</color>
+    <color name="bg_ads_cta">#388E3C</color>
     <color name="bg_blue_pro">#28B6F4</color>
     <color name="text_color_pro">#FFCC29</color>
 </resources>

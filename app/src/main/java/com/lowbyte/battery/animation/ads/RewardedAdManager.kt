@@ -22,6 +22,8 @@ import com.lowbyte.battery.animation.utils.ServiceUtils.isEditing
 object RewardedAdManager {
 
     private var rewardedAd: RewardedAd? = null
+     var rewardedAdLoaded: Boolean = false
+     var isClickedPerform: Boolean = false
     private var isLoading = false
     private var pendingShowRequest = false
     private const val TAG = "RewardedAdManager"
@@ -35,6 +37,7 @@ object RewardedAdManager {
         val adRequest = AdRequest.Builder().build()
         RewardedAd.load(context, getRewardedId(), adRequest, object : RewardedAdLoadCallback() {
             override fun onAdLoaded(ad: RewardedAd) {
+                rewardedAdLoaded = true
                 if (context.isValid()) {
                     rewardedAd = ad
                     isLoading = false
@@ -48,6 +51,7 @@ object RewardedAdManager {
                 isLoading = false
                 rewardedAd = null
                 onFailed?.invoke()
+                rewardedAdLoaded = false
             }
         })
     }

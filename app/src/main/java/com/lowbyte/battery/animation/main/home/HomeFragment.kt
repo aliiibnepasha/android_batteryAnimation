@@ -21,8 +21,11 @@ import com.lowbyte.battery.animation.activity.BatteryWidgetEditApplyActivity
 import com.lowbyte.battery.animation.activity.EmojiEditApplyActivity
 import com.lowbyte.battery.animation.adapter.MultiViewAdapter
 import com.lowbyte.battery.animation.ads.AdManager
+import com.lowbyte.battery.animation.ads.RewardedAdManager.isClickedPerform
+import com.lowbyte.battery.animation.ads.RewardedAdManager.rewardedAdLoaded
 import com.lowbyte.battery.animation.databinding.FragmentHomeBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
+import com.lowbyte.battery.animation.dialoge.RewardedDialogHandler
 import com.lowbyte.battery.animation.model.MultiViewItem
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION_DYNAMIC
@@ -30,9 +33,8 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.combinedAnimationList
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenHomeEnabled
-import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenSplashEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isRewardedEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.toy
-import com.lowbyte.battery.animation.utils.AnimationUtils.trendy
 import com.lowbyte.battery.animation.utils.AnimationUtils.widgetListFantasy
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
@@ -131,7 +133,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val adapter = MultiViewAdapter(
             data,
-            onChildItemClick = { parentPosition, name, parentPos ->
+            onChildItemClick = { parentPosition, name, parentPos, isRewarded ->
                 val label = name.ifBlank { "unknown" }
 
                 FirebaseAnalyticsUtils.logClickEvent(
@@ -146,19 +148,85 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     else -> null
                 }
 
-                AdManager.showInterstitialAd(
-                    requireActivity(),
-                    isFullscreenHomeEnabled,
-                    true
+
+                if (isRewarded && rewardedAdLoaded && !preferences.isProUser && preferences.getBoolean(
+                        "RewardEarned",
+                        false
+                    ) == false
                 ) {
-                    AdManager.setCooldownEnabledForShow(true)
-                    AdManager.setCooldownEnabledForLoad(true)
-                    intent?.apply {
-                        putExtra(EXTRA_POSITION, parentPosition)
-                        putExtra(EXTRA_LABEL, label)
-                        startActivity(this)
+                    RewardedDialogHandler.showRewardedDialog(
+                        context = requireActivity(),
+                        preferences = preferences,
+                        isSkipShow = false,
+                        isRewardedEnabled = isRewardedEnabled,
+                        onCompleted = {
+                            intent?.apply {
+                                putExtra(EXTRA_POSITION, parentPosition)
+                                putExtra(EXTRA_LABEL, label)
+                                startActivity(intent)
+                            }
+                            Log.d("AdManager", "Navigate 1")
+
+                            AdManager.setCooldownEnabledForShow(true)
+                            AdManager.setCooldownEnabledForLoad(true)
+
+                        }
+                    )
+                } else {
+
+                    if ( !isClickedPerform && rewardedAdLoaded && !preferences.isProUser && preferences.getBoolean(
+                            "RewardEarned",
+                            false
+                        ) == false
+                    ) {
+                        RewardedDialogHandler.showRewardedDialog(
+                            context = requireActivity(),
+                            preferences = preferences,
+                            isSkipShow = true,
+                            isRewardedEnabled = isRewardedEnabled,
+                            onCompleted = {
+                                intent?.apply {
+                                    putExtra(EXTRA_POSITION, parentPosition)
+                                    putExtra(EXTRA_LABEL, label)
+                                    startActivity(intent)
+                                }
+                                Log.d("AdManager", "Navigate 1")
+
+                                AdManager.setCooldownEnabledForShow(true)
+                                AdManager.setCooldownEnabledForLoad(true)
+
+                            },
+                            onSkip = {
+                                intent?.apply {
+                                    putExtra(EXTRA_POSITION, parentPosition)
+                                    putExtra(EXTRA_LABEL, label)
+                                    startActivity(intent)
+                                }
+                                Log.d("AdManager", "Navigate 1")
+                                isClickedPerform = true
+                            }
+                        )
+                    } else {
+                        AdManager.showInterstitialAd(
+                            requireActivity(),
+                            isFullscreenHomeEnabled,
+                            true
+                        ) {
+                            intent?.apply {
+                                putExtra(EXTRA_POSITION, parentPosition)
+                                putExtra(EXTRA_LABEL, label)
+                                startActivity(intent)
+                            }
+                            Log.d("AdManager", "Navigate 1")
+
+                            AdManager.setCooldownEnabledForShow(true)
+                            AdManager.setCooldownEnabledForLoad(true)
+                        }
                     }
+
+
                 }
+
 
 
 
@@ -172,15 +240,42 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         if (isAdded && findNavController().currentDestination?.id == R.id.navigation_home) {
 
                             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_emojis", eventMap)
-                            AdManager.showInterstitialAd(
-                                requireActivity(),
-                                isFullscreenHomeEnabled,
-                                true
+                            if (rewardedAdLoaded && !preferences.isProUser && preferences.getBoolean(
+                                    "RewardEarned",
+                                    false
+                                ) == false
                             ) {
-                                findNavController().navigate(R.id.action_home_to_viewAllEmoji)
-                                AdManager.setCooldownEnabledForShow(true)
-                                AdManager.setCooldownEnabledForLoad(true)
+                                RewardedDialogHandler.showRewardedDialog(
+                                    context = requireActivity(),
+                                    preferences = preferences,
+                                    isSkipShow = true,
+                                    isRewardedEnabled = isRewardedEnabled,
+                                    onCompleted = {
+                                        findNavController().navigate(R.id.action_home_to_viewAllEmoji)
+                                        AdManager.setCooldownEnabledForShow(true)
+                                        AdManager.setCooldownEnabledForLoad(true)
+
+                                    },
+                                    onSkip = {
+                                        findNavController().navigate(R.id.action_home_to_viewAllEmoji)
+                                    }
+                                )
+                            } else {
+                                AdManager.showInterstitialAd(
+                                    requireActivity(),
+                                    isFullscreenHomeEnabled,
+                                    false
+                                ) {
+                                    findNavController().navigate(R.id.action_home_to_viewAllEmoji)
+                                    AdManager.setCooldownEnabledForShow(true)
+                                    AdManager.setCooldownEnabledForLoad(true)
+                                    Log.d("AdManager", "Navigate 2")
+
+                                }
+
                             }
+
+
 
 
                             FirebaseAnalyticsUtils.logClickEvent(requireContext(), "home_to_view_all", null)
@@ -191,16 +286,42 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     2 -> {
                         if (isAdded && findNavController().currentDestination?.id == R.id.navigation_home) {
                             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_widgets", eventMap)
-
-                            AdManager.showInterstitialAd(
-                                requireActivity(),
-                                isFullscreenHomeEnabled,
-                                true
+                            if (rewardedAdLoaded && !preferences.isProUser && preferences.getBoolean(
+                                    "RewardEarned",
+                                    false
+                                ) == false
                             ) {
-                                findNavController().navigate(R.id.action_home_to_viewAllWidget)
-                                AdManager.setCooldownEnabledForShow(true)
-                                AdManager.setCooldownEnabledForLoad(true)
+                                RewardedDialogHandler.showRewardedDialog(
+                                    context = requireActivity(),
+                                    preferences = preferences,
+                                    isSkipShow = true,
+                                    isRewardedEnabled = isRewardedEnabled,
+                                    onCompleted = {
+                                        findNavController().navigate(R.id.action_home_to_viewAllWidget)
+                                        AdManager.setCooldownEnabledForShow(true)
+                                        AdManager.setCooldownEnabledForLoad(true)
+                                        Log.d("AdManager", "Navigate 3")
+
+                                    },
+                                    onSkip = {
+                                        findNavController().navigate(R.id.action_home_to_viewAllWidget)
+
+                                    }
+                                )
+                            } else {
+                                AdManager.showInterstitialAd(
+                                    requireActivity(),
+                                    isFullscreenHomeEnabled,
+                                    false
+                                ) {
+                                    findNavController().navigate(R.id.action_home_to_viewAllWidget)
+                                    AdManager.setCooldownEnabledForShow(true)
+                                    AdManager.setCooldownEnabledForLoad(true)
+                                    Log.d("AdManager", "Navigate 3")
+
+                                }
                             }
+
 
 
 
@@ -211,16 +332,41 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     4 -> {
                         if (isAdded && findNavController().currentDestination?.id == R.id.navigation_home) {
                             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "view_all_animations", eventMap)
-                            AdManager.showInterstitialAd(
-                                requireActivity(),
-                                isFullscreenHomeEnabled,
-                                true
+                            if (rewardedAdLoaded && !preferences.isProUser && preferences.getBoolean(
+                                    "RewardEarned",
+                                    false
+                                ) == false
                             ) {
-                                findNavController().navigate(R.id.action_home_to_viewAllAnim)
-                                AdManager.setCooldownEnabledForShow(true)
-                                AdManager.setCooldownEnabledForLoad(true)
-                            }
+                                RewardedDialogHandler.showRewardedDialog(
+                                    context = requireActivity(),
+                                    preferences = preferences,
+                                    isSkipShow = true,
+                                    isRewardedEnabled = isRewardedEnabled,
+                                    onCompleted = {
+                                        findNavController().navigate(R.id.action_home_to_viewAllAnim)
+                                        AdManager.setCooldownEnabledForShow(true)
+                                        AdManager.setCooldownEnabledForLoad(true)
+                                        Log.d("AdManager", "Navigate 5")
 
+                                    },
+                                    onSkip = {
+                                        findNavController().navigate(R.id.action_home_to_viewAllAnim)
+
+                                    }
+                                )
+                            } else {
+                                AdManager.showInterstitialAd(
+                                    requireActivity(),
+                                    isFullscreenHomeEnabled,
+                                    false
+                                ) {
+                                    findNavController().navigate(R.id.action_home_to_viewAllAnim)
+                                    AdManager.setCooldownEnabledForShow(true)
+                                    AdManager.setCooldownEnabledForLoad(true)
+                                    Log.d("AdManager", "Navigate 5")
+
+                                }
+                            }
 
                         }
 

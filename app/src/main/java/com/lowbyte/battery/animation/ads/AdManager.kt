@@ -182,9 +182,19 @@ object AdManager {
             override fun onAdShowedFullScreenContent() {
                 activity.isEditing(isEditing = true, isAdShowing = true)
                 Log.d(TAG, "Ad is now showing")
-                updateLastAdShownTime()
 
-                // Auto-preload new ad after 10 seconds if app is still foreground
+
+            }
+
+            override fun onAdDismissedFullScreenContent() {
+                Log.e(TAG, "Ad Dismissed")
+
+                if (isFromActivity) onDismiss()
+                adIsLoading = false
+                interstitialAd = null
+                AdStateController.isInterstitialShowing = false
+                activity.isEditing(isEditing = false, isAdShowing = false)
+                updateLastAdShownTime()
                 activity.window.decorView.postDelayed({
                     try {
                         if (activity.isValid() && isAppInForeground(activity) && !preferences.isProUser) {
@@ -196,14 +206,7 @@ object AdManager {
                         Log.e(TAG, "Error auto-loading ad: ${e.localizedMessage}")
                     }
                 }, RELOAD_DELAY_MS)
-            }
 
-            override fun onAdDismissedFullScreenContent() {
-                adIsLoading = false
-                interstitialAd = null
-                AdStateController.isInterstitialShowing = false
-                activity.isEditing(isEditing = false, isAdShowing = false)
-                if (isFromActivity) onDismiss()
             }
 
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {

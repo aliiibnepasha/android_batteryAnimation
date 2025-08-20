@@ -35,18 +35,18 @@
           android:layout_width="0dp"
           android:layout_height="45dp"
           android:layout_marginTop="12dp"
-          android:background="@drawable/home_button"
+          android:background="@drawable/bg_next_button"
           android:gravity="center"
           android:text="@string/getStarted"
           android:textColor="@color/white"
           android:textSize="16sp"
           android:textStyle="bold"
-          android:visibility="invisible"
+          android:visibility="visible"
           app:layout_constraintBottom_toTopOf="@+id/progressBar"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintTop_toBottomOf="@+id/tvSplashAppTitle"
-          app:layout_constraintWidth_percent="0.4" />
+          app:layout_constraintWidth_percent="0.6" />
 
       <ProgressBar
           android:id="@+id/progressBar"
@@ -76,7 +76,8 @@
           android:id="@+id/nativeAdSplashFirstContainer"
           android:layout_width="match_parent"
           android:layout_height="155dp"
-          android:background="@color/bg_statusbar_menu"
+          android:padding="3dp"
+          android:background="@color/bg_ads"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent" />

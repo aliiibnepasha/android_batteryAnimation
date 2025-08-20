@@ -1,9 +1,12 @@
 package com.lowbyte.battery.animation.main
 
 import android.Manifest
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -26,6 +29,8 @@ import com.lowbyte.battery.animation.activity.ProActivity
 import com.lowbyte.battery.animation.activity.SettingsActivity
 import com.lowbyte.battery.animation.ads.BannerAdHelper
 import com.lowbyte.battery.animation.ads.NativeBannerSizeHelper
+import com.lowbyte.battery.animation.databinding.DialogPermissionBinding
+import com.lowbyte.battery.animation.databinding.DialogRationaleBinding
 import com.lowbyte.battery.animation.databinding.FragmentMainBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.getBannerId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeHomeId
@@ -33,6 +38,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeHomeEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
+import androidx.core.graphics.drawable.toDrawable
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
@@ -110,12 +116,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
                      }
                 }
-
-
-
-
-
-
 
             }
             false // let navController handle navigation
@@ -253,11 +253,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     }
 
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
         if (!isGranted && shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-            showRationaleDialog()
+            showCustomRationaleDialog()
         } else if (!isGranted) {
             Toast.makeText(requireContext(), "Notification permission denied", Toast.LENGTH_SHORT).show()
         }
@@ -273,43 +271,65 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             if (isGranted) return
 
             if (forceShow || !hasShownNotificationDialogBefore()) {
-                showPermissionDialog()
+                showCustomPermissionDialog()
             }
         }
     }
+    private fun showCustomPermissionDialog() {
+        val dialog = Dialog(requireContext())
+        val binding = DialogPermissionBinding.inflate(layoutInflater)
 
-    private fun showPermissionDialog() {
-        val dialog = android.app.AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.enable_notifications))
-            .setMessage(getString(R.string.notification_mesg))
-            .setPositiveButton(getString(R.string.allow)) { _, _ ->
-                markNotificationDialogShown()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                }
+        dialog.setContentView(binding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+
+        // Set title & body dynamically if needed
+//        binding.tvTitle.text = getString(R.string.enable_notifications)
+//        binding.tvBody.text = getString(R.string.notification_mesg)
+
+        // Listeners
+        binding.btnAllow.setOnClickListener {
+            dialog.dismiss()
+            markNotificationDialogShown()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
-            .setNegativeButton(getString(R.string.later)) { dialogInterface, _ ->
-                markNotificationDialogShown()
-                dialogInterface.dismiss()
-            }
-            .setCancelable(false)
-            .create()
-        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
+        }
+
+        binding.btnDeny.setOnClickListener {
+            dialog.dismiss()
+            markNotificationDialogShown()
+        }
+
         dialog.show()
     }
 
-    private fun showRationaleDialog() {
-        val dialog = android.app.AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.why_we_need_notification_access))
-            .setMessage(getString(R.string.notification_mesg_2))
-            .setPositiveButton(getString(R.string.open_settings)) { _, _ ->
-                val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = Uri.fromParts("package", requireContext().packageName, null)
-                }
-                startActivity(intent)
+
+    private fun showCustomRationaleDialog() {
+        val dialog = Dialog(requireContext())
+        val binding = DialogRationaleBinding.inflate(layoutInflater)
+
+        dialog.setContentView(binding.root)
+        dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+        dialog.setCancelable(false)
+
+        // Set title & body dynamically if needed
+//        binding.tvTitle.text = getString(R.string.why_we_need_notification_access)
+//        binding.tvBody.text = getString(R.string.notification_mesg_2)
+
+        // Listeners
+        binding.btnOpenSettings.setOnClickListener {
+            dialog.dismiss()
+            val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.fromParts("package", requireContext().packageName, null)
             }
-            .setNegativeButton(getString(R.string.cancel), null)
-            .create()
+            startActivity(intent)
+        }
+
+        binding.btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
         dialog.show()
     }
 

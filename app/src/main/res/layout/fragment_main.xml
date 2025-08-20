@@ -131,9 +131,9 @@
     <LinearLayout
         android:id="@+id/bannerAdHome"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="70dp"
         android:orientation="vertical"
-        android:background="@color/bg_statusbar_menu"
+        android:background="@color/bg_ads"
         android:visibility="visible"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"

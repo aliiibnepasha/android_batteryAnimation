@@ -84,5 +84,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/bg_statusbar_menu" />
+        android:background="@color/bg_ads" />
 </androidx.constraintlayout.widget.ConstraintLayout>

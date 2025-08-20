@@ -62,7 +62,7 @@ class ViewPagerWidgetItemFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = AllWidgetAdapter { position, label ->
+        adapter = AllWidgetAdapter { position, label, isRewarded ->
             // Log widget click event
             FirebaseAnalyticsUtils.logClickEvent(
                 requireActivity(),
@@ -74,6 +74,8 @@ class ViewPagerWidgetItemFragment : Fragment() {
                 )
             )
 
+
+
             AdManager.showInterstitialAd(
                 requireActivity(),
                 isFullscreenHomeEnabled,
@@ -82,6 +84,7 @@ class ViewPagerWidgetItemFragment : Fragment() {
                 val intent = Intent(requireActivity(), BatteryWidgetEditApplyActivity::class.java).apply {
                     putExtra(EXTRA_POSITION, position)
                     putExtra(EXTRA_LABEL, label)
+                    putExtra("RewardEarned", isRewarded)
                 }
                 startActivity(intent)
                 FirebaseAnalyticsUtils.logClickEvent(

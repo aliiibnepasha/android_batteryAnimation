@@ -17,4 +17,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
      />
+    <ImageView
+        android:id="@+id/watchAdItem"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginHorizontal="5dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_reward_ad"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/widgetPreview"
+        app:layout_constraintTop_toTopOf="@+id/widgetPreview" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

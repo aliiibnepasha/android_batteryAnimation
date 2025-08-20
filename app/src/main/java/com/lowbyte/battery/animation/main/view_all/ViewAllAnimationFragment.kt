@@ -100,7 +100,7 @@ class ViewAllAnimationFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = AnimationAdapter { position, name ->
+        adapter = AnimationAdapter { position, name, isRewarded ->
             Log.d("Click", "Clicked position: $position, animation: $name")
 
             // Log animation click
@@ -119,6 +119,7 @@ class ViewAllAnimationFragment : Fragment() {
                     Intent(requireActivity(), BatteryAnimationEditApplyActivity::class.java).apply {
                         putExtra(EXTRA_POSITION, position)
                         putExtra(EXTRA_LABEL, name)
+                        putExtra("RewardEarned", isRewarded)
                     }
                 startActivity(intent)
             }

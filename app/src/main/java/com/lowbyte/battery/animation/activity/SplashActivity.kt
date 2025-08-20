@@ -14,6 +14,7 @@ import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.NativeLanguageHelper
+import com.lowbyte.battery.animation.ads.RewardedAdManager
 import com.lowbyte.battery.animation.databinding.ActivitySplashBinding
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerHomeEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isBannerPermissionSettings
@@ -61,8 +62,24 @@ class SplashActivity : BaseActivity() {
             setContentView(binding.root)
 
             preferences = AppPreferences.getInstance(this)
-            Log.d("SplashActivityLog", "Preferences initialized: isProUser=${preferences.isProUser}")
-            if (!preferences.isProUser){
+
+            if (preferences.getBoolean("RewardEarned", false) == false) {
+                RewardedAdManager.loadAd(
+                    context = this,
+                    onLoaded = {
+
+                    },
+                    onFailed = {
+
+                    })
+            }
+
+            //
+            Log.d(
+                "SplashActivityLog",
+                "Preferences initialized: isProUser=${preferences.isProUser}"
+            )
+            if (!preferences.isProUser) {
                 window.decorView.systemUiVisibility = (
                         View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
@@ -105,11 +122,16 @@ class SplashActivity : BaseActivity() {
             isFullscreenSplashEnabled = jsonObject.optBoolean("FullscreenSplash_enabled", true)
             isRewardedEnabled = jsonObject.optBoolean("Rewarded_enabled", true)
             isFullscreenStatusEnabled = jsonObject.optBoolean("FullscreenStatusBack_enabled", true)
-            isFullscreenDynamicDoneEnabled = jsonObject.optBoolean("FullscreenDynamicDone_enabled", true)
-            isFullscreenGestureEnabled = jsonObject.optBoolean("FullscreenGestureBack_enabled", true)
-            isFullscreenApplyEmojiEnabled = jsonObject.optBoolean("FullscreenApplyEmoji_enabled", true)
-            isFullscreenApplyWidgetEnabled = jsonObject.optBoolean("FullscreenApplyWidget_enabled", true)
-            isFullscreenApplyAnimEnabled = jsonObject.optBoolean("FullscreenApplyAnim_enabled", true)
+            isFullscreenDynamicDoneEnabled =
+                jsonObject.optBoolean("FullscreenDynamicDone_enabled", true)
+            isFullscreenGestureEnabled =
+                jsonObject.optBoolean("FullscreenGestureBack_enabled", true)
+            isFullscreenApplyEmojiEnabled =
+                jsonObject.optBoolean("FullscreenApplyEmoji_enabled", true)
+            isFullscreenApplyWidgetEnabled =
+                jsonObject.optBoolean("FullscreenApplyWidget_enabled", true)
+            isFullscreenApplyAnimEnabled =
+                jsonObject.optBoolean("FullscreenApplyAnim_enabled", true)
             isBannerPermissionSettings = jsonObject.optBoolean("BannerAdSettings_enabled", true)
             isBannerHomeEnabled = jsonObject.optBoolean("BannerAdHome_enabled", true)
             isNativeHomeEnabled = jsonObject.optBoolean("NativeAdHome_enabled", true)
@@ -148,7 +170,10 @@ class SplashActivity : BaseActivity() {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     queryActiveSubscriptions()
                 } else {
-                    Log.w("SplashActivityLog", "Billing setup failed: ${billingResult.debugMessage}")
+                    Log.w(
+                        "SplashActivityLog",
+                        "Billing setup failed: ${billingResult.debugMessage}"
+                    )
                 }
             }
 
@@ -166,7 +191,10 @@ class SplashActivity : BaseActivity() {
                 .setProductType(BillingClient.ProductType.SUBS)
                 .build()
         ) { billingResult, purchases ->
-            Log.d("SplashActivityLog", "Query result: ${billingResult.responseCode}, ${billingResult.debugMessage}")
+            Log.d(
+                "SplashActivityLog",
+                "Query result: ${billingResult.responseCode}, ${billingResult.debugMessage}"
+            )
 
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 Log.d("SplashActivityLog", "Found ${purchases.size} purchase(s)")
@@ -187,10 +215,14 @@ class SplashActivity : BaseActivity() {
                     Log.d("SplashActivityLog", "Cleared active_subscription preference")
                 }
             } else {
-                Log.e("SplashActivityLog", "Failed to query purchases: ${billingResult.debugMessage}")
+                Log.e(
+                    "SplashActivityLog",
+                    "Failed to query purchases: ${billingResult.debugMessage}"
+                )
             }
         }
     }
+
     fun changeLanguage(language: String) {
         setLanguage(language)
     }

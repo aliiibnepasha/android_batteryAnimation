@@ -1,16 +1,19 @@
 package com.lowbyte.battery.animation.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.ItemAllWidgetBinding
+import com.lowbyte.battery.animation.utils.AppPreferences
 
 class AllWidgetAdapter(
-    private val onItemClick: (position: Int, label: String) -> Unit
+    private val onItemClick: (position: Int, label: String,isRewardAd:Boolean) -> Unit
 ) : ListAdapter<String, AllWidgetAdapter.ViewHolder>(DiffCallback()) {
+    private lateinit var preferences: AppPreferences
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemAllWidgetBinding.inflate(
@@ -18,32 +21,46 @@ class AllWidgetAdapter(
             parent,
             false
         )
+        preferences = AppPreferences.getInstance(parent.context)
+
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position),position)
     }
 
     inner class ViewHolder(
         private val binding: ItemAllWidgetBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: String, position: Int) {
 
-        init {
             binding.root.setOnClickListener {
-                onItemClick(adapterPosition, getItem(adapterPosition))
-            }
-        }
+                if (preferences.getBoolean("RewardEarned", false) == false) {
+                    val cycleIndex = position % 6 // total cycle length = 2 false + 4 true
+                    val isTrue = cycleIndex >= 2  // index 0,1 → false; 2,3,4,5 → true
+                    onItemClick(position, getItem(position), isTrue)
+                } else {
+                    onItemClick(position, getItem(position),false)
+                }
 
-        fun bind(item: String) {
+            }
+
             val context = binding.root.context
             val resId = context.resources.getIdentifier(item, "drawable", context.packageName)
+
+            val cycleIndex = position % 6 // total cycle length = 2 false + 4 true
+            val isTrue = cycleIndex >= 2  // index 0,1 → false; 2,3,4,5 → true
+            if (isTrue && preferences.getBoolean("RewardEarned",false) == false) {
+                binding.watchAdItem.visibility = View.VISIBLE
+            } else {
+                binding.watchAdItem.visibility = View.INVISIBLE
+            }
 
             if (resId != 0) {
                 binding.widgetPreview.setImageResource(resId)
             } else {
-                // Handle missing drawable (optional)
-                binding.widgetPreview.setImageResource(R.drawable.emoji_3) // fallback image
+                binding.widgetPreview.setImageResource(R.drawable.emoji_2) // fallback image
             }
         }
     }

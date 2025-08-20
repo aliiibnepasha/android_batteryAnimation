@@ -4,7 +4,7 @@
     android:id="@+id/dialogRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/black">
+    android:background="@drawable/bg_dialog_rounded">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,13 +15,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <!-- Title -->
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/enable_notifications_for_dynamic_bar"
+            android:text="@string/enable_notifications_access"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@android:color/white"
             android:textStyle="bold"
@@ -36,8 +37,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:gravity="center"
+            android:text="@string/this_app_needs_notification"
             android:textColor="@android:color/white"
-            android:text="@string/dynamic_permission_body"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
@@ -60,16 +61,16 @@
                 android:layout_height="45dp"
                 android:background="@drawable/home_button"
                 android:gravity="center"
-                android:text="@string/continue_app"
+                android:text="@string/allow"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold"
+                app:layout_constraintWidth_percent="0.45"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btnDeny"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.45" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/btnDeny"
@@ -77,16 +78,16 @@
                 android:layout_height="45dp"
                 android:background="@drawable/bg_border_fill_transparent"
                 android:gravity="center"
-                android:text="@string/cancel"
+                android:text="@string/deny"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold"
+                app:layout_constraintWidth_percent="0.45"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btnAllow"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.45" />
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

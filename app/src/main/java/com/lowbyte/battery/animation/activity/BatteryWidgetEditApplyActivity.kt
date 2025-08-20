@@ -24,14 +24,13 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
 import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeInsideId
-import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyAnimEnabled
-import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyEmojiEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyWidgetEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyWidgetEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class BatteryWidgetEditApplyActivity : BaseActivity() {
+    private var isRewarded: Boolean = false
 
     private lateinit var binding: ActivityBatteryWidgetEditApplyBinding
     private lateinit var preferences: AppPreferences
@@ -71,6 +70,7 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
 
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
         isNewWidget = appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID
+        isRewarded = intent.getBooleanExtra("RewardEarned", false)
 
       //  enableEdgeToEdge()
 
@@ -133,17 +133,12 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
             if (isNewWidget) {
                 setResult(RESULT_CANCELED)
             }
-          //  if (isUserActionPerformedWidget) {
                 AdManager.showInterstitialAd(this, isFullscreenApplyWidgetEnabled, true) {
                     finish()
                 }
-//            } else {
-//                finish()
-//            }
         }
 
         binding.buttonForApply.setOnClickListener {
-          //  isUserActionPerformedWidget = true
             if (preferences.widgetCount>=10){
                 Toast.makeText(this, getString(R.string.widget_limit_reached), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -161,35 +156,7 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
 
             val appWidgetManager = AppWidgetManager.getInstance(this)
             val widgetProvider = ComponentName(this, BatteryWidgetProvider::class.java)
-
-            /*    if (preferences.shouldTriggerEveryThirdTime("interstitial_ad_count")) {
-                    AdManager.showInterstitialAd(this, isFullscreenApplyWidgetEnabled,true,) {
-                        Log.e("Ads", "FullScreenTobeShoe")
-                        if (!(SDK_INT < VERSION_CODES.O || !appWidgetManager.isRequestPinAppWidgetSupported)) {
-
-                            val options = Bundle().apply {
-                                putString("WIDGET_ICON", label)
-                            }
-
-                            val successIntent = Intent(this, BatteryWidgetProvider::class.java).apply {
-                                action = BatteryWidgetProvider.ACTION_UPDATE_WIDGET
-                                putExtra("WIDGET_ICON", label)
-                            }
-
-                            val successCallback = PendingIntent.getBroadcast(this, 0, successIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-                            appWidgetManager.requestPinAppWidget(widgetProvider, options, successCallback)
-                            Log.e("BatteryWidgetProvider", "Activity ------------- Loading image for label 2: $label")
-                        }
-                        else {
-                            Toast.makeText(this, "Device not supported", Toast.LENGTH_SHORT).show()
-                        }
-                        val serviceIntent = Intent(this, BatteryWidgetForegroundService::class.java)
-                        ContextCompat.startForegroundService(this,serviceIntent)
-                        Toast.makeText(this, getString(R.string.widget_applied_successfully), Toast.LENGTH_SHORT).show()
-
-                    }
-                } else{*/
-                Log.e("Ads", "FullScreenTobeShoe")
+            Log.e("Ads", "FullScreenTobeShoe")
                 if (!(SDK_INT < VERSION_CODES.O || !appWidgetManager.isRequestPinAppWidgetSupported)) {
 
                     val options = Bundle().apply {

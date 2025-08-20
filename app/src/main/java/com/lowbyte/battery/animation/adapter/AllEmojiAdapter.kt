@@ -65,6 +65,7 @@ class AllEmojiAdapter(
             } else {
                 binding.widgetPreview.setImageResource(R.drawable.emoji_2) // fallback image
             }
+
         }
     }
 

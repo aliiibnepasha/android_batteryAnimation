@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/enable_notifications_for_dynamic_bar"
+            android:text="@string/allow_bluetooth_access"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@android:color/white"
             android:textStyle="bold"
@@ -36,12 +36,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:gravity="center"
+            android:text="@string/bluetooth_body"
             android:textColor="@android:color/white"
-            android:text="@string/dynamic_permission_body"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
-
         <!-- Buttons Row -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/btnContainer"

@@ -1,7 +1,6 @@
 package com.lowbyte.battery.animation.adapter
 
 import android.graphics.Color
-import android.text.Html
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.UnderlineSpan
@@ -9,14 +8,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.databinding.MainItemRvBinding
 import com.lowbyte.battery.animation.databinding.MainItemTitleBinding
 import com.lowbyte.battery.animation.model.MultiViewItem
 
 class MultiViewAdapter(
     private val data: List<MultiViewItem>,
-    private val onChildItemClick: (Int, String, Int) -> Unit,
+    private val onChildItemClick: (Int, String, Int, isRewardAd: Boolean) -> Unit,
     private val onChildViewAllClick: (Int) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -69,7 +67,6 @@ class MultiViewAdapter(
     inner class TitleViewHolder(private val binding: MainItemTitleBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: MultiViewItem.TitleItem, position: Int) {
             binding.textLeft.text = item.title
-          //  binding.textRight.text = Html.fromHtml(binding.root.context.getString(R.string.view_all))
             binding.textRight.setOnClickListener {
                 onChildViewAllClick.invoke(position)
             }

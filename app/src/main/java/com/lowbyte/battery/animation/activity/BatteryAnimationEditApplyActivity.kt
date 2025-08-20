@@ -27,6 +27,7 @@ import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
 class BatteryAnimationEditApplyActivity : BaseActivity() {
+    private  var isRewarded: Boolean = false
 
     private lateinit var binding: ActivityBatteryAnimationEditApplyBinding
     private lateinit var preferences: AppPreferences
@@ -52,9 +53,7 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
             FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_denied", null)
             preferences.isStatusBarEnabled = false
         }, onDismissListener = {
-//            if (!isAccessibilityServiceEnabled()) {
-//                preferences.isStatusBarEnabled = false
-//            }
+
         })
 
         // Track screen view & time
@@ -70,6 +69,8 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
         // Get intent extras
         position = intent.getIntExtra(EXTRA_POSITION, -1)
         label = intent.getStringExtra(EXTRA_LABEL) ?: getString(R.string.wifi)
+        isRewarded = intent.getBooleanExtra("RewardEarned", false)
+
         Log.i("ITEM_CLICK", "$position $label")
 
         // Log selected animation
@@ -105,14 +106,10 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-             //   if (isUserActionPerformed) {
                     AdManager.showInterstitialAd(this@BatteryAnimationEditApplyActivity, isFullscreenApplyAnimEnabled, true) {
                         finish()
                     }
-//                } else {
-//                    finish()
-//
-//                }
+
             }
         }
         onBackPressedDispatcher.addCallback(this, callback)
@@ -136,22 +133,14 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
 
             FirebaseAnalyticsUtils.logClickEvent(this, "click_apply_animation", mapOf("label" to label))
             preferences.statusLottieName = label
-            //  if (!preferences.isStatusBarEnabled) {
             checkAccessibilityPermission()
-            //    return@setOnClickListener
-            //  }
-
         }
 
         binding.buttonHome.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_home_button", mapOf("screen" to "BatteryAnimationEditApplyScreen"))
-            //if (isUserActionPerformed) {
                 AdManager.showInterstitialAd(this, isFullscreenApplyAnimEnabled, true) {
                     finish()
                 }
-//            } else {
-//                finish()
-//            }
         }
     }
 

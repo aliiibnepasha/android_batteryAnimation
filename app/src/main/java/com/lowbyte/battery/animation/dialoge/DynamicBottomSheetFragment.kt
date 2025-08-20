@@ -1,15 +1,17 @@
 import android.Manifest
-import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -18,7 +20,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.adapter.ActionDynamicAdapter
 import com.lowbyte.battery.animation.adapter.ActionDynamicItem
-import com.lowbyte.battery.animation.databinding.DialogNotificationMsgPermissionBinding
+import com.lowbyte.battery.animation.databinding.DialogBlutoothPermissionBinding
+import com.lowbyte.battery.animation.databinding.DialogNotificationPermissionBinding
+import com.lowbyte.battery.animation.databinding.DialogRationaleBinding
 import com.lowbyte.battery.animation.databinding.FragmentDynamicBottomSheetBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
 
@@ -112,7 +116,7 @@ class DynamicBottomSheetFragment(
                     Manifest.permission.BLUETOOTH_CONNECT
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                bluetoothPermissionRequest.launch(Manifest.permission.BLUETOOTH_CONNECT)
+                showCustomPermissionDialog()
                 return false
             } else {
                 // Permission already granted
@@ -139,29 +143,87 @@ class DynamicBottomSheetFragment(
         context.startActivity(intent)
     }
 
+    private fun showNotificationPermissionDialog(context: Context) {
+        val dialog = Dialog(requireContext())
+        val binding = DialogNotificationPermissionBinding.inflate(layoutInflater)
 
-    fun showNotificationPermissionDialog(context: Context) {
-        val binding = DialogNotificationMsgPermissionBinding.inflate(LayoutInflater.from(context))
+        dialog.setContentView(binding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
 
-        val dialog = AlertDialog.Builder(context)
-            .setView(binding.root)
-            .setCancelable(false)
-            .create()
+//        // Set title & body dynamically if needed
+//        binding.tvTitle.text = getString(R.string.enable_notifications)
+//        binding.tvBody.text = getString(R.string.notification_mesg)
 
-        dialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
+        // Listeners
         binding.btnAllow.setOnClickListener {
             dialog.dismiss()
             requestNotificationAccess(context)
         }
 
-        binding.btnLater.setOnClickListener {
+        binding.btnDeny.setOnClickListener {
             dialog.dismiss()
         }
 
         dialog.show()
     }
+    private fun showCustomPermissionDialog() {
+        val dialog = Dialog(requireContext())
+        val binding = DialogBlutoothPermissionBinding.inflate(layoutInflater)
+        dialog.setContentView(binding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+        // Set title & body dynamically if needed
+//        binding.tvTitle.text = getString(R.string.enable_notifications)
+//        binding.tvBody.text = getString(R.string.notification_mesg)
+
+        // Listeners
+        binding.btnAllow.setOnClickListener {
+            dialog.dismiss()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                bluetoothPermissionRequest.launch(Manifest.permission.BLUETOOTH_CONNECT)
+
+            }
+        }
+
+        binding.btnDeny.setOnClickListener {
+            dialog.dismiss()
+
+        }
+
+        dialog.show()
+    }
+
+
+    private fun showCustomRationaleDialog() {
+        val dialog = Dialog(requireContext())
+        val binding = DialogRationaleBinding.inflate(layoutInflater)
+
+        dialog.setContentView(binding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
+
+        // Set title & body dynamically if needed
+//        binding.tvTitle.text = getString(R.string.why_we_need_notification_access)
+//        binding.tvBody.text = getString(R.string.notification_mesg_2)
+
+        // Listeners
+        binding.btnOpenSettings.setOnClickListener {
+            dialog.dismiss()
+            val intent =
+                Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.fromParts("package", requireContext().packageName, null)
+                }
+            startActivity(intent)
+        }
+
+        binding.btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

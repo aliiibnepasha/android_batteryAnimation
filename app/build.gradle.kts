@@ -19,8 +19,8 @@ android {
         applicationId = "emojibattery.widget.statusbar"
         minSdk = 24
         targetSdk = 35
-        versionCode = 24
-        versionName = "3.4"
+        versionCode = 54
+        versionName = "3.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -141,13 +141,10 @@ dependencies {
     implementation(libs.json)
     implementation(libs.gson)
     implementation("com.facebook.android:facebook-android-sdk:18.1.3")
-//    implementation("com.adjust.sdk:adjust-android:5.4.2")
-//    implementation("com.android.installreferrer:installreferrer:2.2")
-//    implementation("com.adjust.sdk:adjust-android-webbridge:5.4.2")
-
-
-
-
+    implementation("com.google.ads.mediation:facebook:6.20.0.0")
+    implementation("com.google.ads.mediation:inmobi:10.8.7.0")
+    implementation("com.unity3d.ads:unity-ads:4.16.1")
+    implementation("com.google.ads.mediation:unity:4.16.0.1")
     //Pamngel  , mentegral
 
 

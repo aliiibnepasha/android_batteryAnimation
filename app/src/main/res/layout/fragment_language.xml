@@ -84,7 +84,7 @@
         android:id="@+id/nativeAdLangFirstContainer"
         android:layout_width="match_parent"
         android:layout_height="155dp"
-        android:background="@color/bg_statusbar_menu"
+        android:background="@color/bg_ads"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

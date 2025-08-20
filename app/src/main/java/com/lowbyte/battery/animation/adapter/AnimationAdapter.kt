@@ -2,16 +2,18 @@ package com.lowbyte.battery.animation.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.airbnb.lottie.LottieDrawable
 import com.lowbyte.battery.animation.databinding.ItemAllAnimationBinding
+import com.lowbyte.battery.animation.utils.AppPreferences
 
 class AnimationAdapter(
-    private val onItemClick: (Int, String) -> Unit
+    private val onItemClick: (Int, String,isRewardAd:Boolean) -> Unit
 ) : ListAdapter<String, AnimationAdapter.ViewHolder>(DiffCallback()) {
+    private lateinit var preferences: AppPreferences
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemAllAnimationBinding.inflate(
@@ -19,11 +21,13 @@ class AnimationAdapter(
             parent,
             false
         )
+        preferences = AppPreferences.getInstance(parent.context)
+
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position),position)
     }
 
     override fun onViewRecycled(holder: ViewHolder) {
@@ -37,19 +41,35 @@ class AnimationAdapter(
 
         private var lastAnimationName: String? = null
 
-        init {
+
+        fun bind(item: String,position: Int) {
+
             binding.root.setOnClickListener {
                 val position = bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    onItemClick(position, getItem(position))
+
+                    if (preferences.getBoolean("RewardEarned", false) == false) {
+                        val cycleIndex = position % 6 // total cycle length = 2 false + 4 true
+                        val isTrue = cycleIndex >= 2  // index 0,1 → false; 2,3,4,5 → true
+                        onItemClick(position, getItem(position), isTrue)
+                    } else {
+                        onItemClick(position, getItem(position),false)
+                    }
 
                     // Optionally play animation on click
                     binding.lottiAnimation.playAnimation()
                 }
             }
-        }
 
-        fun bind(item: String) {
+            val cycleIndex = position % 6 // total cycle length = 2 false + 4 true
+            val isTrue = cycleIndex >= 2  // index 0,1 → false; 2,3,4,5 → true
+            if (isTrue && preferences.getBoolean("RewardEarned",false) == false) {
+                binding.watchAdItem.visibility = View.VISIBLE
+            } else {
+                binding.watchAdItem.visibility = View.INVISIBLE
+            }
+
+
             if (item != lastAnimationName) {
                 val context = binding.root.context
                 val resId = context.resources.getIdentifier(item, "raw", context.packageName)
