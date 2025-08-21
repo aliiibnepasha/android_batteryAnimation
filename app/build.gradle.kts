@@ -19,8 +19,8 @@ android {
         applicationId = "emojibattery.widget.statusbar"
         minSdk = 24
         targetSdk = 35
-        versionCode = 54
-        versionName = "3.5"
+        versionCode = 55
+        versionName = "3.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
