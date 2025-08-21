@@ -113,6 +113,7 @@ class SettingsActivity : BaseActivity() {
         if (preferences.isProUser) {
             binding.proView.visibility = View.GONE
             binding.viewRestoreSub.visibility = View.VISIBLE
+            preferences.setBoolean("RewardEarned", true)
         }else{
             binding.viewRestoreSub.visibility = View.GONE
             binding.proView.visibility = View.VISIBLE

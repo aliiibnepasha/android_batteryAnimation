@@ -273,6 +273,8 @@ class IslandFragment : Fragment() {
                                 checkAccessibilityPermission()
                             } else {
                                 requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
+                                Log.e("Ads", "FullScreenTobeShoe ggg")
+
                             }
                         }
                     } catch (e: NullPointerException) {
@@ -354,16 +356,13 @@ class IslandFragment : Fragment() {
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
             FirebaseAnalyticsUtils.logClickEvent(requireActivity(), "accessibility_prompt_shown")
-//            if (BuildConfig.DEBUG){
-//                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-//            }else{
+
                 val existing = childFragmentManager.findFragmentByTag("AccessibilityPermission")
                 if (existing == null || !existing.isAdded) {
                     sheet.show(childFragmentManager, "AccessibilityPermission")
                 } else {
                     Log.d("Accessibility", "AccessibilityPermissionBottomSheet already shown")
                 }
-          //  }
         } else {
 
             if (preferences.getInt("widget_style_index", 0) == 0) {
@@ -398,9 +397,7 @@ class IslandFragment : Fragment() {
                     false
                 ) {
                     binding.switchEnableDynamic.isChecked = preferences.isDynamicEnabled
-
                     requireContext().isEditing(true)
-                  //  requireActivity().sendBroadcast(Intent(BROADCAST_ACTION))
                     Log.e("Ads", "FullScreenTobeShoe")
                 }
                 dialogNotch.dismiss()

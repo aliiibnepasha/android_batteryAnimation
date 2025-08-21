@@ -75,7 +75,7 @@ class ViewAllEmojiFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViewPager()
+
 
         binding.switchEnableBatteryEmojiViewAll.isChecked = preferences.isStatusBarEnabled && isAccessibilityServiceEnabled()
 
@@ -135,6 +135,11 @@ class ViewAllEmojiFragment : Fragment() {
         }.attach()
     }
 
+
+    override fun onResume() {
+        setupViewPager()
+        super.onResume()
+    }
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
 //            if (BuildConfig.DEBUG){

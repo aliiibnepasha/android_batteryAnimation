@@ -382,6 +382,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         if (preferences.isProUser) {
             binding.bannerAdHome.visibility = View.GONE
             binding.ifvPro.visibility = View.GONE
+            preferences.setBoolean("RewardEarned", true)
+
         }
         super.onResume()
     }

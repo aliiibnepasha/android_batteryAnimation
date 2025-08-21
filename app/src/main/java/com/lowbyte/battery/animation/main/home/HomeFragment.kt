@@ -44,6 +44,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var preferences: AppPreferences
+    private lateinit var adapter : MultiViewAdapter
     private lateinit var sheet: AccessibilityPermissionBottomSheet // Declare the sheet
 
     override fun onCreateView(
@@ -131,7 +132,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             MultiViewItem.ListAnimationItem(combinedAnimationList),
         )
 
-        val adapter = MultiViewAdapter(
+         adapter = MultiViewAdapter(
             data,
             onChildItemClick = { parentPosition, name, parentPos, isRewarded ->
                 val label = name.ifBlank { "unknown" }
@@ -149,26 +150,24 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
 
 
-                if (isRewarded && rewardedAdLoaded && !preferences.isProUser && preferences.getBoolean(
-                        "RewardEarned",
-                        false
-                    ) == false
-                ) {
+                if (isRewarded && !preferences.isProUser && preferences.getBoolean("RewardEarned", false) == false) {
+                    Log.d("AdManager", "Show Dialoge  1")
+
                     RewardedDialogHandler.showRewardedDialog(
                         context = requireActivity(),
                         preferences = preferences,
                         isSkipShow = false,
                         isRewardedEnabled = isRewardedEnabled,
                         onCompleted = {
+                            adapter.notifyDataSetChanged()
                             intent?.apply {
                                 putExtra(EXTRA_POSITION, parentPosition)
                                 putExtra(EXTRA_LABEL, label)
                                 startActivity(intent)
                             }
-                            Log.d("AdManager", "Navigate 1")
-
                             AdManager.setCooldownEnabledForShow(true)
                             AdManager.setCooldownEnabledForLoad(true)
+
 
                         }
                     )
@@ -179,12 +178,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             false
                         ) == false
                     ) {
+                        Log.d("AdManager", "Show Dialoge  2")
+
                         RewardedDialogHandler.showRewardedDialog(
                             context = requireActivity(),
                             preferences = preferences,
                             isSkipShow = true,
                             isRewardedEnabled = isRewardedEnabled,
                             onCompleted = {
+                                adapter.notifyDataSetChanged()
                                 intent?.apply {
                                     putExtra(EXTRA_POSITION, parentPosition)
                                     putExtra(EXTRA_LABEL, label)
@@ -195,6 +197,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 AdManager.setCooldownEnabledForShow(true)
                                 AdManager.setCooldownEnabledForLoad(true)
 
+
                             },
                             onSkip = {
                                 intent?.apply {
@@ -202,7 +205,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                     putExtra(EXTRA_LABEL, label)
                                     startActivity(intent)
                                 }
-                                Log.d("AdManager", "Navigate 1")
+                                Log.d("AdManager", "NexMove 1")
                                 isClickedPerform = true
                             }
                         )
@@ -251,6 +254,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                     isSkipShow = true,
                                     isRewardedEnabled = isRewardedEnabled,
                                     onCompleted = {
+                                        adapter.notifyDataSetChanged()
                                         findNavController().navigate(R.id.action_home_to_viewAllEmoji)
                                         AdManager.setCooldownEnabledForShow(true)
                                         AdManager.setCooldownEnabledForLoad(true)
@@ -275,9 +279,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                             }
 
-
-
-
                             FirebaseAnalyticsUtils.logClickEvent(requireContext(), "home_to_view_all", null)
 
                         }
@@ -297,6 +298,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                     isSkipShow = true,
                                     isRewardedEnabled = isRewardedEnabled,
                                     onCompleted = {
+                                        adapter.notifyDataSetChanged()
                                         findNavController().navigate(R.id.action_home_to_viewAllWidget)
                                         AdManager.setCooldownEnabledForShow(true)
                                         AdManager.setCooldownEnabledForLoad(true)
@@ -343,6 +345,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                     isSkipShow = true,
                                     isRewardedEnabled = isRewardedEnabled,
                                     onCompleted = {
+                                        adapter.notifyDataSetChanged()
                                         findNavController().navigate(R.id.action_home_to_viewAllAnim)
                                         AdManager.setCooldownEnabledForShow(true)
                                         AdManager.setCooldownEnabledForLoad(true)

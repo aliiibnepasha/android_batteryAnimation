@@ -113,6 +113,10 @@ class ViewPagerEmojiItemFragment : Fragment() {
             adapter = this@ViewPagerEmojiItemFragment.adapter
         }
 
+
+    }
+
+    override fun onResume() {
         val emojiList = when (currentPos) {
             0 -> toy
             1 -> emojiFace
@@ -131,8 +135,8 @@ class ViewPagerEmojiItemFragment : Fragment() {
 
         Log.d("EmojiTab", "Tab $currentPos loaded with ${emojiList.size} items.")
         adapter.submitList(emojiList)
+        super.onResume()
     }
-
     override fun onDestroyView() {
 
         super.onDestroyView()

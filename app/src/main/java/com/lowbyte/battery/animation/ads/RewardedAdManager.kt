@@ -153,7 +153,7 @@ object RewardedAdManager {
         }
     }
 
-    private fun isInternetAvailable(context: Activity): Boolean {
+     fun isInternetAvailable(context: Activity): Boolean {
         val cm = context.getSystemService(ConnectivityManager::class.java)
         val network = cm.activeNetwork ?: return false
         val capabilities = cm.getNetworkCapabilities(network) ?: return false

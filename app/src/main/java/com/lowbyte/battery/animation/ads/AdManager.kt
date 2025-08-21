@@ -119,18 +119,21 @@ object AdManager {
         if (preferences.isProUser || !remoteConfig || !activity.isValid()) {
             Log.d(TAG, "Skipping ad: Pro user or remote config off")
             onDismiss()
+            activity.isEditing(false)
             return
         }
 
         if (!isInternetAvailable(activity)) {
             Log.d(TAG, "Skipping ad: No internet")
             onDismiss()
+            activity.isEditing(false)
             return
         }
 
         if (isCooldownEnabledForShow && !hasCooldownPassed()) {
             Log.d(TAG, "Ad cooldown active — skipping ad")
             onDismiss()
+            activity.isEditing(false)
             return
         }
 

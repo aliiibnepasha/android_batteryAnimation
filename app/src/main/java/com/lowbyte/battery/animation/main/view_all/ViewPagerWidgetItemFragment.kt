@@ -102,6 +102,10 @@ class ViewPagerWidgetItemFragment : Fragment() {
             adapter = this@ViewPagerWidgetItemFragment.adapter
         }
 
+
+    }
+
+    override fun onResume() {
         val widgetList = when (currentPos) {
             0 -> widgetListFantasy
             1 -> widgetListAction
@@ -113,5 +117,6 @@ class ViewPagerWidgetItemFragment : Fragment() {
 
         Log.d("WidgetTab", "Tab $currentPos loaded with ${widgetList.size} items.")
         adapter.submitList(widgetList)
+        super.onResume()
     }
 }

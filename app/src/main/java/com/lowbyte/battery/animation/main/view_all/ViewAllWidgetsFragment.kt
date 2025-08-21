@@ -71,7 +71,6 @@ class ViewAllWidgetsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViewPager()
     }
 
     private fun setupViewPager() {
@@ -99,6 +98,7 @@ class ViewAllWidgetsFragment : Fragment() {
     }
 
     override fun onResume() {
+        setupViewPager()
         super.onResume()
         binding.switchEnableWidgetService.isChecked = preferences.serviceRunningFlag
 

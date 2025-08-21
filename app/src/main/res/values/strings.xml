@@ -217,7 +217,7 @@
     <string name="enable_notification_access">Enable Notification Access</string>
     <string name="allow_notification_access_so_we_can_show_notifications_in_your_custom_notch">Allow notification access so we can show notifications in your custom notch.</string>
     <string name="go_pro">Go PRO!</string>
-    <string name="experience_high_quality_nchoose_your_access_method_below">Experience high-quality.\nBattery Emoji Watch Reward Ad and Unlock All EMoji !</string>
+    <string name="experience_high_quality_nchoose_your_access_method_below">Get access to all Animations, Battery Emojis, and Widget in one go.</string>
     <string name="watch_an_ad_to_continue">Watch An Ad To Continue</string>
     <string name="takes_15_30_seconds">Takes 15–30 Seconds</string>
     <string name="go_premium_unlimited_access">Go Premium – Unlimited Access</string>
@@ -250,14 +250,17 @@
     <string name="enable_notifications_access">Enable Notifications Access?</string>
     <string name="this_app_needs_notification">This app needs access to notifications to send FCM notification and notify the user for widget functionality. We do not read, store, or share your personal messages. Access is only used to show icons and battery updates.</string>
     <string name="deny">Deny</string>
-    <string name="enable_notifications_for_dynamic_bar">Enable notifications for\nDynamic Bar?</string>
+    <string name="enable_notifications_for_dynamic_bar">Enable notifications for \nDynamic Bar?</string>
     <string name="dynamic_permission_body"><![CDATA[To show app alerts on the Dynamic Bar, App needs to enable the Device & App Notification to show other apps notification on Dynamic Bar. we don’t read, store, or share your notification content. You can turn off this anytime in Settings.]]></string>
     <string name="continue_app">Continue</string>
     <string name="allow_bluetooth_access">Allow Bluetooth Access?</string>
     <string name="bluetooth_body"><![CDATA[This app uses Bluetooth to show your connected devices on the dynamic island.We do not collect or share your Bluetooth data. You can change this permission anytime in your phone’s settings.]]></string>
     <string name="permission">Permission and Access</string>
     <string name="close">Close</string>
-    <string name="unlock_all_animations">Unlock All Animations</string>
+    <string name="unlock_all_animations">Unlock All Premium</string>
+    <string name="enabl">Enable</string>
+    <string name="skip">Skip</string>
+    <string name="internet_not_available">Please turn on internet first.</string>
 
 
 </resources>

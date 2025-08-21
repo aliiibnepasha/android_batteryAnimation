@@ -214,7 +214,7 @@ class EmojiEditApplyActivity : BaseActivity() {
                 RewardedDialogHandler.showRewardedDialog(
                     context = this,
                     preferences = preferences,
-                    isSkipShow = isRewarded,
+                    isSkipShow = false,
                     isRewardedEnabled = isRewardedEnabled,
                     onCompleted = {
                         preferences.isStatusBarEnabled = true

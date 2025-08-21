@@ -131,10 +131,11 @@ class ViewAllAnimationFragment : Fragment() {
             adapter = this@ViewAllAnimationFragment.adapter
         }
 
-        adapter.submitList(combinedAnimationList)
+
     }
 
     override fun onResume() {
+        adapter.submitList(combinedAnimationList)
         binding.switchVibrateFeedback.isChecked = preferences.statusLottieName.isNotBlank()
         super.onResume()
     }

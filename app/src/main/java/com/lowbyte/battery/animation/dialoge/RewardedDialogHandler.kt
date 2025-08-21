@@ -4,8 +4,10 @@ import android.app.Activity
 import android.app.Dialog
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.RewardedAdManager
+import com.lowbyte.battery.animation.ads.RewardedAdManager.isInternetAvailable
 import com.lowbyte.battery.animation.ads.RewardedAdManager.rewardedAdLoaded
 import com.lowbyte.battery.animation.databinding.DialogGoProBinding
 import com.lowbyte.battery.animation.utils.AppPreferences
@@ -47,23 +49,29 @@ object RewardedDialogHandler {
 
             binding.btnWatchAd.setOnClickListener {
                 dialog.dismiss()
-                RewardedAdManager.showRewardedAd(
-                    activity = context,
-                    onRewardEarned = {
-                        rewardedAdLoaded = false
-                        preferences.setBoolean("RewardEarned", true)
-                    },
-                    onAdShown = {
-                        rewardedAdLoaded = false
-                        // Log analytics if needed
-                    },
-                    onAdDismissed = {
-                        rewardedAdLoaded = false
-                        preferences.isStatusBarEnabled = true
-                        FirebaseAnalyticsUtils.logClickEvent(context, "reward_ad_dismissed", null)
-                        onCompleted?.invoke()
-                    }
-                )
+                if (isInternetAvailable(context)){
+                    RewardedAdManager.showRewardedAd(
+                        activity = context,
+                        onRewardEarned = {
+                            rewardedAdLoaded = false
+                            preferences.setBoolean("RewardEarned", true)
+                        },
+                        onAdShown = {
+                            rewardedAdLoaded = false
+                            // Log analytics if needed
+                        },
+                        onAdDismissed = {
+                            rewardedAdLoaded = false
+                            preferences.isStatusBarEnabled = true
+                            FirebaseAnalyticsUtils.logClickEvent(context, "reward_ad_dismissed", null)
+                            onCompleted?.invoke()
+                        }
+                    )
+                }else{
+                    Toast.makeText(context, context.getString(R.string.internet_not_available), Toast.LENGTH_SHORT).show()
+                }
+
+
             }
         }
 

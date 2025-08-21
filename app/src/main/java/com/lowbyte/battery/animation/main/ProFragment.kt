@@ -370,6 +370,8 @@ class ProFragment : Fragment() {
     private fun saveSubscription(sku: String) {
         preferences.isProUser = true
         preferences.setString("active_subscription", sku)
+        preferences.setBoolean("RewardEarned", true)
+
     }
 
     private fun highlightSelection(plan: String) {
