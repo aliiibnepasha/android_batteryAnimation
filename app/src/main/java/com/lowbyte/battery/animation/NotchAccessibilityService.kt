@@ -607,15 +607,17 @@ class NotchAccessibilityService : AccessibilityService() {
                 val now = System.currentTimeMillis()
                 if (!force && overlayAttached && (now - lastOverlayAddMs) < 150) return@synchronized
 
-                // Always remove first to prevent dupes
+                // ✅ If already attached, just update instead of re-adding
                 overlayLottieCanvas?.let {
                     if (overlayAttached && it.isAttachedToWindow) {
-                        runCatching { windowManager?.removeViewImmediate(it) }
+                        it.loadLottieItemsFromPrefs() // update instead of remove/add
+                        lastOverlayAddMs = now
+                        Log.d("servicesListener", "Overlay updated")
+                        return@synchronized
                     }
                 }
-                overlayAttached = false
-                overlayLottieCanvas = null
 
+                // Otherwise, create new one
                 overlayLottieCanvas = InteractiveLottieView(this).apply {
                     loadLottieItemsFromPrefs()
                 }

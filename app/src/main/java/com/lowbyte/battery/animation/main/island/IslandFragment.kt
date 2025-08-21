@@ -92,8 +92,6 @@ class IslandFragment : Fragment() {
                 preferences.notchYAxis = realValue
                 Log.d("TAG_Access", "notchYAxis $realValue")
 
-
-
                 requireContext().sendBroadcast(Intent(BROADCAST_ACTION))
             }
 
