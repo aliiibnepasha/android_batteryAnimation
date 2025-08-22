@@ -17,8 +17,10 @@ import com.lowbyte.battery.animation.BaseActivity
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.NativeWidgetHelper
+import com.lowbyte.battery.animation.ads.RewardedAdManager
 import com.lowbyte.battery.animation.broadcastReciver.BatteryWidgetProvider
 import com.lowbyte.battery.animation.databinding.ActivityBatteryWidgetEditApplyBinding
+import com.lowbyte.battery.animation.dialoge.RewardedDialogHandler
 import com.lowbyte.battery.animation.service.BatteryWidgetForegroundService
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
@@ -26,6 +28,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeInsideId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyWidgetEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyWidgetEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isRewardedEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -157,12 +160,56 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
             val appWidgetManager = AppWidgetManager.getInstance(this)
             val widgetProvider = ComponentName(this, BatteryWidgetProvider::class.java)
             Log.e("Ads", "FullScreenTobeShoe")
-                if (!(SDK_INT < VERSION_CODES.O || !appWidgetManager.isRequestPinAppWidgetSupported)) {
+            if (!(SDK_INT < VERSION_CODES.O || !appWidgetManager.isRequestPinAppWidgetSupported)) {
 
+                if (isRewarded && !preferences.isProUser && preferences.getBoolean(
+                        "RewardEarned", false
+                    ) == false
+                ) {
+                    RewardedDialogHandler.showRewardedDialog(
+                        context = this,
+                        preferences = preferences,
+                        isSkipShow = false,
+                        isRewardedEnabled = isRewardedEnabled,
+                        onCompleted = {
+                            val options = Bundle().apply {
+                                putString("WIDGET_ICON", label)
+                            }
+                            val successIntent =
+                                Intent(this, BatteryWidgetProvider::class.java).apply {
+                                    action = BatteryWidgetProvider.ACTION_UPDATE_WIDGET
+                                    putExtra("WIDGET_ICON", label)
+                                }
+
+                            val successCallback = PendingIntent.getBroadcast(
+                                this,
+                                0,
+                                successIntent,
+                                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                            )
+                            appWidgetManager.requestPinAppWidget(
+                                widgetProvider, options, successCallback
+                            )
+                            Log.e(
+                                "BatteryWidgetProvider",
+                                "Activity ------------- Loading image for label 2: $label"
+                            )
+                            val serviceIntent =
+                                Intent(this, BatteryWidgetForegroundService::class.java).setAction(
+                                    BatteryWidgetForegroundService.ACTION_START_SERVICE
+                                )
+                            ContextCompat.startForegroundService(this, serviceIntent)
+                            Toast.makeText(
+                                this,
+                                getString(R.string.widget_applied_successfully),
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                        })
+                } else {
                     val options = Bundle().apply {
                         putString("WIDGET_ICON", label)
                     }
-
                     val successIntent = Intent(this, BatteryWidgetProvider::class.java).apply {
                         action = BatteryWidgetProvider.ACTION_UPDATE_WIDGET
                         putExtra("WIDGET_ICON", label)
@@ -178,13 +225,13 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
                         getString(R.string.widget_applied_successfully),
                         Toast.LENGTH_SHORT
                     ).show()
-
-                }
-                else {
-                    Toast.makeText(this, "Device not supported", Toast.LENGTH_SHORT).show()
                 }
 
-            //   }
+
+            } else {
+                Toast.makeText(this, "Device not supported", Toast.LENGTH_SHORT).show()
+            }
+
 
 
         }
@@ -202,6 +249,16 @@ class BatteryWidgetEditApplyActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        if (preferences.getBoolean("RewardEarned", false) == false) {
+            RewardedAdManager.loadAd(context = this, onLoaded = {
+
+            }, onFailed = {
+
+            })
+        }
+        super.onResume()
+    }
     override fun onPause() {
         super.onPause()
         FirebaseAnalyticsUtils.stopScreenTimer(this, "BatteryWidgetEditApplyScreen")

@@ -13,9 +13,10 @@ import com.lowbyte.battery.animation.NotchAccessibilityService
 import com.lowbyte.battery.animation.R
 import com.lowbyte.battery.animation.ads.AdManager
 import com.lowbyte.battery.animation.ads.NativeAnimationHelper
+import com.lowbyte.battery.animation.ads.RewardedAdManager
 import com.lowbyte.battery.animation.databinding.ActivityBatteryAnimationEditApplyBinding
 import com.lowbyte.battery.animation.dialoge.AccessibilityPermissionBottomSheet
-import com.lowbyte.battery.animation.utils.AllowAccessibilityDialogFragment
+import com.lowbyte.battery.animation.dialoge.RewardedDialogHandler
 import com.lowbyte.battery.animation.utils.AnimationUtils.BROADCAST_ACTION
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_LABEL
 import com.lowbyte.battery.animation.utils.AnimationUtils.EXTRA_POSITION
@@ -23,6 +24,7 @@ import com.lowbyte.battery.animation.utils.AnimationUtils.getFullscreenId
 import com.lowbyte.battery.animation.utils.AnimationUtils.getNativeInsideId
 import com.lowbyte.battery.animation.utils.AnimationUtils.isFullscreenApplyAnimEnabled
 import com.lowbyte.battery.animation.utils.AnimationUtils.isNativeApplyAnimEnabled
+import com.lowbyte.battery.animation.utils.AnimationUtils.isRewardedEnabled
 import com.lowbyte.battery.animation.utils.AppPreferences
 import com.lowbyte.battery.animation.utils.FirebaseAnalyticsUtils
 
@@ -118,13 +120,10 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
     private fun setupClickListeners() {
         binding.ibBackButton.setOnClickListener {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_back_button", mapOf("screen" to "BatteryAnimationEditApplyScreen"))
-          //  if (isUserActionPerformed) {
                 AdManager.showInterstitialAd(this, isFullscreenApplyAnimEnabled, true) {
                     finish()
                 }
-//            } else {
-//                finish()
-//            }
+
         }
 
         binding.buttonForAnimApply.setOnClickListener {
@@ -134,6 +133,8 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
             FirebaseAnalyticsUtils.logClickEvent(this, "click_apply_animation", mapOf("label" to label))
             preferences.statusLottieName = label
             checkAccessibilityPermission()
+
+
         }
 
         binding.buttonHome.setOnClickListener {
@@ -147,24 +148,48 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
     private fun checkAccessibilityPermission() {
         if (!isAccessibilityServiceEnabled()) {
             FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_prompt_shown", null)
-//            if (BuildConfig.DEBUG) {
-//                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-//            } else {
                 val existing = supportFragmentManager.findFragmentByTag("AccessibilityPermission")
                 if (existing == null || !existing.isAdded) {
                     accessibilityPermissionBottomSheet.show(supportFragmentManager, "AccessibilityPermission")
                 } else {
                     Log.d("Accessibility", "AccessibilityPermissionBottomSheet already shown")
-          //      }
             }
         } else {
-            FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
-            sendBroadcast(Intent(BROADCAST_ACTION))
-            Toast.makeText(
-                this,
-                getString(R.string.animation_applied_successfully),
-                Toast.LENGTH_SHORT
-            ).show()
+            if (isRewarded && !preferences.isProUser && preferences.getBoolean(
+                    "RewardEarned",
+                    false
+                ) == false
+            ) {
+                RewardedDialogHandler.showRewardedDialog(
+                    context = this,
+                    preferences = preferences,
+                    isSkipShow = false,
+                    isRewardedEnabled = isRewardedEnabled,
+                    onCompleted = {
+                        FirebaseAnalyticsUtils.logClickEvent(
+                            this,
+                            "accessibility_permission_granted",
+                            null
+                        )
+                        sendBroadcast(Intent(BROADCAST_ACTION))
+                        Toast.makeText(
+                            this,
+                            getString(R.string.animation_applied_successfully),
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                    }
+                )
+            } else {
+                FirebaseAnalyticsUtils.logClickEvent(this, "accessibility_permission_granted", null)
+                sendBroadcast(Intent(BROADCAST_ACTION))
+                Toast.makeText(
+                    this,
+                    getString(R.string.animation_applied_successfully),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
         }
     }
 
@@ -185,7 +210,19 @@ class BatteryAnimationEditApplyActivity : BaseActivity() {
 //       // dialog.
 //    }
 
+    override fun onResume() {
+        if (preferences.getBoolean("RewardEarned", false) == false) {
+            RewardedAdManager.loadAd(
+                context = this,
+                onLoaded = {
 
+                },
+                onFailed = {
+
+                })
+        }
+        super.onResume()
+    }
     override fun onPause() {
         super.onPause()
         FirebaseAnalyticsUtils.stopScreenTimer(this, "BatteryAnimationEditApplyScreen")

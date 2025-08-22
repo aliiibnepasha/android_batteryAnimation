@@ -8,6 +8,7 @@ import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.QueryPurchasesParams
+import com.google.android.gms.ads.MobileAds
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.lowbyte.battery.animation.BaseActivity
@@ -60,7 +61,6 @@ class SplashActivity : BaseActivity() {
             Log.d("SplashActivityLog", "onCreate called")
             binding = ActivitySplashBinding.inflate(layoutInflater)
             setContentView(binding.root)
-
             preferences = AppPreferences.getInstance(this)
 
             if (preferences.getBoolean("RewardEarned", false) == false) {
